@@ -1,0 +1,27 @@
+{
+  "name": "graphql-builder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@types/graphql": "^14.0.5",
+    "@types/lodash": "^4.14.120",
+    "lodash": "^4.17.11",
+    "mobx": "^5.9.0",
+    "parcel-bundler": "^1.11.0",
+    "utility-types": "^3.4.1"
+  },
+  "scripts": {
+    "start": "parcel server index.html"
+  },
+  "devDependencies": {
+    "@types/react": "^16.7.20",
+    "@types/react-dom": "^16.0.11",
+    "apollo-boost": "^0.1.27",
+    "graphql": "^14.1.1",
+    "graphql-tag": "^2.10.1",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "typescript": "^3.2.2"
+  }
+}
