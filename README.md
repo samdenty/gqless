@@ -2,9 +2,9 @@
 
 Seamlessly access GraphQL data, and the queries will be automatically generated.
 
-```typescript
-import { useQuery } from 'graphql-builder'
+## React
 
+```typescript
 export const GithubUser = () => {
   const { data } = useQuery()
   const user = data.user({ login: 'torvalds' })
@@ -26,3 +26,11 @@ export const GithubUser = () => {
   )
 }
 ```
+
+# Features
+
+- 100% type-safe using TypeScript
+
+## Similiar projects
+
+- https://github.com/sw-yx/babel-blade
