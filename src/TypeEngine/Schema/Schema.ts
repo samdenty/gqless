@@ -2,8 +2,18 @@ type ObjectKind = 'OBJECT'
 type InterfaceKind = 'INTERFACE'
 type ScalarKind = 'SCALAR'
 type ListKind = 'LIST'
+type UnionKind = 'UNION'
+type EnumKind = 'ENUM'
+type InputObjectKind = 'INPUT_OBJECT'
 
-export type SchemaKind = ListKind | ObjectKind | ScalarKind | InterfaceKind
+export type SchemaKind =
+  | ListKind
+  | ObjectKind
+  | ScalarKind
+  | InterfaceKind
+  | UnionKind
+  | EnumKind
+  | InputObjectKind
 
 export interface Schema {
   queryType: string

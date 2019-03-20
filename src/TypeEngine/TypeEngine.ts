@@ -2,6 +2,8 @@ import { Schema, SchemaType, SchemaField, SchemaFieldType } from './Schema'
 
 const engineCache = new WeakMap<Schema, TypeEngine>()
 
+export type LookupResult = ReturnType<TypeEngine['lookupPath']>
+
 export class TypeEngine {
   constructor(public schema: Schema) {
     if (engineCache.has(schema)) return engineCache.get(schema)
@@ -33,14 +35,17 @@ export class TypeEngine {
 
     for (const path of paths) {
       if (currentFieldType && currentFieldType.kind === 'LIST') {
-        // currentField = null
         // If the path is an index, skip it
         currentFieldType = currentFieldType.ofType
+        currentField = null
         if (!isNaN(path as any)) continue
       }
 
-      const field = currentType.fields && currentType.fields[path]
-      if (!field) return null
+      const validField =
+        currentType.fields && currentType.fields.hasOwnProperty(path)
+      if (!validField) return null
+
+      const field = currentType.fields[path]
 
       currentFieldType = field.type
       currentField = field
@@ -48,9 +53,13 @@ export class TypeEngine {
     }
 
     return {
-      field: currentField,
-      fieldType: currentFieldType,
-      type: currentType,
+      args: currentField ? currentField.args : null,
+      // The info about this exact field
+      // Whether it supports non-null etc.
+      type: currentFieldType || currentType,
+      // The Schema type this field refers to
+      // [User] => User, User => User
+      schemaType: currentType,
     }
   }
 }

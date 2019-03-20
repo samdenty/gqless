@@ -4,6 +4,7 @@ import { SelectionNode, FieldNode } from 'graphql'
  * Recursively merges multiple selections into one
  */
 export const mergeSelections = (selections: SelectionNode[]) => {
+  // Only merge if needed
   if (selections.length <= 1) return selections
 
   for (let i = 0; i < selections.length; i++) {

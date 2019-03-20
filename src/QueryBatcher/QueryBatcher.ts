@@ -1,6 +1,6 @@
-import { optimiseNodes } from './optimiseNodes'
+import { flattenNodes } from './optimiseNodes'
 import { Query } from '../Query'
-import { QueryField } from '../QueryNode'
+import { QueryField, QueryRoot } from '../QueryNode'
 
 export class QueryBatcher {
   private timer: any
@@ -10,19 +10,25 @@ export class QueryBatcher {
     this.startTimer()
   }
 
-  public stageNode(node: QueryField) {
-    this.commits.add(node)
+  public stage(node: QueryField | QueryRoot) {
+    const nodes = node instanceof QueryRoot ? node.fields : [node]
+
+    nodes.forEach(node => {
+      this.commits.add(node)
+    })
   }
 
-  public unstageNode(node: QueryField) {
-    this.commits.delete(node)
+  public unstage(node: QueryField | QueryRoot) {
+    if (node instanceof QueryRoot) {
+      this.commits.clear()
+    } else {
+      this.commits.delete(node)
+    }
   }
 
-  public async commit() {
+  public async fetchCommits() {
     if (!this.commits.size) return
-    const commits = optimiseNodes(Array.from(this.commits))
-
-    console.log('got some', commits)
+    const commits = flattenNodes(Array.from(this.commits))
 
     this.commits.clear()
 
@@ -31,8 +37,6 @@ export class QueryBatcher {
         await this.query.fetchNodes(commits)
       } catch (e) {
         commits.forEach(node => node.errors.add(e))
-
-        console.error(commits, 'failed to fetch')
       }
     } else {
       await Promise.all(
@@ -41,7 +45,6 @@ export class QueryBatcher {
             await node.fetch()
           } catch (e) {
             node.errors.add(e)
-            console.error(node, 'failed to fetch')
           }
         })
       )
@@ -51,7 +54,7 @@ export class QueryBatcher {
   public startTimer() {
     this.stopTimer()
     this.timer = setTimeout(async () => {
-      this.commit()
+      this.fetchCommits()
       this.startTimer()
     }, this.interval)
   }

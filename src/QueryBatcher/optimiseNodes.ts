@@ -26,5 +26,5 @@ export const highestCommonNode = <T extends QueryNode>(nodes: T[]) => {
   return nodes
 }
 
-export const optimiseNodes = <T extends QueryNode>(nodes: T[]) =>
+export const flattenNodes = <T extends QueryNode>(nodes: T[]) =>
   highestCommonNode(nodes)

@@ -4,24 +4,31 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@types/graphql": "^14.0.5",
-    "@types/lodash": "^4.14.120",
+    "@types/graphql": "^14.0.7",
+    "@types/lodash": "^4.14.122",
+    "@types/zen-observable": "^0.8.0",
     "lodash": "^4.17.11",
     "mobx": "^5.9.0",
-    "parcel-bundler": "^1.11.0",
+    "parcel-bundler": "^1.12.0",
+    "react-testing-library": "^6.0.0",
     "utility-types": "^3.4.1"
   },
   "scripts": {
-    "start": "parcel server index.html"
+    "start": "parcel server index.html",
+    "test": "yarn jest --env=jsdom"
   },
   "devDependencies": {
-    "@types/react": "^16.7.20",
-    "@types/react-dom": "^16.0.11",
-    "apollo-boost": "^0.1.27",
+    "@types/jest": "^24.0.11",
+    "@types/react": "^16.8.7",
+    "@types/react-dom": "^16.8.2",
+    "apollo-boost": "^0.3.1",
     "graphql": "^14.1.1",
+    "graphql-faker": "^1.9.0",
     "graphql-tag": "^2.10.1",
-    "react": "^16.7.0",
-    "react-dom": "^16.7.0",
-    "typescript": "^3.2.2"
+    "jest": "^24.5.0",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3333"
   }
 }

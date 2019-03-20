@@ -1,38 +1,23 @@
+import * as React from 'react'
+import { Suspense } from 'react'
+import ReactDOM from 'react-dom'
+
 import ApolloClient from 'apollo-boost'
-import { Query, introspectionQuery, introspectionToSchema } from './src'
-import { QueryNode, QueryRoot, QueryField } from './src/QueryNode'
-import { isPrimitiveSomething, isPrimitiveType, isIndexType } from './src/utils'
-import { print, parse } from 'graphql'
+import {
+  introspectionQuery,
+  introspectionToSchema,
+  LoggerMiddleware,
+} from './src'
 
-class IncompleteQuery {
-  constructor(public node: QueryNode) {}
-}
+import { useQuery, QueryProvider, querier } from './src/React'
 
-type user = { name: string; age: number; b: string; c: string; d: string }
-
-const querier = <Component extends Function>(
-  component: Component
-): Component => {
-  return ((...args) => {
-    const retry = () => component(...args)
-
-    try {
-      var result = component(...args)
-    } catch (exception) {
-      if (exception instanceof IncompleteQuery) {
-        const { node }: IncompleteQuery = exception
-
-        // retry()
-
-        console.log('waiting for', node)
-        return null
-      } else {
-        throw exception
-      }
-    }
-
-    return result
-  }) as any
+type user = {
+  name: string
+  age: number
+  b: string
+  c: string
+  d: string
+  id: string
 }
 
 const client = new ApolloClient({
@@ -42,63 +27,78 @@ async function bootstrap() {
   const r = await client.query<any>({
     query: introspectionQuery,
   })
-
   const introspection = r.data.__schema
-
   const schema = introspectionToSchema(introspection)
 
-  const query = new Query<{
+  type Data = {
+    getUser: user
     user: user
     users: user[]
-    a: { b: { c: 1; d: number } }
-    number: 1
-  }>({
-    schema,
-    queryName: 'TEST',
-    // synchronous: false,
-    async fetchQuery(query) {
-      const resp = await client.query({
-        query,
-      })
-
-      return { data: resp.data, errors: resp.errors }
-    },
-    // This function ensures that if you try and access a value which has already been fetched,
-    // you get a primitive value.
-    proxyHandler(node, path, { calledAsFunction }) {
-      const { value, unresolvedNode } = node.resolve()
-
-      // TODO: If we can get the schema here, we can optimise this
-      // function from a blacklist to whitelist
-      const isPrimitive = node.kind === 'SCALAR' || isPrimitiveSomething(path)
-      const isValue = isPrimitive || isIndexType(path)
-
-      const possibleToReturnValue = calledAsFunction === node.beenUsedAsFunc
-
-      console.log({ path, possibleToReturnValue })
-      if (isValue) {
-        if (unresolvedNode) throw new IncompleteQuery(unresolvedNode)
-      }
-
-      if (possibleToReturnValue) {
-        let data = value && value[path]
-
-        if (typeof data === 'string' || typeof data === 'number') {
-          return data
+    a: {
+      b: {
+        c: 1
+        d: number
+        __argmap: {
+          c: { test: number }
         }
       }
+    }
+    number: 1
 
-      if (isPrimitive) {
-        return () => (typeof value === 'object' ? String(value) : value)
-      }
-    },
-  })
+    __args: {
+      getUser: { id: number }
+    }
+  }
 
-  const Component = querier(() => {
-    query.data.user.age
-    query.data.user.b
-    query.data.user.name
+  console.log(schema)
 
+  const Component = () => {
+    const [clicks, setClicks] = React.useState(0)
+    const query = useQuery<Data>({
+      queryName: 'TestQuery',
+      middleware: (m, q) => [new LoggerMiddleware(q), ...m],
+    })
+
+    if (!query) return null
+    ;(window as any).query = query
+
+    // if (query.data.user.age > 50000) {
+    //   return `${query.data.user.name} is older than 50000`
+    // }
+
+    // return 'user is less than 50000'
+
+    return (
+      <>
+        <button onClick={() => setClicks(clicks + 1)}>{clicks}</button>
+        <table>
+          <tbody>
+            <tr>
+              <td>combined</td>
+              <td>{`${query.data.user.name} (${query.data.user.age})`}</td>
+            </tr>
+            <tr>
+              <td>name</td>
+              <td>{query.data.user.name}</td>
+            </tr>
+            <tr>
+              <td>age</td>
+              <td>{query.data.user.age}</td>
+            </tr>
+            <tr>
+              <td>getUser -> name</td>
+              <td>{query.data.getUser({ id: 10 }).name}</td>
+            </tr>
+            <tr>
+              <td>getUser -> age</td>
+              <td>{query.data.getUser({ id: 10 }).age}</td>
+            </tr>
+          </tbody>
+        </table>
+      </>
+    )
+
+    // return <div>Name: {query.data.user.name}</div>
     // query.data.a.b(null, { alias: 'test' }).c
 
     // const users = query.data.users({ where: { following: ['example'] } })
@@ -128,16 +128,33 @@ async function bootstrap() {
     //     ))}
     //   </div>
     // )
-  })
+  }
 
-  Component()
+  const App = () => {
+    return (
+      <Suspense fallback={<div>FALLBACK</div>}>
+        <Component />
+      </Suspense>
+    )
+  }
+
+  ReactDOM.render(
+    <QueryProvider
+      value={{
+        schema,
+        async fetchQuery(query) {
+          const resp = await client.query({ query })
+
+          return { data: resp.data, errors: resp.errors }
+        },
+      }}
+    >
+      <App />
+    </QueryProvider>,
+    document.getElementById('root')
+  )
+
   // query.batcher.stageNode(query.root.fields[0])
-  ;(window as any).query = query
 }
 
-// async function promise() {
-//   const users = await query.data.users({ where: { following: ['example'] } })
-// }
-
 bootstrap()
-// ReactDOM.render(<Component />, document.getElementById('root'))

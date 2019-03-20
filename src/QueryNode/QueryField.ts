@@ -1,6 +1,10 @@
 import { isEqual } from 'lodash'
-import { QueryNode, IQueryNodeArg } from './QueryNode'
+import { QueryNode, QueryNodeJSON, IQueryNodeArg } from '.'
 import { Query } from '../Query'
+
+export type QueryFieldJSON<T> = QueryNodeJSON<T> & {
+  $_: { args: any; alias: string }
+}
 
 export class QueryField<T = any, ParentT = any> extends QueryNode<T, ParentT> {
   public fetched = false
@@ -14,13 +18,14 @@ export class QueryField<T = any, ParentT = any> extends QueryNode<T, ParentT> {
     super(query)
   }
 
-  public toJSON() {
+  public toJSON(): QueryFieldJSON<T> {
     return {
       ...super.toJSON(),
-      name: this.name,
-      args: this.args,
-      alias: this.alias,
-    }
+      $_: {
+        args: this.args,
+        alias: this.alias,
+      },
+    } as any
   }
 
   public async fetch() {
@@ -31,28 +36,20 @@ export class QueryField<T = any, ParentT = any> extends QueryNode<T, ParentT> {
    * Stage the node for fetching
    */
   public stage() {
-    this.query.batcher.stageNode(this)
+    this.query.batcher.stage(this)
   }
 
   /**
    * Unstage the node for fetching
    */
   public unstage() {
-    this.query.batcher.unstageNode(this)
+    this.query.batcher.unstage(this)
   }
 
   public get aliasedName() {
     if (this.alias) return `${this.name}__${this.alias}`
 
     return this.name
-  }
-
-  public get supportsArgs() {
-    const result = this.lookup()
-    if (!result) return null
-
-    console.log(result.field)
-    return result.field.args
   }
 
   public get args() {
@@ -70,6 +67,7 @@ export class QueryField<T = any, ParentT = any> extends QueryNode<T, ParentT> {
   }
   public set alias(value: string) {
     this._alias = value
-    this.stage()
+
+    if (this._alias != value) this.stage()
   }
 }

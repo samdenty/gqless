@@ -15,19 +15,21 @@
 #   name: String @fake(type:companyName)
 #   industry: String @examples(values: ["IT", "Manufacturing", "Medicine", "Media"])
 #   employees: [Employee!]
-# } 
+# }
 
 type User {
-  name: String @fake(type: firstName, locale:en_CA)
+  id: ID!
+
+  name: String @fake(type: firstName, locale: en_CA)
   age: String @fake(type: number)
-  b:String
+  b: String
   c: String
   d: String
 }
 
 type B {
- c: Int @examples(values: 1)
- d:Int
+  c: Int @examples(values: 1)
+  d: Int
 }
 
 type A {
@@ -35,7 +37,7 @@ type A {
 }
 
 interface Test {
-a: String
+  a: String
 }
 
 type TestB implements Test {
@@ -48,6 +50,8 @@ type TestC implements Test {
   c: String
 }
 
+union TestOrUser = User | TestB
+
 type Query {
   user: User
   users: [User!]!
@@ -55,6 +59,13 @@ type Query {
   a: A
   number: Int
   getUser(id: ID): User
+  getUsers(id: ID): [User!]!
+
+  testOrUser: TestOrUser
 
   test: Test
+}
+
+type Mutation {
+  deleteUser(id: ID!): Int!
 }

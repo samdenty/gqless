@@ -4,9 +4,8 @@ import {
   ArgumentNode,
   ObjectFieldNode,
   ValueNode,
-  print,
 } from 'graphql'
-import { QueryNode, QueryField } from '../QueryNode'
+import { QueryNode, QueryField, QueryRoot } from '../QueryNode'
 import { Query } from '../Query'
 import { mergeSelections } from './mergeSelections'
 
@@ -67,7 +66,7 @@ export class QueryBuilder {
       arguments: this.getArguments(node),
       directives: [],
       selectionSet:
-        node.kind === 'SCALAR'
+        node.definition.type.kind === 'SCALAR'
           ? null
           : {
               kind: 'SelectionSet',
@@ -87,7 +86,7 @@ export class QueryBuilder {
   }
 
   private getSelections(node: QueryField) {
-    let path = node.path.slice(1)
+    const path = node.path.slice(1)
 
     const getSelectionsAtLevel = (index: number): SelectionNode[] =>
       path[index]
@@ -97,9 +96,13 @@ export class QueryBuilder {
     return getSelectionsAtLevel(0)
   }
 
-  public buildQuery(nodes: QueryField[]) {
+  public buildDocument(...nodes: (QueryRoot | QueryField)[]) {
+    const fieldNodes = nodes.includes(this.query.root)
+      ? this.query.root.fields
+      : (nodes as QueryField[])
+
     const selections = mergeSelections(
-      nodes.map(node => this.getSelections(node)).flat()
+      [].concat(...fieldNodes.map(node => this.getSelections(node)))
     )
 
     const doc: DocumentNode = {
@@ -123,8 +126,6 @@ export class QueryBuilder {
         },
       ],
     }
-
-    console.error(print(doc))
 
     return doc
   }

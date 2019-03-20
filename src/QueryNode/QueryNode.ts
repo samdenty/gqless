@@ -1,8 +1,7 @@
 import { Query } from '../Query'
 import { resolveNode, getNodePath } from '../utils'
-import { QueryField } from './QueryField'
-import { nodes } from '.'
-import { QueryRoot } from './QueryRoot'
+import { QueryField, QueryFieldJSON, QueryRoot } from '.'
+import { LookupResult } from '../TypeEngine'
 
 export type IQueryNodeArg = [string, string]
 
@@ -11,43 +10,27 @@ export interface IQueryNodeOptions {
   alias?: string
 }
 
-export class QueryNode<T = any, P = any> {
+const fromEntries = iterable =>
+  iterable.reduce(
+    (obj, { 0: key, 1: val }) => Object.assign(obj, { [key]: val }),
+    {}
+  )
+
+export type QueryNodeJSON<T> = { [key in keyof T]: QueryFieldJSON<T[key]> }
+
+export class QueryNode<T = any, Parent = any> {
   protected disposers = new Array<() => any>()
   public errors = new Set()
 
-  public beenUsedAsFunc: boolean = false
   public fields = new Array<QueryField<T[keyof T]>>()
-  public parent: P extends null ? null : QueryNode<P> = null
+  public parent: Parent extends null ? null : QueryNode<Parent> = null
 
   constructor(protected query: Query) {}
 
-  public toJSON() {
-    const fields: any[] = this.fields.map(field => field.toJSON())
+  public toJSON(): QueryNodeJSON<T> {
+    const fields = this.fields.map(field => [field.name, field.toJSON()])
 
-    return {
-      constructorName: this.constructor.name,
-      beenUsedAsFunc: this.beenUsedAsFunc,
-      fields,
-    }
-  }
-
-  static fromJSON(
-    query: Query,
-    parent: QueryNode = null,
-    {
-      constructorName = this.name,
-      ...json
-    }: ReturnType<typeof nodes[number]['prototype']['toJSON']>
-  ) {
-    const Node = nodes.find(({ name }) => name === constructorName)
-    const node = new Node(query)
-
-    Object.assign(node, json, {
-      parent,
-      fields: json.fields.map(f => QueryNode.fromJSON(query, node, f)),
-    })
-
-    return node
+    return fromEntries(fields)
   }
 
   public getField(field: string, alias?: string) {
@@ -67,8 +50,10 @@ export class QueryNode<T = any, P = any> {
     queryField.name = field
     queryField.parent = this
 
-    this.fields.push(queryField)
+    // If it's not in the schema, return undefined
+    if (!queryField.definition) return undefined
 
+    this.fields.push(queryField)
     queryField.stage()
 
     return queryField
@@ -82,7 +67,31 @@ export class QueryNode<T = any, P = any> {
     return getNodePath(this)
   }
 
-  public get value(): T {
+  private resolveValue: (value: T) => void
+  public value = this.getValuePromise()
+
+  private getValuePromise() {
+    return new Promise<T>(resolve => {
+      this.resolveValue = resolve
+    })
+  }
+
+  private currentValue: T
+  public nextValue() {
+    const value = this.getValue()
+    this.resolveValue(value)
+
+    if (this.currentValue !== value) {
+      this.currentValue = value
+
+      this.value = this.getValuePromise()
+      this.resolveValue(value)
+    }
+
+    this.fields.forEach(field => field.nextValue())
+  }
+
+  public getValue(): T {
     if (this.errors.size) throw Array.from(this.errors)
 
     const { value, unresolvedNode } = this.resolve()
@@ -98,7 +107,14 @@ export class QueryNode<T = any, P = any> {
     return value
   }
 
-  public lookup() {
+  private _definition: LookupResult
+  public get definition() {
+    if (!this._definition) this.updateDefinition()
+
+    return this._definition
+  }
+
+  private updateDefinition() {
     const path = this.path.map(node =>
       node instanceof QueryRoot
         ? 'Query'
@@ -107,16 +123,9 @@ export class QueryNode<T = any, P = any> {
         : null
     )
 
-    const result = this.query.typeEngine.lookupPath(path)
+    const definition = this.query.typeEngine.lookupPath(path)
 
-    return result
-  }
-
-  public get kind() {
-    const result = this.lookup()
-    if (!result) return null
-
-    return result.fieldType ? result.fieldType.kind : result.type.kind
+    this._definition = definition
   }
 
   public dispose() {

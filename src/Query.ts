@@ -1,4 +1,4 @@
-import { merge, isEqual } from 'lodash'
+import { merge } from 'lodash'
 import {
   QueryNode,
   IQueryNodeOptions,
@@ -9,13 +9,21 @@ import { QueryBuilder } from './QueryBuilder'
 import { QueryBatcher } from './QueryBatcher'
 import { TypeEngine, Schema } from './TypeEngine'
 import { DocumentNode } from 'graphql'
+import { QueryMiddleware, defaultMiddleware } from './QueryMiddleware'
 
-type RecurseNode<T> = { [key in keyof T]: Node<T[key]> }
+type RequiredKeys<T> = {
+  [K in keyof T]-?: ({} extends { [P in K]: T[K] } ? never : K)
+}[keyof T]
 
-type NodeCallback<T, isRoot extends boolean> = (
-  queryArgs?: { [key: string]: any },
-  options?: IQueryNodeOptions
-) => Node<T, isRoot>
+type ArgMap = '__args'
+
+type RecurseNode<T extends any> = {
+  [key in Exclude<keyof T, ArgMap>]: Node<T[key], T[ArgMap][key]>
+}
+
+type NodeCallback<T, Args> = RequiredKeys<Args> extends never
+  ? (queryArgs?: Args, options?: IQueryNodeOptions) => Node<T>
+  : (queryArgs: Args, options?: IQueryNodeOptions) => Node<T>
 
 interface NodeValuePromise<T>
   extends Pick<
@@ -23,27 +31,19 @@ interface NodeValuePromise<T>
     'then' | 'catch'
   > {}
 
-type NodeField<T, isRoot extends boolean = false> = NodeCallback<T, isRoot> &
-  NodeValuePromise<T> & {
-    __node: isRoot extends true ? QueryRoot<T> : QueryField<T>
-  }
+export type Node<T = any, Args = unknown> = (T extends object
+  ? RecurseNode<T>
+  : unknown) &
+  (Args extends object ? NodeCallback<T, Args> : unknown) &
+  (T extends object ? {} : T /* NodeValuePromise<T>*/)
 
-export type Node<T = any, isRoot extends boolean = false> = T extends object
-  ? RecurseNode<T> & NodeField<T, isRoot>
-  : NodeField<T, isRoot>
-
-type Response<Data = any> = { data: Data; errors: any }
+export type QueryResponse<Data = any> = { data: Data; errors: any }
 
 export interface IQueryOptions {
   schema: Schema
-  fetchQuery(query: DocumentNode): Promise<Response> | Response
-
-  proxyHandler?(
-    node: QueryNode,
-    path: string | symbol,
-    context: { calledAsFunction: boolean; target: NodeCallback<any, boolean> }
-  ): any
+  fetchQuery(query: DocumentNode): Promise<QueryResponse> | QueryResponse
   queryName?: string
+  middleware?(middleware: QueryMiddleware[], query: Query): QueryMiddleware[]
 
   // If set to true, the proxy will return an array to capture sub-field selections
   optimisticArrays?: boolean
@@ -52,14 +52,20 @@ export interface IQueryOptions {
   mergeQueries?: boolean
 }
 
+export type ProxyInterceptor = (
+  target: unknown,
+  prop: string | symbol
+) => unknown
+
 export class Query<Data = any> {
   public options: IQueryOptions
   public currentNode: QueryNode
   public root = new QueryRoot<Data>(this)
-  public response: Response<Data> = this.clear()
+  public response: QueryResponse<Data> = this.clear()
 
   public builder: QueryBuilder
   public batcher: QueryBatcher
+  public middleware: QueryMiddleware[]
   public typeEngine: TypeEngine
 
   constructor(options: IQueryOptions) {
@@ -71,17 +77,18 @@ export class Query<Data = any> {
 
     this.builder = new QueryBuilder(this)
     this.batcher = new QueryBatcher(this)
+    this.middleware = this.options.middleware
+      ? this.options.middleware(defaultMiddleware, this)
+      : defaultMiddleware
+
     this.typeEngine = new TypeEngine(this.options.schema)
+
+    this.data = this.createProxy(this.root)
   }
 
   public clear() {
     this.response = {
-      data: {
-        // user: { name: 'test', age: 'basdasasd' },
-        // users: [{ name: 'test', age: 'basdasd' }],
-        // a: { b: { c: 1 } },
-        // number: 1,
-      } as any,
+      data: {} as Data,
       errors: null,
     }
     return this.response
@@ -90,38 +97,50 @@ export class Query<Data = any> {
   public async fetchNodes(nodes: QueryField[]) {
     nodes.forEach(node => (node.fetching = true))
 
-    const query = this.builder.buildQuery(nodes)
+    const query = this.builder.buildDocument(...nodes)
 
+    this.middleware.forEach(m => m.onFetch && m.onFetch({ nodes, query }))
+
+    let error: any
     try {
-      const response = await this.options.fetchQuery(query)
-      nodes.forEach(node => (node.fetched = true))
-
-      merge(this.response.data, response.data)
-
-      return response
+      var response = await this.options.fetchQuery(query)
     } catch (e) {
-      throw e
-    } finally {
-      nodes.forEach(node => (node.fetching = false))
+      error = e
     }
-  }
 
-  private createProxy = <T, isRoot extends boolean = false>(
-    currentNode: QueryNode
-  ): Node<T, isRoot> => {
-    this.currentNode = currentNode
+    if (!error) merge(this.response.data, response.data)
 
-    const valueResolver = new Promise((resolve, reject) => {
-      if (currentNode instanceof QueryField) {
-        if (currentNode.fetched) {
-          return resolve(currentNode.value)
-        }
-      }
+    nodes.forEach(node => {
+      node.fetching = false
+      node.fetched = true
+
+      node.nextValue()
     })
 
-    const nodeCallback: NodeCallback<T, isRoot> = (
-      argsObject = null,
-      { alias } = {}
+    if (error) {
+      this.middleware.forEach(
+        m => m.onFetched && m.onFetched({ nodes, query, error })
+      )
+
+      throw error
+    }
+
+    this.middleware.forEach(
+      m => m.onFetched && m.onFetched({ nodes, query, response })
+    )
+
+    return response
+  }
+
+  private createProxy = <T, Args>(
+    currentNode: QueryNode,
+    interceptor?: ProxyInterceptor
+  ): Node<T, Args> => {
+    this.currentNode = currentNode
+
+    const nodeCallback = (
+      argsObject: Args = null,
+      { alias }: IQueryNodeOptions = {}
     ) => {
       if (currentNode instanceof QueryField) {
         const aliasedNode = currentNode.parent.getField(currentNode.name, alias)
@@ -134,50 +153,91 @@ export class Query<Data = any> {
         // Update node
         const args = Object.entries(argsObject)
 
-        node.beenUsedAsFunc = true
         if (argsObject) node.args = args
         node.alias = alias
 
-        if (differentNode) return this.createProxy(node)
+        if (differentNode) return this.createProxy<T, Args>(node)
       }
 
-      return createProxy(true)
+      return createProxy(false)
     }
 
-    const api: Partial<NodeField<T>> = {
-      then: valueResolver.then.bind(valueResolver),
-      catch: valueResolver.catch.bind(valueResolver),
-      __node: currentNode as any,
-    }
+    const target = {}
 
-    const createProxy = (calledAsFunction: boolean) =>
-      new Proxy(nodeCallback, {
-        get: (target, path: string | symbol) => {
-          if (api.hasOwnProperty(path)) return api[path]
-
-          const returnValue = this.options.proxyHandler
-            ? this.options.proxyHandler(currentNode, path, {
-                calledAsFunction,
-                target,
-              })
-            : undefined
-
-          if (typeof path === 'string' || typeof path === 'number') {
-            const queryField = currentNode.addField(path)
-
-            return returnValue !== undefined
-              ? returnValue
-              : this.createProxy(queryField)
+    const createProxy = (callable: boolean) =>
+      new Proxy(callable ? nodeCallback : target, {
+        get: (target, prop: string | symbol) => {
+          if (interceptor) {
+            const value = interceptor(target, prop)
+            if (value !== undefined) return value
           }
 
-          return returnValue
-        },
-      }) as Node<T, isRoot>
+          let customReturnValue: any
+          for (const m of this.middleware) {
+            if (!m.proxyGetter) continue
 
-    return createProxy(false)
+            const value = m.proxyGetter(currentNode, prop, interceptor => {
+              if (typeof prop === 'string' || typeof prop === 'number') {
+                const queryField = currentNode.addField(prop)
+                if (queryField) return this.createProxy(queryField, interceptor)
+              }
+            })
+
+            if (value !== undefined) {
+              customReturnValue = value
+              break
+            }
+          }
+
+          if (typeof prop === 'string' || typeof prop === 'number') {
+            const queryField = currentNode.addField(prop)
+
+            if (customReturnValue !== undefined) return customReturnValue
+            if (queryField) return this.createProxy(queryField)
+          }
+
+          return customReturnValue
+        },
+
+        has(target, key) {
+          if (currentNode.definition.type.kind === 'OBJECT') {
+            if (key in currentNode.definition.schemaType.fields) return true
+          }
+
+          return key in target
+        },
+
+        ownKeys(target) {
+          const keys: (string | number | symbol)[] = []
+
+          if (currentNode.definition.type.kind === 'OBJECT') {
+            keys.push(...Object.keys(currentNode.definition.schemaType.fields))
+          }
+
+          for (const key of Reflect.ownKeys(target)) {
+            if (!keys.includes(key)) {
+              keys.push(key)
+            }
+          }
+
+          return keys
+        },
+
+        getOwnPropertyDescriptor(target, p) {
+          if (p === 'prototype')
+            return Reflect.getOwnPropertyDescriptor(target, p)
+
+          return {
+            enumerable: true,
+            configurable: true,
+          }
+        },
+      }) as Node<T, Args>
+
+    return createProxy(currentNode.definition.args)
   }
 
-  public data = this.createProxy<Data, true>(this.root)
+  public data: Node<Data>
 
   public dispose() {
     this.root.dispose()
