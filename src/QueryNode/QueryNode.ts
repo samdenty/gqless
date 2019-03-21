@@ -60,7 +60,15 @@ export class QueryNode<T = any, Parent = any> {
   }
 
   public resolve() {
-    return resolveNode(this.query, this)
+    const resolution = resolveNode(this.query, this)
+
+    if (resolution && resolution.unresolvedNode) {
+      this.query.middleware.forEach(
+        m => m.onUnresolvedNode && m.onUnresolvedNode(resolution.unresolvedNode)
+      )
+    }
+
+    return resolution
   }
 
   public get path() {

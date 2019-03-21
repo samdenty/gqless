@@ -3,29 +3,55 @@ import { IMockedSchema } from '.'
 import { useQuery } from '../src/React'
 import { IQueryOptions, Schema } from '../src'
 import { executeQuery } from './graphql-faker'
-
-const schema: Schema = require('./schema.json')
+import { schema } from './query'
 
 export const useTestQuery = (options: Partial<IQueryOptions> = {}) => {
   const query = useQuery<IMockedSchema>({
     schema,
-    fetchQuery(query) {
-      expect(print(query)).toMatchSnapshot()
-
-      return executeQuery(query)
-    },
     ...options,
   })
 
   return query
 }
 
-export const queryComponent = <T, T2>(
-  component: (props: T) => T2,
-  done: Function
-) => (props: T): T2 => {
-  const value = component(props)
-  if (value) done()
+let unresolvedNodes = []
 
-  return value
+export const testQuery = <T, T2>(
+  component: (props: T, query: ReturnType<typeof useTestQuery>) => T2,
+  complete: (queries: string[]) => void
+) => {
+  let queries: string[] = []
+
+  return (props: T): T2 => {
+    const query = useTestQuery({
+      fetchQuery(query) {
+        queries.push(print(query))
+
+        return executeQuery(query)
+      },
+      middleware: m => [
+        ...m,
+        {
+          onUnresolvedNode(node) {
+            unresolvedNodes.push(node)
+          },
+        },
+      ],
+    })
+
+    if (!query) return null
+
+    unresolvedNodes = []
+    const value = component(props, query)
+
+    if (unresolvedNodes.length === 0) {
+      setTimeout(() => {
+        complete(queries)
+
+        query.dispose()
+      }, 0)
+    }
+
+    return value
+  }
 }

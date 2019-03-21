@@ -11,6 +11,15 @@ export type IMockedSchema = {
   getUser: user
   user: user
   users: user[]
-  a: { b: { c: 1; d: number } }
+  a: {
+    b: {
+      c: 1
+      d: number
+    }
+  }
   number: 1
+
+  __args: {
+    getUser: { id: number }
+  }
 }

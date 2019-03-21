@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`combines multiple react children into one query 1`] = `
+Array [
+  "{
+  user {
+    name
+    age
+    __typename
+  }
+}
+",
+]
+`;
+
+exports[`combines multiple react children into one query 2`] = `
+<DocumentFragment>
+  <div
+    style=""
+  >
+    Maurine 71295
+  </div>
+</DocumentFragment>
+`;
+
+exports[`supports GraphQL arguments 1`] = `
+Array [
+  "{
+  getUser(id: 10) {
+    name
+    __typename
+  }
+}
+",
+]
+`;
+
+exports[`supports GraphQL arguments 2`] = `
+<DocumentFragment>
+  <div
+    style=""
+  >
+    Maurine
+  </div>
+</DocumentFragment>
+`;
+
+exports[`supports aliases 1`] = `
+Array [
+  "{
+  getUser(id: 1) {
+    age
+    __typename
+  }
+  getUser__two: getUser(id: 2) {
+    age
+    __typename
+  }
+}
+",
+]
+`;
+
+exports[`supports aliases 2`] = `<DocumentFragment />`;
+
+exports[`supports omitting GraphQL arguments 1`] = `
+Array [
+  "{
+  getUser {
+    name
+    __typename
+  }
+}
+",
+]
+`;
+
+exports[`supports omitting GraphQL arguments 2`] = `
+<DocumentFragment>
+  <div
+    style=""
+  >
+    Maurine
+  </div>
+</DocumentFragment>
+`;

@@ -29,6 +29,7 @@ export const GithubUser = () => {
 
 # Features
 
+- Uses react suspense
 - 100% type-safe using TypeScript
 
 ## Similiar projects

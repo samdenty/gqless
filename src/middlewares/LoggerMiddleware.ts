@@ -1,10 +1,6 @@
 import { print } from 'graphql'
-import { QueryMiddleware } from '../QueryMiddleware'
+import { QueryMiddleware, QueryMiddlewareArg } from '../QueryMiddleware'
 import { Query } from '../Query'
-
-type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any
-  ? A
-  : never
 
 const format = (...parts: any[][]) => {
   const texts = []
@@ -31,10 +27,7 @@ export class LoggerMiddleware implements QueryMiddleware {
     ].filter(Boolean)
   }
 
-  public onFetch({
-    query,
-    nodes,
-  }: ArgumentTypes<QueryMiddleware['onFetch']>[0]) {
+  public onFetch({ query, nodes }: QueryMiddlewareArg<'onFetch'>) {
     // @ts-ignore
     console.groupCollapsed(
       ...format(...this.header, [
@@ -48,9 +41,7 @@ export class LoggerMiddleware implements QueryMiddleware {
     )
   }
 
-  public onFetched({
-    response,
-  }: ArgumentTypes<QueryMiddleware['onFetched']>[0]) {
+  public onFetched({ response }: QueryMiddlewareArg<'onFetched'>) {
     console.log(...format(['RESPONSE', 'color: orange']), response)
     console.groupEnd()
   }

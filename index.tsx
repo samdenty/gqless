@@ -62,14 +62,17 @@ async function bootstrap() {
     if (!query) return null
     ;(window as any).query = query
 
-    // if (query.data.user.age > 50000) {
-    //   return `${query.data.user.name} is older than 50000`
-    // }
+    return <div>{query.data.users[0].name}</div>
 
-    // return 'user is less than 50000'
+    // const defaultWithoutArgs = query.data.getUser
+    // const defaultWithArgs = query.data.getUser({ id: 1 })
+    // const two = query.data.getUser({ id: 2 }, { alias: 'two' })
 
     return (
       <>
+        {/*<div>
+          {defaultWithArgs.age} {defaultWithoutArgs.age} {two.age}
+    </div>*/}
         <button onClick={() => setClicks(clicks + 1)}>{clicks}</button>
         <table>
           <tbody>

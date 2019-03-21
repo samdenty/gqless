@@ -151,9 +151,8 @@ export class Query<Data = any> {
           : currentNode
 
         // Update node
-        const args = Object.entries(argsObject)
+        if (argsObject) node.args = Object.entries(argsObject)
 
-        if (argsObject) node.args = args
         node.alias = alias
 
         if (differentNode) return this.createProxy<T, Args>(node)
@@ -172,31 +171,25 @@ export class Query<Data = any> {
             if (value !== undefined) return value
           }
 
-          let customReturnValue: any
+          const propNode =
+            typeof prop === 'string' && currentNode.addField(prop)
+
           for (const m of this.middleware) {
             if (!m.proxyGetter) continue
 
-            const value = m.proxyGetter(currentNode, prop, interceptor => {
-              if (typeof prop === 'string' || typeof prop === 'number') {
-                const queryField = currentNode.addField(prop)
-                if (queryField) return this.createProxy(queryField, interceptor)
-              }
+            const value = m.proxyGetter({
+              node: currentNode,
+              prop,
+              nodeForProp: propNode,
+              createNestedProxy: interceptor => {
+                if (propNode) return this.createProxy(propNode, interceptor)
+              },
             })
 
-            if (value !== undefined) {
-              customReturnValue = value
-              break
-            }
+            if (value !== undefined) return value
           }
 
-          if (typeof prop === 'string' || typeof prop === 'number') {
-            const queryField = currentNode.addField(prop)
-
-            if (customReturnValue !== undefined) return customReturnValue
-            if (queryField) return this.createProxy(queryField)
-          }
-
-          return customReturnValue
+          if (propNode) return this.createProxy(propNode)
         },
 
         has(target, key) {
@@ -242,5 +235,7 @@ export class Query<Data = any> {
   public dispose() {
     this.root.dispose()
     this.batcher.dispose()
+
+    this.middleware.forEach(m => m.dispose && m.dispose())
   }
 }
