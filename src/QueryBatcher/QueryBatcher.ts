@@ -6,7 +6,7 @@ export class QueryBatcher {
   private timer: any
   private commits = new Set<QueryField>()
 
-  constructor(private query: Query, public interval: number = 50) {
+  constructor(protected query: Query, public interval: number = 50) {
     this.startTimer()
   }
 

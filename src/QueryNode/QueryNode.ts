@@ -3,13 +3,6 @@ import { resolveNode, getNodePath } from '../utils'
 import { QueryField, QueryFieldJSON, QueryRoot } from '.'
 import { LookupResult } from '../TypeEngine'
 
-export type IQueryNodeArg = [string, string]
-
-export interface IQueryNodeOptions {
-  args?: IQueryNodeArg[]
-  alias?: string
-}
-
 const fromEntries = iterable =>
   iterable.reduce(
     (obj, { 0: key, 1: val }) => Object.assign(obj, { [key]: val }),
@@ -18,14 +11,13 @@ const fromEntries = iterable =>
 
 export type QueryNodeJSON<T> = { [key in keyof T]: QueryFieldJSON<T[key]> }
 
-export class QueryNode<T = any, Parent = any> {
+export class QueryNode<T = any> {
   protected disposers = new Array<() => any>()
+
   public errors = new Set()
-
   public fields = new Array<QueryField<T[keyof T]>>()
-  public parent: Parent extends null ? null : QueryNode<Parent> = null
 
-  constructor(protected query: Query) {}
+  constructor(protected query: Query, public parent: QueryNode) {}
 
   public toJSON(): QueryNodeJSON<T> {
     const fields = this.fields.map(field => [field.name, field.toJSON()])
@@ -46,9 +38,7 @@ export class QueryNode<T = any, Parent = any> {
     const existingField = this.getField(field, alias)
     if (existingField) return existingField
 
-    const queryField = new QueryField(this.query)
-    queryField.name = field
-    queryField.parent = this
+    const queryField = new QueryField(this.query, this, field)
 
     // If it's not in the schema, return undefined
     if (!queryField.definition) return undefined

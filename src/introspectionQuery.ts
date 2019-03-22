@@ -21,6 +21,9 @@ export const introspectionQuery = gql`
     fields(includeDeprecated: true) {
       name
       args {
+        type {
+          ...TypeRef
+        }
         ...InputValue
       }
       type {

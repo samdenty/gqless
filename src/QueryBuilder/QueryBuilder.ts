@@ -10,7 +10,7 @@ import { Query } from '../Query'
 import { mergeSelections } from './mergeSelections'
 
 export class QueryBuilder {
-  constructor(private query: Query) {}
+  constructor(protected query: Query) {}
 
   private getValue(value: any): ValueNode {
     return value === null

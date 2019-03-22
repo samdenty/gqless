@@ -15,11 +15,11 @@ export type SchemaKind =
   | EnumKind
   | InputObjectKind
 
-export interface Schema {
+export interface Schema<T = any> {
   queryType: string
   mutationType?: string
 
-  types: { [key: string]: SchemaType }
+  types: { [key in keyof T]: SchemaType }
 }
 
 export interface SchemaType {
@@ -31,12 +31,24 @@ export interface SchemaType {
 }
 
 export interface SchemaField {
-  args: boolean
+  name: string
+  args?: { [key: string]: SchemaFieldType }
   type: SchemaFieldType
 }
 
-export interface SchemaFieldType {
-  kind: SchemaKind
-  name?: string
-  ofType?: SchemaFieldType
+type BaseSchemaFieldType<TKind extends SchemaKind> = {
+  kind: TKind
+  nullable: boolean
 }
+
+export type SchemaFieldList = BaseSchemaFieldType<ListKind> & {
+  ofType: SchemaFieldType
+}
+
+export type SchemaFieldRef = BaseSchemaFieldType<
+  Exclude<SchemaKind, ListKind>
+> & {
+  name: string
+}
+
+export type SchemaFieldType = SchemaFieldList | SchemaFieldRef

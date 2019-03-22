@@ -14,7 +14,7 @@ const format = (...parts: any[][]) => {
 }
 
 export class LoggerMiddleware implements QueryMiddleware {
-  constructor(private query: Query) {}
+  constructor(protected query: Query) {}
 
   private get header() {
     return [

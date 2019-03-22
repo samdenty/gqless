@@ -1,21 +1,20 @@
 import { isEqual } from 'lodash'
-import { QueryNode, QueryNodeJSON, IQueryNodeArg } from '.'
+import { QueryNode, QueryNodeJSON } from '.'
 import { Query } from '../Query'
 
 export type QueryFieldJSON<T> = QueryNodeJSON<T> & {
   $_: { args: any; alias: string }
 }
 
-export class QueryField<T = any, ParentT = any> extends QueryNode<T, ParentT> {
+export class QueryField<T = any> extends QueryNode<T> {
   public fetched = false
   public fetching = false
 
-  private _args = new Array<IQueryNodeArg>()
+  private _args: [string, string][] = []
   private _alias: string = null
-  public name: string
 
-  constructor(query: Query) {
-    super(query)
+  constructor(query: Query, parent: QueryNode, public name: string) {
+    super(query, parent)
   }
 
   public toJSON(): QueryFieldJSON<T> {

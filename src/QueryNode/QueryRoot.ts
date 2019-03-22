@@ -4,7 +4,11 @@ import { QueryFieldJSON } from './QueryField'
 
 export type QueryRootJSON<T> = QueryNodeJSON<T>
 
-export class QueryRoot<T = any> extends QueryNode<T, null> {
+export class QueryRoot<T = any> extends QueryNode<T> {
+  constructor(query: Query) {
+    super(query, null)
+  }
+
   static fromJSON<T>(query: Query<T>, json: QueryRootJSON<T>) {
     const root = new QueryRoot(query)
 

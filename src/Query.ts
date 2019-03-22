@@ -1,10 +1,5 @@
 import { merge } from 'lodash'
-import {
-  QueryNode,
-  IQueryNodeOptions,
-  QueryRoot,
-  QueryField,
-} from './QueryNode'
+import { QueryNode, QueryRoot, QueryField } from './QueryNode'
 import { QueryBuilder } from './QueryBuilder'
 import { QueryBatcher } from './QueryBatcher'
 import { TypeEngine, Schema } from './TypeEngine'
@@ -21,9 +16,13 @@ type RecurseNode<T extends any> = {
   [key in Exclude<keyof T, ArgMap>]: Node<T[key], T[ArgMap][key]>
 }
 
+interface NodeCallbackOptions {
+  alias?: string
+}
+
 type NodeCallback<T, Args> = RequiredKeys<Args> extends never
-  ? (queryArgs?: Args, options?: IQueryNodeOptions) => Node<T>
-  : (queryArgs: Args, options?: IQueryNodeOptions) => Node<T>
+  ? (args?: Args, options?: NodeCallbackOptions) => Node<T>
+  : (args: Args, options?: NodeCallbackOptions) => Node<T>
 
 interface NodeValuePromise<T>
   extends Pick<
@@ -139,8 +138,8 @@ export class Query<Data = any> {
     this.currentNode = currentNode
 
     const nodeCallback = (
-      argsObject: Args = null,
-      { alias }: IQueryNodeOptions = {}
+      args: Args = null,
+      { alias }: NodeCallbackOptions = {}
     ) => {
       if (currentNode instanceof QueryField) {
         const aliasedNode = currentNode.parent.getField(currentNode.name, alias)
@@ -151,7 +150,7 @@ export class Query<Data = any> {
           : currentNode
 
         // Update node
-        if (argsObject) node.args = Object.entries(argsObject)
+        if (args) node.args = Object.entries(args)
 
         node.alias = alias
 

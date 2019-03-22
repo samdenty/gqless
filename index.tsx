@@ -1,3 +1,4 @@
+import { test } from './index2'
 import * as React from 'react'
 import { Suspense } from 'react'
 import ReactDOM from 'react-dom'
@@ -9,7 +10,7 @@ import {
   LoggerMiddleware,
 } from './src'
 
-import { useQuery, QueryProvider, querier } from './src/React'
+import { useQuery, QueryProvider } from './src/React'
 
 type user = {
   name: string
@@ -50,7 +51,8 @@ async function bootstrap() {
     }
   }
 
-  console.log(schema)
+  test(schema)
+  return
 
   const Component = () => {
     const [clicks, setClicks] = React.useState(0)

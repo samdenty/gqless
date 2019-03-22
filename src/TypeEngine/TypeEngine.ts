@@ -1,4 +1,11 @@
-import { Schema, SchemaType, SchemaField, SchemaFieldType } from './Schema'
+import {
+  Schema,
+  SchemaType,
+  SchemaField,
+  SchemaFieldType,
+  SchemaFieldList,
+  SchemaFieldRef,
+} from './Schema'
 
 const engineCache = new WeakMap<Schema, TypeEngine>()
 
@@ -17,11 +24,11 @@ export class TypeEngine {
 
   public resolveListType(field: SchemaField) {
     let type = field.type
-    while (type.ofType) {
-      type = type.ofType
+    while ((type as SchemaFieldList).ofType) {
+      type = (type as SchemaFieldList).ofType
     }
 
-    return type.name
+    return (type as SchemaFieldRef).name
   }
 
   public lookupPath(paths: string[]) {
