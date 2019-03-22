@@ -3,7 +3,7 @@ import { NodeContainer } from './NodeContainer'
 import { UInputNode, UInputNodeDataType } from './InputNode'
 import { UObjectNode, UObjectNodeDataType } from './ObjectNode'
 
-export class ArrayNode<
+export class UnionNode<
   TNode extends UInputNode | UObjectNode,
   TNullable extends boolean = false
 > extends NodeContainer<

@@ -1,5 +1,9 @@
 import { Query } from '../Query'
 
-export abstract class Node {
+export type NodeDataType<T extends Node<any>> = T['$$dataType']
+
+export abstract class Node<DataType = never> {
+  public $$dataType: DataType
+
   constructor(protected query: Query) {}
 }

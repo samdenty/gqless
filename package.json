@@ -6,10 +6,12 @@
   "dependencies": {
     "@types/graphql": "^14.0.7",
     "@types/lodash": "^4.14.122",
+    "@types/prettier": "^1.16.1",
     "@types/zen-observable": "^0.8.0",
     "lodash": "^4.17.11",
     "mobx": "^5.9.0",
     "parcel-bundler": "^1.12.0",
+    "prettier": "^1.16.4",
     "react-testing-library": "^6.0.0",
     "utility-types": "^3.4.1"
   },

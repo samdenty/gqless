@@ -52,6 +52,10 @@ type TestC implements Test {
 
 union TestOrUser = User | TestB
 
+input InputObj {
+  a: String!
+}
+
 type Query {
   user: User
   users: [User!]!
@@ -64,6 +68,8 @@ type Query {
   testOrUser: TestOrUser
 
   test: Test
+  
+  testWithInput(id: String, ids: [String!]!, input:InputObj): Int
 }
 
 type Mutation {

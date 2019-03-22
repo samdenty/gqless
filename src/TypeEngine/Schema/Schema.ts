@@ -22,33 +22,61 @@ export interface Schema<T = any> {
   types: { [key in keyof T]: SchemaType }
 }
 
-export interface SchemaType {
+interface BaseSchemaType<TKind extends SchemaKind> {
+  kind: TKind
   name: string
-  kind: SchemaKind
-  fields: { [key: string]: SchemaField }
-
-  possibleTypes?: string[]
 }
+
+export type SchemaObjectFields = Record<string, SchemaField>
+
+export type SchemaObjectType = BaseSchemaType<ObjectKind> & {
+  fields: SchemaObjectFields
+}
+
+export type SchemaUnionType = BaseSchemaType<UnionKind | InterfaceKind> & {
+  possibleTypes: Type[]
+}
+
+export type SchemaInputFields = Record<string, SchemaInputField>
+export type SchemaInputType = BaseSchemaType<InputObjectKind> & {
+  inputFields: SchemaInputFields
+}
+
+export type SchemaType =
+  | SchemaObjectType
+  | SchemaUnionType
+  | SchemaInputType
+  | BaseSchemaType<
+      Exclude<
+        SchemaKind,
+        ObjectKind | InterfaceKind | UnionKind | InputObjectKind
+      >
+    >
+
+export type SchemaFieldArgs = Record<string, Type>
 
 export interface SchemaField {
   name: string
-  args?: { [key: string]: SchemaFieldType }
-  type: SchemaFieldType
+  args?: SchemaFieldArgs
+  type: Type
 }
 
-type BaseSchemaFieldType<TKind extends SchemaKind> = {
+export interface SchemaInputField {
+  name: string
+  type: Type
+}
+
+type BaseType<TKind extends SchemaKind> = {
   kind: TKind
   nullable: boolean
 }
 
-export type SchemaFieldList = BaseSchemaFieldType<ListKind> & {
-  ofType: SchemaFieldType
+export type ListType = BaseType<ListKind> & {
+  ofType: Type
 }
 
-export type SchemaFieldRef = BaseSchemaFieldType<
-  Exclude<SchemaKind, ListKind>
-> & {
+export type ObjectType = BaseType<Exclude<SchemaKind, ListKind>> & {
   name: string
 }
 
-export type SchemaFieldType = SchemaFieldList | SchemaFieldRef
+export type Type = ListType | ObjectType

@@ -8,23 +8,23 @@ import { memoizedGetters } from '../../utils'
 
 export type UArguments =
   | UScalarNode
-  | ArrayNode<any>
-  | ArgumentsField<any>
+  | ArrayNode<any, boolean>
+  | ArgumentsField<any, boolean>
   | InputNode<any>
 
 type UArgumentsRecord<T extends keyof any> = Record<
   T,
-  ArgumentsField<UArguments>
+  ArgumentsField<UArguments, boolean>
 >
 
 export type UArgumentsDataType<T extends UArguments> = T extends InputNode<any>
-  ? T['$$type']
+  ? T['$$dataType']
   : T extends ScalarNode<infer U>
   ? U
-  : T extends ArrayNode<any>
-  ? T['$$type']
+  : T extends ArrayNode<any, boolean>
+  ? T['$$dataType']
   : T extends Arguments<any, any>
-  ? ArgumentsDataType<T['$$type']>
+  ? ArgumentsDataType<T['$$dataType']>
   : never
 
 type ArgumentsDataType<T extends UArgumentsRecord<keyof T>> = {

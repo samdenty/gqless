@@ -2,9 +2,10 @@ import {
   Schema,
   SchemaType,
   SchemaField,
-  SchemaFieldType,
-  SchemaFieldList,
-  SchemaFieldRef,
+  Type,
+  ListType,
+  ObjectType,
+  SchemaObjectType,
 } from './Schema'
 
 const engineCache = new WeakMap<Schema, TypeEngine>()
@@ -24,11 +25,11 @@ export class TypeEngine {
 
   public resolveListType(field: SchemaField) {
     let type = field.type
-    while ((type as SchemaFieldList).ofType) {
-      type = (type as SchemaFieldList).ofType
+    while ((type as ListType).ofType) {
+      type = (type as ListType).ofType
     }
 
-    return (type as SchemaFieldRef).name
+    return (type as ObjectType).name
   }
 
   public lookupPath(paths: string[]) {
@@ -38,7 +39,7 @@ export class TypeEngine {
 
     let currentType: SchemaType = root
     let currentField: SchemaField
-    let currentFieldType: SchemaFieldType
+    let currentFieldType: Type
 
     for (const path of paths) {
       if (currentFieldType && currentFieldType.kind === 'LIST') {
@@ -49,10 +50,10 @@ export class TypeEngine {
       }
 
       const validField =
-        currentType.fields && currentType.fields.hasOwnProperty(path)
+        currentType.kind === 'OBJECT' && currentType.fields.hasOwnProperty(path)
       if (!validField) return null
 
-      const field = currentType.fields[path]
+      const field = (currentType as SchemaObjectType).fields[path]
 
       currentFieldType = field.type
       currentField = field

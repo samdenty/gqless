@@ -1,15 +1,57 @@
-import { Schema, SchemaType, SchemaFieldType } from './Schema'
+import {
+  Schema,
+  SchemaType,
+  Type,
+  SchemaObjectFields,
+  SchemaInputFields,
+} from './Schema'
 
-const getType = (type: any, nullable = true): SchemaFieldType => {
+const getType = (type: any, nullable = true): Type => {
   if (!type) return null
   if (type.kind === 'NON_NULL') return getType(type.ofType, false)
 
   return {
-    name: type.name,
     kind: type.kind,
-    ofType: getType(type.ofType),
     nullable,
+    ...(type.kind === 'LIST'
+      ? { ofType: getType(type.ofType) }
+      : { name: type.name }),
   }
+}
+
+const getObjectFields = (introspectionFields: any) => {
+  const fields: SchemaObjectFields = {}
+
+  for (const field of introspectionFields) {
+    let args = null
+    if (field.args.length) {
+      args = {}
+      for (const arg of field.args) {
+        args[arg.name] = getType(arg.type)
+      }
+    }
+
+    fields[field.name] = {
+      name: field.name,
+      args,
+      type: getType(field.type),
+    }
+  }
+
+  return fields
+}
+
+const getInputObjectFields = (introspectionFields: any) => {
+  const fields: SchemaInputFields = {}
+
+  for (const field of introspectionFields) {
+    fields[field.name] = {
+      name: field.name,
+      type: getType(field.type),
+    }
+  }
+
+  return fields
 }
 
 export const introspectionToSchema = (introspection: any) => {
@@ -20,33 +62,18 @@ export const introspectionToSchema = (introspection: any) => {
   }
 
   for (const type of introspection.types) {
-    const schemaType: SchemaType = (schema.types[type.name] = {
+    schema.types[type.name] = {
       name: type.name,
       kind: type.kind,
-      possibleTypes: type.possibleTypes
-        ? type.possibleTypes.map(({ name }) => name)
-        : undefined,
-      fields: null,
-    })
-
-    if (type.fields) {
-      schemaType.fields = {}
-
-      for (const field of type.fields) {
-        let args = null
-        if (field.args.length) {
-          args = {}
-          for (const arg of field.args) {
-            args[arg.name] = arg.type
+      ...(type.kind === 'UNION' || type.kind === 'INTERFACE'
+        ? { possibleTypes: type.possibleTypes.map(({ name }) => name) }
+        : type.kind === 'OBJECT'
+        ? { fields: getObjectFields(type.fields) }
+        : type.kind === 'INPUT_OBJECT'
+        ? {
+            inputFields: getInputObjectFields(type.inputFields),
           }
-        }
-
-        schemaType.fields[field.name] = {
-          name: field.name,
-          args,
-          type: getType(field.type),
-        }
-      }
+        : null),
     }
   }
 

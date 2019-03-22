@@ -14,7 +14,7 @@ export type UScalarNode =
   | NumberNode<any>
   | ScalarNode<any>
 
-export class ScalarNode<T extends string | boolean | number> extends Node {
+export class ScalarNode<T extends string | boolean | number> extends Node<T> {
   public data: T
   public name?: string
 

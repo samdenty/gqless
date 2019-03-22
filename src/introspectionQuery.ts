@@ -31,6 +31,9 @@ export const introspectionQuery = gql`
       }
     }
     inputFields {
+      type {
+        ...TypeRef
+      }
       ...InputValue
     }
     interfaces {

@@ -1,10 +1,5 @@
 import { Query } from '../Query'
 import { Node } from './Node'
-import { ArrayNode } from './ArrayNode'
-import { ObjectNode } from './ObjectNode'
-import { ScalarNode } from './ScalarNode'
-import { InputNode } from './InputNode'
-import { Arguments } from './Arguments'
 
 export type NullableKeys<T> = ({
   [P in keyof T]: T[P] extends NodeContainer<any, true> ? P : never
@@ -16,8 +11,9 @@ export type NonNullableKeys<T> = ({
 
 export abstract class NodeContainer<
   T extends Node,
-  TNullable extends boolean
-> extends Node {
+  TNullable extends boolean,
+  DataType = never
+> extends Node<DataType> {
   constructor(
     query: Query,
     public node: T,
