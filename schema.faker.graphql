@@ -36,6 +36,8 @@ type A {
   b: B
 }
 
+union U = User
+
 interface Test {
   a: String
 }

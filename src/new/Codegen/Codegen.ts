@@ -1,9 +1,16 @@
 import { Schema, SchemaType, Type, SchemaFieldArgs } from '../../TypeEngine'
-import { ObjectNodeField, ObjectNode } from '../ObjectNode'
-import { ArrayNode } from '../ArrayNode'
-import { ScalarNode, BooleanNode, StringNode, NumberNode } from '../ScalarNode'
-import { InputNode, InputNodeField } from '../InputNode'
+import {
+  ObjectNode,
+  ArrayNode,
+  ScalarNode,
+  BooleanNode,
+  StringNode,
+  NumberNode,
+  InputNode,
+  InputNodeField,
+} from '../nodes'
 import { Arguments, ArgumentsField } from '../Arguments'
+import { FieldNode } from '../FieldsNode'
 
 /*
 const types = {
@@ -74,11 +81,11 @@ export class Codegen {
 
   private generateNode(type: SchemaType) {
     if (type.kind === 'OBJECT')
-      return `new ${ObjectNode.name}(query, {
+      return `new ${ObjectNode.name}({
         ${Object.values(type.fields)
           .map(field => {
             // prettier-ignore
-            const newField = `new ${ObjectNodeField.name}(query, ${this.generateType(field.type)}, ${this.generateArguments(field.args)}, ${field.type.nullable})`
+            const newField = `new ${FieldNode.name}(${this.generateType(field.type)}, ${this.generateArguments(field.args)}, ${field.type.nullable})`
 
             return `get ${field.name}() {
               return ${newField}
@@ -90,20 +97,20 @@ export class Codegen {
     if (type.kind === 'SCALAR') {
       // prettier-ignore
       return type.name === 'Int' || type.name === 'Float'
-        ? `new ${NumberNode.name}(query, ${JSON.stringify({ name: type.name })})`
+        ? `new ${NumberNode.name}(${JSON.stringify({ name: type.name })})`
         : type.name === 'ID' || type.name === 'String'
-        ? `new ${StringNode.name}(query, ${JSON.stringify({ name: type.name })})`
+        ? `new ${StringNode.name}(${JSON.stringify({ name: type.name })})`
         : type.name === 'Boolean'
-        ? `new ${BooleanNode.name}(query, ${JSON.stringify({ name: type.name })})`
-        : `new ${ScalarNode.name}(query, ${JSON.stringify({ name: type.name })})`
+        ? `new ${BooleanNode.name}(${JSON.stringify({ name: type.name })})`
+        : `new ${ScalarNode.name}(${JSON.stringify({ name: type.name })})`
     }
 
     if (type.kind === 'INPUT_OBJECT') {
-      return `new ${InputNode.name}(query, {
+      return `new ${InputNode.name}({
         ${Object.values(type.inputFields)
           .map(field => {
             // prettier-ignore
-            const newField = `new ${InputNodeField.name}(query, ${this.generateType(field.type)}, ${field.type.nullable})`
+            const newField = `new ${InputNodeField.name}(${this.generateType(field.type)}, ${field.type.nullable})`
 
             return `get ${field.name}() {
               return ${newField}
@@ -117,19 +124,19 @@ export class Codegen {
   private generateType(type: Type) {
     return type.kind === 'LIST'
       ? // prettier-ignore
-        `new ${ArrayNode.name}(query, ${this.generateType(type.ofType)}, ${type.nullable})`
+        `new ${ArrayNode.name}(${this.generateType(type.ofType)}, ${type.nullable})`
       : `types.${type.name}`
   }
 
   public generateArguments(args: SchemaFieldArgs) {
     if (!args) return null
 
-    return `new ${Arguments.name}(query, {
+    return `new ${Arguments.name}({
       ${Object.entries(args)
         .map(
           // prettier-ignore
           ([name, type]) => `get ${name}() {
-            return new ${ArgumentsField.name}(query, ${this.generateType(type)}, ${type.nullable})
+            return new ${ArgumentsField.name}(${this.generateType(type)}, ${type.nullable})
           }`
         )
         .join(',')}

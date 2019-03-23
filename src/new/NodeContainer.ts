@@ -1,5 +1,5 @@
-import { Query } from '../Query'
-import { Node } from './Node'
+import { Node, NodeDataType } from './Node'
+import { StringNode } from './nodes'
 
 export type NullableKeys<T> = ({
   [P in keyof T]: T[P] extends NodeContainer<any, true> ? P : never
@@ -9,16 +9,37 @@ export type NonNullableKeys<T> = ({
   [P in keyof T]: T[P] extends NodeContainer<any, false> ? P : never
 })[keyof T]
 
+export type InnerNode<T extends Node<any>> = T extends NodeContainer<
+  infer U,
+  any
+>
+  ? NodeDataType<U> extends NodeDataType<T>
+    ? U extends NodeContainer<infer T, any>
+      ? NodeDataType<U> extends NodeDataType<T>
+        ? T extends NodeContainer<infer U, any>
+          ? NodeDataType<U> extends NodeDataType<T>
+            ? U extends NodeContainer<infer T, any>
+              ? NodeDataType<U> extends NodeDataType<T>
+                ? T extends NodeContainer<infer U, any>
+                  ? NodeDataType<U> extends NodeDataType<T>
+                    ? U
+                    : never
+                  : T
+                : never
+              : U
+            : never
+          : T
+        : never
+      : U
+    : never
+  : T
+
 export abstract class NodeContainer<
-  T extends Node,
-  TNullable extends boolean,
-  DataType = never
+  TNode extends Node<any>,
+  TNullable extends boolean = false,
+  DataType = NodeDataType<TNode>
 > extends Node<DataType> {
-  constructor(
-    query: Query,
-    public node: T,
-    public nullable = false as TNullable
-  ) {
-    super(query)
+  constructor(public ofNode: TNode, public nullable = false as TNullable) {
+    super()
   }
 }

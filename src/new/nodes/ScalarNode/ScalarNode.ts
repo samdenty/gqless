@@ -1,5 +1,4 @@
-import { Query } from '../../Query'
-import { Node } from '../Node'
+import { Node } from '../../Node'
 import { StringNode } from '.'
 import { BooleanNode } from './BooleanNode'
 import { NumberNode } from './NumberNode'
@@ -18,8 +17,8 @@ export class ScalarNode<T extends string | boolean | number> extends Node<T> {
   public data: T
   public name?: string
 
-  constructor(query: Query, { name }: IScalarNodeOptions = {}) {
-    super(query)
+  constructor({ name }: IScalarNodeOptions = {}) {
+    super()
     this.name = name
   }
 }

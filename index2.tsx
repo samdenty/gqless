@@ -2,7 +2,7 @@ import {
   StringNode,
   NumberNode,
   ObjectNode,
-  ObjectNodeField,
+  FieldNode,
   InputNode,
   InputNodeField,
   Arguments,
@@ -10,16 +10,17 @@ import {
   ArrayNode,
   ScalarNode,
   BooleanNode,
-  UScalarNode,
+  UnionNode,
+  InterfaceNode,
+  NodeDataType,
 } from './src/new'
-import { Schema, SchemaType, Type, SchemaFieldArgs } from './src'
+import { Schema, SchemaType, Type, SchemaFieldArgs, Query } from './src'
 import { Codegen } from './src/new/Codegen'
 
 export const test = (schema: Schema) => {
-  const query = null
   const resolvedTypes = new Map<
     keyof Schema['types'],
-    ObjectNode<any> | UScalarNode
+    ReturnType<typeof createNode>
   >()
 
   const getType = (name: string) => {
@@ -31,6 +32,8 @@ export const test = (schema: Schema) => {
 
     return resolvedTypes.get(name)
   }
+
+  // @ts-ignore
   Object.assign(window, {
     getType,
     resolvedTypes,
@@ -39,7 +42,7 @@ export const test = (schema: Schema) => {
 
   const resolveType = (type: Type) =>
     type.kind === 'LIST'
-      ? new ArrayNode(query, resolveType(type.ofType), type.nullable)
+      ? new ArrayNode(resolveType(type.ofType), type.nullable)
       : getType(type.name)
 
   const resolveArgs = (args?: SchemaFieldArgs) => {
@@ -55,18 +58,18 @@ export const test = (schema: Schema) => {
       })
     }
 
-    return new Arguments(query, inputs)
+    return new Arguments(inputs)
   }
 
   const createNode = (type: SchemaType) => {
     if (type.kind === 'SCALAR') {
       return type.name === 'Int' || type.name === 'Float'
-        ? new NumberNode(query, { name: type.name })
+        ? new NumberNode({ name: type.name })
         : type.name === 'ID' || type.name === 'String'
-        ? new StringNode(query, { name: type.name })
+        ? new StringNode({ name: type.name })
         : type.name === 'Boolean'
-        ? new BooleanNode(query, { name: type.name })
-        : new ScalarNode(query, { name: type.name })
+        ? new BooleanNode({ name: type.name })
+        : new ScalarNode({ name: type.name })
     }
 
     if (type.kind === 'OBJECT') {
@@ -75,8 +78,7 @@ export const test = (schema: Schema) => {
       for (const field of Object.values(type.fields)) {
         Object.defineProperty(fields, field.name, {
           get() {
-            return new ObjectNodeField(
-              query,
+            return new FieldNode(
               resolveType(field.type),
               resolveArgs(field.args),
               field.type.nullable
@@ -86,7 +88,7 @@ export const test = (schema: Schema) => {
         })
       }
 
-      return new ObjectNode(query, fields, { name: type.name })
+      return new ObjectNode(fields, { name: type.name })
     }
 
     if (type.kind === 'INPUT_OBJECT') {
@@ -96,7 +98,6 @@ export const test = (schema: Schema) => {
         Object.defineProperty(inputs, inputField.name, {
           get() {
             return new InputNodeField(
-              query,
               resolveType(inputField.type),
               inputField.type.nullable
             )
@@ -105,7 +106,7 @@ export const test = (schema: Schema) => {
         })
       }
 
-      return new InputNode(query, inputs, { name: type.name })
+      return new InputNode(inputs, { name: type.name })
     }
   }
 
@@ -120,85 +121,72 @@ export const test = (schema: Schema) => {
   // console.log(schema)
 }
 
-console.time()
-const query = null
 const types = {
   get Query() {
     return new ObjectNode(
-      query,
       {
         get user() {
-          return new ObjectNodeField(query, types.User, null, true)
+          return new FieldNode(types.User, null, true)
         },
         get users() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.User, false),
-            null,
-            false
-          )
+          return new FieldNode(new ArrayNode(types.User, false), null, false)
         },
         get users2() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, new ArrayNode(query, types.User, true), true),
+          return new FieldNode(
+            new ArrayNode(new ArrayNode(types.User, true), true),
             null,
             true
           )
         },
         get a() {
-          return new ObjectNodeField(query, types.A, null, true)
+          return new FieldNode(types.A, null, true)
         },
         get number() {
-          return new ObjectNodeField(query, types.Int, null, true)
+          return new FieldNode(types.Int, null, true)
         },
         get getUser() {
-          return new ObjectNodeField(
-            query,
+          return new FieldNode(
             types.User,
-            new Arguments(query, {
+            new Arguments({
               get id() {
-                return new ArgumentsField(query, types.ID, true)
+                return new ArgumentsField(types.ID, true)
               },
             }),
             true
           )
         },
         get getUsers() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.User, false),
-            new Arguments(query, {
+          return new FieldNode(
+            new ArrayNode(types.User, false),
+            new Arguments({
               get id() {
-                return new ArgumentsField(query, types.ID, true)
+                return new ArgumentsField(types.ID, true)
               },
             }),
             false
           )
         },
         get testOrUser() {
-          return new ObjectNodeField(query, types.TestOrUser, null, true)
+          return new FieldNode(types.TestOrUser, null, true)
         },
         get test() {
-          return new ObjectNodeField(query, types.Test, null, true)
+          return new FieldNode(types.Test, null, true)
         },
         get testWithInput() {
-          return new ObjectNodeField(
-            query,
+          return new FieldNode(
             types.Int,
-            new Arguments(query, {
+            new Arguments({
               get id() {
-                return new ArgumentsField(query, types.String, true)
+                return new ArgumentsField(types.String, true)
               },
               get ids() {
                 return new ArgumentsField(
-                  query,
-                  new ArrayNode(query, types.String, false),
+                  new ArrayNode(types.String, false),
                   false
                 )
               },
               get input() {
-                return new ArgumentsField(query, types.InputObj, true)
+                return new ArgumentsField(types.InputObj, true)
               },
             }),
             true
@@ -210,45 +198,43 @@ const types = {
   },
   get User() {
     return new ObjectNode(
-      query,
       {
         get id() {
-          return new ObjectNodeField(query, types.ID, null, false)
+          return new FieldNode(types.ID, null, false)
         },
         get name() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get age() {
-          return new ObjectNodeField(query, types.Int, null, true)
+          return new FieldNode(types.Int, null, true)
         },
         get b() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get c() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get d() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
       { name: 'User' }
     )
   },
   get ID() {
-    return new StringNode(query, { name: 'ID' })
+    return new StringNode({ name: 'ID' })
   },
   get String() {
-    return new StringNode(query, { name: 'String' })
+    return new StringNode({ name: 'String' })
   },
   get Int() {
-    return new NumberNode(query, { name: 'Int' })
+    return new NumberNode({ name: 'Int' })
   },
   get A() {
     return new ObjectNode(
-      query,
       {
         get b() {
-          return new ObjectNodeField(query, types.B, null, true)
+          return new FieldNode(types.B, null, true)
         },
       },
       { name: 'A' }
@@ -256,13 +242,12 @@ const types = {
   },
   get B() {
     return new ObjectNode(
-      query,
       {
         get c() {
-          return new ObjectNodeField(query, types.Int, null, true)
+          return new FieldNode(types.Int, null, true)
         },
         get d() {
-          return new ObjectNodeField(query, types.Int, null, true)
+          return new FieldNode(types.Int, null, true)
         },
       },
       { name: 'B' }
@@ -273,13 +258,12 @@ const types = {
   },
   get TestB() {
     return new ObjectNode(
-      query,
       {
         get a() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get b() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
       { name: 'TestB' }
@@ -290,10 +274,9 @@ const types = {
   },
   get InputObj() {
     return new InputNode(
-      query,
       {
         get a() {
-          return new InputNodeField(query, types.String, false)
+          return new InputNodeField(types.String, false)
         },
       },
       { name: 'InputObj' }
@@ -301,15 +284,13 @@ const types = {
   },
   get Mutation() {
     return new ObjectNode(
-      query,
       {
         get deleteUser() {
-          return new ObjectNodeField(
-            query,
+          return new FieldNode(
             types.Int,
-            new Arguments(query, {
+            new Arguments({
               get id() {
-                return new ArgumentsField(query, types.ID, false)
+                return new ArgumentsField(types.ID, false)
               },
             }),
             false
@@ -321,29 +302,22 @@ const types = {
   },
   get __Schema() {
     return new ObjectNode(
-      query,
       {
         get types() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__Type, false),
-            null,
-            false
-          )
+          return new FieldNode(new ArrayNode(types.__Type, false), null, false)
         },
         get queryType() {
-          return new ObjectNodeField(query, types.__Type, null, false)
+          return new FieldNode(types.__Type, null, false)
         },
         get mutationType() {
-          return new ObjectNodeField(query, types.__Type, null, true)
+          return new FieldNode(types.__Type, null, true)
         },
         get subscriptionType() {
-          return new ObjectNodeField(query, types.__Type, null, true)
+          return new FieldNode(types.__Type, null, true)
         },
         get directives() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__Directive, false),
+          return new FieldNode(
+            new ArrayNode(types.__Directive, false),
             null,
             false
           )
@@ -354,67 +328,53 @@ const types = {
   },
   get __Type() {
     return new ObjectNode(
-      query,
       {
         get kind() {
-          return new ObjectNodeField(query, types.__TypeKind, null, false)
+          return new FieldNode(types.__TypeKind, null, false)
         },
         get name() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get description() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get fields() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__Field, true),
-            new Arguments(query, {
+          return new FieldNode(
+            new ArrayNode(types.__Field, true),
+            new Arguments({
               get includeDeprecated() {
-                return new ArgumentsField(query, types.Boolean, true)
+                return new ArgumentsField(types.Boolean, true)
               },
             }),
             true
           )
         },
         get interfaces() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__Type, true),
-            null,
-            true
-          )
+          return new FieldNode(new ArrayNode(types.__Type, true), null, true)
         },
         get possibleTypes() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__Type, true),
-            null,
-            true
-          )
+          return new FieldNode(new ArrayNode(types.__Type, true), null, true)
         },
         get enumValues() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__EnumValue, true),
-            new Arguments(query, {
+          return new FieldNode(
+            new ArrayNode(types.__EnumValue, true),
+            new Arguments({
               get includeDeprecated() {
-                return new ArgumentsField(query, types.Boolean, true)
+                return new ArgumentsField(types.Boolean, true)
               },
             }),
             true
           )
         },
         get inputFields() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__InputValue, true),
+          return new FieldNode(
+            new ArrayNode(types.__InputValue, true),
             null,
             true
           )
         },
         get ofType() {
-          return new ObjectNodeField(query, types.__Type, null, true)
+          return new FieldNode(types.__Type, null, true)
         },
       },
       { name: '__Type' }
@@ -424,34 +384,32 @@ const types = {
     return undefined
   },
   get Boolean() {
-    return new BooleanNode(query, { name: 'Boolean' })
+    return new BooleanNode({ name: 'Boolean' })
   },
   get __Field() {
     return new ObjectNode(
-      query,
       {
         get name() {
-          return new ObjectNodeField(query, types.String, null, false)
+          return new FieldNode(types.String, null, false)
         },
         get description() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get args() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__InputValue, false),
+          return new FieldNode(
+            new ArrayNode(types.__InputValue, false),
             null,
             false
           )
         },
         get type() {
-          return new ObjectNodeField(query, types.__Type, null, false)
+          return new FieldNode(types.__Type, null, false)
         },
         get isDeprecated() {
-          return new ObjectNodeField(query, types.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
         get deprecationReason() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
       { name: '__Field' }
@@ -459,19 +417,18 @@ const types = {
   },
   get __InputValue() {
     return new ObjectNode(
-      query,
       {
         get name() {
-          return new ObjectNodeField(query, types.String, null, false)
+          return new FieldNode(types.String, null, false)
         },
         get description() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get type() {
-          return new ObjectNodeField(query, types.__Type, null, false)
+          return new FieldNode(types.__Type, null, false)
         },
         get defaultValue() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
       { name: '__InputValue' }
@@ -479,19 +436,18 @@ const types = {
   },
   get __EnumValue() {
     return new ObjectNode(
-      query,
       {
         get name() {
-          return new ObjectNodeField(query, types.String, null, false)
+          return new FieldNode(types.String, null, false)
         },
         get description() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get isDeprecated() {
-          return new ObjectNodeField(query, types.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
         get deprecationReason() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
       { name: '__EnumValue' }
@@ -499,38 +455,35 @@ const types = {
   },
   get __Directive() {
     return new ObjectNode(
-      query,
       {
         get name() {
-          return new ObjectNodeField(query, types.String, null, false)
+          return new FieldNode(types.String, null, false)
         },
         get description() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get locations() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__DirectiveLocation, false),
+          return new FieldNode(
+            new ArrayNode(types.__DirectiveLocation, false),
             null,
             false
           )
         },
         get args() {
-          return new ObjectNodeField(
-            query,
-            new ArrayNode(query, types.__InputValue, false),
+          return new FieldNode(
+            new ArrayNode(types.__InputValue, false),
             null,
             false
           )
         },
         get onOperation() {
-          return new ObjectNodeField(query, types.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
         get onFragment() {
-          return new ObjectNodeField(query, types.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
         get onField() {
-          return new ObjectNodeField(query, types.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
       },
       { name: '__Directive' }
@@ -541,13 +494,12 @@ const types = {
   },
   get TestC() {
     return new ObjectNode(
-      query,
       {
         get a() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get c() {
-          return new ObjectNodeField(query, types.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
       { name: 'TestC' }
@@ -567,16 +519,15 @@ const types = {
   },
   get fake__color() {
     return new InputNode(
-      query,
       {
         get red255() {
-          return new InputNodeField(query, types.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get green255() {
-          return new InputNodeField(query, types.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get blue255() {
-          return new InputNodeField(query, types.Int, true)
+          return new InputNodeField(types.Int, true)
         },
       },
       { name: 'fake__color' }
@@ -584,93 +535,117 @@ const types = {
   },
   get fake__options() {
     return new InputNode(
-      query,
       {
         get useFullAddress() {
-          return new InputNodeField(query, types.Boolean, true)
+          return new InputNodeField(types.Boolean, true)
         },
         get minMoney() {
-          return new InputNodeField(query, types.Float, true)
+          return new InputNodeField(types.Float, true)
         },
         get maxMoney() {
-          return new InputNodeField(query, types.Float, true)
+          return new InputNodeField(types.Float, true)
         },
         get decimalPlaces() {
-          return new InputNodeField(query, types.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get imageWidth() {
-          return new InputNodeField(query, types.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get imageHeight() {
-          return new InputNodeField(query, types.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get imageCategory() {
-          return new InputNodeField(query, types.fake__imageCategory, true)
+          return new InputNodeField(types.fake__imageCategory, true)
         },
         get randomizeImageUrl() {
-          return new InputNodeField(query, types.Boolean, true)
+          return new InputNodeField(types.Boolean, true)
         },
         get emailProvider() {
-          return new InputNodeField(query, types.String, true)
+          return new InputNodeField(types.String, true)
         },
         get passwordLength() {
-          return new InputNodeField(query, types.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get loremSize() {
-          return new InputNodeField(query, types.fake__loremSize, true)
+          return new InputNodeField(types.fake__loremSize, true)
         },
         get dateFormat() {
-          return new InputNodeField(query, types.String, true)
+          return new InputNodeField(types.String, true)
         },
         get baseColor() {
-          return new InputNodeField(query, types.fake__color, true)
+          return new InputNodeField(types.fake__color, true)
         },
         get minNumber() {
-          return new InputNodeField(query, types.Float, true)
+          return new InputNodeField(types.Float, true)
         },
         get maxNumber() {
-          return new InputNodeField(query, types.Float, true)
+          return new InputNodeField(types.Float, true)
         },
         get precisionNumber() {
-          return new InputNodeField(query, types.Float, true)
+          return new InputNodeField(types.Float, true)
         },
       },
       { name: 'fake__options' }
     )
   },
   get Float() {
-    return new NumberNode(query, { name: 'Float' })
+    return new NumberNode({ name: 'Float' })
   },
   get examples__JSON() {
-    return new ScalarNode(query, { name: 'examples__JSON' })
+    return new ScalarNode({ name: 'examples__JSON' })
   },
 }
-console.timeEnd()
+
+async function a() {
+  const t = types.Query.data.user.name
+}
 
 if (window.__ASDASD_) {
-  const String = new StringNode(null)
-  const ID = new StringNode(null)
-  const Int = new NumberNode(null)
-  const Float = new NumberNode(null)
+  const String = new StringNode()
+  const ID = new StringNode()
+  const Int = new NumberNode()
+  const Float = new NumberNode()
 
-  const User = new ObjectNode(null, {
-    name: new ObjectNodeField(null, String),
-    id: new ObjectNodeField(null, ID),
-    age: new ObjectNodeField(null, Int),
+  const User = new ObjectNode(
+    {
+      name: new FieldNode(String),
+      id: new FieldNode(ID),
+      age: new FieldNode(Int),
+    },
+    { name: 'User' }
+  )
+
+  const Nameable = new InterfaceNode(
+    {
+      name: new FieldNode(String),
+    },
+    [User],
+    { name: 'Nameable' }
+  )
+  var B: NodeDataType<typeof Nameable>
+
+  const Person = new ObjectNode(
+    {
+      name: new FieldNode(String),
+      firstName: new FieldNode(String),
+      lastName: new FieldNode(String),
+    },
+    { name: 'Person' }
+  )
+
+  const Test = new InputNode({
+    test: new InputNodeField(String),
   })
 
-  const Test = new InputNode(null, {
-    test: new InputNodeField(null, String),
+  const Filter = new InputNode({
+    count: new InputNodeField(Int),
+    before: new InputNodeField(ID),
+    after: new InputNodeField(ID),
+    array: new InputNodeField(new ArrayNode(ID), true),
   })
 
-  const Filter = new InputNode(null, {
-    count: new InputNodeField(null, Int),
-    before: new InputNodeField(null, ID),
-    after: new InputNodeField(null, ID),
-    array: new InputNodeField(null, new ArrayNode(null, ID), true),
-  })
+  var b: typeof Filter.a
 
-  type A = typeof Filter.a
   Filter.provide({
     after: '10',
     before: '10',
@@ -682,40 +657,56 @@ if (window.__ASDASD_) {
   //   id: 'hello',
   // })
 
-  const a = new Arguments(null, {
-    filter: new ArgumentsField(null, Filter),
+  const a = new Arguments({
+    filter: new ArgumentsField(Filter),
+    filters: new ArgumentsField(new ArrayNode(Filter), true),
   })
   a.provide({ filter: { after: '', before: '', count: 10 } })
   // a.delete.
 
-  const Query = new ObjectNode(null, {
-    user: new ObjectNodeField(null, User),
-    users: new ObjectNodeField(null, new ArrayNode(null, User)),
-    users2: new ObjectNodeField(
-      null,
-      new ArrayNode(null, new ArrayNode(null, User))
-    ),
+  const Query = new ObjectNode({
+    userOrPerson: new FieldNode(new UnionNode([User, Person])),
+    user: new FieldNode(User),
+    users: new FieldNode(new ArrayNode(User)),
+    users2: new FieldNode(new ArrayNode(new ArrayNode(User))),
   })
 
   var q: ObjectNode<{
     a: number
+    __typename: 'Query'
     people: { name: string }[]
     user: {
       name: string
-      a: { b: { c: number } }
+      a: {
+        b: {
+          c: number
+          __typename: 'B'
+        }
+        __typename: 'A'
+      }
+      __typename: 'User'
     }
     $args: {
       user: { id: string }
     }
   }>
 
-  // q.fields.people
-  // q.fields.user.node.fields.name
+  q.data.user.__typename
   q.data.user({ id: 'hello' }).name
   q.data.user.name
   q.data.user.a.b.c
   q.data.people[0].name
   q.data.user.name
+
+  const userOrPerson = Query.data.userOrPerson
+
+  if (userOrPerson.__typename === 'User') {
+    userOrPerson.name
+    userOrPerson.age
+  } else {
+    userOrPerson.firstName
+    userOrPerson.lastName
+  }
 
   Query.data.user.name
   Query.data.users[0].name

@@ -5,7 +5,7 @@ type RequiredKeys<T> = {
 export type ArgsMap = '$args'
 
 type RecurseDataNode<T extends any> = {
-  [key in Exclude<keyof T, ArgsMap>]: DataNode<T[key], T[ArgsMap][key]>
+  [key in Exclude<keyof T, ArgsMap>]: DataProxy<T[key], T[ArgsMap][key]>
 }
 
 interface DataNodeCallbackOptions {
@@ -13,19 +13,21 @@ interface DataNodeCallbackOptions {
 }
 
 type DataNodeCallback<T, Args> = RequiredKeys<Args> extends never
-  ? (args?: Args, options?: DataNodeCallbackOptions) => DataNode<T>
-  : (args: Args, options?: DataNodeCallbackOptions) => DataNode<T>
+  ? (args?: Args, options?: DataNodeCallbackOptions) => DataProxy<T>
+  : (args: Args, options?: DataNodeCallbackOptions) => DataProxy<T>
 
 interface DataNodeValuePromise<T>
   extends Pick<
     Promise<
-      T extends any[] ? RecurseDataNode<T> : T extends object ? DataNode<T> : T
+      T extends any[] ? RecurseDataNode<T> : T extends object ? DataProxy<T> : T
     >,
     'then' | 'catch'
   > {}
 
-export type DataNode<T = any, Args = unknown> = (T extends object
+type DataNodeValue<T> = T
+
+export type DataProxy<T = any, Args = unknown> = (T extends object
   ? RecurseDataNode<T>
   : unknown) &
   (Args extends object ? DataNodeCallback<T, Args> : unknown) &
-  (T extends object ? {} : DataNodeValuePromise<T>)
+  (T extends object ? {} : DataNodeValue<T>)

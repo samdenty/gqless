@@ -1,5 +1,4 @@
 import { NodeContainer } from '../NodeContainer'
-import { Query } from '../../Query'
 import { UArguments } from './Arguments'
 
 export class ArgumentsField<
@@ -8,7 +7,7 @@ export class ArgumentsField<
 > extends NodeContainer<T, TNullable> {
   public accessed = false
 
-  constructor(query: Query, node: T, nullable?: TNullable) {
-    super(query, node, nullable)
+  constructor(node: T, nullable?: TNullable) {
+    super(node, nullable)
   }
 }

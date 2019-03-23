@@ -1,10 +1,8 @@
-import { Query } from '../../Query'
 import { ArgumentsField } from './ArgumentsField'
-import { UScalarNode, ScalarNode } from '../ScalarNode'
-import { ArrayNode } from '../ArrayNode'
-import { InputNode } from '../InputNode'
+import { UScalarNode, ArrayNode, InputNode } from '../nodes'
 import { NonNullableKeys, NullableKeys } from '../NodeContainer'
 import { memoizedGetters } from '../../utils'
+import { NodeDataType } from '../Node'
 
 export type UArguments =
   | UScalarNode
@@ -17,29 +15,18 @@ type UArgumentsRecord<T extends keyof any> = Record<
   ArgumentsField<UArguments, boolean>
 >
 
-export type UArgumentsDataType<T extends UArguments> = T extends InputNode<any>
-  ? T['$$dataType']
-  : T extends ScalarNode<infer U>
-  ? U
-  : T extends ArrayNode<any, boolean>
-  ? T['$$dataType']
-  : T extends Arguments<any, any>
-  ? ArgumentsDataType<T['$$dataType']>
-  : never
-
 type ArgumentsDataType<T extends UArgumentsRecord<keyof T>> = {
-  [P in Exclude<keyof T, NonNullableKeys<T>>]?: UArgumentsDataType<T[P]['node']>
+  [P in Exclude<keyof T, NonNullableKeys<T>>]?: NodeDataType<T[P]['ofNode']>
 } &
-  { [P in Exclude<keyof T, NullableKeys<T>>]: UArgumentsDataType<T[P]['node']> }
+  { [P in Exclude<keyof T, NullableKeys<T>>]: NodeDataType<T[P]['ofNode']> }
 
 export class Arguments<
   T extends ArgumentsDataType<TInputs>,
   TInputs extends UArgumentsRecord<keyof T> = UArgumentsRecord<keyof T>
 > {
-  public $$type: T
   public inputs: TInputs
 
-  constructor(protected query: Query, inputs: TInputs) {
+  constructor(inputs: TInputs) {
     this.inputs = memoizedGetters(inputs)
   }
 
