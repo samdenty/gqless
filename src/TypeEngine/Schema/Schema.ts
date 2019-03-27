@@ -27,14 +27,19 @@ interface BaseSchemaType<TKind extends SchemaKind> {
   name: string
 }
 
-export type SchemaObjectFields = Record<string, SchemaField>
+export type SchemaFields = Record<string, SchemaField>
 
 export type SchemaObjectType = BaseSchemaType<ObjectKind> & {
-  fields: SchemaObjectFields
+  fields: SchemaFields
 }
 
-export type SchemaUnionType = BaseSchemaType<UnionKind | InterfaceKind> & {
-  possibleTypes: Type[]
+export type SchemaInterfaceType = BaseSchemaType<InterfaceKind> & {
+  possibleTypes: string[]
+  fields: SchemaFields
+}
+
+export type SchemaUnionType = BaseSchemaType<UnionKind> & {
+  possibleTypes: string[]
 }
 
 export type SchemaInputFields = Record<string, SchemaInputField>
@@ -45,6 +50,7 @@ export type SchemaInputType = BaseSchemaType<InputObjectKind> & {
 export type SchemaType =
   | SchemaObjectType
   | SchemaUnionType
+  | SchemaInterfaceType
   | SchemaInputType
   | BaseSchemaType<
       Exclude<

@@ -7,7 +7,7 @@ export type NodeDataType<T extends Node<any>> = T extends ObjectNode<
   any,
   infer Typename
 >
-  ? NodeData<T> & { __typename: Typename }
+  ? NodeData<T> & { __typename?: Typename }
   : NodeData<T>
 
 export abstract class Node<DataType = never> {

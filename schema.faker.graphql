@@ -36,7 +36,11 @@ type A {
   b: B
 }
 
-union U = User
+enum Episode {
+  NEWHOPE
+  EMPIRE
+  JEDI
+}
 
 interface Test {
   a: String

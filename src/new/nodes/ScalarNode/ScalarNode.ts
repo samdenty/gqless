@@ -21,4 +21,17 @@ export class ScalarNode<T extends string | boolean | number> extends Node<T> {
     super()
     this.name = name
   }
+
+  protected proxyGetter(prop: string) {}
+
+  public getData(path: string[]) {
+    console.log(path)
+
+    return new Proxy(
+      {},
+      {
+        get: (_, prop: string) => this.proxyGetter(prop),
+      }
+    )
+  }
 }

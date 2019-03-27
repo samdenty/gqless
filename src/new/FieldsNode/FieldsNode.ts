@@ -1,8 +1,16 @@
 import { Node, NodeDataType } from '../Node'
-import { UScalarNode, ArrayNode } from '../nodes'
+import {
+  UScalarNode,
+  ArrayNode,
+  StringNode,
+  ObjectNode,
+  NumberNode,
+  BooleanNode,
+} from '../nodes'
 import { memoizedGetters } from '../../utils'
 import { UnionNode } from '../nodes/UnionNode'
 import { FieldNode } from './FieldNode'
+import { Arguments } from '../Arguments'
 
 export type IFieldsNodeOptions<Typename> = {
   name?: Typename
@@ -14,15 +22,27 @@ export type UFieldsNode =
   | UnionNode<any>
   | UScalarNode
 
-export type UFieldsNodeRecord<T extends keyof any> = Record<
-  T,
-  FieldNode<UFieldsNode, any, any>
->
+interface NodeOfArray<T> extends ArrayNode<NodeOf<T>> {}
 
-export type FieldsNodeDataType<
-  T extends UFieldsNodeRecord<keyof T>,
-  Typename extends string
-> = { [P in keyof T]: NodeDataType<T[P]['ofNode']> } & {
+export type NodeOf<T extends any> = T extends Array<infer T>
+  ? NodeOfArray<T>
+  : T extends boolean
+  ? BooleanNode<T>
+  : T extends string
+  ? StringNode<T>
+  : T extends number
+  ? NumberNode<T>
+  : T extends object
+  ? ObjectNode<T>
+  : never
+
+export type UFieldsNodeRecord<T extends any> = {
+  [K in keyof T]: FieldNode<NodeOf<T[K]>, any, any>
+}
+
+export type FieldsNodeDataType<T extends any, Typename extends string> = {
+  [P in keyof T]: NodeDataType<T[P]['ofNode']>
+} & {
   __typename?: Typename
 } /* @TODO: This type breaks for some reason (to a plain {}) if all fields are nullable (same with InputObject)
   {
@@ -34,11 +54,12 @@ export type FieldsNodeDataType<
     [P in Exclude<keyof T, NullableKeys<T>>]: UObjectNodeDataType<T[P]['node']>
   }*/
 
-export abstract class FieldsNode<
-  T extends FieldsNodeDataType<TNode, Typename>,
-  TNode extends UFieldsNodeRecord<keyof T> = UFieldsNodeRecord<keyof T>,
-  Typename extends string = string
-> extends Node<T> {
+export /*abstract*/ class FieldsNode<
+  TData extends FieldsNodeDataType<TNode, Typename>,
+  TNode extends UFieldsNodeRecord<TData> = UFieldsNodeRecord<TData>,
+  Typename extends string = string,
+  TDataType extends any = TData
+> extends Node<TDataType> {
   public name?: Typename
   public fields: TNode
 

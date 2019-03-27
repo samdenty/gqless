@@ -2,7 +2,7 @@ import {
   Schema,
   SchemaType,
   Type,
-  SchemaObjectFields,
+  SchemaFields,
   SchemaInputFields,
 } from './Schema'
 
@@ -19,8 +19,8 @@ const getType = (type: any, nullable = true): Type => {
   }
 }
 
-const getObjectFields = (introspectionFields: any) => {
-  const fields: SchemaObjectFields = {}
+const getFields = (introspectionFields: any) => {
+  const fields: SchemaFields = {}
 
   for (const field of introspectionFields) {
     let args = null
@@ -65,10 +65,15 @@ export const introspectionToSchema = (introspection: any) => {
     schema.types[type.name] = {
       name: type.name,
       kind: type.kind,
-      ...(type.kind === 'UNION' || type.kind === 'INTERFACE'
+      ...(type.kind === 'UNION'
         ? { possibleTypes: type.possibleTypes.map(({ name }) => name) }
+        : type.kind === 'INTERFACE'
+        ? {
+            possibleTypes: type.possibleTypes.map(({ name }) => name),
+            fields: getFields(type.fields),
+          }
         : type.kind === 'OBJECT'
-        ? { fields: getObjectFields(type.fields) }
+        ? { fields: getFields(type.fields) }
         : type.kind === 'INPUT_OBJECT'
         ? {
             inputFields: getInputObjectFields(type.inputFields),

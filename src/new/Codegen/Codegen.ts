@@ -1,4 +1,10 @@
-import { Schema, SchemaType, Type, SchemaFieldArgs } from '../../TypeEngine'
+import {
+  Schema,
+  SchemaType,
+  Type,
+  SchemaFieldArgs,
+  SchemaField,
+} from '../../TypeEngine'
 import {
   ObjectNode,
   ArrayNode,
@@ -8,6 +14,8 @@ import {
   NumberNode,
   InputNode,
   InputNodeField,
+  InterfaceNode,
+  UnionNode,
 } from '../nodes'
 import { Arguments, ArgumentsField } from '../Arguments'
 import { FieldNode } from '../FieldsNode'
@@ -94,6 +102,26 @@ export class Codegen {
           .join(',')}
       }, ${JSON.stringify({ name: type.name })})`
 
+    if (type.kind === 'INTERFACE') {
+      return `new ${InterfaceNode.name}({
+        ${Object.values(type.fields)
+          .map(
+            field => `get ${field.name}() {
+              return ${this.generateField(field)}
+            }`
+          )
+          .join(',')}
+      },
+      [${type.possibleTypes.map(type => `types.${type}`).join(',')}],
+      ${JSON.stringify({ name: type.name })})`
+    }
+
+    if (type.kind === 'UNION') {
+      return `new ${UnionNode.name}([${type.possibleTypes.map(
+        type => `types.${type}`
+      )}])`
+    }
+
     if (type.kind === 'SCALAR') {
       // prettier-ignore
       return type.name === 'Int' || type.name === 'Float'
@@ -108,17 +136,19 @@ export class Codegen {
     if (type.kind === 'INPUT_OBJECT') {
       return `new ${InputNode.name}({
         ${Object.values(type.inputFields)
-          .map(field => {
-            // prettier-ignore
-            const newField = `new ${InputNodeField.name}(${this.generateType(field.type)}, ${field.type.nullable})`
-
-            return `get ${field.name}() {
-              return ${newField}
+          .map(
+            field => `get ${field.name}() {
+              return ${this.generateField(field)}
             }`
-          })
+          )
           .join(',')}
       }, ${JSON.stringify({ name: type.name })})`
     }
+  }
+
+  private generateField(field: SchemaField) {
+    // prettier-ignore
+    return `new ${FieldNode.name}(${this.generateType(field.type)}, ${this.generateArguments(field.args)}, ${field.type.nullable})`
   }
 
   private generateType(type: Type) {

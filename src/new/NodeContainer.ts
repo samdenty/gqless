@@ -1,5 +1,4 @@
 import { Node, NodeDataType } from './Node'
-import { StringNode } from './nodes'
 
 export type NullableKeys<T> = ({
   [P in keyof T]: T[P] extends NodeContainer<any, true> ? P : never
