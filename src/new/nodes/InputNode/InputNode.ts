@@ -3,12 +3,9 @@ import { UScalarNode } from '../ScalarNode'
 import { InputNodeField } from './InputNodeField'
 import { ArrayNode } from '../ArrayNode'
 import { NullableKeys, NonNullableKeys } from '../../NodeContainer'
-import { memoizedGetters } from '../../../utils'
+import { lazyGetters } from '../../../utils'
 
-export type UInputNode =
-  | UScalarNode
-  | ArrayNode<any, boolean>
-  | InputNode<any, any>
+export type UInputNode = UScalarNode | ArrayNode<any, any> | InputNode<any, any>
 
 type UInputNodeRecord<T extends keyof any> = Record<
   T,
@@ -25,18 +22,17 @@ export type IInputNodeOptions = {
 }
 
 export class InputNode<
-  T extends InputNodeDataType<TInputs>,
-  TInputs extends UInputNodeRecord<keyof T> = UInputNodeRecord<keyof T>
-> extends Node<T> {
+  T,
+  TInputs extends UInputNodeRecord<keyof T>
+> extends Node<InputNodeDataType<TInputs>> {
   public name?: string
   public inputs: TInputs
 
   constructor(inputs: TInputs, { name }: IInputNodeOptions = {}) {
     super()
     this.name = name
-    this.inputs = memoizedGetters(inputs)
+    this.inputs = lazyGetters(inputs)
   }
 
-  a: T
-  public provide(value: T) {}
+  public provide(value: InputNodeDataType<TInputs>) {}
 }

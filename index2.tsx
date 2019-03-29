@@ -16,6 +16,8 @@ import {
   DataProxy,
   DataPromiseValue,
   FieldsNode,
+  FieldsDataType,
+  SelectionRoot,
 } from './src/new'
 import { Schema, SchemaType, Type, SchemaFieldArgs, Query } from './src'
 import { Codegen } from './src/new/Codegen'
@@ -36,13 +38,6 @@ export const test = (schema: Schema) => {
 
     return resolvedTypes.get(name)
   }
-
-  // @ts-ignore
-  Object.assign(window, {
-    getType,
-    resolvedTypes,
-    schema,
-  })
 
   const resolveType = (type: Type) =>
     type.kind === 'LIST'
@@ -141,7 +136,17 @@ export const test = (schema: Schema) => {
     }
   }
 
-  getType(schema.queryType)
+  const root = new SelectionRoot(getType('Query'))
+
+  // @ts-ignore
+  Object.assign(window, {
+    root,
+    getType,
+    resolvedTypes,
+    data: getType('Query').getData(root),
+    schema,
+  })
+
   // const codegen = new Codegen(schema)
 
   // console.log(codegen.generate())
@@ -659,6 +664,18 @@ export const test = (schema: Schema) => {
 //   }
 // }
 
+// @ts-ignore
+if (window._ASDASDDASS_) {
+  const repos = types_github.Query.data
+    .user({ login: 'samdenty99' })
+    .repositories({ orderBy: { direction: {}, field: {} } })
+
+  // @TODO: this is not typesafe for some reason
+  // const n = repos.nodes[0]
+  // n.createdAt
+}
+
+// @ts-ignore
 if (window.__ASDASD_) {
   const String = new StringNode()
   const ID = new StringNode()
@@ -680,7 +697,7 @@ if (window.__ASDASD_) {
     { name: 'User' }
   )
 
-  const Recursive = new FieldsNode({
+  const Recursive = new ObjectNode({
     a: new FieldNode(String),
     get r() {
       return new FieldNode(Recursive)
@@ -690,11 +707,15 @@ if (window.__ASDASD_) {
     // },
   })
 
+  Recursive.data.r.r.r.__typename
+
   const RecursiveField = new ObjectNode({
     get r() {
       return new FieldNode(Recursive)
     },
   })
+
+  RecursiveField.data.r.r.r.a
 
   const Nameable = new InterfaceNode(
     {
@@ -714,18 +735,12 @@ if (window.__ASDASD_) {
     { name: 'Person' }
   )
 
-  const Test = new InputNode({
-    test: new InputNodeField(String),
-  })
-
   const Filter = new InputNode({
     count: new InputNodeField(Int),
     before: new InputNodeField(ID),
     after: new InputNodeField(ID),
     array: new InputNodeField(new ArrayNode(ID), true),
   })
-
-  var b: typeof Filter.a
 
   Filter.provide({
     after: '10',
@@ -738,18 +753,18 @@ if (window.__ASDASD_) {
   //   id: 'hello',
   // })
 
-  const a = new Arguments({
+  const TestArgs = new Arguments({
     filter: new ArgumentsField(Filter),
     filters: new ArgumentsField(new ArrayNode(Filter), true),
   })
-  a.provide({ filter: { after: '', before: '', count: 10 } })
+  TestArgs.provide({ filter: { after: '', before: '', count: 10 } })
   // a.delete.
 
   const Query = new ObjectNode(
     {
       userOrPerson: new FieldNode(new UnionNode([User, Person])),
       user: new FieldNode(User),
-      users: new FieldNode(new ArrayNode(User), a),
+      users: new FieldNode(new ArrayNode(User), TestArgs),
       users2: new FieldNode(new ArrayNode(new ArrayNode(User))),
       getUser: new FieldNode(
         User,
@@ -772,38 +787,16 @@ if (window.__ASDASD_) {
   p.user.avatarURL({ size: 100 })
   p.getUser({ id: 'hello' }).avatarURL({ size: 100 })
 
-  var q: ObjectNode<{
-    a: string
-    __typename: 'Query'
+  Query.data.__typename
+  Query.data.getUser({ id: 'hello' }).avatarURL({ size: 100 })
 
-    people: { name: string; __typename: 'People' }[]
-    user: {
-      name: string
-      a: {
-        b: {
-          c: number
-          __typename: 'B'
-        }
-        __typename: 'A'
-      }
-      __typename: 'User'
-    }
-  }>
-
-  q.fields.a
-  q.fields.people
-  q.fields.user
-
-  q.data.a
-  q.data.__typename
-  q.data.user({ id: 1 }).name
-  q.data.user.name
-  q.data.user.a.b.c
-  q.data.people[0].name
-  q.data.user.name
+  Query.data.__typename
+  Query.data.user.name
+  Query.data.users[0].name
+  Query.data.users2[0][0].name
+  Query.data.getUser({ id: 'asd' })
 
   const userOrPerson = Query.data.userOrPerson
-
   if (userOrPerson.__typename === 'User') {
     userOrPerson.name
     userOrPerson.age
@@ -811,10 +804,4 @@ if (window.__ASDASD_) {
     userOrPerson.firstName
     userOrPerson.lastName
   }
-
-  Query.data.__typename
-  Query.data.user.name
-  Query.data.users[0].name
-  Query.data.users2[0][0].name
-  Query.data.user({ id: 10 })
 }

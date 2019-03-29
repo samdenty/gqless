@@ -1,6 +1,7 @@
 import { NodeContainer } from '../NodeContainer'
 import { Node, NodeDataType } from '../Node'
 import { ObjectNode } from './ObjectNode'
+import { Selection, SelectionIndex } from '../selections'
 
 export class ArrayNode<
   TNode extends Node<any>,
@@ -10,7 +11,7 @@ export class ArrayNode<
     super(ofNode, nullable)
   }
 
-  public getData(path: string[]) {
+  public getData(selection: Selection<any, SelectionIndex<any>>) {
     // const getData = this.ofNode instanceof ObjectNode ? this.ofNode.getData : null
 
     const proxy = new Proxy([], {
@@ -19,10 +20,19 @@ export class ArrayNode<
           return 1
         }
 
-        if (typeof prop === 'string' && !isNaN(+prop)) {
-          return this.ofNode instanceof ObjectNode
-            ? this.ofNode.getData([...path, prop])
-            : null
+        if (typeof prop === 'string') {
+          const index = +prop
+
+          if (!isNaN(index)) {
+            const selectionIndex = selection.getSelection(
+              s => s.index === index,
+              () => new SelectionIndex(selection, this.ofNode, index)
+            )
+
+            return this.ofNode instanceof ObjectNode
+              ? this.ofNode.getData(selectionIndex)
+              : null
+          }
         }
 
         if (typeof target[prop] === 'function') {

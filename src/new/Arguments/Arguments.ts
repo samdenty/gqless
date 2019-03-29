@@ -1,18 +1,18 @@
 import { ArgumentsField } from './ArgumentsField'
 import { UScalarNode, ArrayNode, InputNode } from '../nodes'
 import { NonNullableKeys, NullableKeys } from '../NodeContainer'
-import { memoizedGetters } from '../../utils'
-import { NodeDataType } from '../Node'
+import { lazyGetters } from '../../utils'
+import { NodeDataType, Node } from '../Node'
 
 export type UArguments =
   | UScalarNode
-  | ArrayNode<any, boolean>
-  | ArgumentsField<any, boolean>
-  | InputNode<any>
+  | ArrayNode<any, any>
+  | ArgumentsField<any, any>
+  | InputNode<any, any>
 
 type UArgumentsRecord<T extends keyof any> = Record<
   T,
-  ArgumentsField<UArguments, boolean>
+  ArgumentsField<UArguments, any>
 >
 
 type ArgumentsDataType<T extends UArgumentsRecord<keyof T>> = {
@@ -21,14 +21,16 @@ type ArgumentsDataType<T extends UArgumentsRecord<keyof T>> = {
   { [P in Exclude<keyof T, NullableKeys<T>>]: NodeDataType<T[P]['ofNode']> }
 
 export class Arguments<
-  T extends ArgumentsDataType<TInputs>,
-  TInputs extends UArgumentsRecord<keyof T> = UArgumentsRecord<keyof T>
-> {
+  T,
+  TInputs extends UArgumentsRecord<keyof T>
+> extends Node<ArgumentsDataType<TInputs>> {
   public inputs: TInputs
 
   constructor(inputs: TInputs) {
-    this.inputs = memoizedGetters(inputs)
+    super()
+
+    this.inputs = lazyGetters(inputs)
   }
 
-  public provide(value: T) {}
+  public provide(value: ArgumentsDataType<TInputs>) {}
 }

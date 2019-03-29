@@ -1,31 +1,35 @@
 import {
   FieldsNode,
   IFieldsNodeOptions,
-  FieldsNodeDataType,
+  FieldsDataType,
   UFieldsNodeRecord,
   FieldNode,
 } from '../FieldsNode'
+import { DataProxy } from '../DataProxy'
+import { NodeDataType } from '../Node'
+import { Selection, SelectionField } from '../selections'
 
 export type IObjectNodeOptions<Typename> = IFieldsNodeOptions<Typename> & {}
 
 export class ObjectNode<
-  TData extends FieldsNodeDataType<TNode, Typename>,
-  TNode extends UFieldsNodeRecord<TData> = UFieldsNodeRecord<TData>,
-  Typename extends string = string
-> extends FieldsNode<TData, TNode, Typename> {
-  public data: TData
+  TNode extends UFieldsNodeRecord<keyof T>,
+  T,
+  Typename extends string
+> extends FieldsNode<TNode, T, Typename> {
+  public data: DataProxy<ObjectNode<TNode, T, Typename>>
+  public data2: NodeDataType<ObjectNode<TNode, T, Typename>>
 
   constructor(fields: TNode, options?: IObjectNodeOptions<Typename>) {
     super(fields, options)
   }
 
-  public getData(path: string[]): TData {
-    return new Proxy<TData>({} as any, {
+  public getData(selection: Selection<any>): FieldsDataType<TNode, Typename> {
+    return new Proxy<FieldsDataType<TNode, Typename>>({} as any, {
       get: (_, prop: string) => {
         if (this.fields.hasOwnProperty(prop)) {
           const field: FieldNode<any> = this.fields[prop]
 
-          return field.getData([...path, prop])
+          return field.getData(selection)
         }
       },
     })

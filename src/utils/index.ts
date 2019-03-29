@@ -1,3 +1,4 @@
 export * from './resolveNode'
 export * from './getNodePath'
-export * from './memoizedGetters'
+export * from './lazyGetters'
+export * from './computed'

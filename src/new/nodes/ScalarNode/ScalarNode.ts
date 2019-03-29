@@ -2,6 +2,7 @@ import { Node } from '../../Node'
 import { StringNode } from '.'
 import { BooleanNode } from './BooleanNode'
 import { NumberNode } from './NumberNode'
+import { Selection } from '../../selections'
 
 export type IScalarNodeOptions = {
   name?: string
@@ -24,9 +25,7 @@ export class ScalarNode<T extends string | boolean | number> extends Node<T> {
 
   protected proxyGetter(prop: string) {}
 
-  public getData(path: string[]) {
-    console.log(path)
-
+  public getData(selection: Selection<any>) {
     return new Proxy(
       {},
       {
