@@ -12,7 +12,7 @@ type UInputNodeRecord<T extends keyof any> = Record<
   InputNodeField<UInputNode, boolean>
 >
 
-type InputNodeDataType<T extends UInputNodeRecord<keyof T>> = {
+type InputNodeDataType<T extends UInputNodeRecord<any>> = {
   [P in Exclude<keyof T, NonNullableKeys<T>>]?: NodeDataType<T[P]['ofNode']>
 } &
   { [P in Exclude<keyof T, NullableKeys<T>>]: NodeDataType<T[P]['ofNode']> }
