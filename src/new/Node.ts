@@ -10,7 +10,7 @@ export abstract class Node<DataType = never> {
 
   constructor() {}
 
-  public getData(selection: Selection<any>) {
+  public getData(selection: Selection<Node<DataType>>) {
     return selection.value
   }
 }
