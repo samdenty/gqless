@@ -1,8 +1,7 @@
 import { Node, NodeDataType } from '../Node'
 import { NodeContainer } from '../NodeContainer'
-import { Arguments } from '../Arguments'
-import { Selection, SelectionField } from '../selections'
-import { ObjectNode, ArrayNode, ScalarNode } from '../nodes'
+import { Selection, SelectionField } from '../../../Selection'
+import { Arguments, ObjectNode, ArrayNode, ScalarNode } from '../..'
 
 export class FieldNode<
   T extends Node<any>,
@@ -39,19 +38,23 @@ export class FieldNode<
     if (this.args) {
       let unaliasedData: any
 
+      // Return a proxy to a function
       return new Proxy(
         (args: NodeDataType<TArguments>, { alias = null } = {}) => {
           const selection = getSelectionAlias(alias)
-
           selection.setArguments(args)
-
           return getData(selection)
         },
         {
           get: (_, prop) => {
             if (!unaliasedData) unaliasedData = getData()
+            const result = unaliasedData[prop]
 
-            return unaliasedData[prop]
+            if (typeof result === 'function') {
+              return result.bind(unaliasedData)
+            }
+
+            return result
           },
         }
       )

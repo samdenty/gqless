@@ -1,7 +1,6 @@
 import { Node, NodeDataType } from '../Node'
-import { UScalarNode, ArrayNode } from '../nodes'
-import { lazyGetters } from '../../utils'
-import { UnionNode } from '../nodes/UnionNode'
+import { UScalarNode, ArrayNode, UnionNode } from '../../'
+import { lazyGetters } from '../../../../utils'
 import { FieldNode } from './FieldNode'
 
 export type IFieldsNodeOptions<Typename> = {
@@ -47,7 +46,7 @@ export type FieldsDataType<
     [P in Exclude<keyof T, NullableKeys<T>>]: UObjectNodeDataType<T[P]['node']>
   }*/
 
-export /*abstract*/ class FieldsNode<
+export abstract class FieldsNode<
   TNode extends UFieldsNodeRecord<keyof T>,
   T,
   Typename extends string,

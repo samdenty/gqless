@@ -1,13 +1,11 @@
 import {
   FieldsNode,
   IFieldsNodeOptions,
-  FieldsDataType,
   UFieldsNodeRecord,
   FieldNode,
-} from '../FieldsNode'
+} from './abstract'
 import { DataProxy } from '../DataProxy'
-import { NodeDataType } from '../Node'
-import { Selection, SelectionField } from '../selections'
+import { Selection } from '../Selection'
 
 export type IObjectNodeOptions<Typename> = IFieldsNodeOptions<Typename> & {}
 

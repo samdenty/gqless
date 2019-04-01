@@ -2,8 +2,8 @@ import {
   FieldsNode,
   UFieldsNodeRecord,
   IFieldsNodeOptions,
-} from '../FieldsNode'
-import { NodeDataType } from '../Node'
+  NodeDataType,
+} from './abstract'
 import { ObjectNode } from './ObjectNode'
 
 export class InterfaceNode<

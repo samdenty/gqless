@@ -1,8 +1,7 @@
-import { Node, NodeDataType } from '../../Node'
 import { UScalarNode } from '../ScalarNode'
 import { InputNodeField } from './InputNodeField'
 import { ArrayNode } from '../ArrayNode'
-import { NullableKeys, NonNullableKeys } from '../../NodeContainer'
+import { Node, NodeDataType, NullableKeys, NonNullableKeys } from '../abstract'
 import { lazyGetters } from '../../../utils'
 
 export type UInputNode = UScalarNode | ArrayNode<any, any> | InputNode<any, any>

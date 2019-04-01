@@ -1,6 +1,5 @@
 import { Selection } from './Selection'
-import { Node, NodeDataType } from '../Node'
-import { FieldNode } from '../FieldsNode'
+import { Node, FieldNode } from '../Node'
 
 export class SelectionField<
   TNode extends Node<any>,
@@ -15,11 +14,11 @@ export class SelectionField<
   ) {
     super(parent, node)
 
-    this.disposers.push(parent.onValueChange(() => this.updateValue()))
-    this.updateValue()
+    this.disposers.push(parent.onValueChange(() => this.recomputeValue()))
   }
 
-  private updateValue() {
+  protected computeValue() {
+    super.computeValue()
     const parentObj = this.parent.value
     this.value = parentObj && parentObj[this.dataProp]
   }

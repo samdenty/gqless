@@ -1,4 +1,4 @@
-import { Node, NodeDataType } from '../Node'
+import { Node, NodeDataType } from './abstract'
 import { ObjectNode } from './ObjectNode'
 import { InterfaceNode } from './InterfaceNode'
 

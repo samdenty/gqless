@@ -1,7 +1,11 @@
-import { Node, NodeDataType } from './Node'
-import { ArrayNode } from './nodes'
-import { InnerNode } from './NodeContainer'
-import { FieldsNode, FieldNode } from './FieldsNode'
+import {
+  ArrayNode,
+  InnerNode,
+  Node,
+  NodeDataType,
+  FieldsNode,
+  FieldNode,
+} from './Node'
 
 type RequiredKeys<T> = {
   [K in keyof T]-?: ({} extends { [P in K]: T[K] } ? never : K)

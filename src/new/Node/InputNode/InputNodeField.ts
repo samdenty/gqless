@@ -1,4 +1,4 @@
-import { NodeContainer } from '../../NodeContainer'
+import { NodeContainer } from '../abstract'
 import { UInputNode } from './InputNode'
 
 export class InputNodeField<

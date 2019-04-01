@@ -17,7 +17,8 @@ export abstract class Selection<
   public selections: S[] = []
 
   private _value: NodeDataType<TNode>
-  protected valueListeners: (() => void)[] = []
+  private valueListeners: (() => void)[] = []
+  private hasComputedValue = false
 
   constructor(public parent: Selection<any>, public node: TNode) {
     if (parent) {
@@ -50,16 +51,30 @@ export abstract class Selection<
   }
 
   public get value() {
+    if (!this.hasComputedValue) this.computeValue()
+
     return this._value
   }
 
-  public set value(value) {
+  public set value(value: NodeDataType<TNode>) {
     const prevValue = this._value
     this._value = value
 
     if (prevValue !== value) {
       this.valueListeners.forEach(cb => cb())
     }
+  }
+
+  protected computeValue() {
+    this.hasComputedValue = true
+  }
+
+  /**
+   * Conditonally computes the value, only if it's been computed before
+   */
+  public recomputeValue() {
+    if (!this.hasComputedValue) return
+    this.computeValue()
   }
 
   public onValueChange(callback: () => void) {

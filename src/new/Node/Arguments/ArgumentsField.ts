@@ -1,4 +1,4 @@
-import { NodeContainer } from '../NodeContainer'
+import { NodeContainer } from '../abstract'
 import { UArguments } from './Arguments'
 
 export class ArgumentsField<

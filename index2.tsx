@@ -14,9 +14,6 @@ import {
   InterfaceNode,
   NodeDataType,
   DataProxy,
-  DataPromiseValue,
-  FieldsNode,
-  FieldsDataType,
   SelectionRoot,
   QueryBuilder,
 } from './src/new'
@@ -150,7 +147,10 @@ export const test = (schema: Schema) => {
     schema,
   })
 
-  root.value = { user: { name: 'hello' }, users: [{ name: 'arr' }] }
+  root.value = {
+    user: { name: 'hello', avatarUrl: 'asd' },
+    users: [{ name: 'arr', avatarUrl: 'asd' }],
+  }
 
   data.a.b.c
 

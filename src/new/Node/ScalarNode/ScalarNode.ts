@@ -1,8 +1,8 @@
-import { Node } from '../../Node'
-import { StringNode } from '.'
+import { Node } from '../abstract'
+import { StringNode } from './StringNode'
 import { BooleanNode } from './BooleanNode'
 import { NumberNode } from './NumberNode'
-import { Selection } from '../../selections'
+import { Selection } from '../../Selection'
 
 export type IScalarNodeOptions = {
   name?: string

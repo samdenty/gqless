@@ -13,8 +13,8 @@ import {
   SelectionField,
   SelectionIndex,
   Selection,
-} from '../selections'
-import { ScalarNode } from '../nodes'
+} from '../Selection'
+import { ScalarNode } from '../Node'
 
 /**
  * @TODO:

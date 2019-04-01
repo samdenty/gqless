@@ -1,8 +1,7 @@
 import { ArgumentsField } from './ArgumentsField'
-import { UScalarNode, ArrayNode, InputNode } from '../nodes'
-import { NonNullableKeys, NullableKeys } from '../NodeContainer'
-import { lazyGetters } from '../../utils'
-import { NodeDataType, Node } from '../Node'
+import { UScalarNode, ArrayNode, InputNode } from '../'
+import { NodeDataType, Node, NonNullableKeys, NullableKeys } from '../abstract'
+import { lazyGetters } from '../../../utils'
 
 export type UArguments =
   | UScalarNode
