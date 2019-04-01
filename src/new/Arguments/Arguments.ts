@@ -12,7 +12,7 @@ export type UArguments =
 
 type UArgumentsRecord<T extends keyof any> = Record<
   T,
-  ArgumentsField<UArguments, any>
+  ArgumentsField<UArguments>
 >
 
 type ArgumentsDataType<T extends UArgumentsRecord<keyof T>> = {

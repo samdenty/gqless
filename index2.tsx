@@ -18,6 +18,7 @@ import {
   FieldsNode,
   FieldsDataType,
   SelectionRoot,
+  QueryBuilder,
 } from './src/new'
 import { Schema, SchemaType, Type, SchemaFieldArgs, Query } from './src'
 import { Codegen } from './src/new/Codegen'
@@ -137,15 +138,26 @@ export const test = (schema: Schema) => {
   }
 
   const root = new SelectionRoot(getType('Query'))
+  const data = getType('Query').getData(root)
 
   // @ts-ignore
   Object.assign(window, {
     root,
     getType,
     resolvedTypes,
-    data: getType('Query').getData(root),
+    queryBuilder: new QueryBuilder({ options: { queryName: 'test' } }),
+    data,
     schema,
   })
+
+  root.value = { user: { name: 'hello' }, users: [{ name: 'arr' }] }
+
+  data.a.b.c
+
+  data.getUser({ id: 10 }).name
+  data.user.age
+  data.user.name
+  data.users[0].name
 
   // const codegen = new Codegen(schema)
 
@@ -665,14 +677,34 @@ export const test = (schema: Schema) => {
 // }
 
 // @ts-ignore
-if (window._ASDASDDASS_) {
-  const repos = types_github.Query.data
+if (window.asdasdasdsd) {
+  const ghRoot = new SelectionRoot(types_github.Query)
+
+  const data = ghRoot.createProxy()
+
+  const repos = data
     .user({ login: 'samdenty99' })
     .repositories({ orderBy: { direction: {}, field: {} } })
 
   // @TODO: this is not typesafe for some reason
   // const n = repos.nodes[0]
   // n.createdAt
+}
+
+if (true) {
+  const String = new StringNode()
+
+  const User = new ObjectNode({
+    name: new FieldNode(String),
+    job: new FieldNode(String),
+  })
+
+  const testRoot = new SelectionRoot(User)
+
+  const data = testRoot.createProxy()
+  data.name
+
+  console.log(testRoot)
 }
 
 // @ts-ignore

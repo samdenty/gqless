@@ -13,18 +13,32 @@ export const computed = (getDependencies?: () => any[]) => <T>(
   propertyKey: string,
   descriptor: PropertyDescriptor
 ) => {
+  const DependenciesSymbol = Symbol(propertyKey + '.dependencies')
+  const LastValueSymbol = Symbol(propertyKey + '.lastValue')
+
   const original = descriptor.get
 
-  let deps: any[] = null
-  let computedValue = null
+  if (getDependencies) {
+    descriptor.get = function() {
+      const newDeps = getDependencies.call(this)
 
-  descriptor.get = function() {
-    const newDeps = getDependencies ? getDependencies.call(this) : []
-    if (deps && isDepsEqual(deps, newDeps)) return computedValue
+      if (
+        this[DependenciesSymbol] &&
+        isDepsEqual(this[DependenciesSymbol], newDeps)
+      )
+        return this[LastValueSymbol]
 
-    deps = newDeps
-    computedValue = original.call(this)
+      this[DependenciesSymbol] = newDeps
+      this[LastValueSymbol] = original.call(this)
 
-    return computedValue
+      return this[LastValueSymbol]
+    }
+  } else {
+    descriptor.get = function() {
+      if (!(LastValueSymbol in this))
+        this[LastValueSymbol] = original.call(this)
+
+      return this[LastValueSymbol]
+    }
   }
 }

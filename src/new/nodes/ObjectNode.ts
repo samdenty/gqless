@@ -16,15 +16,17 @@ export class ObjectNode<
   T,
   Typename extends string
 > extends FieldsNode<TNode, T, Typename> {
+  // @TODO: Remove
   public data: DataProxy<ObjectNode<TNode, T, Typename>>
-  public data2: NodeDataType<ObjectNode<TNode, T, Typename>>
 
   constructor(fields: TNode, options?: IObjectNodeOptions<Typename>) {
     super(fields, options)
   }
 
-  public getData(selection: Selection<any>): FieldsDataType<TNode, Typename> {
-    return new Proxy<FieldsDataType<TNode, Typename>>({} as any, {
+  public getData(
+    selection: Selection<any>
+  ): DataProxy<ObjectNode<TNode, T, Typename>> {
+    return new Proxy({} as any, {
       get: (_, prop: string) => {
         if (this.fields.hasOwnProperty(prop)) {
           const field: FieldNode<any> = this.fields[prop]

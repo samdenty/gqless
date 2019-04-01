@@ -2,6 +2,7 @@ import { Node, NodeDataType } from '../Node'
 import { NodeContainer } from '../NodeContainer'
 import { Arguments } from '../Arguments'
 import { Selection, SelectionField } from '../selections'
+import { ObjectNode, ArrayNode, ScalarNode } from '../nodes'
 
 export class FieldNode<
   T extends Node<any>,
@@ -20,21 +21,29 @@ export class FieldNode<
       fieldsSelection.getSelection(
         selection => {
           if (!(selection instanceof SelectionField)) return false
-          return selection.field === this.name && selection.alias === alias
+          return selection.field.name === this.name && selection.alias === alias
         },
-        () => new SelectionField(fieldsSelection, this.ofNode, this.name)
+        () => new SelectionField(fieldsSelection, this.ofNode, this)
       )
 
     const getData = (selection = getSelectionAlias(null)) => {
-      return this.ofNode.getData(selection)
+      return this.ofNode instanceof ObjectNode
+        ? this.ofNode.getData(selection)
+        : this.ofNode instanceof ArrayNode
+        ? this.ofNode.getData(selection)
+        : this.ofNode instanceof ScalarNode
+        ? this.ofNode.getData(selection)
+        : undefined
     }
 
     if (this.args) {
-      let unaliasedData: ReturnType<typeof getData>
+      let unaliasedData: any
 
       return new Proxy(
-        (args, { alias = null } = {}) => {
+        (args: NodeDataType<TArguments>, { alias = null } = {}) => {
           const selection = getSelectionAlias(alias)
+
+          selection.setArguments(args)
 
           return getData(selection)
         },

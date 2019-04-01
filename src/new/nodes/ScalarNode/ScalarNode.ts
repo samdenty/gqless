@@ -26,11 +26,15 @@ export class ScalarNode<T extends string | boolean | number> extends Node<T> {
   protected proxyGetter(prop: string) {}
 
   public getData(selection: Selection<any>) {
+    if (selection.value !== undefined) {
+      return selection.value as T
+    }
+
     return new Proxy(
       {},
       {
         get: (_, prop: string) => this.proxyGetter(prop),
       }
-    )
+    ) as T
   }
 }

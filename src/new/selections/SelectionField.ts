@@ -1,5 +1,6 @@
 import { Selection } from './Selection'
-import { Node } from '../Node'
+import { Node, NodeDataType } from '../Node'
+import { FieldNode } from '../FieldsNode'
 
 export class SelectionField<
   TNode extends Node<any>,
@@ -7,19 +8,31 @@ export class SelectionField<
 > extends Selection<TNode, S> {
   public alias: string = null
 
-  constructor(parent: Selection<any>, node: TNode, public field: string) {
+  constructor(
+    parent: Selection<any>,
+    node: TNode,
+    public field: FieldNode<any, any, any>
+  ) {
     super(parent, node)
+
+    this.disposers.push(parent.onValueChange(() => this.updateValue()))
+    this.updateValue()
+  }
+
+  private updateValue() {
+    const parentObj = this.parent.value
+    this.value = parentObj && parentObj[this.dataProp]
+  }
+
+  public args: any
+
+  public setArguments(args: any) {
+    this.args = args
   }
 
   public get dataProp() {
-    if (!this.alias) return this.field
+    if (!this.alias) return this.field.name
 
-    return `${this.field}__${this.alias}`
-  }
-
-  public get value() {
-    const parentObj = this.parent.value
-
-    return parentObj && parentObj[this.dataProp]
+    return `${this.field.name}__${this.alias}`
   }
 }
