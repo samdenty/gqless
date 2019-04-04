@@ -1,6 +1,6 @@
 import { Selection } from './Selection'
 import { SelectionField } from './SelectionField'
-import { ObjectNode } from '../nodes'
+import { ObjectNode } from '../Node'
 
 export class SelectionRoot<
   TNode extends ObjectNode<any, any, any>
@@ -11,5 +11,9 @@ export class SelectionRoot<
 
   public createProxy() {
     return this.node.getData(this) as ReturnType<TNode['getData']>
+  }
+
+  public toString() {
+    return '#'
   }
 }

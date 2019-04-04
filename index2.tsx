@@ -15,9 +15,10 @@ import {
   NodeDataType,
   DataProxy,
   SelectionRoot,
-  QueryBuilder,
+  ASTBuilder,
+  Query,
 } from './src/new'
-import { Schema, SchemaType, Type, SchemaFieldArgs, Query } from './src'
+import { Schema, SchemaType, Type, SchemaFieldArgs } from './src'
 import { Codegen } from './src/new/Codegen'
 import { types_github } from './typesGithub'
 
@@ -137,12 +138,14 @@ export const test = (schema: Schema) => {
   const root = new SelectionRoot(getType('Query'))
   const data = getType('Query').getData(root)
 
+  const query = new Query(getType('Query'))
   // @ts-ignore
   Object.assign(window, {
     root,
     getType,
     resolvedTypes,
-    queryBuilder: new QueryBuilder({ options: { queryName: 'test' } }),
+    astBuilder: new ASTBuilder('TestQuery'),
+    query,
     data,
     schema,
   })
@@ -158,6 +161,7 @@ export const test = (schema: Schema) => {
   data.user.age
   data.user.name
   data.users[0].name
+  data.users[0].age
 
   // const codegen = new Codegen(schema)
 

@@ -9,9 +9,11 @@ export type USelection =
   | SelectionField<any, any>
   | SelectionIndex<any>
 
+interface CircularSelection extends Selection<any, CircularSelection> {}
+
 export abstract class Selection<
   TNode extends Node<any>,
-  S extends Selection<any, any> = Selection<any, any>
+  S extends CircularSelection = CircularSelection
 > {
   protected disposers: Function[] = []
   public selections: S[] = []
@@ -44,10 +46,13 @@ export abstract class Selection<
   }
 
   @computed()
-  public get path() {
+  public get path(): Selection<any, any>[] {
     const basePath = this.parent ? this.parent.path : []
+    const path = [...basePath, this]
 
-    return [...basePath, this]
+    path.toString = () => path.map(selection => selection.toString()).join('.')
+
+    return path
   }
 
   public get value() {
@@ -87,6 +92,18 @@ export abstract class Selection<
         this.valueListeners.splice(idx, 1)
       }
     }
+  }
+
+  public then(resolve: (value: NodeDataType<TNode>) => void) {
+    const attemptResolve = () => {
+      if (this.value !== undefined) {
+        dispose()
+        resolve(this.value)
+      }
+    }
+    const dispose = this.onValueChange(attemptResolve)
+    attemptResolve()
+    return this
   }
 
   public destroy() {

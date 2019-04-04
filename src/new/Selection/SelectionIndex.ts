@@ -14,4 +14,8 @@ export class SelectionIndex<TNode extends Node<any>> extends Selection<TNode> {
     const parentArr = this.parent.value
     this.value = parentArr && parentArr[this.index]
   }
+
+  public toString() {
+    return `${this.index}`
+  }
 }

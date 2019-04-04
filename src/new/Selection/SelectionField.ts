@@ -3,7 +3,7 @@ import { Node, FieldNode } from '../Node'
 
 export class SelectionField<
   TNode extends Node<any>,
-  S extends Selection<any, any> = Selection<any, any>
+  S extends Selection<any> = Selection<any>
 > extends Selection<TNode, S> {
   public alias: string = null
 
@@ -33,5 +33,9 @@ export class SelectionField<
     if (!this.alias) return this.field.name
 
     return `${this.field.name}__${this.alias}`
+  }
+
+  public toString() {
+    return this.dataProp
   }
 }

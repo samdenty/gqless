@@ -13,8 +13,6 @@ export class ArrayNode<
   public getData(
     selection: Selection<ArrayNode<TNode, TNullable>, SelectionIndex<any>>
   ) {
-    // const getData = this.ofNode instanceof ObjectNode ? this.ofNode.getData : null
-
     const proxy = new Proxy([], {
       get: (target, prop) => {
         const arr = selection.value
