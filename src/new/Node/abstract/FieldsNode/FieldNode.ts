@@ -5,7 +5,7 @@ import { Arguments, ObjectNode, ArrayNode, ScalarNode } from '../..'
 
 export class FieldNode<
   T extends Node<any>,
-  TArguments extends Arguments<any, any> = never,
+  TArguments extends Arguments<any, any> = any,
   TNullable extends boolean = false
 > extends NodeContainer<T, TNullable> {
   public data: NodeDataType<T>
@@ -22,16 +22,18 @@ export class FieldNode<
           if (!(selection instanceof SelectionField)) return false
           return selection.field.name === this.name && selection.alias === alias
         },
-        () => new SelectionField(fieldsSelection, this.ofNode, this)
+        () => new SelectionField(fieldsSelection, this.ofNode, this, alias)
       )
 
     const getData = (selection = getSelectionAlias(null)) => {
+      if (selection.value === null) return null
+
       return this.ofNode instanceof ObjectNode
         ? this.ofNode.getData(selection)
         : this.ofNode instanceof ArrayNode
-        ? this.ofNode.getData(selection)
+        ? this.ofNode.getData(selection as any)
         : this.ofNode instanceof ScalarNode
-        ? this.ofNode.getData(selection)
+        ? this.ofNode.getData(selection as any)
         : undefined
     }
 

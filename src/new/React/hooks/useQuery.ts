@@ -1,28 +1,28 @@
-import { Query, IQueryOptions } from '../../Query'
+import { Query } from '../../Query'
 import { useContext, useEffect, useState } from 'react'
 import { QueryContext } from '../QueryContext'
 import { ReactMiddleware } from '../ReactMiddleware'
 import { useForceUpdate } from './useForceUpdate'
+import { ObjectNode } from '../../Node'
 
 // TODO: https://github.com/facebook/react/issues/15137 return on first render
-export const useQuery = <T>(options: Partial<IQueryOptions> = {}) => {
+export const useQuery = <TNode extends ObjectNode<any, any, any>>(
+  name: string = null,
+  onCreated?: (query: Query<TNode>) => void
+) => {
   const context = useContext(QueryContext)
   const [query, setQuery] = useState<ReturnType<typeof createQuery>>(null)
   const forceUpdate = useForceUpdate()
 
   const createQuery = () => {
-    return new Query<T>({
-      ...context,
-      ...options,
-      middleware: (middleware, query) => {
-        if (context.middleware)
-          middleware = context.middleware(middleware, query)
-        if (options.middleware)
-          middleware = options.middleware(middleware, query)
+    const query = new Query(context.Query as TNode, context.fetchQuery, {
+      name,
+    })
+    query.middleware.add(new ReactMiddleware(forceUpdate))
 
-        return [...middleware, new ReactMiddleware(forceUpdate)]
-      },
-    } as IQueryOptions)
+    if (onCreated) onCreated(query)
+
+    return query
   }
 
   useEffect(() => {

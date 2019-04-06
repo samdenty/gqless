@@ -26,6 +26,10 @@ export class ObjectNode<
   ): DataProxy<ObjectNode<TNode, T, Typename>> {
     return new Proxy({} as any, {
       get: (_, prop: string) => {
+        if (prop === '__typename') {
+          return this.name
+        }
+
         if (this.fields.hasOwnProperty(prop)) {
           const field: FieldNode<any> = this.fields[prop]
 

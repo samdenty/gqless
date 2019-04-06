@@ -4,104 +4,106 @@ import { Suspense } from 'react'
 import ReactDOM from 'react-dom'
 
 import ApolloClient from 'apollo-boost'
-import {
-  introspectionQuery,
-  introspectionToSchema,
-  LoggerMiddleware,
-} from './src'
 
-import { useQuery, QueryProvider } from './src/React'
-
-type user = {
-  name: string
-  age: number
-  b: string
-  c: string
-  d: string
-  id: string
-}
+import { useQuery, QueryProvider, optimistic, Defer } from './src/new/React'
+import { LoggerMiddleware, ObjectNode } from './src/new'
+import { schemaNodes, fetchSchema } from './src/new/Schema'
+import { Codegen } from './src/new/Codegen'
+import { typesFaker, User } from './typesFaker'
 
 const client = new ApolloClient({
   uri: 'http://localhost:9002/graphql',
 })
 async function bootstrap() {
-  const r = await client.query<any>({
-    query: introspectionQuery,
-  })
-  const introspection = r.data.__schema
-  const schema = introspectionToSchema(introspection)
+  const fetchQuery = async query => {
+    const resp = await client.query({ query })
 
-  type Data = {
-    getUser: user
-    user: user
-    users: user[]
-    a: {
-      b: {
-        c: 1
-        d: number
-        __argmap: {
-          c: { test: number }
-        }
-      }
-    }
-    number: 1
-
-    __args: {
-      getUser: { id: number }
-    }
+    return { data: resp.data, errors: resp.errors }
   }
 
-  test(schema)
-  return
+  // const schema = await fetchSchema(fetchQuery)
+  // const codegen = new Codegen(schema, { variableName: 'typesFaker' })
+  // console.log(codegen.generate())
 
-  const Component = () => {
+  test(typesFaker, fetchQuery)
+
+  const Age = ({ user }: { user: User }) => {
+    return <div>age: {user.age}</div>
+  }
+
+  const Description = ({ user }: { user: User }) => {
+    return <p>{user.description}</p>
+  }
+
+  const UserComponent = ({ user }: { user: User }) => {
+    return (
+      <div>
+        <h2>{user.name}</h2>
+        <Age user={user} />
+        <Description user={user} />
+      </div>
+    )
+  }
+
+  const Component = optimistic(() => {
     const [clicks, setClicks] = React.useState(0)
-    const query = useQuery<Data>({
-      queryName: 'TestQuery',
-      middleware: (m, q) => [new LoggerMiddleware(q), ...m],
+    const query = useQuery<typeof typesFaker.Query>('TestQuery', query => {
+      query.middleware.add(new LoggerMiddleware(query))
     })
 
     if (!query) return null
     ;(window as any).query = query
 
-    return <div>{query.data.users[0].name}</div>
-
-    // const defaultWithoutArgs = query.data.getUser
-    // const defaultWithArgs = query.data.getUser({ id: 1 })
-    // const two = query.data.getUser({ id: 2 }, { alias: 'two' })
-
     return (
-      <>
-        {/*<div>
-          {defaultWithArgs.age} {defaultWithoutArgs.age} {two.age}
-    </div>*/}
-        <button onClick={() => setClicks(clicks + 1)}>{clicks}</button>
-        <table>
-          <tbody>
-            <tr>
-              <td>combined</td>
-              <td>{`${query.data.user.name} (${query.data.user.age})`}</td>
-            </tr>
-            <tr>
-              <td>name</td>
-              <td>{query.data.user.name}</td>
-            </tr>
-            <tr>
-              <td>age</td>
-              <td>{query.data.user.age}</td>
-            </tr>
-            <tr>
-              <td>getUser -> name</td>
-              <td>{query.data.getUser({ id: 10 }).name}</td>
-            </tr>
-            <tr>
-              <td>getUser -> age</td>
-              <td>{query.data.getUser({ id: 10 }).age}</td>
-            </tr>
-          </tbody>
-        </table>
-      </>
+      <div>
+        <b>My name:</b> {query.data.me.name}
+        <br />
+        <b>My description:</b>
+        <Description user={query.data.me} />
+        <div>
+          <b>Other users:</b>
+          {query.data.users.map(user => (
+            <UserComponent key={user.id} user={user} />
+          ))}
+        </div>
+      </div>
     )
+    // return (
+    //   <>
+    //     <div>
+    //       <Suspense fallback="Users loading">
+    //         {query.data.users.map(user => (
+    //           <UserComponent key={user.id} user={user} />
+    //         ))}
+    //       </Suspense>
+    //     </div>
+    //     <button onClick={() => setClicks(clicks + 1)}>{clicks}</button>
+    //     <table>
+    //       <tbody>
+    //         <tr>
+    //           <td>combined</td>
+    //           <td>{`${query.data.user.name} (${query.data.user.age})`}</td>
+    //         </tr>
+    //         <tr>
+    //           <td>name</td>
+    //           <td>{query.data.user.name}</td>
+    //         </tr>
+    //         <tr>
+    //           <td>age</td>
+    //           <td>{query.data.user.age}</td>
+    //         </tr>
+    //         <tr>
+    //           <td>getUser -> name</td>
+    //           <td>{query.data.getUser({ id: '10' }).name}</td>
+    //         </tr>
+    //         <tr>
+    //           <td>getUser -> age</td>
+    //           <td>{query.data.getUser({ id: '10' }).age}</td>
+    //         </tr>
+    //       </tbody>
+    //     </table>
+    //   </>
+    // )
 
     // return <div>Name: {query.data.user.name}</div>
     // query.data.a.b(null, { alias: 'test' }).c
@@ -133,7 +135,7 @@ async function bootstrap() {
     //     ))}
     //   </div>
     // )
-  }
+  })
 
   const App = () => {
     return (
@@ -146,12 +148,8 @@ async function bootstrap() {
   ReactDOM.render(
     <QueryProvider
       value={{
-        schema,
-        async fetchQuery(query) {
-          const resp = await client.query({ query })
-
-          return { data: resp.data, errors: resp.errors }
-        },
+        Query: typesFaker.Query,
+        fetchQuery,
       }}
     >
       <App />

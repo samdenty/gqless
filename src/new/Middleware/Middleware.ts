@@ -1,13 +1,15 @@
 import { DocumentNode } from 'graphql'
 import { QueryResponse } from '../Query'
 import { Selection } from '../Selection'
+import { UScalarNode } from '../Node'
 
-type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any
-  ? A
-  : never
-
+export type ScalarProxyHandler = (prop: string | symbol) => any
 export type Middleware = {
-  // onUnresolvedNode?(node: QueryNode): void
+  // Called each time a new selection is created
+  onSelect?(selection: Selection<any>): void
+
+  // Called each time a selection has changed
+  onSelectUpdate?(selection: Selection<any>): void
 
   onFetch?(data: { selections: Selection<any>[]; query: DocumentNode }): void
   onFetched?(data: {
@@ -16,19 +18,10 @@ export type Middleware = {
     error?: any
     response?: QueryResponse
   }): void
-
-  // proxyGetter?(data: {
-  //   node: QueryNode
-  //   prop: string | symbol
-  //   nodeForProp?: QueryField
-  //   // Returns the proxy that would have been returned,
-  //   // allowing you to perform other logic
-  //   createNestedProxy: (interceptor?: ProxyInterceptor) => Node
-  // }): any
+  scalarProxy?(
+    selection: Selection<UScalarNode>,
+    value: string | number | boolean | object
+  ): any
 
   dispose?(): void
 }
-
-export type QueryMiddlewareArg<T extends keyof Middleware> = ArgumentTypes<
-  Middleware[T]
->[0]

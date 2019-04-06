@@ -5,12 +5,11 @@ export class SelectionField<
   TNode extends Node<any>,
   S extends Selection<any> = Selection<any>
 > extends Selection<TNode, S> {
-  public alias: string = null
-
   constructor(
     parent: Selection<any>,
     node: TNode,
-    public field: FieldNode<any, any, any>
+    public field: FieldNode<any, any, any>,
+    public alias: string = null
   ) {
     super(parent, node)
 
@@ -20,13 +19,19 @@ export class SelectionField<
   protected computeValue() {
     super.computeValue()
     const parentObj = this.parent.value
+
     this.value = parentObj && parentObj[this.dataProp]
   }
 
   public args: any
 
   public setArguments(args: any) {
+    const changed = JSON.stringify(args) !== JSON.stringify(this.args)
     this.args = args
+
+    if (changed) {
+      this.root.selectUpdate(this)
+    }
   }
 
   public get dataProp() {

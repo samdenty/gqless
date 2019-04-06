@@ -1,5 +1,5 @@
-import { Node, NodeDataType } from '../Node'
-import { computed } from '../../utils'
+import { Node, NodeDataType, ObjectNode } from '../Node'
+import { computed, onEvent } from '../../utils'
 import { SelectionField } from './SelectionField'
 import { SelectionIndex } from './SelectionIndex'
 import { SelectionRoot } from './SelectionRoot'
@@ -15,11 +15,13 @@ export abstract class Selection<
   TNode extends Node<any>,
   S extends CircularSelection = CircularSelection
 > {
-  protected disposers: Function[] = []
   public selections: S[] = []
+  public root: SelectionRoot<ObjectNode<any, any, any>> = this.parent
+    ? this.parent.root
+    : null
+  protected disposers: Function[] = []
 
   private _value: NodeDataType<TNode>
-  private valueListeners: (() => void)[] = []
   private hasComputedValue = false
 
   constructor(public parent: Selection<any>, public node: TNode) {
@@ -39,10 +41,15 @@ export abstract class Selection<
     compare: (selection: SelectionType) => boolean,
     create?: () => SelectionType
   ): SelectionType {
-    const selection = (this.selections as SelectionType[]).find(compare)
+    let selection = (this.selections as SelectionType[]).find(compare)
     if (selection) return selection
 
-    return create ? create() : null
+    if (!create) return null
+    selection = create()
+
+    this.root.select(selection)
+
+    return selection
   }
 
   @computed()
@@ -53,6 +60,17 @@ export abstract class Selection<
     path.toString = () => path.map(selection => selection.toString()).join('.')
 
     return path
+  }
+
+  public get unresolvedSelection(): Selection<any> {
+    if (this.parent) {
+      const { unresolvedSelection } = this.parent
+      if (unresolvedSelection) return unresolvedSelection
+    }
+
+    if (this.value === undefined) return this
+
+    return null
   }
 
   public get value() {
@@ -66,7 +84,7 @@ export abstract class Selection<
     this._value = value
 
     if (prevValue !== value) {
-      this.valueListeners.forEach(cb => cb())
+      this.onValueChange.emit()
     }
   }
 
@@ -82,17 +100,7 @@ export abstract class Selection<
     this.computeValue()
   }
 
-  public onValueChange(callback: () => void) {
-    this.valueListeners.push(callback)
-
-    return () => {
-      const idx = this.valueListeners.indexOf(callback)
-
-      if (idx > -1) {
-        this.valueListeners.splice(idx, 1)
-      }
-    }
-  }
+  public onValueChange = onEvent<() => void>()
 
   public then(resolve: (value: NodeDataType<TNode>) => void) {
     const attemptResolve = () => {

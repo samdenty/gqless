@@ -2,7 +2,8 @@ import { Node } from '../abstract'
 import { StringNode } from './StringNode'
 import { BooleanNode } from './BooleanNode'
 import { NumberNode } from './NumberNode'
-import { Selection } from '../../Selection'
+import { Selection, SelectionRoot } from '../../Selection'
+import { ScalarProxyHandler } from '../../Middleware'
 
 export type IScalarNodeOptions = {
   name?: string
@@ -23,18 +24,36 @@ export class ScalarNode<T extends string | boolean | number> extends Node<T> {
     this.name = name
   }
 
-  protected proxyGetter(prop: string) {}
+  protected proxyGetter(
+    selection: Selection<UScalarNode>,
+    prop: string | symbol
+  ) {
+    if (prop === Symbol.toPrimitive) {
+      return (hint: string) => {
+        if (selection.value !== undefined) return selection.value
 
-  public getData(selection: Selection<any>) {
-    if (selection.value !== undefined) {
-      return selection.value as T
-    }
-
-    return new Proxy(
-      {},
-      {
-        get: (_, prop: string) => this.proxyGetter(prop),
+        throw selection.unresolvedSelection
       }
-    ) as T
+    }
+  }
+
+  public getData(selection: Selection<UScalarNode>) {
+    const value: T =
+      selection.value !== undefined
+        ? selection.value
+        : new Proxy(
+            {},
+            {
+              get: (_, prop: string) => this.proxyGetter(selection, prop),
+            }
+          )
+
+    const returnValue = selection.root
+      .scalarProxy(selection, value)
+      .find(value => value !== undefined)
+
+    if (returnValue !== undefined) return returnValue
+
+    return value
   }
 }

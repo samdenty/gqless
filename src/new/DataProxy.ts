@@ -18,39 +18,24 @@ interface DataNodeCallbackOptions {
 type FieldCallback<
   TNode extends FieldNode<any, any, any>
 > = TNode extends FieldNode<any, infer TArgs, any>
-  ? (RequiredKeys<TArgs> extends never
-      ? (
-          args?: NodeDataType<TArgs>,
-          options?: DataNodeCallbackOptions
-        ) => FieldValueProxy<TNode>
-      : (
-          args: NodeDataType<TArgs>,
-          options?: DataNodeCallbackOptions
-        ) => FieldValueProxy<TNode>)
-  : never
-
-interface DataPromise<T> extends Pick<Promise<T>, 'then' | 'catch'> {}
-
-export type DataPromiseValue<T extends Node<any>> = T extends FieldsNode<
-  any,
-  any,
-  any,
-  any
->
-  ? true
-  : false
-
-type NodeData<T> = DataPromise<T>
+  ? keyof NodeDataType<TArgs> extends never
+    ? unknown
+    : (RequiredKeys<NodeDataType<TArgs>> extends never
+        ? (
+            args?: NodeDataType<TArgs>,
+            options?: DataNodeCallbackOptions
+          ) => FieldValueProxy<TNode>
+        : (
+            args: NodeDataType<TArgs>,
+            options?: DataNodeCallbackOptions
+          ) => FieldValueProxy<TNode>)
+  : unknown
 
 type FieldValueProxy<TNode extends FieldNode<any, any, any>> = DataProxy<
   InnerNode<TNode>
 >
 
-type FieldProxy<
-  TNode extends FieldNode<any, any, any>
-> = (TNode extends FieldNode<any, never, any>
-  ? unknown
-  : FieldCallback<TNode>) &
+type FieldProxy<TNode extends FieldNode<any, any, any>> = FieldCallback<TNode> &
   FieldValueProxy<TNode>
 
 type RecurseFields<TNode extends FieldsNode<any, any, any, any>> = {
@@ -73,4 +58,4 @@ export type DataProxy<TNode extends Node<any>> = TNode extends ArrayNode<
   ? RecurseArray<TNode>
   : TNode extends FieldsNode<any, any, any, any>
   ? RecurseFields<TNode>
-  : NodeData<NodeDataType<TNode>>
+  : NodeDataType<TNode>

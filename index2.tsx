@@ -8,8 +8,6 @@ import {
   Arguments,
   ArgumentsField,
   ArrayNode,
-  ScalarNode,
-  BooleanNode,
   UnionNode,
   InterfaceNode,
   NodeDataType,
@@ -17,151 +15,40 @@ import {
   SelectionRoot,
   ASTBuilder,
   Query,
+  LoggerMiddleware,
 } from './src/new'
 import { Schema, SchemaType, Type, SchemaFieldArgs } from './src'
 import { Codegen } from './src/new/Codegen'
 import { types_github } from './typesGithub'
 
-export const test = (schema: Schema) => {
-  const resolvedTypes = new Map<
-    keyof Schema['types'],
-    ReturnType<typeof createNode>
-  >()
+export const test = (nodes, fetchQuery) => {
+  const root = new SelectionRoot(nodes.Query)
+  const data = nodes.Query.getData(root)
 
-  const getType = (name: string) => {
-    if (!resolvedTypes.has(name)) {
-      if (!schema.types.hasOwnProperty(name)) return null
+  const query = new Query(nodes.Query, fetchQuery, { name: 'TestQuery' })
+  query.middleware.add(new LoggerMiddleware(query))
 
-      resolvedTypes.set(name, createNode(schema.types[name]))
-    }
-
-    return resolvedTypes.get(name)
-  }
-
-  const resolveType = (type: Type) =>
-    type.kind === 'LIST'
-      ? new ArrayNode(resolveType(type.ofType), type.nullable)
-      : getType(type.name)
-
-  const resolveArgs = (args?: SchemaFieldArgs) => {
-    if (!args) return null
-
-    const inputs = {}
-    for (const [name, arg] of Object.entries(args)) {
-      Object.defineProperty(inputs, name, {
-        get() {
-          return resolveType(arg)
-        },
-        configurable: true,
-      })
-    }
-
-    return new Arguments(inputs)
-  }
-
-  const createNode = (type: SchemaType) => {
-    if (type.kind === 'SCALAR') {
-      return type.name === 'Int' || type.name === 'Float'
-        ? new NumberNode({ name: type.name })
-        : type.name === 'ID' || type.name === 'String'
-        ? new StringNode({ name: type.name })
-        : type.name === 'Boolean'
-        ? new BooleanNode({ name: type.name })
-        : new ScalarNode({ name: type.name })
-    }
-
-    if (type.kind === 'OBJECT') {
-      const fields = {}
-
-      for (const field of Object.values(type.fields)) {
-        Object.defineProperty(fields, field.name, {
-          get() {
-            return new FieldNode(
-              resolveType(field.type),
-              resolveArgs(field.args),
-              field.type.nullable
-            )
-          },
-          configurable: true,
-        })
-      }
-
-      return new ObjectNode(fields, { name: type.name })
-    }
-
-    if (type.kind === 'INPUT_OBJECT') {
-      const inputs = {}
-
-      for (const inputField of Object.values(type.inputFields)) {
-        Object.defineProperty(inputs, inputField.name, {
-          get() {
-            return new InputNodeField(
-              resolveType(inputField.type),
-              inputField.type.nullable
-            )
-          },
-          configurable: true,
-        })
-      }
-
-      return new InputNode(inputs, { name: type.name })
-    }
-
-    if (type.kind === 'UNION') {
-      return new UnionNode(type.possibleTypes.map(type => getType(type)))
-    }
-
-    if (type.kind === 'INTERFACE') {
-      const fields = {}
-
-      for (const field of Object.values(type.fields)) {
-        Object.defineProperty(fields, field.name, {
-          get() {
-            return new FieldNode(
-              resolveType(field.type),
-              resolveArgs(field.args),
-              field.type.nullable
-            )
-          },
-          configurable: true,
-        })
-      }
-
-      return new InterfaceNode(
-        fields,
-        type.possibleTypes.map(type => getType(type)),
-        { name: type.name }
-      )
-    }
-  }
-
-  const root = new SelectionRoot(getType('Query'))
-  const data = getType('Query').getData(root)
-
-  const query = new Query(getType('Query'))
   // @ts-ignore
   Object.assign(window, {
     root,
-    getType,
-    resolvedTypes,
+    types: nodes,
     astBuilder: new ASTBuilder('TestQuery'),
     query,
     data,
-    schema,
   })
 
-  root.value = {
-    user: { name: 'hello', avatarUrl: 'asd' },
-    users: [{ name: 'arr', avatarUrl: 'asd' }],
-  }
+  // root.value = {
+  //   user: { name: 'hello', avatarUrl: 'asd' },
+  //   users: [{ name: 'arr', avatarUrl: 'asd' }],
+  // }
 
-  data.a.b.c
+  // data.a.b.c
 
-  data.getUser({ id: 10 }).name
-  data.user.age
-  data.user.name
-  data.users[0].name
-  data.users[0].age
+  // data.getUser({ id: 10 }).name
+  // data.user.age
+  // data.user.name
+  // data.users[0].name
+  // data.users[0].age
 
   // const codegen = new Codegen(schema)
 
@@ -693,22 +580,6 @@ if (window.asdasdasdsd) {
   // @TODO: this is not typesafe for some reason
   // const n = repos.nodes[0]
   // n.createdAt
-}
-
-if (true) {
-  const String = new StringNode()
-
-  const User = new ObjectNode({
-    name: new FieldNode(String),
-    job: new FieldNode(String),
-  })
-
-  const testRoot = new SelectionRoot(User)
-
-  const data = testRoot.createProxy()
-  data.name
-
-  console.log(testRoot)
 }
 
 // @ts-ignore

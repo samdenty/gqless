@@ -23,6 +23,7 @@ type User {
   name: String @fake(type: firstName, locale: en_CA)
   age: Int @fake(type: number)
   
+  description: String @fake(type:lorem)
   avatarUrl(size: Int): String @fake(type:imageUrl)
   profileUrl: String @fake(type: imageUrl)
   b: String
@@ -66,11 +67,11 @@ input InputObj {
 }
 
 type Query {
+  me:User
   user: User
   users(limit:Int): [User!]!
-  users2: [[User]]
+
   a: A
-  number: Int
   getUser(id: ID): User
   getUsers(id: ID): [User!]!
 

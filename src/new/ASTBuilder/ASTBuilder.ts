@@ -4,14 +4,8 @@ import {
   ArgumentNode,
   ObjectFieldNode,
   ValueNode,
-  print,
 } from 'graphql'
-import {
-  SelectionField,
-  SelectionIndex,
-  Selection,
-  SelectionRoot,
-} from '../Selection'
+import { SelectionField, SelectionIndex, Selection } from '../Selection'
 import { ScalarNode } from '../Node'
 import { sortByPathLength } from './optimiseSelections'
 
@@ -85,6 +79,7 @@ export class ASTBuilder {
   }
 
   public buildDocument(...selections: Selection<any>[]) {
+    if (!selections.length) return null
     selections.sort(sortByPathLength)
     const astMap = new Map<Selection<any>, SelectionNode[]>()
 
@@ -114,9 +109,11 @@ export class ASTBuilder {
       astMap.set(selection, subSelections)
 
       if (selection.parent) {
-        astMap
-          .get(selection.parent)
-          .push(this.selectionNode(selection, subSelections))
+        const field = this.selectionNode(selection, subSelections)
+
+        if (field) {
+          astMap.get(selection.parent).push(field)
+        }
       }
     }
 
@@ -136,19 +133,15 @@ export class ASTBuilder {
       recurse(selection)
     })
 
-    const root = Array.from(astMap.entries()).find(
-      ([s]) => s instanceof SelectionRoot
-    )
-    if (!root) return null
-
-    const [rootSelection, rootSelections] = root
+    const { root } = selections[0]
+    const rootSelections = astMap.get(root)
 
     const doc: DocumentNode = {
       kind: 'Document',
       definitions: [
         {
           kind: 'OperationDefinition',
-          operation: 'query',
+          operation: root.node.name === 'Mutation' ? 'mutation' : 'query',
           ...(this.queryName && {
             name: {
               kind: 'Name',
@@ -165,7 +158,6 @@ export class ASTBuilder {
       ],
     }
 
-    console.log(print(doc))
     return doc
   }
 }

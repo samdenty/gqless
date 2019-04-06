@@ -16,63 +16,44 @@ import {
   InputNodeField,
   InterfaceNode,
   UnionNode,
-} from '../nodes'
-import { Arguments, ArgumentsField } from '../Arguments'
-import { FieldNode } from '../FieldsNode'
+  Arguments,
+  ArgumentsField,
+  FieldNode,
+} from '../Node'
 
-/*
-const types = {
-  get String() {
-    return new StringNode(null)
-  },
-  get ID() {
-    return new StringNode(null)
-  },
-  get Int() {
-    return new NumberNode(null)
-  },
-  get Float() {
-    return new NumberNode(null)
-  },
-  get User() {
-    return new ObjectNode(null, {
-      get name() {
-        return new ObjectNodeField(null, types.String)
-      },
-      get id() {
-        return new ObjectNodeField(null, types.ID)
-      },
-      get age() {
-        return new ObjectNodeField(null, types.Int)
-      },
-    })
-  },
-  get Query() {
-    return new ObjectNode(null, {
-      get users() {
-        return new ObjectNodeField(null, new ArrayNode(null, types.User))
-      },
-      get me() {
-        return new ObjectNodeField(null, types.User)
-      },
-    })
-  },
+interface CodegenOptions {
+  variableName?: string
+  typescript?: boolean
 }
-*/
-
-interface CodegenOptions {}
 
 export class Codegen {
   public options: CodegenOptions
 
   constructor(private schema: Schema, options?: CodegenOptions) {
     this.options = {
+      variableName: 'nodes',
+      typescript: true,
       ...options,
     }
   }
 
   public generate() {
-    return `const types = ${this.generateTypes()}`
+    return `
+      export const ${this.options.variableName} = ${this.generateTypes()};
+
+      ${this.options.typescript ? this.generateTypescriptExports() : ''}
+    `
+  }
+
+  private generateTypescriptExports() {
+    return Object.values(this.schema.types)
+      .map(
+        type =>
+          `export type ${type.name} = DataProxy<typeof ${this.getNode(
+            type.name
+          )}>`
+      )
+      .join('\n')
   }
 
   private generateTypes() {
@@ -87,16 +68,18 @@ export class Codegen {
     }`
   }
 
+  private getNode(name: string) {
+    return `${this.options.variableName}.${name}`
+  }
+
   private generateNode(type: SchemaType) {
     if (type.kind === 'OBJECT')
       return `new ${ObjectNode.name}({
         ${Object.values(type.fields)
           .map(field => {
             // prettier-ignore
-            const newField = `new ${FieldNode.name}(${this.generateType(field.type)}, ${this.generateArguments(field.args)}, ${field.type.nullable})`
-
             return `get ${field.name}() {
-              return ${newField}
+              return new ${FieldNode.name}(${this.generateType(field.type)}, ${this.generateArguments(field.args)}, ${field.type.nullable})
             }`
           })
           .join(',')}
@@ -106,24 +89,24 @@ export class Codegen {
       return `new ${InterfaceNode.name}({
         ${Object.values(type.fields)
           .map(
+            // prettier-ignore
             field => `get ${field.name}() {
-              return ${this.generateField(field)}
+              return new ${FieldNode.name}(${this.generateType(field.type)}, ${this.generateArguments(field.args)}, ${field.type.nullable})
             }`
           )
           .join(',')}
       },
-      [${type.possibleTypes.map(type => `types.${type}`).join(',')}],
+      [${type.possibleTypes.map(type => this.getNode(type)).join(',')}],
       ${JSON.stringify({ name: type.name })})`
     }
 
     if (type.kind === 'UNION') {
-      return `new ${UnionNode.name}([${type.possibleTypes.map(
-        type => `types.${type}`
+      return `new ${UnionNode.name}([${type.possibleTypes.map(type =>
+        this.getNode(type)
       )}])`
     }
 
     if (type.kind === 'SCALAR') {
-      // prettier-ignore
       return type.name === 'Int' || type.name === 'Float'
         ? `new ${NumberNode.name}(${JSON.stringify({ name: type.name })})`
         : type.name === 'ID' || type.name === 'String'
@@ -137,8 +120,9 @@ export class Codegen {
       return `new ${InputNode.name}({
         ${Object.values(type.inputFields)
           .map(
+            // prettier-ignore
             field => `get ${field.name}() {
-              return ${this.generateField(field)}
+              return new ${InputNodeField.name}(${this.generateType(field.type)}, ${field.type.nullable})
             }`
           )
           .join(',')}
@@ -146,16 +130,12 @@ export class Codegen {
     }
   }
 
-  private generateField(field: SchemaField) {
-    // prettier-ignore
-    return `new ${FieldNode.name}(${this.generateType(field.type)}, ${this.generateArguments(field.args)}, ${field.type.nullable})`
-  }
-
   private generateType(type: Type) {
     return type.kind === 'LIST'
-      ? // prettier-ignore
-        `new ${ArrayNode.name}(${this.generateType(type.ofType)}, ${type.nullable})`
-      : `types.${type.name}`
+      ? `new ${ArrayNode.name}(${this.generateType(type.ofType)}, ${
+          type.nullable
+        })`
+      : this.getNode(type.name)
   }
 
   public generateArguments(args: SchemaFieldArgs) {

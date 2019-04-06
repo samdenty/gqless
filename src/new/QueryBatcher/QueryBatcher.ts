@@ -5,7 +5,10 @@ export class QueryBatcher {
   private timer: any
   private commits = new Set<Selection<any, any>>()
 
-  constructor(protected query: Query<any>, public interval: number = 50) {
+  constructor(
+    private fetchSelections: (selections: Selection<any>[]) => Promise<any>,
+    public interval: number = 50
+  ) {
     this.startTimer()
   }
 
@@ -33,7 +36,7 @@ export class QueryBatcher {
     this.commits.clear()
 
     try {
-      await this.query.fetchSelections(commits)
+      await this.fetchSelections(commits)
     } catch (e) {
       // @TODO
       console.warn('error:', e)

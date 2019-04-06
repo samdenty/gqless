@@ -17,7 +17,7 @@ test('supports providing options using context', () => {
 
   render(
     <React.Suspense fallback="loading">
-      <QueryProvider value={{ queryName: name }}>
+      <QueryProvider value={{ name: name }}>
         <Component />
       </QueryProvider>
     </React.Suspense>

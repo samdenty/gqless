@@ -6,7 +6,8 @@ export const lazyGetters = <T extends Record<any, any>>(
     Object.getOwnPropertyDescriptors(obj)
   )) {
     if (!('get' in descriptor)) {
-      onEvaluated(key, obj[key])
+      if (onEvaluated) onEvaluated(key, obj[key])
+
       continue
     }
 
@@ -25,7 +26,7 @@ export const lazyGetters = <T extends Record<any, any>>(
           enumerable: true,
           value,
         })
-        onEvaluated(key, value)
+        if (onEvaluated) onEvaluated(key, value)
         return value
       },
       enumerable: true,
