@@ -19,8 +19,10 @@ export class SelectionRoot<
   public onSelectUpdate = onEvent<Middleware['onSelectUpdate']>()
   public selectUpdate = this.onSelectUpdate.emit
 
-  public onScalarProxy = onEvent<Middleware['scalarProxy']>()
-  public scalarProxy = this.onScalarProxy.emit
+  public onGetScalarData = onEvent<Middleware['getScalarData']>()
+  public getScalarData = this.onGetScalarData.first(
+    value => value !== undefined
+  )
 
   public createProxy() {
     return this.node.getData(this) as ReturnType<TNode['getData']>

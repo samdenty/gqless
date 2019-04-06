@@ -56,10 +56,10 @@ export class Query<
       this.batcher.stage(selection)
     })
 
-    this.selectionRoot.onScalarProxy((selection, value) => {
-      return this.middleware.all
-        .scalarProxy(selection, value)
-        .find(value => value !== undefined)
+    this.selectionRoot.onGetScalarData((selection, value) => {
+      return this.middleware.first.getScalarData(selection, value)(
+        value => value !== undefined
+      )
     })
 
     this.selectionRoot.onSelectUpdate(selection => {

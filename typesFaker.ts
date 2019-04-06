@@ -14,6 +14,7 @@ import {
   InputNodeField,
   DataProxy,
 } from './src/new'
+import { lazyGetters } from './src/utils'
 
 export const typesFaker = {
   get Query() {
@@ -530,6 +531,8 @@ export const typesFaker = {
     return new ScalarNode({ name: 'examples__JSON' })
   },
 }
+
+lazyGetters(typesFaker)
 
 export type Query = DataProxy<typeof typesFaker.Query>
 export type User = DataProxy<typeof typesFaker.User>

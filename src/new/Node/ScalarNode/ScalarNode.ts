@@ -48,9 +48,7 @@ export class ScalarNode<T extends string | boolean | number> extends Node<T> {
             }
           )
 
-    const returnValue = selection.root
-      .scalarProxy(selection, value)
-      .find(value => value !== undefined)
+    const returnValue = selection.root.getScalarData(selection, value)
 
     if (returnValue !== undefined) return returnValue
 

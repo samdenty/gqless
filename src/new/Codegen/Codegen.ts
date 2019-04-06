@@ -39,7 +39,9 @@ export class Codegen {
 
   public generate() {
     return `
-      export const ${this.options.variableName} = ${this.generateTypes()};
+      export const ${this.options.variableName} = ${this.generateTypes()}
+
+      lazyGetters(${this.options.variableName})
 
       ${this.options.typescript ? this.generateTypescriptExports() : ''}
     `

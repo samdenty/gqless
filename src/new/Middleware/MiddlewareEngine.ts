@@ -40,4 +40,25 @@ export class MiddlewareEngine {
         .map(middleware => middleware[key](...args))
     },
   })
+
+  public first = new Proxy<
+    {
+      [K in keyof Middleware]-?: (
+        ...args: Parameters<Middleware[K]>
+      ) => (
+        isCorrectValue: (value: ReturnType<Middleware[K]>) => boolean
+      ) => ReturnType<Middleware[K]>
+    }
+  >({} as any, {
+    get: (_, key) => (...args: any[]) => (
+      isCorrectValue: (value: any) => boolean
+    ) => {
+      for (const middleware of this.middlewares.filter(
+        middleware => key in middleware
+      )) {
+        const value = middleware[key](...args)
+        if (isCorrectValue(value)) return value
+      }
+    },
+  })
 }

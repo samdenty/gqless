@@ -21,5 +21,14 @@ export const onEvent = <
     return Array.from(listeners).map(emit => emit(...args))
   }
 
+  onEvent.first = (
+    isCorrectValue: (value: ReturnType<TCallback>) => boolean
+  ) => (...args: Parameters<TCallback>) => {
+    for (const emit of Array.from(listeners)) {
+      const value = emit(...args)
+      if (isCorrectValue) return value
+    }
+  }
+
   return onEvent
 }

@@ -18,7 +18,8 @@ export type Middleware = {
     error?: any
     response?: QueryResponse
   }): void
-  scalarProxy?(
+
+  getScalarData?(
     selection: Selection<UScalarNode>,
     value: string | number | boolean | object
   ): any

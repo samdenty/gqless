@@ -6,7 +6,7 @@ import { isOptimistic, recordSelection } from './optimistic'
 export class ReactMiddleware implements Middleware {
   constructor(private forceUpdate: Function) {}
 
-  public scalarProxy = ((selection, value) => {
+  public getScalarData = ((selection, value) => {
     if (isOptimistic && selection.value === undefined) {
       recordSelection(selection.unresolvedSelection)
 
@@ -39,7 +39,7 @@ export class ReactMiddleware implements Middleware {
         },
       })
     }
-  }) as Middleware['scalarProxy']
+  }) as Middleware['getScalarData']
 
   public onFetched() {
     this.forceUpdate()
