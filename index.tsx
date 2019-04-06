@@ -46,7 +46,6 @@ async function bootstrap() {
   }
 
   const Component = optimistic(() => {
-    const [clicks, setClicks] = React.useState(0)
     const query = useQuery<typeof typesFaker.Query>('TestQuery', query => {
       query.middleware.add(new LoggerMiddleware(query))
     })
@@ -59,7 +58,9 @@ async function bootstrap() {
         <b>My name:</b> {query.data.me.name}
         <br />
         <b>My description:</b>
-        <Description user={query.data.me} />
+        <Defer fallback="Loading">
+          <Description user={query.data.me} />
+        </Defer>
         <div>
           <b>Other users:</b>
           {query.data.users.map(user => (

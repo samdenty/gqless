@@ -29,7 +29,9 @@ export const GithubUser = () => {
 
 ### optimistic(component)
 
-If you wrap your component inside this function, all scalar values will return `null` if they have not yet loaded (instead of suspending the component). This greatly reduces the amount of queries made.
+Greatly reduces the amount of queries made
+
+All scalar values will return `null` before loaded, the component will then suspend at the end of the return statement (instead of when scalar methods ie. toString are called)
 
 ```jsx
 // Without optimistic, two seperate queries will be made
