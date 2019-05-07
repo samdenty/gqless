@@ -1,55 +1,31 @@
-import { Node, NodeDataType, ObjectNode } from '../Node'
+import { Node, ObjectNode } from '../Node'
 import { computed, onEvent } from '../../utils'
-import { SelectionField } from './SelectionField'
-import { SelectionIndex } from './SelectionIndex'
-import { SelectionRoot } from './SelectionRoot'
+import { RootSelection } from './RootSelection'
+import { FieldSelection } from './FieldSelection'
+import { Middleware } from '../Middleware'
 
-export type USelection =
-  | SelectionRoot<any>
-  | SelectionField<any, any>
-  | SelectionIndex<any>
-
-interface CircularSelection extends Selection<any, CircularSelection> {}
+export interface CircularSelectionField
+  extends FieldSelection<any, CircularSelectionField> {}
 
 export abstract class Selection<
   TNode extends Node<any>,
-  S extends CircularSelection = CircularSelection
+  TSelections extends CircularSelectionField = CircularSelectionField
 > {
-  public selections: S[] = []
-  public root: SelectionRoot<ObjectNode<any, any, any>> = this.parent
-    ? this.parent.root
-    : null
-  protected disposers: Function[] = []
+  public selections: TSelections[] = []
+  public root: RootSelection<ObjectNode<any, any, any>>
 
-  private _value: NodeDataType<TNode>
-  private hasComputedValue = false
+  public onSelect = onEvent<Middleware['onSelect']>()
+  public onUnselect = onEvent<Middleware['onUnselect']>()
 
   constructor(public parent: Selection<any>, public node: TNode) {
-    if (parent) {
-      parent.selections.push(this)
-      this.disposers.push(() => {
-        const idx = parent.selections.indexOf(this)
-
-        if (idx > -1) {
-          parent.selections.splice(idx, 1)
-        }
-      })
+    if (this.parent) {
+      this.onSelect(this.parent.onSelect.emit)
+      this.onUnselect(this.parent.onUnselect.emit)
     }
   }
 
-  public getSelection<SelectionType extends S>(
-    compare: (selection: SelectionType) => boolean,
-    create?: () => SelectionType
-  ): SelectionType {
-    let selection = (this.selections as SelectionType[]).find(compare)
-    if (selection) return selection
-
-    if (!create) return null
-    selection = create()
-
-    this.root.select(selection)
-
-    return selection
+  public getField(compare: (selection: TSelections) => boolean) {
+    return this.selections.find(compare)
   }
 
   @computed()
@@ -62,60 +38,50 @@ export abstract class Selection<
     return path
   }
 
-  public get unresolvedSelection(): Selection<any> {
-    if (this.parent) {
-      const { unresolvedSelection } = this.parent
-      if (unresolvedSelection) return unresolvedSelection
-    }
+  // public get unresolvedSelection(): Selection<any> {
+  //   if (this.value !== undefined) return null
 
-    if (this.value === undefined) return this
+  //   if (this.parent) {
+  //     const { unresolvedSelection } = this.parent
+  //     if (unresolvedSelection) return unresolvedSelection
+  //   }
 
-    return null
-  }
+  //   return this
+  // }
 
-  public get value() {
-    if (!this.hasComputedValue) this.computeValue()
+  // public get value() {
+  //   return this._value
+  // }
 
-    return this._value
-  }
+  // public set value(value: NodeDataType<TNode>) {
+  //   const prevValue = this._value
+  //   this._value = value
 
-  public set value(value: NodeDataType<TNode>) {
-    const prevValue = this._value
-    this._value = value
+  //   if (prevValue !== value) {
+  //     this.onValueChange.emit(prevValue)
+  //   }
+  // }
 
-    if (prevValue !== value) {
-      this.onValueChange.emit()
-    }
-  }
+  // protected computeValue() {}
 
-  protected computeValue() {
-    this.hasComputedValue = true
-  }
+  // public onValueChange = onEvent<(prevValue: NodeDataType<TNode>) => void>()
 
-  /**
-   * Conditonally computes the value, only if it's been computed before
-   */
-  public recomputeValue() {
-    if (!this.hasComputedValue) return
-    this.computeValue()
-  }
+  // public then(resolve: (value: NodeDataType<TNode>) => void) {
+  //   const attemptResolve = () => {
+  //     if (this.value !== undefined) {
+  //       dispose()
+  //       resolve(this.value)
+  //     }
+  //   }
+  //   const dispose = this.onValueChange(attemptResolve)
+  //   attemptResolve()
+  //   return this
+  // }
 
-  public onValueChange = onEvent<() => void>()
+  public unselect() {
+    const [...selections] = this.selections
+    selections.forEach(s => s.unselect())
 
-  public then(resolve: (value: NodeDataType<TNode>) => void) {
-    const attemptResolve = () => {
-      if (this.value !== undefined) {
-        dispose()
-        resolve(this.value)
-      }
-    }
-    const dispose = this.onValueChange(attemptResolve)
-    attemptResolve()
-    return this
-  }
-
-  public destroy() {
-    this.selections.forEach(s => s.destroy())
-    this.disposers.forEach(dispose => dispose())
+    this.onUnselect.emit(this)
   }
 }

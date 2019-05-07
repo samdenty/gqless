@@ -33,7 +33,7 @@ export type InnerNode<T extends Node<any>> = T extends NodeContainer<
     : never
   : T
 
-export abstract class NodeContainer<
+export class NodeContainer<
   TNode extends Node<any>,
   TNullable extends boolean = false,
   DataType = NodeDataType<TNode>

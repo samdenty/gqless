@@ -5,11 +5,11 @@ import ReactDOM from 'react-dom'
 
 import ApolloClient from 'apollo-boost'
 
-import { useQuery, QueryProvider, optimistic, Defer } from './src/new/React'
-import { LoggerMiddleware, ObjectNode } from './src/new'
-import { schemaNodes, fetchSchema } from './src/new/Schema'
+import { useQuery, QueryProvider, graphql, Defer } from './src/new/React'
+import { LoggerMiddleware, Query } from './src/new'
+import { fetchSchema } from './src/new/Schema'
 import { Codegen } from './src/new/Codegen'
-import { typesFaker, User } from './typesFaker'
+import { types as typesFaker, User } from './typesFaker'
 
 const client = new ApolloClient({
   uri: 'http://localhost:9002/graphql',
@@ -21,31 +21,52 @@ async function bootstrap() {
     return { data: resp.data, errors: resp.errors }
   }
 
-  // const schema = await fetchSchema(fetchQuery)
-  // const codegen = new Codegen(schema, { variableName: 'typesFaker' })
-  // console.log(codegen.generate())
+  const schema = await fetchSchema(fetchQuery)
+  const codegen = new Codegen(schema)
+  console.log(codegen.generate())
+
+  const query = new Query(typesFaker.Query, fetchQuery, { name: 'TestQuery' })
+  query.middleware.add(new LoggerMiddleware(query))
+
+  const getUsers = query.data.users
+  getUsers({ limit: 10 })[1].age
+  getUsers({ limit: 1 })[1].age
+  getUsers({ limit: 1 })[1].avatarUrl
+
+  query.data.user.following[0].name
+
+  query.data.users[1].following[0].age
+  query.data.users[1].avatarUrl
+  query.data.users[1].avatarUrl({ size: 100 })
+  query.data.users[1].age
+
+  window.typesFaker = typesFaker
+  window.query = query
+
+  return
 
   test(typesFaker, fetchQuery)
 
-  const Age = ({ user }: { user: User }) => {
-    return <div>age: {user.age}</div>
-  }
-
-  const Description = ({ user }: { user: User }) => {
+  const Description = graphql(({ user }: { user: User }) => {
     return <p>{user.description}</p>
-  }
+  })
 
-  const UserComponent = ({ user }: { user: User }) => {
+  Description.displayName = 'Description'
+
+  const UserComponent = graphql(({ user }: { user: User }) => {
     return (
       <div>
+        <img src={user.avatarUrl({ size: 200 })} />
         <h2>{user.name}</h2>
-        <Age user={user} />
+        <div>age: {user.age}</div>
         <Description user={user} />
       </div>
     )
-  }
+  })
+  UserComponent.displayName = 'UserComponent'
 
-  const Component = optimistic(() => {
+  const Component = graphql(() => {
+    console.count('Component render')
     const query = useQuery<typeof typesFaker.Query>('TestQuery', query => {
       query.middleware.add(new LoggerMiddleware(query))
     })
@@ -137,6 +158,8 @@ async function bootstrap() {
     //   </div>
     // )
   })
+
+  Component.displayName = 'Component'
 
   const App = () => {
     return (

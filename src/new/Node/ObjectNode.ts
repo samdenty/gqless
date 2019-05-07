@@ -5,25 +5,34 @@ import {
   FieldNode,
 } from './abstract'
 import { DataProxy } from '../DataProxy'
-import { Selection } from '../Selection'
+import { Accessor } from '../Accessor'
 
-export type IObjectNodeOptions<Typename> = IFieldsNodeOptions<Typename> & {}
+export type IObjectNodeOptions<Typename> = IFieldsNodeOptions<Typename> & {
+  getKey?(a: any): any
+}
 
 export class ObjectNode<
   TNode extends UFieldsNodeRecord<keyof T>,
   T,
-  Typename extends string
+  Typename extends string = string
 > extends FieldsNode<TNode, T, Typename> {
   // @TODO: Remove
   public data: DataProxy<ObjectNode<TNode, T, Typename>>
+  private getKey: any
 
-  constructor(fields: TNode, options?: IObjectNodeOptions<Typename>) {
+  constructor(
+    fields: TNode,
+    { getKey, ...options }: IObjectNodeOptions<Typename> = {}
+  ) {
     super(fields, options)
+    this.getKey = getKey
   }
 
   public getData(
-    selection: Selection<any>
+    accessor: Accessor
   ): DataProxy<ObjectNode<TNode, T, Typename>> {
+    // accessor.node.root.dataAccessed(accessor.node)
+
     return new Proxy({} as any, {
       get: (_, prop: string) => {
         if (prop === '__typename') {
@@ -33,7 +42,7 @@ export class ObjectNode<
         if (this.fields.hasOwnProperty(prop)) {
           const field: FieldNode<any> = this.fields[prop]
 
-          return field.getData(selection)
+          return field.getData(accessor)
         }
       },
     })

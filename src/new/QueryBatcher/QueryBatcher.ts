@@ -1,5 +1,4 @@
-import { Query } from '../Query'
-import { Selection, SelectionRoot } from '../Selection'
+import { Selection, RootSelection } from '../Selection'
 
 export class QueryBatcher {
   private timer: any
@@ -13,20 +12,12 @@ export class QueryBatcher {
   }
 
   public stage(selection: Selection<any, any>) {
-    const selections =
-      selection instanceof SelectionRoot ? selection.selections : [selection]
-
-    selections.forEach(node => {
-      this.commits.add(node)
-    })
+    if (this.commits.has(selection)) return
+    this.commits.add(selection)
   }
 
   public unstage(selection: Selection<any, any>) {
-    if (selection instanceof SelectionRoot) {
-      this.commits.clear()
-    } else {
-      this.commits.delete(selection)
-    }
+    this.commits.delete(selection)
   }
 
   public async fetchCommits() {

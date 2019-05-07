@@ -24,8 +24,10 @@ type User {
   age: Int @fake(type: number)
   
   description: String @fake(type:lorem)
-  avatarUrl(size: Int): String @fake(type:imageUrl)
+  avatarUrl(size: Int): String @fake(type:avatarUrl)
   profileUrl: String @fake(type: imageUrl)
+  following:[User]
+  followers:[User]
   b: String
   c: String
   d: String
@@ -68,7 +70,7 @@ input InputObj {
 
 type Query {
   me:User
-  user: User
+  user(id: ID): User
   users(limit:Int): [User!]!
 
   a: A

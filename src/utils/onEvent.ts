@@ -1,20 +1,16 @@
-export const onEvent = <
-  TCallback extends (...args: any[]) => any,
-  THandlerArgs extends any[] = any[]
->(
-  onEventHandler?: (...args: THandlerArgs) => void
-) => {
+export const onEvent = <TCallback extends (...args: any[]) => any>() => {
   const listeners = new Set<TCallback>()
 
-  const onEvent = (callback: TCallback, ...args: THandlerArgs) => {
+  const onEvent = (callback: TCallback) => {
     listeners.add(callback)
-    if (onEventHandler) {
-      onEventHandler(...args)
-    }
 
     return () => {
       listeners.delete(callback)
     }
+  }
+
+  onEvent.off = (callback: TCallback) => {
+    listeners.delete(callback)
   }
 
   onEvent.emit = (...args: Parameters<TCallback>) => {

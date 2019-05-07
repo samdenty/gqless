@@ -1,4 +1,3 @@
 export * from './Selection'
-export * from './SelectionField'
-export * from './SelectionIndex'
-export * from './SelectionRoot'
+export * from './FieldSelection'
+export * from './RootSelection'

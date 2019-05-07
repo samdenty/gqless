@@ -46,10 +46,10 @@ export type FieldsDataType<
     [P in Exclude<keyof T, NullableKeys<T>>]: UObjectNodeDataType<T[P]['node']>
   }*/
 
-export abstract class FieldsNode<
+export class FieldsNode<
   TNode extends UFieldsNodeRecord<keyof T>,
   T,
-  Typename extends string,
+  Typename extends string = string,
   TDataType = unknown
 > extends Node<
   TDataType extends unknown ? FieldsDataType<TNode, Typename> : TDataType

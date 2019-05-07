@@ -8,6 +8,12 @@ export type Middleware = {
   // Called each time a new selection is created
   onSelect?(selection: Selection<any>): void
 
+  // Called each time a selection is destroyed
+  onUnselect?(selection: Selection<any>): void
+
+  // Called each time a new selection is created
+  onDataAccessed?(selection: Selection<any>): void
+
   // Called each time a selection has changed
   onSelectUpdate?(selection: Selection<any>): void
 

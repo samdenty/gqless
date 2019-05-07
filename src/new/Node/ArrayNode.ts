@@ -1,6 +1,7 @@
 import { NodeContainer, Node, NodeDataType } from './abstract'
 import { ObjectNode } from './ObjectNode'
-import { Selection, SelectionIndex } from '../Selection'
+import { Selection } from '../Selection'
+import { Accessor, IndexAccessor } from '../Accessor'
 
 export class ArrayNode<
   TNode extends Node<any>,
@@ -11,11 +12,14 @@ export class ArrayNode<
   }
 
   public getData(
-    selection: Selection<ArrayNode<TNode, TNullable>, SelectionIndex<any>>
+    arrayAccessor: Accessor<
+      Selection<ArrayNode<TNode, TNullable>>,
+      IndexAccessor
+    >
   ) {
     const proxy = new Proxy([], {
       get: (target, prop) => {
-        const arr = selection.value
+        const arr = null //accessor.value
 
         if (prop === 'length') {
           return arr ? arr.length : 1
@@ -28,13 +32,12 @@ export class ArrayNode<
             // If the array is fetched, make sure index exists
             if (arr && index >= arr.length) return undefined
 
-            const selectionIndex = selection.getSelection(
-              s => s.index === index,
-              () => new SelectionIndex(selection, this.ofNode, index)
-            )
+            const accessor =
+              arrayAccessor.getChild(a => a.index === index) ||
+              new IndexAccessor(arrayAccessor, index)
 
             return this.ofNode instanceof ObjectNode
-              ? this.ofNode.getData(selectionIndex)
+              ? this.ofNode.getData(accessor)
               : null
           }
         }
@@ -47,9 +50,9 @@ export class ArrayNode<
       },
       has: (target, prop) => {
         // If the array is fetched, check against it
-        if (selection.value) {
-          return prop in selection.value
-        }
+        // if (accessor.value) {
+        //   return prop in accessor.value
+        // }
 
         if (typeof prop === 'string' && !isNaN(+prop)) {
           return true

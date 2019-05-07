@@ -1,59 +1,86 @@
 import { Node, NodeDataType } from '../Node'
 import { NodeContainer } from '../NodeContainer'
-import { Selection, SelectionField } from '../../../Selection'
+import { FieldSelection } from '../../../Selection'
 import { Arguments, ObjectNode, ArrayNode, ScalarNode } from '../..'
+import { Accessor, FieldAccessor } from '../../../Accessor'
+import isEqual from 'fast-deep-equal'
 
 export class FieldNode<
-  T extends Node<any>,
+  TNode extends Node<any>,
   TArguments extends Arguments<any, any> = any,
   TNullable extends boolean = false
-> extends NodeContainer<T, TNullable> {
-  public data: NodeDataType<T>
+> extends NodeContainer<TNode, TNullable> {
+  public data: NodeDataType<TNode>
   public name: string = null
 
-  constructor(node: T, public args?: TArguments, nullable?: TNullable) {
+  constructor(node: TNode, public args?: TArguments, nullable?: TNullable) {
     super(node, nullable)
   }
 
-  public getData(fieldsSelection: Selection<any, any>) {
-    const getSelectionAlias = (alias: string) =>
-      fieldsSelection.getSelection(
-        selection => {
-          if (!(selection instanceof SelectionField)) return false
-          return selection.field.name === this.name && selection.alias === alias
-        },
-        () => new SelectionField(fieldsSelection, this.ofNode, this, alias)
-      )
+  public getData(fieldsAccessor: Accessor) {
+    const getSelection = (args: any) => {
+      const selection: FieldSelection<
+        TNode
+      > = fieldsAccessor.selection.getField(selection => {
+        if (!(selection instanceof FieldSelection)) return false
 
-    const getData = (selection = getSelectionAlias(null)) => {
-      if (selection.value === null) return null
+        return (
+          selection.field.name === this.name && isEqual(selection.args, args)
+        )
+      })
 
-      return this.ofNode instanceof ObjectNode
-        ? this.ofNode.getData(selection)
-        : this.ofNode instanceof ArrayNode
-        ? this.ofNode.getData(selection as any)
-        : this.ofNode instanceof ScalarNode
-        ? this.ofNode.getData(selection as any)
-        : undefined
+      if (selection) return { justCreated: false, selection }
+
+      return {
+        justCreated: true,
+        selection: new FieldSelection(
+          fieldsAccessor.selection,
+          this.ofNode,
+          this,
+          args
+        ),
+      }
     }
 
-    if (this.args) {
-      let unaliasedData: any
+    const getData = (selection: FieldSelection<TNode>) => {
+      // selection.root.dataAccessed(selection)
 
+      const accessor =
+        fieldsAccessor.getChild(a => a.selection === selection) ||
+        new FieldAccessor(fieldsAccessor, selection)
+
+      return this.ofNode instanceof ObjectNode
+        ? this.ofNode.getData(accessor)
+        : this.ofNode instanceof ArrayNode
+        ? this.ofNode.getData(accessor as any)
+        : this.ofNode instanceof ScalarNode
+        ? this.ofNode.getData(accessor as any)
+        : undefined
+    }
+    const argumentless = getSelection(null)
+    const argumentlessData = getData(argumentless.selection)
+
+    if (this.args) {
       // Return a proxy to a function
       return new Proxy(
-        (args: NodeDataType<TArguments>, { alias = null } = {}) => {
-          const selection = getSelectionAlias(alias)
-          selection.setArguments(args)
+        (args: NodeDataType<TArguments>) => {
+          if (args === undefined) args = null
+
+          // If we just created the argumentless selection
+          // + it didn't already exist then destroy it, as it's not required
+          if (args && argumentless.justCreated) {
+            argumentless.selection.unselect()
+          }
+
+          const { selection } = getSelection(args)
           return getData(selection)
         },
         {
           get: (_, prop) => {
-            if (!unaliasedData) unaliasedData = getData()
-            const result = unaliasedData[prop]
+            const result = argumentlessData[prop]
 
             if (typeof result === 'function') {
-              return result.bind(unaliasedData)
+              return result.bind(argumentlessData)
             }
 
             return result
@@ -62,6 +89,6 @@ export class FieldNode<
       )
     }
 
-    return getData()
+    return argumentlessData
   }
 }

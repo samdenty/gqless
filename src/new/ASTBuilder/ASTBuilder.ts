@@ -4,8 +4,9 @@ import {
   ArgumentNode,
   ObjectFieldNode,
   ValueNode,
+  print,
 } from 'graphql'
-import { SelectionField, SelectionIndex, Selection } from '../Selection'
+import { FieldSelection, Selection } from '../Selection'
 import { ScalarNode } from '../Node'
 import { sortByPathLength } from './optimiseSelections'
 
@@ -38,7 +39,7 @@ export class ASTBuilder {
         }
   }
 
-  private getArguments(selection: SelectionField<any, any>) {
+  private getArguments(selection: FieldSelection<any, any>) {
     if (!selection.args) return []
 
     return Object.entries(selection.args).map(
@@ -54,39 +55,33 @@ export class ASTBuilder {
   }
 
   private selectionNode(
-    selection: Selection<any>,
+    selection: FieldSelection<any>,
     subSelections: SelectionNode[]
   ): SelectionNode {
-    if (selection instanceof SelectionField) {
-      return {
-        kind: 'Field',
-        name: {
-          kind: 'Name',
-          value: selection.field.name,
-        },
-        ...(selection.alias && {
-          alias: { kind: 'Name', value: selection.dataProp },
-        }),
-        arguments: this.getArguments(selection),
-        directives: [],
-        selectionSet: subSelections.length
-          ? { kind: 'SelectionSet', selections: subSelections }
-          : null,
-      }
+    return {
+      kind: 'Field',
+      name: {
+        kind: 'Name',
+        value: selection.field.name,
+      },
+      ...(selection.alias && {
+        alias: { kind: 'Name', value: selection.dataProp },
+      }),
+      arguments: this.getArguments(selection),
+      directives: [],
+      selectionSet: subSelections.length
+        ? { kind: 'SelectionSet', selections: subSelections }
+        : null,
     }
-
-    return null
   }
 
   public buildDocument(...selections: Selection<any>[]) {
     if (!selections.length) return null
     selections.sort(sortByPathLength)
+
     const astMap = new Map<Selection<any>, SelectionNode[]>()
 
-    const getSubselections = (selection: Selection<any>) => {
-      if (selection instanceof SelectionIndex)
-        return astMap.get(selection.parent)
-
+    const getInitialSubselections = (selection: Selection<any>) => {
       const subSelections: SelectionNode[] = []
 
       if (!(selection.node instanceof ScalarNode)) {
@@ -105,11 +100,14 @@ export class ASTBuilder {
     const addSelectionNode = (selection: Selection<any>) => {
       if (astMap.has(selection)) return
 
-      const subSelections = getSubselections(selection)
+      const subSelections = getInitialSubselections(selection)
       astMap.set(selection, subSelections)
 
       if (selection.parent) {
-        const field = this.selectionNode(selection, subSelections)
+        const field = this.selectionNode(
+          selection as FieldSelection<any>,
+          subSelections
+        )
 
         if (field) {
           astMap.get(selection.parent).push(field)

@@ -12,7 +12,7 @@ import {
   InterfaceNode,
   NodeDataType,
   DataProxy,
-  SelectionRoot,
+  RootSelection,
   ASTBuilder,
   Query,
   LoggerMiddleware,
@@ -22,7 +22,7 @@ import { Codegen } from './src/new/Codegen'
 import { types_github } from './typesGithub'
 
 export const test = (nodes, fetchQuery) => {
-  const root = new SelectionRoot(nodes.Query)
+  const root = new RootSelection(nodes.Query)
   const data = nodes.Query.getData(root)
 
   const query = new Query(nodes.Query, fetchQuery, { name: 'TestQuery' })
@@ -569,7 +569,7 @@ export const test = (nodes, fetchQuery) => {
 
 // @ts-ignore
 if (window.asdasdasdsd) {
-  const ghRoot = new SelectionRoot(types_github.Query)
+  const ghRoot = new RootSelection(types_github.Query)
 
   const data = ghRoot.createProxy()
 

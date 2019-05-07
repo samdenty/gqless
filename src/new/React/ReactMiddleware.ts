@@ -1,19 +1,20 @@
 import { createElement } from 'react'
 import { Middleware } from '../Middleware'
-import { StringNode, NumberNode } from '../Node'
-import { isOptimistic, recordSelection } from './optimistic'
+import { isRecording, recordSelection } from './recorder'
 
 export class ReactMiddleware implements Middleware {
   constructor(private forceUpdate: Function) {}
 
-  public getScalarData = ((selection, value) => {
-    if (isOptimistic && selection.value === undefined) {
-      recordSelection(selection.unresolvedSelection)
-
-      return null
+  public onDataAccessed = (selection => {
+    if (isRecording) {
+      recordSelection(selection)
     }
+  }) as Middleware['onDataAccessed']
 
+  public getScalarData = ((selection, value) => {
     if (selection.value === undefined) {
+      if (isRecording) return undefined
+
       // We return a proxy to a react element here, which
       // once rendered, will suspend -> causing parent to suspend
       // by doing this, we can detect multiple scalars in one render
@@ -40,8 +41,4 @@ export class ReactMiddleware implements Middleware {
       })
     }
   }) as Middleware['getScalarData']
-
-  public onFetched() {
-    this.forceUpdate()
-  }
 }

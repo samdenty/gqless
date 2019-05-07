@@ -1,51 +1,64 @@
+import { typeOptions } from './typeOptions'
+import { lazyGetters } from './src/utils'
 import {
-  StringNode,
-  NumberNode,
   ObjectNode,
   FieldNode,
-  InputNode,
+  ArrayNode,
   Arguments,
   ArgumentsField,
-  ArrayNode,
-  ScalarNode,
-  BooleanNode,
+  StringNode,
+  NumberNode,
   UnionNode,
   InterfaceNode,
+  InputNode,
   InputNodeField,
+  BooleanNode,
+  ScalarNode,
   DataProxy,
+  IScalarNodeOptions,
+  Node,
+  IObjectNodeOptions,
+  IInterfaceNodeOptions,
 } from './src/new'
-import { lazyGetters } from './src/utils'
 
-export const typesFaker = {
+export const types = {
   get Query() {
     return new ObjectNode(
       {
         get me() {
-          return new FieldNode(typesFaker.User, null, true)
+          return new FieldNode(types.User, null, true)
         },
         get user() {
-          return new FieldNode(typesFaker.User, null, true)
+          return new FieldNode(
+            types.User,
+            new Arguments({
+              get id() {
+                return new ArgumentsField(types.ID, true)
+              },
+            }),
+            true
+          )
         },
         get users() {
           return new FieldNode(
-            new ArrayNode(typesFaker.User, false),
+            new ArrayNode(types.User, false),
             new Arguments({
               get limit() {
-                return new ArgumentsField(typesFaker.Int, true)
+                return new ArgumentsField(types.Int, true)
               },
             }),
             false
           )
         },
         get a() {
-          return new FieldNode(typesFaker.A, null, true)
+          return new FieldNode(types.A, null, true)
         },
         get getUser() {
           return new FieldNode(
-            typesFaker.User,
+            types.User,
             new Arguments({
               get id() {
-                return new ArgumentsField(typesFaker.ID, true)
+                return new ArgumentsField(types.ID, true)
               },
             }),
             true
@@ -53,151 +66,160 @@ export const typesFaker = {
         },
         get getUsers() {
           return new FieldNode(
-            new ArrayNode(typesFaker.User, false),
+            new ArrayNode(types.User, false),
             new Arguments({
               get id() {
-                return new ArgumentsField(typesFaker.ID, true)
+                return new ArgumentsField(types.ID, true)
               },
             }),
             false
           )
         },
         get testOrUser() {
-          return new FieldNode(typesFaker.TestOrUser, null, true)
+          return new FieldNode(types.TestOrUser, null, true)
         },
         get test() {
-          return new FieldNode(typesFaker.Test, null, true)
+          return new FieldNode(types.Test, null, true)
         },
         get testWithInput() {
           return new FieldNode(
-            typesFaker.Int,
+            types.Int,
             new Arguments({
               get id() {
-                return new ArgumentsField(typesFaker.String, true)
+                return new ArgumentsField(types.String, true)
               },
               get ids() {
                 return new ArgumentsField(
-                  new ArrayNode(typesFaker.String, false),
+                  new ArrayNode(types.String, false),
                   false
                 )
               },
               get input() {
-                return new ArgumentsField(typesFaker.InputObj, true)
+                return new ArgumentsField(types.InputObj, true)
               },
             }),
             true
           )
         },
       },
-      { name: 'Query' }
+      { name: 'Query', ...((typeOptions as any).Query as {}) }
     )
   },
   get User() {
     return new ObjectNode(
       {
         get id() {
-          return new FieldNode(typesFaker.ID, null, false)
+          return new FieldNode(types.ID, null, false)
         },
         get name() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get age() {
-          return new FieldNode(typesFaker.Int, null, true)
+          return new FieldNode(types.Int, null, true)
         },
         get description() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get avatarUrl() {
           return new FieldNode(
-            typesFaker.String,
+            types.String,
             new Arguments({
               get size() {
-                return new ArgumentsField(typesFaker.Int, true)
+                return new ArgumentsField(types.Int, true)
               },
             }),
             true
           )
         },
         get profileUrl() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
+        },
+        get following() {
+          return new FieldNode(new ArrayNode(types.User, true), null, true)
+        },
+        get followers() {
+          return new FieldNode(new ArrayNode(types.User, true), null, true)
         },
         get b() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get c() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get d() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
-      { name: 'User' }
+      { name: 'User', ...((typeOptions as any).User as {}) }
     )
   },
   get ID() {
-    return new StringNode({ name: 'ID' })
+    return new StringNode({ name: 'ID', ...((typeOptions as any).ID as {}) })
   },
   get String() {
-    return new StringNode({ name: 'String' })
+    return new StringNode({
+      name: 'String',
+      ...((typeOptions as any).String as {}),
+    })
   },
   get Int() {
-    return new NumberNode({ name: 'Int' })
+    return new NumberNode({ name: 'Int', ...((typeOptions as any).Int as {}) })
   },
   get A() {
     return new ObjectNode(
       {
         get b() {
-          return new FieldNode(typesFaker.B, null, true)
+          return new FieldNode(types.B, null, true)
         },
       },
-      { name: 'A' }
+      { name: 'A', ...((typeOptions as any).A as {}) }
     )
   },
   get B() {
     return new ObjectNode(
       {
         get c() {
-          return new FieldNode(typesFaker.Int, null, true)
+          return new FieldNode(types.Int, null, true)
         },
         get d() {
-          return new FieldNode(typesFaker.Int, null, true)
+          return new FieldNode(types.Int, null, true)
         },
       },
-      { name: 'B' }
+      { name: 'B', ...((typeOptions as any).B as {}) }
     )
   },
   get TestOrUser() {
-    return new UnionNode([typesFaker.User, typesFaker.TestB])
+    return new UnionNode([types.User, types.TestB])
   },
   get TestB() {
     return new ObjectNode(
       {
         get a() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get b() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
-      { name: 'TestB' }
+      { name: 'TestB', ...((typeOptions as any).TestB as {}) }
     )
   },
   get Test() {
     return new InterfaceNode(
       {
         get a() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
-      [typesFaker.TestB, typesFaker.TestC],
-      { name: 'Test' }
+      [types.TestB, types.TestC],
+      { name: 'Test', ...((typeOptions as any).Test as {}) }
     )
   },
   get InputObj() {
     return new InputNode(
       {
         get a() {
-          return new InputNodeField(typesFaker.String, false)
+          return new InputNodeField(types.String, false)
         },
       },
       { name: 'InputObj' }
@@ -208,92 +230,80 @@ export const typesFaker = {
       {
         get deleteUser() {
           return new FieldNode(
-            typesFaker.Int,
+            types.Int,
             new Arguments({
               get id() {
-                return new ArgumentsField(typesFaker.ID, false)
+                return new ArgumentsField(types.ID, false)
               },
             }),
             false
           )
         },
       },
-      { name: 'Mutation' }
+      { name: 'Mutation', ...((typeOptions as any).Mutation as {}) }
     )
   },
   get __Schema() {
     return new ObjectNode(
       {
         get types() {
-          return new FieldNode(
-            new ArrayNode(typesFaker.__Type, false),
-            null,
-            false
-          )
+          return new FieldNode(new ArrayNode(types.__Type, false), null, false)
         },
         get queryType() {
-          return new FieldNode(typesFaker.__Type, null, false)
+          return new FieldNode(types.__Type, null, false)
         },
         get mutationType() {
-          return new FieldNode(typesFaker.__Type, null, true)
+          return new FieldNode(types.__Type, null, true)
         },
         get subscriptionType() {
-          return new FieldNode(typesFaker.__Type, null, true)
+          return new FieldNode(types.__Type, null, true)
         },
         get directives() {
           return new FieldNode(
-            new ArrayNode(typesFaker.__Directive, false),
+            new ArrayNode(types.__Directive, false),
             null,
             false
           )
         },
       },
-      { name: '__Schema' }
+      { name: '__Schema', ...((typeOptions as any).__Schema as {}) }
     )
   },
   get __Type() {
     return new ObjectNode(
       {
         get kind() {
-          return new FieldNode(typesFaker.__TypeKind, null, false)
+          return new FieldNode(types.__TypeKind, null, false)
         },
         get name() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get description() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get fields() {
           return new FieldNode(
-            new ArrayNode(typesFaker.__Field, true),
+            new ArrayNode(types.__Field, true),
             new Arguments({
               get includeDeprecated() {
-                return new ArgumentsField(typesFaker.Boolean, true)
+                return new ArgumentsField(types.Boolean, true)
               },
             }),
             true
           )
         },
         get interfaces() {
-          return new FieldNode(
-            new ArrayNode(typesFaker.__Type, true),
-            null,
-            true
-          )
+          return new FieldNode(new ArrayNode(types.__Type, true), null, true)
         },
         get possibleTypes() {
-          return new FieldNode(
-            new ArrayNode(typesFaker.__Type, true),
-            null,
-            true
-          )
+          return new FieldNode(new ArrayNode(types.__Type, true), null, true)
         },
         get enumValues() {
           return new FieldNode(
-            new ArrayNode(typesFaker.__EnumValue, true),
+            new ArrayNode(types.__EnumValue, true),
             new Arguments({
               get includeDeprecated() {
-                return new ArgumentsField(typesFaker.Boolean, true)
+                return new ArgumentsField(types.Boolean, true)
               },
             }),
             true
@@ -301,125 +311,128 @@ export const typesFaker = {
         },
         get inputFields() {
           return new FieldNode(
-            new ArrayNode(typesFaker.__InputValue, true),
+            new ArrayNode(types.__InputValue, true),
             null,
             true
           )
         },
         get ofType() {
-          return new FieldNode(typesFaker.__Type, null, true)
+          return new FieldNode(types.__Type, null, true)
         },
       },
-      { name: '__Type' }
+      { name: '__Type', ...((typeOptions as any).__Type as {}) }
     )
   },
   get __TypeKind() {
     return undefined
   },
   get Boolean() {
-    return new BooleanNode({ name: 'Boolean' })
+    return new BooleanNode({
+      name: 'Boolean',
+      ...((typeOptions as any).Boolean as {}),
+    })
   },
   get __Field() {
     return new ObjectNode(
       {
         get name() {
-          return new FieldNode(typesFaker.String, null, false)
+          return new FieldNode(types.String, null, false)
         },
         get description() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get args() {
           return new FieldNode(
-            new ArrayNode(typesFaker.__InputValue, false),
+            new ArrayNode(types.__InputValue, false),
             null,
             false
           )
         },
         get type() {
-          return new FieldNode(typesFaker.__Type, null, false)
+          return new FieldNode(types.__Type, null, false)
         },
         get isDeprecated() {
-          return new FieldNode(typesFaker.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
         get deprecationReason() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
-      { name: '__Field' }
+      { name: '__Field', ...((typeOptions as any).__Field as {}) }
     )
   },
   get __InputValue() {
     return new ObjectNode(
       {
         get name() {
-          return new FieldNode(typesFaker.String, null, false)
+          return new FieldNode(types.String, null, false)
         },
         get description() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get type() {
-          return new FieldNode(typesFaker.__Type, null, false)
+          return new FieldNode(types.__Type, null, false)
         },
         get defaultValue() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
-      { name: '__InputValue' }
+      { name: '__InputValue', ...((typeOptions as any).__InputValue as {}) }
     )
   },
   get __EnumValue() {
     return new ObjectNode(
       {
         get name() {
-          return new FieldNode(typesFaker.String, null, false)
+          return new FieldNode(types.String, null, false)
         },
         get description() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get isDeprecated() {
-          return new FieldNode(typesFaker.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
         get deprecationReason() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
-      { name: '__EnumValue' }
+      { name: '__EnumValue', ...((typeOptions as any).__EnumValue as {}) }
     )
   },
   get __Directive() {
     return new ObjectNode(
       {
         get name() {
-          return new FieldNode(typesFaker.String, null, false)
+          return new FieldNode(types.String, null, false)
         },
         get description() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get locations() {
           return new FieldNode(
-            new ArrayNode(typesFaker.__DirectiveLocation, false),
+            new ArrayNode(types.__DirectiveLocation, false),
             null,
             false
           )
         },
         get args() {
           return new FieldNode(
-            new ArrayNode(typesFaker.__InputValue, false),
+            new ArrayNode(types.__InputValue, false),
             null,
             false
           )
         },
         get onOperation() {
-          return new FieldNode(typesFaker.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
         get onFragment() {
-          return new FieldNode(typesFaker.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
         get onField() {
-          return new FieldNode(typesFaker.Boolean, null, false)
+          return new FieldNode(types.Boolean, null, false)
         },
       },
-      { name: '__Directive' }
+      { name: '__Directive', ...((typeOptions as any).__Directive as {}) }
     )
   },
   get __DirectiveLocation() {
@@ -432,13 +445,13 @@ export const typesFaker = {
     return new ObjectNode(
       {
         get a() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
         get c() {
-          return new FieldNode(typesFaker.String, null, true)
+          return new FieldNode(types.String, null, true)
         },
       },
-      { name: 'TestC' }
+      { name: 'TestC', ...((typeOptions as any).TestC as {}) }
     )
   },
   get fake__Locale() {
@@ -457,13 +470,13 @@ export const typesFaker = {
     return new InputNode(
       {
         get red255() {
-          return new InputNodeField(typesFaker.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get green255() {
-          return new InputNodeField(typesFaker.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get blue255() {
-          return new InputNodeField(typesFaker.Int, true)
+          return new InputNodeField(types.Int, true)
         },
       },
       { name: 'fake__color' }
@@ -473,99 +486,113 @@ export const typesFaker = {
     return new InputNode(
       {
         get useFullAddress() {
-          return new InputNodeField(typesFaker.Boolean, true)
+          return new InputNodeField(types.Boolean, true)
         },
         get minMoney() {
-          return new InputNodeField(typesFaker.Float, true)
+          return new InputNodeField(types.Float, true)
         },
         get maxMoney() {
-          return new InputNodeField(typesFaker.Float, true)
+          return new InputNodeField(types.Float, true)
         },
         get decimalPlaces() {
-          return new InputNodeField(typesFaker.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get imageWidth() {
-          return new InputNodeField(typesFaker.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get imageHeight() {
-          return new InputNodeField(typesFaker.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get imageCategory() {
-          return new InputNodeField(typesFaker.fake__imageCategory, true)
+          return new InputNodeField(types.fake__imageCategory, true)
         },
         get randomizeImageUrl() {
-          return new InputNodeField(typesFaker.Boolean, true)
+          return new InputNodeField(types.Boolean, true)
         },
         get emailProvider() {
-          return new InputNodeField(typesFaker.String, true)
+          return new InputNodeField(types.String, true)
         },
         get passwordLength() {
-          return new InputNodeField(typesFaker.Int, true)
+          return new InputNodeField(types.Int, true)
         },
         get loremSize() {
-          return new InputNodeField(typesFaker.fake__loremSize, true)
+          return new InputNodeField(types.fake__loremSize, true)
         },
         get dateFormat() {
-          return new InputNodeField(typesFaker.String, true)
+          return new InputNodeField(types.String, true)
         },
         get baseColor() {
-          return new InputNodeField(typesFaker.fake__color, true)
+          return new InputNodeField(types.fake__color, true)
         },
         get minNumber() {
-          return new InputNodeField(typesFaker.Float, true)
+          return new InputNodeField(types.Float, true)
         },
         get maxNumber() {
-          return new InputNodeField(typesFaker.Float, true)
+          return new InputNodeField(types.Float, true)
         },
         get precisionNumber() {
-          return new InputNodeField(typesFaker.Float, true)
+          return new InputNodeField(types.Float, true)
         },
       },
       { name: 'fake__options' }
     )
   },
   get Float() {
-    return new NumberNode({ name: 'Float' })
+    return new NumberNode({
+      name: 'Float',
+      ...((typeOptions as any).Float as {}),
+    })
   },
   get examples__JSON() {
-    return new ScalarNode({ name: 'examples__JSON' })
+    return new ScalarNode({
+      name: 'examples__JSON',
+      ...((typeOptions as any).examples__JSON as {}),
+    })
   },
 }
 
-lazyGetters(typesFaker)
+lazyGetters(types)
 
-export type Query = DataProxy<typeof typesFaker.Query>
-export type User = DataProxy<typeof typesFaker.User>
-export type ID = DataProxy<typeof typesFaker.ID>
-export type String = DataProxy<typeof typesFaker.String>
-export type Int = DataProxy<typeof typesFaker.Int>
-export type A = DataProxy<typeof typesFaker.A>
-export type B = DataProxy<typeof typesFaker.B>
-export type TestOrUser = DataProxy<typeof typesFaker.TestOrUser>
-export type TestB = DataProxy<typeof typesFaker.TestB>
-export type Test = DataProxy<typeof typesFaker.Test>
-export type InputObj = DataProxy<typeof typesFaker.InputObj>
-export type Mutation = DataProxy<typeof typesFaker.Mutation>
-export type __Schema = DataProxy<typeof typesFaker.__Schema>
-export type __Type = DataProxy<typeof typesFaker.__Type>
-export type __TypeKind = DataProxy<typeof typesFaker.__TypeKind>
-export type Boolean = DataProxy<typeof typesFaker.Boolean>
-export type __Field = DataProxy<typeof typesFaker.__Field>
-export type __InputValue = DataProxy<typeof typesFaker.__InputValue>
-export type __EnumValue = DataProxy<typeof typesFaker.__EnumValue>
-export type __Directive = DataProxy<typeof typesFaker.__Directive>
-export type __DirectiveLocation = DataProxy<
-  typeof typesFaker.__DirectiveLocation
->
-export type Episode = DataProxy<typeof typesFaker.Episode>
-export type TestC = DataProxy<typeof typesFaker.TestC>
-export type fake__Locale = DataProxy<typeof typesFaker.fake__Locale>
-export type fake__Types = DataProxy<typeof typesFaker.fake__Types>
-export type fake__imageCategory = DataProxy<
-  typeof typesFaker.fake__imageCategory
->
-export type fake__loremSize = DataProxy<typeof typesFaker.fake__loremSize>
-export type fake__color = DataProxy<typeof typesFaker.fake__color>
-export type fake__options = DataProxy<typeof typesFaker.fake__options>
-export type Float = DataProxy<typeof typesFaker.Float>
-export type examples__JSON = DataProxy<typeof typesFaker.examples__JSON>
+export type Query = DataProxy<typeof types.Query>
+export type User = DataProxy<typeof types.User>
+export type ID = DataProxy<typeof types.ID>
+export type String = DataProxy<typeof types.String>
+export type Int = DataProxy<typeof types.Int>
+export type A = DataProxy<typeof types.A>
+export type B = DataProxy<typeof types.B>
+export type TestOrUser = DataProxy<typeof types.TestOrUser>
+export type TestB = DataProxy<typeof types.TestB>
+export type Test = DataProxy<typeof types.Test>
+export type InputObj = DataProxy<typeof types.InputObj>
+export type Mutation = DataProxy<typeof types.Mutation>
+export type __Schema = DataProxy<typeof types.__Schema>
+export type __Type = DataProxy<typeof types.__Type>
+export type __TypeKind = DataProxy<typeof types.__TypeKind>
+export type Boolean = DataProxy<typeof types.Boolean>
+export type __Field = DataProxy<typeof types.__Field>
+export type __InputValue = DataProxy<typeof types.__InputValue>
+export type __EnumValue = DataProxy<typeof types.__EnumValue>
+export type __Directive = DataProxy<typeof types.__Directive>
+export type __DirectiveLocation = DataProxy<typeof types.__DirectiveLocation>
+export type Episode = DataProxy<typeof types.Episode>
+export type TestC = DataProxy<typeof types.TestC>
+export type fake__Locale = DataProxy<typeof types.fake__Locale>
+export type fake__Types = DataProxy<typeof types.fake__Types>
+export type fake__imageCategory = DataProxy<typeof types.fake__imageCategory>
+export type fake__loremSize = DataProxy<typeof types.fake__loremSize>
+export type fake__color = DataProxy<typeof types.fake__color>
+export type fake__options = DataProxy<typeof types.fake__options>
+export type Float = DataProxy<typeof types.Float>
+export type examples__JSON = DataProxy<typeof types.examples__JSON>
+
+type NodeOptions<T extends Node<any>> = T extends ScalarNode<any>
+  ? IScalarNodeOptions
+  : T extends ObjectNode<any, any, infer Typename>
+  ? IObjectNodeOptions<Typename>
+  : T extends InterfaceNode<any, any, any, infer Typename>
+  ? IInterfaceNodeOptions<Typename>
+  : never
+
+export type ITypeOptions<T extends Record<string, Node<any>> = typeof types> = {
+  [K in keyof T]?: NodeOptions<T[K]>
+}
