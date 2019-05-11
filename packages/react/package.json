@@ -1,0 +1,25 @@
+{
+  "name": "@graphql-builder/react",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "umd:main": "dist/graphql-builderreact.umd.production.js",
+  "module": "dist/graphql-builderreact.es.production.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "watch": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --env=jsdom"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "devDependencies": {
+    "@types/react": "^16.8.17",
+    "@types/react-dom": "^16.8.4",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
+}

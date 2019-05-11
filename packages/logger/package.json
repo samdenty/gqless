@@ -1,0 +1,23 @@
+{
+  "name": "@graphql-builder/logger",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "umd:main": "dist/graphql-builderlogger.umd.production.js",
+  "module": "dist/graphql-builderlogger.es.production.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "watch": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test"
+  },
+  "dependencies": {
+    "graphql": "^14.3.0"
+  },
+  "peerDependencies": {
+    "graphql-builder": "*"
+  },
+  "devDependencies": {}
+}

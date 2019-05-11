@@ -1,0 +1,18 @@
+{
+  "name": "@graphql-builder/utils",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "umd:main": "dist/graphql-builderutils.umd.production.js",
+  "module": "dist/graphql-builderutils.es.production.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "watch": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test"
+  },
+  "peerDependencies": {},
+  "devDependencies": {}
+}

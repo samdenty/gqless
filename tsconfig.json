@@ -1,12 +1,32 @@
 {
+  "references": [
+    { "path": "./src/graphql-builder" },
+    { "path": "./packages/codegen" },
+    { "path": "./packages/logger" },
+    { "path": "./packages/react" },
+    { "path": "./packages/schema" }
+  ],
   "compilerOptions": {
-    /* Basic Options */
-    "jsx": "react",
+    "target": "es5",
+    "module": "esnext",
+    "lib": ["dom", "esnext"],
+    "importHelpers": true,
+    "declaration": true,
+    "sourceMap": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "target": "es2015",
-    "allowSyntheticDefaultImports": true,
-    "module": "commonjs",
-    "lib": ["esnext", "es2017"]
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "downlevelIteration": true,
+    // "noUnusedLocals": true,
+    // "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "jsx": "react",
+    "esModuleInterop": true
   }
 }
