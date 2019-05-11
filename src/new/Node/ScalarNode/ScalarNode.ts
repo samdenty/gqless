@@ -1,11 +1,10 @@
-import { Node } from '../abstract'
+import { Outputable, Node } from '../abstract'
 import { StringNode } from './StringNode'
 import { BooleanNode } from './BooleanNode'
 import { NumberNode } from './NumberNode'
-import { Selection, RootSelection } from '../../Selection'
-import { ScalarProxyHandler } from '../../Middleware'
-import { interceptFunction } from './utils'
+import { Selection } from '../../Selection'
 import { Accessor } from '../../Accessor'
+import { Mix, Generic } from 'mix-classes'
 
 export type IScalarNodeOptions = {
   name?: string
@@ -17,7 +16,13 @@ export type UScalarNode =
   | NumberNode<any>
   | ScalarNode<any>
 
-export class ScalarNode<T extends string | boolean | number> extends Node<T> {
+export interface ScalarNode<T extends string | boolean | number>
+  extends Node<T> {}
+
+export class ScalarNode<T extends string | boolean | number> extends Mix(
+  Generic(Node),
+  Outputable
+) {
   public data: T
   public name?: string
 
@@ -58,6 +63,8 @@ export class ScalarNode<T extends string | boolean | number> extends Node<T> {
   }
 
   public getData(accessor: Accessor<Selection<UScalarNode>>) {
+    super.getData(accessor)
+
     let value: T = null //accessor.value
 
     if (value === undefined) {

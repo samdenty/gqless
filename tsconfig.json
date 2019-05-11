@@ -4,7 +4,7 @@
     "jsx": "react",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "target": "es5",
+    "target": "es2015",
     "allowSyntheticDefaultImports": true,
     "module": "commonjs",
     "lib": ["esnext", "es2017"]

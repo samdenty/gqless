@@ -7,7 +7,7 @@ export type UUnionNode =
   | InterfaceNode<any, any, any>
 
 export class UnionNode<
-  TNode extends UUnionNode,
+  TNode extends UUnionNode = UUnionNode,
   DataType = NodeDataType<TNode>
 > extends Node<DataType> {
   constructor(public ofNodes: TNode[]) {

@@ -17,13 +17,10 @@ export type Middleware = {
   // Called each time a selection has changed
   onSelectUpdate?(selection: Selection<any>): void
 
-  onFetch?(data: { selections: Selection<any>[]; query: DocumentNode }): void
-  onFetched?(data: {
+  onFetch?(data: {
     selections: Selection<any>[]
     query: DocumentNode
-    error?: any
-    response?: QueryResponse
-  }): void
+  }): ((response: QueryResponse, error?: any) => void) | void
 
   getScalarData?(
     selection: Selection<UScalarNode>,

@@ -4,6 +4,7 @@ import { FieldSelection } from '../../../Selection'
 import { Arguments, ObjectNode, ArrayNode, ScalarNode } from '../..'
 import { Accessor, FieldAccessor } from '../../../Accessor'
 import isEqual from 'fast-deep-equal'
+import { Outputable } from '../Outputable'
 
 export class FieldNode<
   TNode extends Node<any>,
@@ -49,12 +50,8 @@ export class FieldNode<
         fieldsAccessor.getChild(a => a.selection === selection) ||
         new FieldAccessor(fieldsAccessor, selection)
 
-      return this.ofNode instanceof ObjectNode
+      return this.ofNode instanceof Outputable
         ? this.ofNode.getData(accessor)
-        : this.ofNode instanceof ArrayNode
-        ? this.ofNode.getData(accessor as any)
-        : this.ofNode instanceof ScalarNode
-        ? this.ofNode.getData(accessor as any)
         : undefined
     }
     const argumentless = getSelection(null)

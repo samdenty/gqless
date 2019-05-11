@@ -10,6 +10,9 @@ import { LoggerMiddleware, Query } from './src/new'
 import { fetchSchema } from './src/new/Schema'
 import { Codegen } from './src/new/Codegen'
 import { types as typesFaker, User } from './typesFaker'
+import * as Imports from './src/new'
+
+Object.assign(window, { ...Imports, typesFaker })
 
 const client = new ApolloClient({
   uri: 'http://localhost:9002/graphql',
@@ -21,24 +24,27 @@ async function bootstrap() {
     return { data: resp.data, errors: resp.errors }
   }
 
-  const schema = await fetchSchema(fetchQuery)
-  const codegen = new Codegen(schema)
-  console.log(codegen.generate())
+  // const schema = await fetchSchema(fetchQuery)
+  // const codegen = new Codegen(schema)
+  // console.log(codegen.generate())
 
   const query = new Query(typesFaker.Query, fetchQuery, { name: 'TestQuery' })
   query.middleware.add(new LoggerMiddleware(query))
 
   const getUsers = query.data.users
   getUsers({ limit: 10 })[1].age
-  getUsers({ limit: 1 })[1].age
-  getUsers({ limit: 1 })[1].avatarUrl
-
-  query.data.user.following[0].name
-
-  query.data.users[1].following[0].age
-  query.data.users[1].avatarUrl
-  query.data.users[1].avatarUrl({ size: 100 })
   query.data.users[1].age
+
+  setTimeout(() => {
+    getUsers({ limit: 1 })[1].age
+    getUsers({ limit: 1 })[1].avatarUrl
+
+    query.data.user.following[0].name
+
+    query.data.users[1].following[0].age
+    query.data.users[1].avatarUrl
+    query.data.users[1].avatarUrl({ size: 100 })
+  }, 100)
 
   window.typesFaker = typesFaker
   window.query = query

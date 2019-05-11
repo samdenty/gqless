@@ -3,12 +3,26 @@ import merge from 'lodash/fp/merge'
 // import { QueryBatcher } from './QueryBatcher'
 import { DocumentNode } from 'graphql'
 import { Selection, RootSelection } from './Selection'
-import { ObjectNode, NodeDataType, ArrayNode, Node } from './Node'
+import {
+  ObjectNode,
+  NodeDataType,
+  ArrayNode,
+  Node,
+  FieldsNode,
+  ScalarNode,
+  UnionNode,
+  InterfaceNode,
+} from './Node'
 import { defaultMiddleware, MiddlewareEngine } from './Middleware'
 import { ASTBuilder } from './ASTBuilder'
 import { QueryBatcher } from './QueryBatcher'
 import { Cache } from './Cache'
-import { RootAccessor } from './Accessor'
+import {
+  RootAccessor,
+  Accessor,
+  IndexAccessor,
+  FieldAccessor,
+} from './Accessor'
 
 export type QueryResponse<Data = any> = { data: Data; errors: any }
 
@@ -83,7 +97,7 @@ export class Query<
   protected async fetchSelections(selections: Selection<any>[]) {
     const query = this.astBuilder.buildDocument(...selections)
 
-    this.middleware.all.onFetch({ selections, query })
+    const onFetchedHandlers = this.middleware.all.onFetch({ selections, query })
 
     let error: any
     try {
@@ -93,49 +107,86 @@ export class Query<
     }
 
     if (!error) {
-      const recurseSelection = (
-        selection: Selection<ObjectNode<any, any, any> | ArrayNode<any, any>>,
-        data: Record<string, any>,
-        path: any[]
+      const recurseFieldsAccessor = (
+        accessor: Accessor<
+          Selection<
+            ObjectNode<any, any> | InterfaceNode<any, any, any> | UnionNode
+          >
+        >,
+        data: Record<string, unknown>
       ) => {
-        Object.entries(data).forEach(([key, value]) => {
-          const fieldSelection = selection.getField(s => s.dataProp === key)
+        if (data === null) return
 
-          if (fieldSelection) {
-            const fieldPath = [...path, fieldSelection.toString()]
+        Object.entries(data).forEach(([dataProp, value]) => {
+          // __typename is not a selection, but handled internally
+          if (dataProp === '__typename') return
 
-            if (fieldSelection.field.ofNode instanceof ObjectNode) {
-              recurseSelection(fieldSelection as any, value, fieldPath)
+          let fieldAccessor = accessor.getChild(
+            ({ selection }) => selection.dataProp === dataProp
+          )
+
+          if (!fieldAccessor) {
+            const subSelection = accessor.selection.getField(
+              s => s.dataProp === dataProp
+            )
+
+            if (!subSelection) {
+              console.error(
+                `Couldn't locate selection ${accessor.path}.${dataProp}`
+              )
+              return
             }
 
-            if (fieldSelection.field.ofNode instanceof ArrayNode) {
-              if (value instanceof Array) {
-                const mergedValue = value.map((item, i) =>
-                  recurseSelection(fieldSelection, item, [...fieldPath, i])
-                )
-
-                this.cache.update(fieldPath.join('.'), value)
-              }
-            }
+            fieldAccessor = new FieldAccessor(accessor, subSelection)
           }
-        })
 
-        this.cache.update(path.join('.'), data)
+          recurseAccessor(fieldAccessor, value)
+        })
       }
 
-      // console.log(response.data)
-      recurseSelection(this.selection, response.data, ['Query'])
+      const recurseArrayAccessor = (
+        accessor: Accessor<Selection<any>, IndexAccessor>,
+        data: unknown[]
+      ) => {
+        if (data === null) return
 
+        data.forEach((value, i) => {
+          const indexAccessor =
+            accessor.getChild(a => a.index === i) ||
+            new IndexAccessor(accessor, i)
+
+          recurseAccessor(indexAccessor, value)
+        })
+      }
+
+      const recurseAccessor = (accessor: Accessor<any, any>, data: any) => {
+        if (accessor.node instanceof FieldsNode) {
+          return recurseFieldsAccessor(accessor, data)
+        }
+
+        if (accessor.node instanceof ArrayNode) {
+          return recurseArrayAccessor(accessor, data)
+        }
+      }
+
+      recurseFieldsAccessor(this.accessor, response.data)
+
+      //   this.cache.update(path.join('.'), data)
+      // }
       const newResponse = merge(this.response, response)
       this.response = newResponse
     }
 
     if (error) {
-      this.middleware.all.onFetched({ selections, query, error })
+      onFetchedHandlers.forEach(
+        onFetched => onFetched && onFetched(undefined, error)
+      )
+
       throw error
     }
 
-    this.middleware.all.onFetched({ selections, query, response })
+    onFetchedHandlers.forEach(onFetched => onFetched && onFetched(response))
+
     return response
   }
 

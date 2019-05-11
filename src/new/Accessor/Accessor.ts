@@ -1,5 +1,6 @@
 import { Selection } from '../Selection'
 import { computed } from '../../utils'
+import { Node } from '../Node'
 
 export abstract class Accessor<
   TSelection extends Selection<any> = Selection<any>,
@@ -8,7 +9,11 @@ export abstract class Accessor<
   public children: TChildren[] = []
   public value: any
 
-  constructor(public parent: Accessor, public selection: TSelection) {
+  constructor(
+    public parent: Accessor,
+    public selection: TSelection,
+    public node: Node<any> = selection.node
+  ) {
     if (parent) {
       parent.children.push(this)
     }

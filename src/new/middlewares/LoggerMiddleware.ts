@@ -27,33 +27,47 @@ export class LoggerMiddleware implements Middleware {
     ].filter(Boolean)
   }
 
-  public onFetched = (({ query, response, selections }) => {
-    // @ts-ignore
-    console.groupCollapsed(
-      ...format(...this.header, [
-        `(${selections.length} selections) ${selections
-          .map(s => s.toString())
-          .join(', ')}`,
-        'color: gray',
-      ])
-    )
+  public onFetch = (({ query, selections }) => {
+    const start = Date.now()
 
-    // @ts-ignore
-    console.groupCollapsed(...format(['SELECTIONS', 'color: orange']))
-    for (const selection of selections) {
-      console.log(
-        ...format([selection.path.toString(), 'color: lime']),
-        selection
+    return (response, error) => {
+      const time = Date.now() - start
+
+      console.groupCollapsed(
+        // @ts-ignore
+        ...format(
+          ...this.header,
+          [`(${time}ms)`, 'color: gray'],
+          [` ${selections.length} selections`, 'color: gray']
+        )
       )
+
+      const headerStyles = `font-weight: bold; color: #f316c1`
+
+      console.groupCollapsed(
+        // @ts-ignore
+        ...format(['Selections', headerStyles])
+      )
+      for (const selection of selections) {
+        // @ts-ignore
+        console.groupCollapsed(...format([selection.path.toString(), '']))
+        console.log(selection)
+        console.groupEnd()
+      }
+      console.groupEnd()
+
+      // console.log(...format(['SELECTIONS', 'color: orange']), selectionsObj)
+      console.group(
+        ...format(
+          ['Query ', headerStyles],
+          ['  ', `background-image: url(https://graphql.org/img/logo.svg)`]
+        )
+      )
+      console.log(...format([print(query), 'color: gray']))
+      console.groupEnd()
+
+      console.log(...format(['Result', headerStyles]), response)
+      console.groupEnd()
     }
-    console.groupEnd()
-
-    // console.log(...format(['SELECTIONS', 'color: orange']), selectionsObj)
-    console.log(
-      ...format(['QUERY ', 'color: orange'], [print(query), 'color: gray'])
-    )
-
-    console.log(...format(['RESPONSE', 'color: orange']), response)
-    console.groupEnd()
-  }) as Middleware['onFetched']
+  }) as Middleware['onFetch']
 }
