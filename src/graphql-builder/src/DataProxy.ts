@@ -13,15 +13,17 @@ type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K
 }[keyof T]
 
-interface DataNodeCallbackOptions {
-  alias?: string
-}
-
+// Extracts the nullable value from a NodeContainer
 type NodeContainerNullable<
   TNode extends Node<any>
 > = TNode extends NodeContainer<any, infer TNullable, any>
   ? TNullable extends true ? null : never
   : never
+
+// Gets the inner value for a NodeContainer
+type NodeContainerValue<TNode extends NodeContainer<any, any, any>> = DataProxy<
+  InnerNode<TNode>
+>
 
 // If the Arguments are type any, it's because undefined / null was passed
 // meaning no arguments needed
@@ -32,29 +34,26 @@ type FieldCallback<
     ? never
     : (RequiredKeys<NodeDataType<Arguments<T, TInputs>>> extends never
         ? (
-            args?: NodeDataType<Arguments<T, TInputs>>,
-            options?: DataNodeCallbackOptions
-          ) => FieldValueProxy<TNode> | NodeContainerNullable<TNode>
+            args?: NodeDataType<Arguments<T, TInputs>>
+          ) => NodeContainerValue<TNode> | NodeContainerNullable<TNode>
         : (
-            args: NodeDataType<Arguments<T, TInputs>>,
-            options?: DataNodeCallbackOptions
-          ) => FieldValueProxy<TNode> | NodeContainerNullable<TNode>)
+            args: NodeDataType<Arguments<T, TInputs>>
+          ) => NodeContainerValue<TNode> | NodeContainerNullable<TNode>)
   : never
 
-type FieldValueProxy<TNode extends FieldNode<any, any, any>> = DataProxy<
-  InnerNode<TNode>
->
-
+// Returns a field + callback + nullable
 type FieldProxy<TNode extends FieldNode<any, any, any>> = FieldCallback<
   TNode
 > extends never
-  ? (FieldValueProxy<TNode> | NodeContainerNullable<TNode>)
-  : (FieldCallback<TNode> & FieldValueProxy<TNode>)
+  ? (NodeContainerValue<TNode> | NodeContainerNullable<TNode>)
+  : (FieldCallback<TNode> & NodeContainerValue<TNode>)
 
+// Recurse over a FieldsNode (ObjectNode / InterfaceNode)
 type RecurseFields<TNode extends FieldsNode<any, any, any, any>> = {
   [K in keyof NodeDataType<TNode>]: FieldProxy<TNode['fields'][K]>
 }
 
+// Recurse over ArrayNode + add nullable
 type RecurseArray<
   TNode extends ArrayNode<any, any>,
   DataType = NodeDataType<TNode>
@@ -64,6 +63,7 @@ type RecurseArray<
     : DataType[K]
 }
 
+// Input factory type for Node
 export type DataProxy<TNode extends Node<any>> = TNode extends ArrayNode<
   any,
   any

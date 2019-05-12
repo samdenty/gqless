@@ -4,13 +4,15 @@ import { Selection } from '../Selection'
 import { Accessor, IndexAccessor } from '../Accessor'
 import { Mix, Generic } from 'mix-classes'
 
-export interface ArrayNode<TNode extends Node<any>, TNullable extends boolean>
-  extends NodeContainer<TNode, TNullable, NodeDataType<TNode>[]> {}
-
-export class ArrayNode<
+export interface ArrayNode<
   TNode extends Node<any>,
   TNullable extends boolean = false
-> extends Mix(Generic(NodeContainer), Outputable) {
+> extends NodeContainer<TNode, TNullable, NodeDataType<TNode>[]> {}
+
+export class ArrayNode<TNode, TNullable> extends Mix(
+  Generic(NodeContainer),
+  Outputable
+) {
   constructor(ofNode: TNode, nullable?: TNullable) {
     super([ofNode, nullable])
   }

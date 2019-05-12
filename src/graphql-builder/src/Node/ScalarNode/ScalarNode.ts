@@ -19,10 +19,7 @@ export type UScalarNode =
 export interface ScalarNode<T extends string | boolean | number>
   extends Node<T> {}
 
-export class ScalarNode<T extends string | boolean | number> extends Mix(
-  Generic(Node),
-  Outputable
-) {
+export class ScalarNode<T> extends Mix(Generic(Node), Outputable) {
   public name?: string
 
   constructor({ name }: IScalarNodeOptions = {}) {
