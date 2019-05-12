@@ -72,14 +72,14 @@ export class SchemaFile extends File {
 
     type NodeOptions<T extends Node<any>> = T extends ScalarNode<any>
       ? IScalarNodeOptions
-      : T extends ObjectNode<any, any, infer Typename>
-      ? IObjectNodeOptions<Typename>
+      : T extends ObjectNode<any, any, any>
+      ? IObjectNodeOptions<T>
       : T extends InterfaceNode<any, any, any, infer Typename>
       ? IInterfaceNodeOptions<Typename>
       : never
 
-    export type ${TYPE_OPTIONS}<T extends Record<string, Node<any>> = typeof ${TYPES_VAR}> = {
-      [K in keyof T]?: NodeOptions<T[K]>
+    export type ${TYPE_OPTIONS} = {
+      [K in keyof typeof ${TYPES_VAR}]?: NodeOptions<typeof ${TYPES_VAR}[K]>
     }`
   }
 

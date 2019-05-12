@@ -1,6 +1,6 @@
 import { Selection } from '../Selection'
 import { computed } from '../utils'
-import { Node } from '../Node'
+import { Node, Keyable } from '../Node'
 
 export abstract class Accessor<
   TSelection extends Selection<any> = Selection<any>,
@@ -37,5 +37,17 @@ export abstract class Accessor<
     path.toString = () => path.map(selection => selection.toString()).join('.')
 
     return path
+  }
+
+  public get entry() {
+    if (this.node instanceof Keyable) {
+      // this.node.getKey()
+    }
+
+    const baseEntry: string = this.parent
+      ? this.parent.entry
+      : this.path.toString()
+
+    return baseEntry
   }
 }

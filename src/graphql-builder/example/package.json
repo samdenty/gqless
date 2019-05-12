@@ -14,6 +14,9 @@
     "apollo-boost": "^0.3.1",
     "react-app-polyfill": "^1.0.1"
   },
+  "alias": {
+    "graphql-builder": "../src"
+  },
   "devDependencies": {
     "@babel/polyfill": "^7.4.4",
     "@types/react": "^16.8.15",

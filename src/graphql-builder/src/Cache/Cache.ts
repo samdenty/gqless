@@ -1,4 +1,5 @@
 import { onEvent } from '../utils'
+import { Accessor } from '../Accessor'
 
 export class Cache {
   public store = new Map<string, any>()

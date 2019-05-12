@@ -38,9 +38,9 @@ async function bootstrap() {
     getUsers({ limit: 1 })[1].age
     getUsers({ limit: 1 })[1].avatarUrl
 
-    query.data.user.following[0].name
+    query.data.user.following![0]!.name
 
-    query.data.users[1].following[0].age
+    query.data.users[1].following![0]!.age
     query.data.users[1].avatarUrl
     query.data.users[1].avatarUrl({ size: 100 })
   }, 100)

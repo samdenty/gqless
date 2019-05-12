@@ -599,12 +599,12 @@ export type examples__JSON = DataProxy<typeof types.examples__JSON>
 
 type NodeOptions<T extends Node<any>> = T extends ScalarNode<any>
   ? IScalarNodeOptions
-  : T extends ObjectNode<any, any, infer Typename>
-    ? IObjectNodeOptions<Typename>
+  : T extends ObjectNode<any, any, any>
+    ? IObjectNodeOptions<T>
     : T extends InterfaceNode<any, any, any, infer Typename>
       ? IInterfaceNodeOptions<Typename>
       : never
 
-export type ITypeOptions<T extends Record<string, Node<any>> = typeof types> = {
-  [K in keyof T]?: NodeOptions<T[K]>
+export type ITypeOptions = {
+  [K in keyof typeof types]?: NodeOptions<typeof types[K]>
 }
