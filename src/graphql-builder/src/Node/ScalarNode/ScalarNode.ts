@@ -61,8 +61,7 @@ export class ScalarNode<T> extends Mix(Generic(Node), Outputable) {
   public getData(accessor: Accessor<Selection<UScalarNode>>) {
     super.getData(accessor)
 
-    // @ts-ignore
-    let value: T = null //accessor.value
+    let value = accessor.value ? accessor.value.data : null
 
     if (value === undefined) {
       value = new Proxy(
@@ -75,6 +74,6 @@ export class ScalarNode<T> extends Mix(Generic(Node), Outputable) {
 
     // const returnValue = accessor.root.getScalarData(accessor, value)
     // if (returnValue !== undefined) return returnValue
-    return value
+    return value as T
   }
 }

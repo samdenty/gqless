@@ -1,13 +1,16 @@
 import { Selection } from '../Selection'
 import { computed } from '../utils'
 import { Node, Keyable } from '../Node'
+import { Cache, Value } from '../Cache'
 
 export abstract class Accessor<
   TSelection extends Selection<any> = Selection<any>,
   TChildren extends Accessor<any, any> = Accessor<any, any>
 > {
+  protected cache: Cache = this.parent ? this.parent.cache : undefined!
+
   public children: TChildren[] = []
-  public value: any
+  public value: Value | undefined
 
   constructor(
     public parent: Accessor | undefined,
@@ -40,14 +43,17 @@ export abstract class Accessor<
   }
 
   public get entry() {
-    if (this.node instanceof Keyable) {
+    const baseEntry: string[] = this.parent ? this.parent.entry : []
+
+    let entry = [...baseEntry, this.toString()]
+    if (this.node instanceof Keyable && this.node.getKey) {
+      entry = ['User:bob']
+
       // this.node.getKey()
     }
 
-    const baseEntry: string = this.parent
-      ? this.parent.entry
-      : this.path.toString()
+    entry.toString = () => entry.join('.')
 
-    return baseEntry
+    return entry
   }
 }

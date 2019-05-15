@@ -6,6 +6,7 @@ import {
   Keyable,
   KeyFn,
   Node,
+  defaultKey,
 } from './abstract'
 import { DataProxy } from '../DataProxy'
 import { Accessor } from '../Accessor'
@@ -39,7 +40,9 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
       ...options
     }: IObjectNodeOptions<ObjectNode<TNode, T, Typename>> = {}
   ) {
-    super([fields as any, options], [getKey as any])
+    super([fields as any, options])
+
+    this.getKey = defaultKey(this as any)
   }
 
   public getData(

@@ -7,7 +7,7 @@ import {
 } from 'graphql'
 import { FieldSelection, Selection } from '../Selection'
 import { ScalarNode } from '../Node'
-import { sortByPathLength } from './optimiseSelections'
+import { sortByPathLength } from './sortByPathLength'
 
 export class ASTBuilder {
   constructor(private queryName?: string) {}

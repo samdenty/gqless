@@ -17,7 +17,7 @@
     "@graphql-builder/utils": "^0.1.0",
     "fast-deep-equal": "^2.0.1",
     "json-stable-stringify": "^1.0.1",
-    "mix-classes": "^1.1.4"
+    "mix-classes": "^1.1.5"
   },
   "peerDependencies": {},
   "devDependencies": {

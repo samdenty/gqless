@@ -34,16 +34,16 @@ async function bootstrap() {
   getUsers({ limit: 10 })[1].age
   query.data.users[1].age
 
-  setTimeout(() => {
-    getUsers({ limit: 1 })[1].age
-    getUsers({ limit: 1 })[1].avatarUrl
+  // setTimeout(() => {
+  //   getUsers({ limit: 1 })[1].age
+  //   getUsers({ limit: 1 })[1].avatarUrl
 
-    query.data.user.following![0]!.name
+  //   query.data.user.following![0]!.name
 
-    query.data.users[1].following![0]!.age
-    query.data.users[1].avatarUrl
-    query.data.users[1].avatarUrl({ size: 100 })
-  }, 100)
+  //   query.data.users[1].following![0]!.age
+  //   query.data.users[1].avatarUrl
+  //   query.data.users[1].avatarUrl({ size: 100 })
+  // }, 100)
 
   window.query = query
 

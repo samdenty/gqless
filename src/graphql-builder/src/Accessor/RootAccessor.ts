@@ -1,14 +1,16 @@
 import { RootSelection } from '../Selection'
 import { Accessor } from './Accessor'
-import { Cache } from '../Cache'
+import { Cache, Value } from '../Cache'
 
 export class RootAccessor<
-  TSelection extends RootSelection<any> = RootSelection<any>,
+  TSelection extends RootSelection = RootSelection,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelection, TChildren> {
-  constructor(rootSelection: TSelection, private cache: Cache) {
+  constructor(rootSelection: TSelection, protected cache: Cache) {
     super(undefined, rootSelection)
-    // console.log(this.cache.entries)
+    this.value = new Value(rootSelection.node, {})
+
+    cache.store.set(this.toString(), this.value)
   }
 
   public data: TSelection extends RootSelection<infer TNode>

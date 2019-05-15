@@ -25,12 +25,11 @@ type NodeContainerValue<TNode extends NodeContainer<any, any, any>> = DataProxy<
   InnerNode<TNode>
 >
 
-// If the Arguments are type any, it's because undefined / null was passed
-// meaning no arguments needed
-type FieldCallback<
+// Field argument function
+type FieldArgFn<
   TNode extends FieldNode<any, any, any>
 > = TNode extends FieldNode<any, Arguments<infer T, infer TInputs>, any>
-  ? 0 extends (1 & T & TInputs) // check for any
+  ? 0 extends (1 & T & TInputs) // check for any (when undefined / null is passed)
     ? never
     : (RequiredKeys<NodeDataType<Arguments<T, TInputs>>> extends never
         ? (
@@ -42,11 +41,11 @@ type FieldCallback<
   : never
 
 // Returns a field + callback + nullable
-type FieldProxy<TNode extends FieldNode<any, any, any>> = FieldCallback<
+type FieldProxy<TNode extends FieldNode<any, any, any>> = FieldArgFn<
   TNode
 > extends never
   ? (NodeContainerValue<TNode> | NodeContainerNullable<TNode>)
-  : (FieldCallback<TNode> & NodeContainerValue<TNode>)
+  : (FieldArgFn<TNode> & NodeContainerValue<TNode>)
 
 // Recurse over a FieldsNode (ObjectNode / InterfaceNode)
 type RecurseFields<TNode extends FieldsNode<any, any, any, any>> = {

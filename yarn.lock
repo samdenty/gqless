@@ -7336,10 +7336,10 @@ mississippi@^3.0.0:
     stream-each "^1.1.0"
     through2 "^2.0.0"
 
-mix-classes@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/mix-classes/-/mix-classes-1.1.3.tgz#7607aa9830ea7a8f9909b167d63a03bd03d5be1e"
-  integrity sha512-QwCdYWi/n8Te7gU0LvMeQ0xLfiSQQGleEbelokGB32h2368/qACIgILTn/Bu9ODEpF/HF40ZfJtLcppLv7G+ng==
+mix-classes@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/mix-classes/-/mix-classes-1.1.5.tgz#c7066ef2e9e0123a3f8e7a07518f52d639ec2927"
+  integrity sha512-QOIB+nhhXti1Ae7u+t058apZ0eABZb321v2HWOWUxzc+uXvEXmXSViAvP9KFyg3eSfuaDVIiomALOkDl2QvN9Q==
 
 mixin-deep@^1.2.0:
   version "1.3.1"

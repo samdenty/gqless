@@ -1,6 +1,6 @@
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
-import { ArrayNode } from '../Node'
+import { ArrayNode, Node } from '../Node'
 
 export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any, any>> = Selection<
@@ -17,6 +17,14 @@ export class IndexAccessor<
         : parent.selection.node
       ).ofNode
     )
+  }
+
+  // This should eventually move out of a getter and instead be static updating on changes
+  public get value() {
+    const parentValue = this.parent.value
+    if (!parentValue) return undefined
+
+    return parentValue.get(this.toString())
   }
 
   public getData() {

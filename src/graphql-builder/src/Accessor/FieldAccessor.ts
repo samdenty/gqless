@@ -9,18 +9,18 @@ export class FieldAccessor<
     super(parent, fieldSelection)
   }
 
+  public get value() {
+    const parentValue = this.parent.value
+    if (!parentValue) return undefined
+
+    return parentValue.get(this.toString())
+  }
+
   public getData() {
     return this.selection.field.ofNode.getData(this)
   }
 
   public toString() {
     return this.selection.toString()
-  }
-
-  protected computeValue() {
-    if (this.parent.value === undefined || this.parent.value === null)
-      return undefined
-
-    return this.parent.value[this.selection.dataProp]
   }
 }

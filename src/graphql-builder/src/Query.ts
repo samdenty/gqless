@@ -154,22 +154,16 @@ export class Query<TNode extends ObjectNode<any, any, any>> {
       }
 
       const recurseAccessor = (accessor: Accessor<any, any>, data: any) => {
-        console.log(accessor.path.toString(), accessor.entry)
+        this.cache.update2(accessor, data)
 
         if (accessor.node instanceof FieldsNode) {
           recurseFieldsAccessor(accessor, data)
-          // this.cache.update(, data)
-          return
-        }
-
-        if (accessor.node instanceof ArrayNode) {
+        } else if (accessor.node instanceof ArrayNode) {
           recurseArrayAccessor(accessor, data)
-          this.cache.update(accessor.path.toString(), data)
-          return
         }
       }
 
-      recurseFieldsAccessor(this.accessor, response!.data)
+      recurseAccessor(this.accessor, response!.data)
     }
 
     if (error) {
