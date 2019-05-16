@@ -13,7 +13,7 @@ export class FieldSelection<
     parent: Selection<any>,
     node: TNode,
     public field: FieldNode<TNode, any, any>,
-    public args: any = null
+    public args?: Record<string, any>
   ) {
     super(parent, node)
 

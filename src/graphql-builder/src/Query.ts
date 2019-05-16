@@ -34,11 +34,11 @@ export type ProxyInterceptor = (
 ) => unknown
 
 export class Query<TNode extends ObjectNode<any, any, any>> {
-  protected selection = new RootSelection(this.node)
-  protected cache = new Cache()
-  protected accessor = new RootAccessor(this.selection, this.cache)
-  protected astBuilder: ASTBuilder
-  protected batcher: QueryBatcher
+  public selection = new RootSelection(this.node)
+  public cache = new Cache()
+  public accessor = new RootAccessor(this.selection, this.cache)
+  public astBuilder: ASTBuilder
+  public batcher: QueryBatcher
 
   public data = this.accessor.data
   public middleware = new MiddlewareEngine()
@@ -84,23 +84,13 @@ export class Query<TNode extends ObjectNode<any, any, any>> {
     // })
   }
 
-  protected async fetchSelections(selections: Selection<any>[]) {
+  protected fetchSelections(selections: Selection<any>[]) {
     const query = this.astBuilder.buildDocument(...selections)
     if (!query) return
 
-    let error: any
-    const responsePromise = (async () => await this.fetchQuery(query))()
+    const responsePromise = (async () => {
+      const response = await this.fetchQuery(query)
 
-    this.middleware.all.onFetch(query, responsePromise, selections)
-
-    let response: QueryResponse | undefined = undefined
-    try {
-      response = await responsePromise
-    } catch (e) {
-      error = e
-    }
-
-    if (!error) {
       const recurseFieldsAccessor = (
         accessor: Accessor<
           Selection<
@@ -154,7 +144,7 @@ export class Query<TNode extends ObjectNode<any, any, any>> {
       }
 
       const recurseAccessor = (accessor: Accessor<any, any>, data: any) => {
-        this.cache.update2(accessor, data)
+        this.cache.update(accessor, data)
 
         if (accessor.node instanceof FieldsNode) {
           recurseFieldsAccessor(accessor, data)
@@ -164,13 +154,13 @@ export class Query<TNode extends ObjectNode<any, any, any>> {
       }
 
       recurseAccessor(this.accessor, response!.data)
-    }
 
-    if (error) {
-      throw error
-    }
+      return response
+    })()
 
-    return response
+    this.middleware.all.onFetch(query, responsePromise, selections)
+
+    return responsePromise
   }
 
   public dispose() {

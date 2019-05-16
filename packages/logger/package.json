@@ -19,5 +19,7 @@
   "peerDependencies": {
     "graphql-builder": "*"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@babel/core": "^7.4.4"
+  }
 }

@@ -1,6 +1,6 @@
 import { Selection } from '../Selection'
 import { computed } from '../utils'
-import { Node, Keyable } from '../Node'
+import { Node } from '../Node'
 import { Cache, Value } from '../Cache'
 
 export abstract class Accessor<
@@ -40,20 +40,5 @@ export abstract class Accessor<
     path.toString = () => path.map(selection => selection.toString()).join('.')
 
     return path
-  }
-
-  public get entry() {
-    const baseEntry: string[] = this.parent ? this.parent.entry : []
-
-    let entry = [...baseEntry, this.toString()]
-    if (this.node instanceof Keyable && this.node.getKey) {
-      entry = ['User:bob']
-
-      // this.node.getKey()
-    }
-
-    entry.toString = () => entry.join('.')
-
-    return entry
   }
 }

@@ -15,7 +15,8 @@
     "react-app-polyfill": "^1.0.1"
   },
   "alias": {
-    "graphql-builder": "../src"
+    "graphql-builder": "../src",
+    "@graphql-builder/logger": "../../../packages/logger/src"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.4.4",

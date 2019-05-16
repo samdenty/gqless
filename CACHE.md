@@ -3,7 +3,10 @@ The keys being keyed nodes
 
 Selection refers to a gql selection
 Accessor refers to a javascript reference waiting for a value
+
 Value refers to an observable fetched value
+
+- doesn't know it's parent
 
 ```js
 {

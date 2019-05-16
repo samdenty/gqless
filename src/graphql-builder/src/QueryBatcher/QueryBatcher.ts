@@ -28,11 +28,7 @@ export class QueryBatcher {
 
     try {
       await this.fetchSelections(commits)
-    } catch (e) {
-      // @TODO
-      console.warn('error:', e)
-      // commits.forEach(node => node.errors.add(e))
-    }
+    } catch {}
   }
 
   public startTimer() {

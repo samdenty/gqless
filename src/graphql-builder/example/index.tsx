@@ -7,20 +7,38 @@ import ApolloClient from 'apollo-boost'
 // import { useQuery, QueryProvider, graphql, Defer } from '@graphql-builder/react'
 import { Query } from 'graphql-builder'
 import { LoggerMiddleware } from '@graphql-builder/logger'
-import { fetchSchema, Codegen } from '@graphql-builder/schema'
+import { print } from 'graphql'
 import { types as typesFaker, User } from './graphql'
 import * as Imports from 'graphql-builder'
 
 Object.assign(window, { ...Imports, typesFaker })
 
+const endpoint = 'http://localhost:9002/graphql'
 const client = new ApolloClient({
-  uri: 'http://localhost:9002/graphql',
+  uri: endpoint,
 })
 async function bootstrap() {
   const fetchQuery = async query => {
-    const resp = await client.query({ query })
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: print(query),
+      }),
+      mode: 'cors',
+    })
 
-    return { data: resp.data, errors: resp.errors }
+    if (!response.ok) {
+      throw new Error(`Network error, received status code ${response.status}`)
+    }
+
+    return await response.json()
+
+    // const resp = await client.query({ query })
+
+    // return { data: resp.data, errors: resp.errors }
   }
 
   // const schema = await fetchSchema(fetchQuery)
@@ -34,16 +52,16 @@ async function bootstrap() {
   getUsers({ limit: 10 })[1].age
   query.data.users[1].age
 
-  // setTimeout(() => {
-  //   getUsers({ limit: 1 })[1].age
-  //   getUsers({ limit: 1 })[1].avatarUrl
+  setTimeout(() => {
+    getUsers({ limit: 1 })[1].age
+    getUsers({ limit: 1 })[1].avatarUrl
 
-  //   query.data.user.following![0]!.name
+    query.data.user.following![0]!.name
 
-  //   query.data.users[1].following![0]!.age
-  //   query.data.users[1].avatarUrl
-  //   query.data.users[1].avatarUrl({ size: 100 })
-  // }, 100)
+    query.data.users[1].following![0]!.age
+    query.data.users[1].avatarUrl
+    query.data.users[1].avatarUrl({ size: 100 })
+  }, 100)
 
   window.query = query
 

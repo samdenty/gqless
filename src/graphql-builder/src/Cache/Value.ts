@@ -1,4 +1,4 @@
-import { Node } from '../Node'
+import { Node, ScalarNode, ArrayNode } from '../Node'
 import { onEvent } from '../utils'
 
 export type UValueData =
@@ -33,6 +33,26 @@ export class Value {
   public set(key: string | number, value: Value) {
     this.data[key] = value
     this.onSet.emit(key, value)
+  }
+
+  public toJSON(): any {
+    if (this.node instanceof ScalarNode) {
+      return this.data
+    }
+
+    if (this.data instanceof Array) {
+      return this.data.map(value => value.toJSON())
+    }
+
+    if (this.data instanceof Object) {
+      const obj: any = {}
+      Object.entries(this.data).forEach(([key, value]) => {
+        obj[key] = value.toJSON()
+      })
+      return obj
+    }
+
+    return this.data
   }
 }
 
