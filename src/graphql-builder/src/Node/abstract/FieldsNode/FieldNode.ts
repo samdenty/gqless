@@ -6,6 +6,7 @@ import { Accessor, FieldAccessor } from '../../../Accessor'
 import isEqual from 'fast-deep-equal'
 import { Outputable } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
+import { invariant } from '../../../utils'
 
 export class FieldNode<
   TNode extends Node<any>,
@@ -23,15 +24,13 @@ export class FieldNode<
     fieldsAccessor: Accessor<Selection<FieldsNode<any, any, any>>>
   ) {
     const getSelection = (args?: Record<string, any>) => {
-      const selection: FieldSelection<
-        TNode
-      > = fieldsAccessor.selection.getField(selection => {
+      const selection = fieldsAccessor.selection.getField(selection => {
         if (!(selection instanceof FieldSelection)) return false
 
         return (
           selection.field.name === this.name && isEqual(selection.args, args)
         )
-      })!
+      })! as FieldSelection<TNode>
 
       if (selection) return { justCreated: false, selection }
 
@@ -47,8 +46,6 @@ export class FieldNode<
     }
 
     const getData = (selection: FieldSelection<TNode>): any => {
-      // selection.root.dataAccessed(selection)
-
       const accessor =
         fieldsAccessor.getChild(a => a.selection === selection) ||
         new FieldAccessor(fieldsAccessor, selection)
@@ -77,6 +74,16 @@ export class FieldNode<
         },
         {
           get: (_, prop) => {
+            invariant(
+              argumentlessData,
+              `Cannot read property '${String(prop)}' on null [${
+                argumentless.selection.path
+              }]\n\n` +
+                `You should check for null using \`${
+                  argumentless.selection
+                }() && ${argumentless.selection}().${String(prop)}\``
+            )
+
             const result = argumentlessData[prop]
 
             if (typeof result === 'function') {
@@ -84,6 +91,19 @@ export class FieldNode<
             }
 
             return result
+          },
+          set: (_, prop, value) => {
+            invariant(
+              argumentlessData,
+              `Cannot set property '${String(prop)}' on null [${
+                argumentless.selection.path
+              }]\n\n` +
+                `You should check for null using \`${
+                  argumentless.selection
+                }() && ${argumentless.selection}().${String(prop)}\``
+            )
+
+            return (argumentlessData[prop] = value)
           },
         }
       )

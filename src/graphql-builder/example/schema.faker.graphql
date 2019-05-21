@@ -20,8 +20,8 @@
 type User {
   id: ID!
 
-  name: String @fake(type: firstName, locale: en_CA)
-  age: Int @fake(type: number)
+  name: String! @fake(type: firstName, locale: en_CA)
+  age: Int! @fake(type: number)
 
   description: String @fake(type: lorem)
   avatarUrl(size: Int): String @fake(type: avatarUrl)

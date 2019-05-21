@@ -9,13 +9,6 @@ export class FieldAccessor<
     super(parent, fieldSelection)
   }
 
-  public get value() {
-    const parentValue = this.parent.value
-    if (!parentValue) return undefined
-
-    return parentValue.get(this.toString())
-  }
-
   public getData() {
     return this.selection.field.ofNode.getData(this)
   }

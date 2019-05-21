@@ -49,7 +49,10 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
     accessor: Accessor
   ): DataProxy<ObjectNode<TNode, T, Typename>> {
     super.getData(accessor)
-    // accessor.node.root.dataAccessed(accessor.node)
+
+    if (accessor.value && accessor.value!.data === null) {
+      return null as any
+    }
 
     return new Proxy({} as any, {
       get: (_, prop: keyof TNode) => {
@@ -60,8 +63,24 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
 
-          return field.getData(accessor)
+          return field.getData(accessor as any)
         }
+      },
+
+      set: (_, prop: keyof TNode, data) => {
+        if (prop === '__typename') return true
+
+        if (this.fields.hasOwnProperty(prop)) {
+          const fieldAccessor = accessor.getChild(
+            a => a.selection.dataProp === prop
+          )
+
+          if (fieldAccessor) {
+            fieldAccessor.setData(data)
+          }
+        }
+
+        return true
       },
     })
   }

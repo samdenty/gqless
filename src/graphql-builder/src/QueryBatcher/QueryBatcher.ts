@@ -1,14 +1,18 @@
-import { Selection, RootSelection } from '../Selection'
+import { Selection } from '../Selection'
+import { Disposable } from '../mixins'
 
-export class QueryBatcher {
+export class QueryBatcher extends Disposable {
   private timer: any
   private commits = new Set<Selection<any, any>>()
 
   constructor(
-    private fetchSelections: (selections: Selection<any>[]) => Promise<any>,
+    private fetchSelections: (selections: Selection<any>[]) => any,
     public interval: number = 50
   ) {
+    super()
     this.startTimer()
+
+    this.disposers.add(this.stopTimer)
   }
 
   public stage(selection: Selection<any, any>) {
@@ -44,9 +48,5 @@ export class QueryBatcher {
 
     clearTimeout(this.timer)
     this.timer = null
-  }
-
-  public dispose() {
-    this.stopTimer()
   }
 }

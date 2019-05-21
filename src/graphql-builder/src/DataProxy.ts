@@ -44,8 +44,10 @@ type FieldArgFn<
 type FieldProxy<TNode extends FieldNode<any, any, any>> = FieldArgFn<
   TNode
 > extends never
-  ? (NodeContainerValue<TNode> | NodeContainerNullable<TNode>)
-  : (FieldArgFn<TNode> & NodeContainerValue<TNode>)
+  ? (NodeContainerValue<TNode> | NodeContainerNullable<TNode>) // no args
+  : (NodeContainerNullable<TNode> extends never
+      ? (FieldArgFn<TNode> & NodeContainerValue<TNode>) // args + non-nullable = don't need to call it
+      : FieldArgFn<TNode>) // args + nullable = need to call it
 
 // Recurse over a FieldsNode (ObjectNode / InterfaceNode)
 type RecurseFields<TNode extends FieldsNode<any, any, any, any>> = {

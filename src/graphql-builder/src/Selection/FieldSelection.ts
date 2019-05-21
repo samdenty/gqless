@@ -4,7 +4,7 @@ import { generateFieldID } from './utils'
 import stringify from 'json-stable-stringify'
 
 export class FieldSelection<
-  TNode extends Node<any>,
+  TNode extends Node<any> = Node<any>,
   TSelections extends CircularSelectionField = CircularSelectionField
 > extends Selection<TNode, TSelections> {
   public alias?: string
@@ -30,16 +30,7 @@ export class FieldSelection<
 
     parent.selections.push(this)
     parent.onSelect.emit(this)
-
-    // this.disposers.push(parent.onValueChange(() => this.computeValue()))
   }
-
-  // protected computeValue() {
-  //   super.computeValue()
-  //   const parentObj = this.parent.value
-
-  //   this.value = parentObj && parentObj[this.dataProp]
-  // }
 
   public get dataProp() {
     if (this.alias) {

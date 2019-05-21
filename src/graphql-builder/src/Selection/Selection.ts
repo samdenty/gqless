@@ -4,11 +4,10 @@ import { RootSelection } from './RootSelection'
 import { FieldSelection } from './FieldSelection'
 import { MiddlewareMethod } from '../Middleware'
 
-export interface CircularSelectionField
-  extends FieldSelection<any, CircularSelectionField> {}
+export interface CircularSelectionField extends FieldSelection {}
 
 export abstract class Selection<
-  TNode extends Node<any>,
+  TNode extends Node<any> = Node<any>,
   TSelections extends CircularSelectionField = CircularSelectionField
 > {
   public selections: TSelections[] = []

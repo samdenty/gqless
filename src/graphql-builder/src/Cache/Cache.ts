@@ -19,28 +19,56 @@ export class Cache {
 
   public onUpdate = onEvent()
 
-  public update(accessor: Accessor, value: any) {
-    const createValue = (accessor: Accessor) => {
-      if (accessor.value) return
+  public update(accessor: Accessor, data: any) {
+    const createValue = (accessor: Accessor, data?: any) => {
+      const { parent, node, value } = accessor
 
-      createValue(accessor.parent!)
+      // Update the value if it exists
+      if (value) {
+        if (data === undefined) return
 
+        if (node instanceof ScalarNode) {
+          value.update(data)
+          return
+        }
+
+        const wasNull = value.data === null
+        const isNull = data === null
+
+        if (wasNull === isNull) return
+
+        if (isNull && !wasNull) {
+          value.update(null)
+          return
+        }
+
+        if (wasNull && !isNull) {
+          value.update(node instanceof ArrayNode ? [] : {})
+          return
+        }
+
+        if (node instanceof ArrayNode) {
+          // Update the array length (removing values / adding empty elements)
+          value.update((value.data as any[]).slice(0, data.length))
+          return
+        }
+
+        return
+      }
+
+      // Value doesn't exist, recurse up and create parent values (if they don't already exist)
+      createValue(parent!)
+
+      // Create a new value
       const accessorValue = new Value(
-        accessor.node,
-        accessor.node instanceof ScalarNode
-          ? value
-          : accessor.node instanceof ArrayNode
-            ? []
-            : {}
+        node,
+        // Only initialize with data if it's a ScalarNode
+        node instanceof ScalarNode ? data : node instanceof ArrayNode ? [] : {}
       )
 
-      accessor.parent!.value!.set(accessor.toString(), accessorValue)
+      parent!.value!.set(accessor.toString(), accessorValue)
     }
 
-    createValue(accessor)
-
-    // console.groupCollapsed(accessor.path.toString(), value)
-    // console.log(accessor)
-    // console.groupEnd()
+    createValue(accessor, data)
   }
 }

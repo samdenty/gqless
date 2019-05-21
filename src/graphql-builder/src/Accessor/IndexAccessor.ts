@@ -19,14 +19,6 @@ export class IndexAccessor<
     )
   }
 
-  // This should eventually move out of a getter and instead be static updating on changes
-  public get value() {
-    const parentValue = this.parent.value
-    if (!parentValue) return undefined
-
-    return parentValue.get(this.toString())
-  }
-
   public getData() {
     return this.selection.node.ofNode.getData(this)
   }

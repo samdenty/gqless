@@ -17,6 +17,7 @@ import {
   IndexAccessor,
   FieldAccessor,
 } from './Accessor'
+import { Disposable } from './mixins'
 
 export type QueryResponse<Data = any> = { data: Data; errors: any }
 
@@ -33,7 +34,7 @@ export type ProxyInterceptor = (
   prop: string | symbol
 ) => unknown
 
-export class Query<TNode extends ObjectNode<any, any, any>> {
+export class Query<TNode extends ObjectNode<any, any, any>> extends Disposable {
   public selection = new RootSelection(this.node)
   public cache = new Cache()
   public accessor = new RootAccessor(this.selection, this.cache)
@@ -50,11 +51,13 @@ export class Query<TNode extends ObjectNode<any, any, any>> {
     protected fetchQuery: QueryFetcher,
     { name }: IQueryOptions = {}
   ) {
+    super()
+
     this.name = name
 
     this.astBuilder = new ASTBuilder(name)
-    this.batcher = new QueryBatcher(selections =>
-      this.fetchSelections(selections)
+    this.batcher = new QueryBatcher(
+      selections => this.fetchSelections(selections)!
     )
     this.middleware.add(...defaultMiddleware)
 
@@ -115,9 +118,21 @@ export class Query<TNode extends ObjectNode<any, any, any>> {
             )
 
             if (!subSelection) {
+              const dataPropMatch = dataProp.match(/^(.+)__(\d)$/)
+              if (!dataPropMatch) {
+                console.error(
+                  `Couldn't locate selection ${accessor.path}.${dataProp}`
+                )
+                return
+              }
+              const [_, fieldName, alias] = dataPropMatch
+
               console.error(
-                `Couldn't locate selection ${accessor.path}.${dataProp}`
+                `Couldn't locate selection ${
+                  accessor.path
+                }.${fieldName} [alias=${alias}]`
               )
+
               return
             }
 
@@ -164,6 +179,7 @@ export class Query<TNode extends ObjectNode<any, any, any>> {
   }
 
   public dispose() {
+    super.dispose()
     this.batcher.dispose()
 
     this.middleware.all.dispose()

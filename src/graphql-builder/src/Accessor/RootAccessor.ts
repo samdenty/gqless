@@ -15,7 +15,7 @@ export class RootAccessor<
 
   public data: TSelection extends RootSelection<infer TNode>
     ? ReturnType<TNode['getData']>
-    : never = this.selection.createProxy(this)
+    : never = this.selection.createProxy(this) as any
 
   public toString() {
     return this.selection.toString()

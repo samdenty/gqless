@@ -34,7 +34,15 @@ async function bootstrap() {
       throw new Error(`Network error, received status code ${response.status}`)
     }
 
-    return await response.json()
+    const json = await response.json()
+
+    // if (json.data.user) {
+    //   if (Object.keys(json.data.user).length === 1) {
+    //     json.data.user = null
+    //   }
+    // }
+
+    return json
 
     // const resp = await client.query({ query })
 
@@ -46,22 +54,27 @@ async function bootstrap() {
   // console.log(codegen.generate())
 
   const query = new Query(typesFaker.Query, fetchQuery, { name: 'TestQuery' })
-  query.middleware.add(new LoggerMiddleware(query))
+  query.middleware.add(new LoggerMiddleware(query), {
+    // async onFetch(_, response) {
+    //   await response
+    //   getUsers({ limit: 1 })[1].age
+    //   getUsers({ limit: 1 })[1].avatarUrl
+    //   const user = query.data.user()
+    //   if (user) {
+    //     user.following![0]!.name
+    //   }
+    //   query.data.users[1].following![0]!.age
+    //   query.data.users[1].avatarUrl
+    //   query.data.users[1].avatarUrl({ size: 100 })
+    // },
+  })
 
-  const getUsers = query.data.users
-  getUsers({ limit: 10 })[1].age
-  query.data.users[1].age
+  // const getUsers = query.data.users
+  // getUsers({ limit: 10 })[1].age
+  // query.data.users[1].age
 
-  setTimeout(() => {
-    getUsers({ limit: 1 })[1].age
-    getUsers({ limit: 1 })[1].avatarUrl
-
-    query.data.user.following![0]!.name
-
-    query.data.users[1].following![0]!.age
-    query.data.users[1].avatarUrl
-    query.data.users[1].avatarUrl({ size: 100 })
-  }, 100)
+  query.data.user.name
+  query.data.users[0].name
 
   window.query = query
 

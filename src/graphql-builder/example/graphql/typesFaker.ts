@@ -112,13 +112,13 @@ export const types = {
           return new FieldNode(types.ID, undefined, false)
         },
         get name() {
-          return new FieldNode(types.String, undefined, true)
+          return new FieldNode(types.String, undefined, false)
         },
         get age() {
-          return new FieldNode(types.Int, undefined, true)
+          return new FieldNode(types.Int, undefined, false)
         },
         get description() {
-          return new FieldNode(types.String, undefined, true)
+          return new FieldNode(types.String, undefined, false)
         },
         get avatarUrl() {
           return new FieldNode(
