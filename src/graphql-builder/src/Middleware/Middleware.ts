@@ -1,5 +1,5 @@
 import { DocumentNode } from 'graphql'
-import { QueryResponse } from '../Query'
+import { QueryResponse } from '../GraphQL'
 import { Selection } from '../Selection'
 import { Accessor } from '../Accessor'
 

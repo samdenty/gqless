@@ -5,11 +5,12 @@ import { Suspense } from 'react'
 import * as ReactDOM from 'react-dom'
 import ApolloClient from 'apollo-boost'
 // import { useQuery, QueryProvider, graphql, Defer } from '@graphql-builder/react'
-import { Query } from 'graphql-builder'
+import { GraphQL } from 'graphql-builder'
 import { LoggerMiddleware } from '@graphql-builder/logger'
 import { print } from 'graphql'
 import { types as typesFaker, User } from './graphql'
 import * as Imports from 'graphql-builder'
+import { graphql, ReactMiddleware } from '@graphql-builder/react'
 
 Object.assign(window, { ...Imports, typesFaker })
 
@@ -53,148 +54,149 @@ async function bootstrap() {
   // const codegen = new Codegen(schema)
   // console.log(codegen.generate())
 
-  const query = new Query(typesFaker.Query, fetchQuery, { name: 'TestQuery' })
-  query.middleware.add(new LoggerMiddleware(query), {
-    // async onFetch(_, response) {
-    //   await response
-    //   getUsers({ limit: 1 })[1].age
-    //   getUsers({ limit: 1 })[1].avatarUrl
-    //   const user = query.data.user()
-    //   if (user) {
-    //     user.following![0]!.name
-    //   }
-    //   query.data.users[1].following![0]!.age
-    //   query.data.users[1].avatarUrl
-    //   query.data.users[1].avatarUrl({ size: 100 })
-    // },
-  })
+  const graphqlInstance = new GraphQL(typesFaker.Query, fetchQuery)
+  graphqlInstance.middleware.add(
+    new LoggerMiddleware(graphqlInstance),
+    new ReactMiddleware(),
+    {
+      // async onFetch(_, response) {
+      //   await response
+      //   getUsers({ limit: 1 })[1].age
+      //   getUsers({ limit: 1 })[1].avatarUrl
+      //   const user = query.query.user()
+      //   if (user) {
+      //     user.following![0]!.name
+      //   }
+      //   query.query.users[1].following![0]!.age
+      //   query.query.users[1].avatarUrl
+      //   query.query.users[1].avatarUrl({ size: 100 }) /
+      // },
+    }
+  )
 
-  // const getUsers = query.data.users
+  // const getUsers = query.query.users
   // getUsers({ limit: 10 })[1].age
-  // query.data.users[1].age
+  // query.query.users[1].age
 
-  query.data.user.name
-  query.data.users[0].name
+  // graphql.query.user.name
+  // graphql.query.users[0].name
 
-  window.query = query
+  const { query } = graphqlInstance
 
-  return
+  Object.assign(window, { query, graphql: graphqlInstance })
+  // return
 
-  test(typesFaker, fetchQuery)
+  // test(typesFaker, fetchQuery)
 
-  const Description = graphql(({ user }: { user: User }) => {
-    return <p>{user.description}</p>
-  })
+  // const Description = graphql(({ user }: { user: User }) => {
+  //   return <p>{user.description}</p>
+  // })
 
-  Description.displayName = 'Description'
+  // Description.displayName = 'Description'
 
-  const UserComponent = graphql(({ user }: { user: User }) => {
-    return (
-      <div>
-        <img src={user.avatarUrl({ size: 200 })} />
-        <h2>{user.name}</h2>
-        <div>age: {user.age}</div>
-        <Description user={user} />
-      </div>
-    )
-  })
-  UserComponent.displayName = 'UserComponent'
+  const UserComponent = graphql(
+    ({ user }: { user: User }) => {
+      return (
+        <div>
+          <img src={user.avatarUrl({ size: 200 })} />
+          <h2>{user.name}</h2>
+          <div>age: {user.age}</div>
+          {/*<Description user={user} />*/}
+        </div>
+      )
+    },
+    { name: 'UserComponent' }
+  )
 
-  const Component = graphql(() => {
-    console.count('Component render')
-    const query = useQuery<typeof typesFaker.Query>('TestQuery', query => {
-      query.middleware.add(new LoggerMiddleware(query))
-    })
+  const Component = graphql(
+    () => {
+      const [a, setA] = React.useState(0)
+      console.log('Component render', { usersLength: query.users.length })
 
-    if (!query) return null
-    ;(window as any).query = query
-
-    return (
-      <div>
-        <b>My name:</b> {query.data.me.name}
-        <br />
-        <b>My description:</b>
-        <Defer fallback="Loading">
+      return (
+        <div>
+          <b>My name:</b> {query.me!.name}
+          <br />
+          <b>My description:</b>
+          <button onClick={() => setA(a + 1)}>{a}</button>
+          {/*<Defer fallback="Loading">
           <Description user={query.data.me} />
         </Defer>
-        <div>
+    <div>*/}
           <b>Other users:</b>
-          {query.data.users.map(user => (
-            <UserComponent key={user.id} user={user} />
-          ))}
+          {query.users.map(user => <UserComponent key={user.id} user={user} />)}
         </div>
-      </div>
-    )
-    // return (
-    //   <>
-    //     <div>
-    //       <Suspense fallback="Users loading">
-    //         {query.data.users.map(user => (
-    //           <UserComponent key={user.id} user={user} />
-    //         ))}
-    //       </Suspense>
-    //     </div>
-    //     <button onClick={() => setClicks(clicks + 1)}>{clicks}</button>
-    //     <table>
-    //       <tbody>
-    //         <tr>
-    //           <td>combined</td>
-    //           <td>{`${query.data.user.name} (${query.data.user.age})`}</td>
-    //         </tr>
-    //         <tr>
-    //           <td>name</td>
-    //           <td>{query.data.user.name}</td>
-    //         </tr>
-    //         <tr>
-    //           <td>age</td>
-    //           <td>{query.data.user.age}</td>
-    //         </tr>
-    //         <tr>
-    //           <td>getUser -> name</td>
-    //           <td>{query.data.getUser({ id: '10' }).name}</td>
-    //         </tr>
-    //         <tr>
-    //           <td>getUser -> age</td>
-    //           <td>{query.data.getUser({ id: '10' }).age}</td>
-    //         </tr>
-    //       </tbody>
-    //     </table>
-    //   </>
-    // )
+      )
+      // return (
+      //   <>
+      //     <div>
+      //       <Suspense fallback="Users loading">
+      //         {query.data.users.map(user => (
+      //           <UserComponent key={user.id} user={user} />
+      //         ))}
+      //       </Suspense>
+      //     </div>
+      //     <button onClick={() => setClicks(clicks + 1)}>{clicks}</button>
+      //     <table>
+      //       <tbody>
+      //         <tr>
+      //           <td>combined</td>
+      //           <td>{`${query.data.user.name} (${query.data.user.age})`}</td>
+      //         </tr>
+      //         <tr>
+      //           <td>name</td>
+      //           <td>{query.data.user.name}</td>
+      //         </tr>
+      //         <tr>
+      //           <td>age</td>
+      //           <td>{query.data.user.age}</td>
+      //         </tr>
+      //         <tr>
+      //           <td>getUser -> name</td>
+      //           <td>{query.data.getUser({ id: '10' }).name}</td>
+      //         </tr>
+      //         <tr>
+      //           <td>getUser -> age</td>
+      //           <td>{query.data.getUser({ id: '10' }).age}</td>
+      //         </tr>
+      //       </tbody>
+      //     </table>
+      //   </>
+      // )
 
-    // return <div>Name: {query.data.user.name}</div>
-    // query.data.a.b(null, { alias: 'test' }).c
+      // return <div>Name: {query.data.user.name}</div>
+      // query.data.a.b(null, { alias: 'test' }).c
 
-    // const users = query.data.users({ where: { following: ['example'] } })
+      // const users = query.data.users({ where: { following: ['example'] } })
 
-    // // users could be an array, or it could be null.
-    // // We could either pretend it's already resolved and give it a length of one,
-    // // which would allow us to get subfield types or fetch the users array
+      // // users could be an array, or it could be null.
+      // // We could either pretend it's already resolved and give it a length of one,
+      // // which would allow us to get subfield types or fetch the users array
 
-    // // const age = users[0].age
-    // // console.log(1, 'age ->', typeof age, age, `${age}`, +age)
+      // // const age = users[0].age
+      // // console.log(1, 'age ->', typeof age, age, `${age}`, +age)
 
-    // users.forEach(user => {
-    //   console.log('users forEach ->', user) // This should be a proxy
-    // })
+      // users.forEach(user => {
+      //   console.log('users forEach ->', user) // This should be a proxy
+      // })
 
-    // users.map
-    // users.forEach
-    // users.reduce
+      // users.map
+      // users.forEach
+      // users.reduce
 
-    // return (
-    //   <div>
-    //     {users.map(user => (
-    //       <div key={Math.random()}>
-    //         {user.name}
-    //         {user.age}
-    //       </div>
-    //     ))}
-    //   </div>
-    // )
-  })
-
-  Component.displayName = 'Component'
+      // return (
+      //   <div>
+      //     {users.map(user => (
+      //       <div key={Math.random()}>
+      //         {user.name}
+      //         {user.age}
+      //       </div>
+      //     ))}
+      //   </div>
+      // )
+    },
+    { name: 'Component' }
+  )
 
   const App = () => {
     return (
@@ -204,17 +206,7 @@ async function bootstrap() {
     )
   }
 
-  ReactDOM.render(
-    <QueryProvider
-      value={{
-        Query: typesFaker.Query,
-        fetchQuery,
-      }}
-    >
-      <App />
-    </QueryProvider>,
-    document.getElementById('root')
-  )
+  ReactDOM.render(<App />, document.getElementById('root'))
 
   // query.batcher.stageNode(query.root.fields[0])
 }

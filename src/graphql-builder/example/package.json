@@ -12,11 +12,13 @@
     "@graphql-builder/react": "^0.1.0",
     "@graphql-builder/schema": "^0.1.0",
     "apollo-boost": "^0.3.1",
+    "babel-plugin-add-react-displayname": "^0.0.5",
     "react-app-polyfill": "^1.0.1"
   },
   "alias": {
     "graphql-builder": "../src",
-    "@graphql-builder/logger": "../../../packages/logger/src"
+    "@graphql-builder/logger": "../../../packages/logger/src",
+    "@graphql-builder/react": "../../../packages/react/src"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.4.4",

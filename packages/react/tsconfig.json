@@ -5,7 +5,7 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
-      "*": ["src/*", "node_modules/*"]
+      "graphql-builder": ["../../src/graphql-builder/src"]
     }
   }
 }

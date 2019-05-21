@@ -25,35 +25,25 @@ export type QueryFetcher = (
   query: DocumentNode
 ) => Promise<QueryResponse> | QueryResponse
 
-export interface IQueryOptions {
-  name?: string
-}
-
 export type ProxyInterceptor = (
   target: unknown,
   prop: string | symbol
 ) => unknown
 
-export class Query<TNode extends ObjectNode<any, any, any>> extends Disposable {
+export class GraphQL<
+  TNode extends ObjectNode<any, any, any> = ObjectNode<any, any, any>
+> extends Disposable {
   public selection = new RootSelection(this.node)
   public cache = new Cache()
   public accessor = new RootAccessor(this.selection, this.cache)
   public astBuilder: ASTBuilder
   public batcher: QueryBatcher
 
-  public data = this.accessor.data
+  public query = this.accessor.data
   public middleware = new MiddlewareEngine()
 
-  public name?: string
-
-  constructor(
-    protected node: TNode,
-    protected fetchQuery: QueryFetcher,
-    { name }: IQueryOptions = {}
-  ) {
+  constructor(protected node: TNode, protected fetchQuery: QueryFetcher) {
     super()
-
-    this.name = name
 
     this.astBuilder = new ASTBuilder(name)
     this.batcher = new QueryBatcher(

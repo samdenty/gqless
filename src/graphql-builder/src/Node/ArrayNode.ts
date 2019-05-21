@@ -23,9 +23,11 @@ export class ArrayNode<TNode, TNullable> extends Mix(
       IndexAccessor
     >
   ) {
+    super.getData(arrayAccessor)
+
     const proxy: any[] = new Proxy([] as any[], {
       get: (target, prop: keyof any[]) => {
-        const arr: any[] | undefined = undefined //accessor.value
+        const arr = arrayAccessor.value && (arrayAccessor.value.data as any[])
 
         if (prop === 'length') {
           return arr ? arr!.length : 1

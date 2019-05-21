@@ -13,6 +13,11 @@
     "sourceMap": true,
     "lib": ["es2015", "es2016", "dom"],
     "baseUrl": ".",
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "graphql-builder": ["../src"],
+      "@graphql-builder/logger": ["../../../packages/logger/src"],
+      "@graphql-builder/react": ["../../../packages/react/src"]
+    }
   }
 }

@@ -11,7 +11,11 @@ export abstract class Accessor<
   protected cache: Cache = this.parent ? this.parent.cache : undefined!
   public children: TChildren[] = []
 
-  public onValueChange = onEvent()
+  // When the Value class associated with this accessor changes
+  public onValueAssociated = onEvent<(prevValue: Value | undefined) => void>()
+
+  // When the data changes (equality check)
+  public onDataUpdate = onEvent<(prevData: any) => void>()
 
   constructor(
     public parent: Accessor | undefined,
@@ -33,28 +37,58 @@ export abstract class Accessor<
         })
       )
 
-      let disposePrevListener: Function | undefined
-      const updateListener = () => {
-        if (disposePrevListener) {
-          this.disposers.delete(disposePrevListener)
-          disposePrevListener()
+      // Sync up data changes
+      let disposeVA: Function | undefined
+      let prevData: any
+      const valueAssociated = () => {
+        if (disposeVA) {
+          disposeVA()
+          disposeVA = undefined
+        }
+        const check = () => {
+          const newData = value ? value.data : undefined
+          if (prevData === newData) return
+
+          this.onDataUpdate.emit(prevData)
+
+          prevData = newData
+        }
+
+        const value = this.value!
+        if (!value) {
+          check()
+          return
+        }
+
+        disposeVA = value.onChange(check)
+        check()
+      }
+
+      this.disposers.add(this.onValueAssociated(valueAssociated))
+
+      // Sync the Value class to this accessor (using parent)
+      let disposeParentVA: Function | undefined
+      const parentValueAssociated = () => {
+        if (disposeParentVA) {
+          this.disposers.delete(disposeParentVA)
+          disposeParentVA()
+          disposeParentVA = undefined
         }
 
         if (parent.value) {
           this.value = parent.value!.get(this.toString())
 
-          disposePrevListener = parent.value!.onChange(() => {
+          disposeParentVA = parent.value!.onChange(() => {
             this.value = parent.value!.get(this.toString())
           })
-          this.disposers.add(disposePrevListener)
+          this.disposers.add(disposeParentVA)
         } else {
           this.value = undefined
-          disposePrevListener = undefined
         }
       }
 
-      this.disposers.add(parent.onValueChange(updateListener))
-      updateListener()
+      this.disposers.add(parent.onValueAssociated(parentValueAssociated))
+      parentValueAssociated()
     }
   }
 
@@ -69,7 +103,7 @@ export abstract class Accessor<
     this._value = value
 
     if (value !== prevValue) {
-      this.onValueChange.emit()
+      this.onValueAssociated.emit(prevValue)
     }
   }
 

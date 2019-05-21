@@ -1,89 +1,94 @@
 import * as React from 'react'
 
 import { DeferContext } from './Defer'
-import { startRecording, stopRecording, RecorderRecord } from './recorder'
 import { useForceUpdate } from './hooks/useForceUpdate'
-import { Selection } from '../Selection'
+import { Selection, Accessor, Recorder } from 'graphql-builder'
 
-interface OptimisticOptions {
+export interface IQueryOptions {
   name?: string
 }
 
 export const graphql = <T extends (...args: any[]) => any>(
   component: T,
-  { name }: OptimisticOptions = {}
+  { name }: IQueryOptions = {}
 ) => {
   const GraphQLComponent = (...args: Parameters<T>) => {
-    const onValueChangeDisposers = React.useMemo(
-      () => new WeakMap<Selection<any>, Function>(),
+    console.group(name)
+    const accessorDisposers = React.useMemo(
+      () => new Map<Accessor, Function>(),
       []
     )
-    const recordRef = React.useRef<RecorderRecord>(null)
+    const accessors = React.useMemo(() => new Set<Accessor>(), [])
     const forceUpdate = useForceUpdate()
+    console.log(Array.from(accessors).map(a => a.path.toString()))
 
     React.useEffect(() => {
       return () => {
-        recordRef.current.selections.forEach(s => {
-          const dispose = onValueChangeDisposers.get(s)
-          dispose()
-        })
+        accessorDisposers.forEach(dispose => dispose())
       }
     }, [])
 
+    const record = new Recorder()
     try {
-      startRecording()
+      record.start()
       var returnValue = component(...args)
     } catch (e) {
       throw e
     } finally {
-      const record = stopRecording()
+      record.stop()
 
-      record.selections.forEach(s => {
-        const added =
-          !recordRef.current || !recordRef.current.selections.includes(s)
+      // Add new accessors
+      record.accessors.forEach(accessor => {
+        if (accessors.has(accessor)) return
 
-        if (added) {
-          onValueChangeDisposers.set(
-            s,
-            s.onValueChange(prevValue => {
-              // console.log(s.path.toString(), prevValue, s.value)
-              // console.log(
-              //   s.path.toString(),
-              //   'causing force update for',
-              //   GraphQLComponent.displayName
-              // )
-              forceUpdate()
-            })
-          )
-        }
+        accessors.add(accessor)
+        accessorDisposers.set(
+          accessor,
+          accessor.onDataUpdate(prevData => {
+            forceUpdate()
+            // console.log(
+            //   name,
+            //   accessor.path.toString(),
+            //   'changed',
+            //   'from',
+            //   prevData,
+            //   'to',
+            //   accessor.value!.data
+            // )
+          })
+        )
       })
 
-      if (recordRef.current) {
-        recordRef.current.selections.forEach(s => {
-          const removed = !record.selections.includes(s)
-          if (removed) s.onValueChange.off(forceUpdate)
-        })
-      }
+      // Remove unused accessors
+      accessors.forEach(accessor => {
+        if (record.accessors.has(accessor)) return
 
-      recordRef.current = record
-
-      const unresolvedSelections = record.selections
-        .map(selection => selection.unresolvedSelection)
-        .filter(Boolean)
-
-      if (unresolvedSelections.length) {
-        const promise = Promise.all(unresolvedSelections)
-        const SuspendComponent = () => {
-          throw promise
+        const dispose = accessorDisposers.get(accessor)
+        if (dispose) {
+          accessorDisposers.delete(accessor)
+          dispose()
         }
+        accessors.delete(accessor)
+      })
+      console.groupEnd()
 
-        return (
-          <DeferContext.Provider value={{ defer: true }}>
-            {returnValue}
-            <SuspendComponent />
-          </DeferContext.Provider>
-        )
-      }
+      // const unresolvedSelections = record.selections
+      //   .map(selection => selection.unresolvedSelection)
+      //   .filter(Boolean)
+
+      // if (unresolvedSelections.length) {
+      //   const promise = Promise.all(unresolvedSelections)
+      //   const SuspendComponent = () => {
+      //     throw promise
+      //   }
+
+      //   return (
+      //     <DeferContext.Provider value={{ defer: true }}>
+      //       {returnValue}
+      //       <SuspendComponent />
+      //     </DeferContext.Provider>
+      //   )
+      // }
 
       return returnValue
     }

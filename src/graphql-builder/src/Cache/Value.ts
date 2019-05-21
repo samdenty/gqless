@@ -12,15 +12,14 @@ export type UValueData =
 export class Value {
   constructor(public node: Node<any>, public data?: UValueData) {}
 
-  public onChange = onEvent<() => void>()
+  public onChange = onEvent<(prevData?: UValueData) => void>()
 
   public update(data: UValueData) {
     const prevData = this.data
-    this.data = data
+    if (data === prevData) return
 
-    if (data !== prevData) {
-      this.onChange.emit()
-    }
+    this.data = data
+    this.onChange.emit(prevData)
   }
 
   public get(key: string | number): Value | undefined {
@@ -35,11 +34,9 @@ export class Value {
 
   public set(key: string | number, value: Value) {
     const prevValue = this.get(key)
+    if (prevValue === value) return
     ;(this.data as any)[key] = value
-
-    if (prevValue !== value) {
-      this.onChange.emit()
-    }
+    this.onChange.emit(this.data)
   }
 
   public toJSON(): any {

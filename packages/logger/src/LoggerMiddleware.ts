@@ -37,10 +37,7 @@ export class LoggerMiddleware implements Middleware {
       ...format(
         ['GraphQL ', 'color: gray; font-weight: lighter'],
         ['query ', `color: ${error ? 'red' : '#03A9F4'}; font-weight: bold`],
-        [
-          `${this.query.name || '(Unnamed)'} `,
-          'font-weight: bold; color: inherit',
-        ],
+        // [`${'(Unnamed)'} `, 'font-weight: bold; color: inherit'],
 
         [`(${time}ms)`, 'color: gray'],
         [` ${selections.length} selections`, 'color: gray'],

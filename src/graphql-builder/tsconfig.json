@@ -3,9 +3,6 @@
   "include": ["src", "types"],
   "compilerOptions": {
     "rootDir": "./",
-    "baseUrl": "./",
-    "paths": {
-      "*": ["src/*", "node_modules/*"]
-    }
+    "baseUrl": "./"
   }
 }

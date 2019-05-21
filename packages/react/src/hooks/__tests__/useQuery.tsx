@@ -1,7 +1,7 @@
 import { render } from 'react-testing-library'
 import * as React from 'react'
 import { useTestQuery } from '../../../../test'
-import { QueryProvider } from '../../QueryContext'
+import { GraphQLProvider } from '../../GraphQLContext'
 
 test('supports providing options using context', () => {
   const name = 'exampleQuery'
@@ -17,9 +17,9 @@ test('supports providing options using context', () => {
 
   render(
     <React.Suspense fallback="loading">
-      <QueryProvider value={{ name: name }}>
+      <GraphQLProvider value={{ name: name }}>
         <Component />
-      </QueryProvider>
+      </GraphQLProvider>
     </React.Suspense>
   )
 })
