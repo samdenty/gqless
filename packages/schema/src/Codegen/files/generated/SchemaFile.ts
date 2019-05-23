@@ -70,8 +70,8 @@ export class SchemaFile extends File {
 
     type NodeOptions<T extends Node<any>> = T extends ScalarNode<any>
       ? IScalarNodeOptions
-      : T extends ObjectNode<any, any, any>
-      ? IObjectNodeOptions<T>
+      : T extends ObjectNode<infer TNode, infer T, infer Typename>
+      ? IObjectNodeOptions<ObjectNode<TNode, T, Typename>>
       : T extends InterfaceNode<any, any, any, infer Typename>
       ? IInterfaceNodeOptions<Typename>
       : never
