@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-export const introspectionQuery = gql`
+export const introspectionQuery = (includeInfo = false) => gql`
   query IntrospectionQuery {
     __schema {
       queryType {
@@ -19,6 +19,15 @@ export const introspectionQuery = gql`
     kind
     name
     fields(includeDeprecated: true) {
+      ${
+        includeInfo
+          ? `
+      description
+      isDeprecated
+      deprecationReason
+      `
+          : ''
+      }
       name
       args {
         type {

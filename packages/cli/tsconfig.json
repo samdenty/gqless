@@ -1,8 +1,13 @@
 {
-  "extends": "../../tsconfig-base.json",
-  "include": ["src", "types"],
   "compilerOptions": {
-    "rootDir": "./",
-    "baseUrl": "./"
-  }
+    "declaration": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "target": "es2017",
+    "composite": true
+  },
+  "include": ["src/**/*"]
 }

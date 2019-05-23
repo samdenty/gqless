@@ -1,13 +1,15 @@
-import { File } from './File'
-import { SchemaFile, TYPE_OPTIONS } from './SchemaFile'
+import { File } from '../File'
+import { TYPE_OPTIONS } from './generated'
 
 export const TYPE_OPTIONS_VAR = 'typeOptions'
 
-export class TypeOptionsFile extends File {
-  static path = 'typeOptions'
+export class InstanceFile extends File {
+  constructor() {
+    super('instance', false)
+  }
 
   public generate() {
-    this.addImports(`./${SchemaFile.path}`, TYPE_OPTIONS)
+    this.addImports(`./generated`, TYPE_OPTIONS)
 
     return `
       ${super.generate()}

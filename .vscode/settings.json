@@ -1,6 +1,7 @@
 {
   "files.exclude": {
     "**/.rts2_*": true,
+    "**/*.tsbuildinfo": true,
     "**/node_modules": true,
     "**/dist": true,
     "**/.cache": true

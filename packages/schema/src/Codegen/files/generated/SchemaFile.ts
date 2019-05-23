@@ -1,4 +1,4 @@
-import { SchemaType, Type, SchemaFieldArgs } from '../Schema'
+import { SchemaType, Type, SchemaFieldArgs, SchemaField } from '../../../Schema'
 import {
   ObjectNode,
   ArrayNode,
@@ -14,22 +14,20 @@ import {
   ArgumentsField,
   FieldNode,
 } from 'graphql-builder'
-import { File, UTILS, CORE } from './File'
-import { Codegen } from './Codegen'
-import { TypeOptionsFile, TYPE_OPTIONS_VAR } from './TypeOptionsFile'
+import { File, UTILS, CORE } from '../../File'
+import { Codegen } from '../../Codegen'
+import { TypeOptionsFile, TYPE_OPTIONS_VAR } from '../TypeOptionsFile'
 
 export const TYPES_VAR = 'types'
 export const TYPE_OPTIONS = 'ITypeOptions'
 
 export class SchemaFile extends File {
-  static path = 'schema'
-
   constructor(private codegen: Codegen) {
-    super()
+    super('generated/schema')
   }
 
   public generate() {
-    this.addImports(`./${TypeOptionsFile.path}`, TYPE_OPTIONS_VAR)
+    this.addImports(`../typeOptions`, TYPE_OPTIONS_VAR)
     this.addImports(UTILS, 'lazyGetters')
 
     const body = `
@@ -109,21 +107,54 @@ export class SchemaFile extends File {
     return `${TYPE_OPTIONS_VAR}.${name}`
   }
 
+  private generateFieldComment(field: SchemaField) {
+    const comments: string[] = []
+    if (field.isDeprecated) {
+      comments.push(
+        `@deprecated${
+          field.deprecationReason
+            ? ` ${field.deprecationReason.replace(/\n/gm, ' ')}`
+            : ''
+        }`
+      )
+    }
+
+    if (field.description) {
+      comments.push(...field.description.split('\n'))
+    }
+
+    if (comments.length) {
+      return (
+        `\n` +
+        `/**\n` +
+        ` * ${comments.join('\n* ').replace(/\*\//gm, '*\u200B/')}\n` +
+        ` */\n`
+      )
+    }
+
+    return ''
+  }
+
+  private generateFieldGetter(field: SchemaField) {
+    this.addImports(CORE, FieldNode.name)
+
+    return (
+      this.generateFieldComment(field) +
+      `get ${field.name}() {
+      return new ${FieldNode.name}(${this.generateType(
+        field.type
+      )}, ${this.generateArguments(field.args)}, ${field.type.nullable})
+    }`
+    )
+  }
+
   private generateNode(type: SchemaType) {
     if (type.kind === 'OBJECT') {
       this.addImports(CORE, ObjectNode.name)
 
       return `new ${ObjectNode.name}({
         ${Object.values(type.fields)
-          .map(field => {
-            this.addImports(CORE, FieldNode.name)
-
-            return `get ${field.name}() {
-              return new ${FieldNode.name}(${this.generateType(
-              field.type
-            )}, ${this.generateArguments(field.args)}, ${field.type.nullable})
-            }`
-          })
+          .map(field => this.generateFieldGetter(field))
           .join(',')}
       }, { name: ${JSON.stringify(type.name)}, ...${this.getSchemaOption(
         type.name
@@ -135,15 +166,7 @@ export class SchemaFile extends File {
 
       return `new ${InterfaceNode.name}({
         ${Object.values(type.fields)
-          .map(field => {
-            this.addImports(CORE, FieldNode.name)
-
-            return `get ${field.name}() {
-                return new ${FieldNode.name}(${this.generateType(
-              field.type
-            )}, ${this.generateArguments(field.args)}, ${field.type.nullable})
-              }`
-          })
+          .map(field => this.generateFieldGetter(field))
           .join(',')}
       },
       [${type.possibleTypes.map(type => this.getNode(type)).join(',')}],
@@ -195,7 +218,7 @@ export class SchemaFile extends File {
       }, ${JSON.stringify({ name: type.name })})`
     }
 
-    return null
+    return undefined
   }
 
   private generateType(type: Type): string {
@@ -211,7 +234,7 @@ export class SchemaFile extends File {
   }
 
   public generateArguments(args?: SchemaFieldArgs) {
-    if (!args) return null
+    if (!args) return undefined
 
     this.addImports(CORE, Arguments.name)
 

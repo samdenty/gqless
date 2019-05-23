@@ -1,27 +1,78 @@
-# TSDX Bootstrap
+# @oclif/example-multi-ts
 
-This project was bootstrapped with [TSDX](https://github.com/jaredpalmer/tsdx).
+example multi-command CLI built with typescript
 
-## Local Development
+[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Version](https://img.shields.io/npm/v/@oclif/example-multi-ts.svg)](https://npmjs.org/package/@oclif/example-multi-ts)
+[![CircleCI](https://circleci.com/gh/oclif/example-multi-ts/tree/master.svg?style=shield)](https://circleci.com/gh/oclif/example-multi-ts/tree/master)
+[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/oclif/example-multi-ts?branch=master&svg=true)](https://ci.appveyor.com/project/oclif/example-multi-ts/branch/master)
+[![Codecov](https://codecov.io/gh/oclif/example-multi-ts/branch/master/graph/badge.svg)](https://codecov.io/gh/oclif/example-multi-ts)
+[![Downloads/week](https://img.shields.io/npm/dw/@oclif/example-multi-ts.svg)](https://npmjs.org/package/@oclif/example-multi-ts)
+[![License](https://img.shields.io/npm/l/@oclif/example-multi-ts.svg)](https://github.com/oclif/example-multi-ts/blob/master/package.json)
 
-Below is a list of commands you will probably find useful.
+<!-- toc -->
 
-### `npm start` or `yarn start`
+- [Usage](#usage)
+- [Commands](#commands)
+  <!-- tocstop -->
 
-Runs the project in development/watch mode. Your project will be rebuilt upon changes. TSDX has a special logger for you convenience. Error messages are pretty printed and formatted for compatibility VS Code's Problems tab.
+# Usage
 
-<img src="https://user-images.githubusercontent.com/4060187/52168303-574d3a00-26f6-11e9-9f3b-71dbec9ebfcb.gif" width="600" />
+<!-- usage -->
 
-Your library will be rebuilt if you make edits.
+```sh-session
+$ npm install -g @oclif/example-multi-ts
+$ graphql-builder COMMAND
+running command...
+$ graphql-builder (-v|--version|version)
+@oclif/example-multi-ts/1.10.7 linux-x64 node-v10.15.1
+$ graphql-builder --help [COMMAND]
+USAGE
+  $ graphql-builder COMMAND
+...
+```
 
-### `npm run build` or `yarn build`
+<!-- usagestop -->
 
-Bundles the package to the `dist` folder.
-The package is optimized and bundled with Rollup into multiple formats (CommonJS, UMD, and ES Module).
+# Commands
 
-<img src="https://user-images.githubusercontent.com/4060187/52168322-a98e5b00-26f6-11e9-8cf6-222d716b75ef.gif" width="600" />
+<!-- commands -->
 
-### `npm test` or `yarn test`
+- [`graphql-builder generate OUTPUT_DIR`](#graphql-builder-generate-output_dir)
+- [`graphql-builder help [COMMAND]`](#graphql-builder-help-command)
 
-Runs the test watcher (Jest) in an interactive mode.
-By default, runs tests related to files changed since the last commit.
+## `graphql-builder generate OUTPUT_DIR`
+
+generate a client from a GraphQL endpoint
+
+```
+USAGE
+  $ graphql-builder generate OUTPUT_DIR
+
+OPTIONS
+  -h, --help        show CLI help
+  -t, --typescript  output typescript (instead of javascript)
+  -u, --url=url     (required) url to the GraphQL endpoint
+
+EXAMPLE
+  $ graphql-builder generate https://example.com/graphql
+```
+
+## `graphql-builder help [COMMAND]`
+
+display help for graphql-builder
+
+```
+USAGE
+  $ graphql-builder help [COMMAND]
+
+ARGUMENTS
+  COMMAND  command to show help for
+
+OPTIONS
+  --all  see all commands in CLI
+```
+
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
+
+<!-- commandsstop -->

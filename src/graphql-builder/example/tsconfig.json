@@ -17,6 +17,7 @@
     "paths": {
       "graphql-builder": ["../src"],
       "@graphql-builder/logger": ["../../../packages/logger/src"],
+      "@graphql-builder/schema": ["../../../packages/schema/src"],
       "@graphql-builder/react": ["../../../packages/react/src"]
     }
   }

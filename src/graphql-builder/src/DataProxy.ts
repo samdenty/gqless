@@ -7,6 +7,7 @@ import {
   FieldNode,
   Arguments,
   NodeContainer,
+  ScalarNode,
 } from './Node'
 
 type RequiredKeys<T> = {
@@ -46,7 +47,9 @@ type FieldProxy<TNode extends FieldNode<any, any, any>> = FieldArgFn<
 > extends never
   ? (NodeContainerValue<TNode> | NodeContainerNullable<TNode>) // no args
   : (NodeContainerNullable<TNode> extends never
-      ? (FieldArgFn<TNode> & NodeContainerValue<TNode>) // args + non-nullable = don't need to call it
+      ? (InnerNode<TNode> extends ScalarNode // always need to call scalar nodes
+          ? FieldArgFn<TNode>
+          : (FieldArgFn<TNode> & NodeContainerValue<TNode>)) // args + non-nullable = don't need to call it
       : FieldArgFn<TNode>) // args + nullable = need to call it
 
 // Recurse over a FieldsNode (ObjectNode / InterfaceNode)

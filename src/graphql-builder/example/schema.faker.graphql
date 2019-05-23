@@ -20,8 +20,8 @@
 type User {
   id: ID!
 
-  name: String! @fake(type: firstName, locale: en_CA)
-  age: Int! @fake(type: number)
+  name: String @fake(type: firstName, locale: en_CA)
+  age: Int @fake(type: number)
 
   description: String @fake(type: lorem)
   avatarUrl(size: Int): String @fake(type: avatarUrl)
@@ -69,13 +69,16 @@ input InputObj {
 }
 
 type Query {
+  # Current signed in user
   me: User
+  # Fetch a user by ID
   user(id: ID): User
+  # All users stored in the database
   users(limit: Int): [User!]!
 
   a: A
-  getUser(id: ID): User
-  getUsers(id: ID): [User!]!
+  getUser(id: ID): User @deprecated(reason: "use the user field instead")
+  getUsers(id: ID): [User!]! @deprecated(reason: "use the users field instead")
 
   testOrUser: TestOrUser
 

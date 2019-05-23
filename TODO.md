@@ -13,8 +13,7 @@
 
 * React `graphql()` component wrapper
 
-  - remove useQuery hook
-  - Query batcher should provide an API for creating individual queries
+  - Query batcher should provide an API for creating individual queries - and use the passed name option
   - Updates component when values change
   - Renders all the components, combining into one query
   - Extracts the React component name and uses it as the GraphQL query name

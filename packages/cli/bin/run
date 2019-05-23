@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+require('@babel/polyfill')
+require('@oclif/command')
+  .run()
+  .then(require('@oclif/command/flush'))
+  .catch(require('@oclif/errors/handle'))

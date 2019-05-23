@@ -2,8 +2,7 @@ export const CORE = 'graphql-builder'
 export const UTILS = '@graphql-builder/utils'
 
 export abstract class File {
-  static path: string
-  public path = (this.constructor as typeof File).path
+  constructor(public path: string, public overwrite: boolean = true) {}
 
   private imports = new Map<string, Set<string>>()
 

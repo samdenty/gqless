@@ -1,1 +1,1 @@
-export * from './typesFaker'
+export * from './generated'

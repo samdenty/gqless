@@ -1,9 +1,10 @@
-import { ITypeOptions } from './typesFaker'
+import { ITypeOptions } from './generated'
 
 export const typeOptions: ITypeOptions = {
-  User: {
-    getKey(user) {
-      return user.id
-    },
-  },
+  // Example:
+  // User: {
+  //   getKey(user) {
+  //     return user.id
+  //   },
+  // },
 }

@@ -11,6 +11,7 @@ import { print } from 'graphql'
 import { types as typesFaker, User } from './graphql'
 import * as Imports from 'graphql-builder'
 import { graphql, ReactMiddleware } from '@graphql-builder/react'
+import { Codegen, fetchSchema } from '@graphql-builder/schema'
 
 Object.assign(window, { ...Imports, typesFaker })
 
@@ -50,9 +51,9 @@ async function bootstrap() {
     // return { data: resp.data, errors: resp.errors }
   }
 
-  // const schema = await fetchSchema(fetchQuery)
+  // const schema = await fetchSchema(fetchQuery, { includeInfo: true })
   // const codegen = new Codegen(schema)
-  // console.log(codegen.generate())
+  // console.log(schema, codegen.generate())
 
   const graphqlInstance = new GraphQL(typesFaker.Query, fetchQuery)
   graphqlInstance.middleware.add(
@@ -88,9 +89,9 @@ async function bootstrap() {
 
   // test(typesFaker, fetchQuery)
 
-  // const Description = graphql(({ user }: { user: User }) => {
-  //   return <p>{user.description}</p>
-  // })
+  const Description = graphql(({ user }: { user: User }) => {
+    return <p>{user.description}</p>
+  })
 
   // Description.displayName = 'Description'
 
@@ -110,17 +111,19 @@ async function bootstrap() {
 
   const Component = graphql(
     () => {
-      const [a, setA] = React.useState(0)
-      console.log('Component render', { usersLength: query.users.length })
+      const [showDescription, setShowDescription] = React.useState(false)
 
       return (
         <div>
           <b>My name:</b> {query.me!.name}
           <br />
           <b>My description:</b>
-          <button onClick={() => setA(a + 1)}>{a}</button>
+          <button onClick={() => setShowDescription(!showDescription)}>
+            {showDescription ? 'Hide' : 'Show'} description
+          </button>
+          {showDescription && <Description user={query.me!} />}
           {/*<Defer fallback="Loading">
-          <Description user={query.data.me} />
+
         </Defer>
     <div>*/}
           <b>Other users:</b>

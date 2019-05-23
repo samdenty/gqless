@@ -1,7 +1,5 @@
 import { Schema } from '../Schema'
-import { SchemaFile } from './SchemaFile'
-import { TypeOptionsFile } from './TypeOptionsFile'
-import { IndexFile } from './IndexFile'
+import * as graphql from './files'
 import { File } from './File'
 
 interface CodegenOptions {
@@ -18,13 +16,21 @@ export class Codegen {
       ...options,
     }
 
-    this.files = [new SchemaFile(this), new TypeOptionsFile(), new IndexFile()]
+    this.files = [
+      new graphql.TypeOptionsFile(),
+      new graphql.IndexFile(),
+
+      new graphql.generated.SchemaFile(this),
+      new graphql.generated.GraphQLFile(this),
+      new graphql.generated.IndexFile(),
+    ]
   }
 
   public generate() {
-    return this.files.map(file => [
-      `${file.path}.${this.options.typescript ? 'ts' : 'js'}`,
-      file.generate(),
-    ])
+    return this.files.map(file => ({
+      path: `${file.path}.${this.options.typescript ? 'ts' : 'js'}`,
+      overwrite: file.overwrite,
+      contents: file.generate(),
+    }))
   }
 }

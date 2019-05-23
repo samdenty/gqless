@@ -16,8 +16,7 @@ export type UScalarNode =
   | NumberNode<any>
   | ScalarNode<any>
 
-export interface ScalarNode<T extends string | boolean | number>
-  extends Node<T> {}
+export interface ScalarNode<T extends any = any> extends Node<T> {}
 
 export class ScalarNode<T> extends Mix(Generic(Node), Outputable) {
   public name?: string
@@ -58,10 +57,10 @@ export class ScalarNode<T> extends Mix(Generic(Node), Outputable) {
     // }
   }
 
-  public getData(accessor: Accessor<Selection<UScalarNode>>) {
+  public getData(accessor: Accessor<Selection<UScalarNode>>): T {
     super.getData(accessor)
 
-    let value = accessor.value ? accessor.value.data : null
+    let value: any = accessor.value ? accessor.value.data : null
 
     if (value === undefined) {
       value = new Proxy(
@@ -74,6 +73,6 @@ export class ScalarNode<T> extends Mix(Generic(Node), Outputable) {
 
     // const returnValue = accessor.root.getScalarData(accessor, value)
     // if (returnValue !== undefined) return returnValue
-    return value as T
+    return value
   }
 }

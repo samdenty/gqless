@@ -1,4 +1,4 @@
-import { typeOptions } from './typeOptions'
+import { typeOptions } from '../typeOptions'
 import { lazyGetters } from '@graphql-builder/utils'
 import {
   ObjectNode,
@@ -25,9 +25,15 @@ export const types = {
   get Query() {
     return new ObjectNode(
       {
+        /**
+         * Current signed in user
+         */
         get me() {
           return new FieldNode(types.User, undefined, true)
         },
+        /**
+         * Fetch a user by ID
+         */
         get user() {
           return new FieldNode(
             types.User,
@@ -39,6 +45,9 @@ export const types = {
             true
           )
         },
+        /**
+         * All users stored in the database
+         */
         get users() {
           return new FieldNode(
             new ArrayNode(types.User, false),
@@ -53,6 +62,9 @@ export const types = {
         get a() {
           return new FieldNode(types.A, undefined, true)
         },
+        /**
+         * @deprecated use the user field instead
+         */
         get getUser() {
           return new FieldNode(
             types.User,
@@ -64,6 +76,9 @@ export const types = {
             true
           )
         },
+        /**
+         * @deprecated use the users field instead
+         */
         get getUsers() {
           return new FieldNode(
             new ArrayNode(types.User, false),
@@ -112,13 +127,13 @@ export const types = {
           return new FieldNode(types.ID, undefined, false)
         },
         get name() {
-          return new FieldNode(types.String, undefined, false)
+          return new FieldNode(types.String, undefined, true)
         },
         get age() {
-          return new FieldNode(types.Int, undefined, false)
+          return new FieldNode(types.Int, undefined, true)
         },
         get description() {
-          return new FieldNode(types.String, undefined, false)
+          return new FieldNode(types.String, undefined, true)
         },
         get avatarUrl() {
           return new FieldNode(
@@ -246,6 +261,9 @@ export const types = {
   get __Schema() {
     return new ObjectNode(
       {
+        /**
+         * A list of all types supported by this server.
+         */
         get types() {
           return new FieldNode(
             new ArrayNode(types.__Type, false),
@@ -253,15 +271,27 @@ export const types = {
             false
           )
         },
+        /**
+         * The type that query operations will be rooted at.
+         */
         get queryType() {
           return new FieldNode(types.__Type, undefined, false)
         },
+        /**
+         * If this server supports mutation, the type that mutation operations will be rooted at.
+         */
         get mutationType() {
           return new FieldNode(types.__Type, undefined, true)
         },
+        /**
+         * If this server support subscription, the type that subscription operations will be rooted at.
+         */
         get subscriptionType() {
           return new FieldNode(types.__Type, undefined, true)
         },
+        /**
+         * A list of all directives supported by this server.
+         */
         get directives() {
           return new FieldNode(
             new ArrayNode(types.__Directive, false),
@@ -385,6 +415,9 @@ export const types = {
         get type() {
           return new FieldNode(types.__Type, undefined, false)
         },
+        /**
+         * A GraphQL-formatted string representing the default value for this input value.
+         */
         get defaultValue() {
           return new FieldNode(types.String, undefined, true)
         },
@@ -434,12 +467,21 @@ export const types = {
             false
           )
         },
+        /**
+         * @deprecated Use `locations`.
+         */
         get onOperation() {
           return new FieldNode(types.Boolean, undefined, false)
         },
+        /**
+         * @deprecated Use `locations`.
+         */
         get onFragment() {
           return new FieldNode(types.Boolean, undefined, false)
         },
+        /**
+         * @deprecated Use `locations`.
+         */
         get onField() {
           return new FieldNode(types.Boolean, undefined, false)
         },
@@ -599,8 +641,8 @@ export type examples__JSON = DataProxy<typeof types.examples__JSON>
 
 type NodeOptions<T extends Node<any>> = T extends ScalarNode<any>
   ? IScalarNodeOptions
-  : T extends ObjectNode<infer TNode, infer T, infer Typename>
-    ? IObjectNodeOptions<ObjectNode<TNode, T, Typename>>
+  : T extends ObjectNode<any, any, any>
+    ? IObjectNodeOptions<T>
     : T extends InterfaceNode<any, any, any, infer Typename>
       ? IInterfaceNodeOptions<Typename>
       : never

@@ -1,7 +1,8 @@
 import { Selection } from '../Selection'
 import { Disposable } from '../mixins'
+import { Query } from './Query'
 
-export class QueryBatcher extends Disposable {
+export class Batcher extends Disposable {
   private timer: any
   private commits = new Set<Selection<any, any>>()
 
@@ -14,6 +15,10 @@ export class QueryBatcher extends Disposable {
 
     this.disposers.add(this.stopTimer)
   }
+
+  public beginQuery(query: Query, seperate = false) {}
+
+  public endQuery(query: Query) {}
 
   public stage(selection: Selection<any, any>) {
     if (this.commits.has(selection)) return

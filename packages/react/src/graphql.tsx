@@ -13,14 +13,12 @@ export const graphql = <T extends (...args: any[]) => any>(
   { name }: IQueryOptions = {}
 ) => {
   const GraphQLComponent = (...args: Parameters<T>) => {
-    console.group(name)
     const accessorDisposers = React.useMemo(
       () => new Map<Accessor, Function>(),
       []
     )
     const accessors = React.useMemo(() => new Set<Accessor>(), [])
     const forceUpdate = useForceUpdate()
-    console.log(Array.from(accessors).map(a => a.path.toString()))
 
     React.useEffect(() => {
       return () => {
@@ -70,7 +68,6 @@ export const graphql = <T extends (...args: any[]) => any>(
         }
         accessors.delete(accessor)
       })
-      console.groupEnd()
 
       // const unresolvedSelections = record.selections
       //   .map(selection => selection.unresolvedSelection)

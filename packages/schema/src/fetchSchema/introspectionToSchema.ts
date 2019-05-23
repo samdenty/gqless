@@ -33,6 +33,9 @@ const getFields = (introspectionFields: any) => {
 
     fields[field.name] = {
       name: field.name,
+      deprecationReason: field.deprecationReason,
+      description: field.description,
+      isDeprecated: field.isDeprecated,
       args,
       type: getType(field.type)!,
     }

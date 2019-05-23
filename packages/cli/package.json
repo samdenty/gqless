@@ -1,18 +1,51 @@
 {
   "name": "@graphql-builder/cli",
-  "version": "0.1.0",
-  "main": "dist/index.js",
-  "umd:main": "dist/graphql-buildercli.umd.production.js",
-  "module": "dist/graphql-buildercli.es.production.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "watch": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test"
+  "description": "example multi-command CLI built with typescript",
+  "version": "1.10.7",
+  "author": "Jeff Dickey @jdxcode",
+  "bin": {
+    "graphql-builder": "./bin/run"
   },
-  "peerDependencies": {},
-  "devDependencies": {}
+  "bugs": "https://github.com/oclif/example-multi-ts/issues",
+  "dependencies": {
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2",
+    "got": "^9.6.0",
+    "mkdirp": "^0.5.1",
+    "prettier": "^1",
+    "tslib": "^1"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@types/got": "^9.4.4",
+    "@types/mkdirp": "^0.5.2",
+    "@types/node": "^10",
+    "@types/prettier": "^1.16.4",
+    "ts-node": "^8",
+    "typescript": "^3.3"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/oclif/example-multi-ts",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "oclif": {
+    "commands": "./dist/commands",
+    "bin": "graphql-builder",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  },
+  "scripts": {
+    "build": "rm -rf dist; tsc -b && oclif-dev readme"
+  },
+  "types": "dist/index.d.ts"
 }

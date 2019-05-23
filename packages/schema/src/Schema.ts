@@ -63,8 +63,12 @@ export type SchemaFieldArgs = Record<string, Type>
 
 export interface SchemaField {
   name: string
-  args?: SchemaFieldArgs
   type: Type
+  args?: SchemaFieldArgs
+
+  description?: string
+  isDeprecated?: boolean
+  deprecationReason?: string
 }
 
 export interface SchemaInputField {

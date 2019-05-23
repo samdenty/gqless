@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel index.html",
+    "generate": "../../../packages/cli/bin/run generate -t -u http://localhost:9002/graphql ./output",
     "start:server": "graphql-faker --open",
     "build": "parcel build index.html"
   },
@@ -18,6 +19,7 @@
   "alias": {
     "graphql-builder": "../src",
     "@graphql-builder/logger": "../../../packages/logger/src",
+    "@graphql-builder/schema": "../../../packages/schema/src",
     "@graphql-builder/react": "../../../packages/react/src"
   },
   "devDependencies": {

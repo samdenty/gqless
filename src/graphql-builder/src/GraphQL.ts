@@ -9,7 +9,7 @@ import {
 } from './Node'
 import { defaultMiddleware, MiddlewareEngine } from './Middleware'
 import { ASTBuilder } from './ASTBuilder'
-import { QueryBatcher } from './QueryBatcher'
+import { Batcher } from './Batcher'
 import { Cache } from './Cache'
 import {
   RootAccessor,
@@ -37,7 +37,7 @@ export class GraphQL<
   public cache = new Cache()
   public accessor = new RootAccessor(this.selection, this.cache)
   public astBuilder: ASTBuilder
-  public batcher: QueryBatcher
+  public batcher: Batcher
 
   public query = this.accessor.data
   public middleware = new MiddlewareEngine()
@@ -46,9 +46,7 @@ export class GraphQL<
     super()
 
     this.astBuilder = new ASTBuilder(name)
-    this.batcher = new QueryBatcher(
-      selections => this.fetchSelections(selections)!
-    )
+    this.batcher = new Batcher(selections => this.fetchSelections(selections)!)
     this.middleware.add(...defaultMiddleware)
 
     this.selection.onSelect(selection => {
