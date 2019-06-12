@@ -83,6 +83,10 @@ export class Batcher extends Disposable {
     const queries = new Map<Query | undefined, Selection[]>()
 
     stackQueries.forEach((query, idx) => {
+      if (query === undefined) {
+        stackQueries[idx] = query = this.defaultQuery
+      }
+
       const selection = selections[idx]
 
       if (queries.has(query)) {

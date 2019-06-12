@@ -10,6 +10,6 @@ export class Query {
   }
 
   public toString() {
-    return this.name || 'default'
+    return this.name || '(unnamed)'
   }
 }

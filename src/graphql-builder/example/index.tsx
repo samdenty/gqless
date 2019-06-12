@@ -107,7 +107,7 @@ async function bootstrap() {
         </div>
       )
     },
-    { name: 'UserComponent', seperateRequest: true }
+    { name: 'UserComponent' }
   )
 
   const Component = graphql(

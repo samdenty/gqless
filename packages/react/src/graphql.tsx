@@ -77,86 +77,84 @@ export const graphql = <Props extends any>(
     } finally {
       record.stop()
 
-      // Add new accessors
-      record.accessors.forEach(accessor => {
-        if (accessors.has(accessor)) return
-
-        accessors.add(accessor)
-        accessorDisposers.set(
-          accessor,
-          accessor.onDataUpdate(() => {
-            forceUpdate()
-          })
-        )
-      })
-
-      const fetchingSelections = new Set<Selection>()
-
-      // Remove unused accessors
-      accessors.forEach(accessor => {
-        if (record.accessors.has(accessor)) {
-          if (accessor.selection.isFetching) {
-            fetchingSelections.add(accessor.selection)
-          }
-
-          return
-        }
-
-        const dispose = accessorDisposers.get(accessor)
-        if (dispose) {
-          accessorDisposers.delete(accessor)
-          dispose()
-        }
-        accessors.delete(accessor)
-      })
-
       // Cleanup batcher calls
       recordedBatchers.forEach(batcher => {
         stack.frames.forEach(query => {
           batcher.endQuery(query)
         })
       })
+    }
 
-      returnValue = (
-        <StackContext.Provider value={stack}>
-          {returnValue}
-        </StackContext.Provider>
-      )
+    // Add new accessors
+    record.accessors.forEach(accessor => {
+      if (accessors.has(accessor)) return
 
-      // React suspense
-      if (fetchingSelections.size) {
-        let resolve: Function
-        let resolved = false
-        const promise = new Promise(r => (resolve = r))
-
-        fetchingSelections.forEach(selection => {
-          const dispose = selection.onNotFetching(() => {
-            fetchingSelections.delete(selection)
-
-            if (!fetchingSelections.size) {
-              resolved = true
-              resolve()
-            }
-            dispose()
-          })
+      accessors.add(accessor)
+      accessorDisposers.set(
+        accessor,
+        accessor.onDataUpdate(() => {
+          forceUpdate()
         })
+      )
+    })
 
-        const SuspendComponent = () => {
-          if (resolved) return null
+    const fetchingSelections = new Set<Selection>()
 
-          throw promise
+    // Remove unused accessors
+    accessors.forEach(accessor => {
+      if (record.accessors.has(accessor)) {
+        if (accessor.selection.isFetching) {
+          fetchingSelections.add(accessor.selection)
         }
 
-        return (
-          <>
-            {returnValue}
-            <SuspendComponent />
-          </>
-        )
+        return
       }
 
-      return returnValue
+      const dispose = accessorDisposers.get(accessor)
+      if (dispose) {
+        accessorDisposers.delete(accessor)
+        dispose()
+      }
+      accessors.delete(accessor)
+    })
+
+    returnValue = (
+      <StackContext.Provider value={stack}>{returnValue}</StackContext.Provider>
+    )
+
+    // React suspense
+    if (fetchingSelections.size) {
+      let resolve: Function
+      let resolved = false
+      const promise = new Promise(r => (resolve = r))
+
+      fetchingSelections.forEach(selection => {
+        const dispose = selection.onNotFetching(() => {
+          fetchingSelections.delete(selection)
+
+          if (!fetchingSelections.size) {
+            resolved = true
+            resolve()
+          }
+          dispose()
+        })
+      })
+
+      const SuspendComponent = () => {
+        if (resolved) return null
+
+        throw promise
+      }
+
+      return (
+        <>
+          {returnValue}
+          <SuspendComponent />
+        </>
+      )
     }
+
+    return returnValue
   }
 
   GraphQLComponent.displayName = (component as any).displayName
