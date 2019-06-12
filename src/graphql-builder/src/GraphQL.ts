@@ -77,11 +77,11 @@ export class GraphQL<
   }
 
   protected fetchSelections(selections: Selection<any>[], queryName?: string) {
-    const query = this.astBuilder.buildDocument(queryName, ...selections)
-    if (!query) return
+    const result = this.astBuilder.buildDocument(queryName, ...selections)
+    if (!result) return
 
     const responsePromise = (async () => {
-      const response = await this.fetchQuery(query)
+      const response = await this.fetchQuery(result.doc)
 
       const recurseFieldsAccessor = (
         accessor: Accessor<
@@ -162,7 +162,12 @@ export class GraphQL<
       return response
     })()
 
-    this.middleware.all.onFetch(query, responsePromise, queryName, selections)
+    this.middleware.all.onFetch(
+      result.doc,
+      responsePromise,
+      queryName,
+      Array.from(result.astMap.keys())
+    )
 
     return responsePromise
   }

@@ -1,4 +1,4 @@
 export * from './hooks'
 export * from './ReactMiddleware'
 export * from './graphql'
-export * from './Defer'
+export * from './Query'

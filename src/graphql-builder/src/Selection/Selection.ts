@@ -14,6 +14,9 @@ export abstract class Selection<
   public root: RootSelection<ObjectNode<any, any, any>> =
     this.parent! && this.parent!.root
 
+  public onFetching = onEvent<() => void>()
+  public onNotFetching = onEvent<() => void>()
+
   public onSelect = onEvent<MiddlewareMethod<'onSelect'>>()
   public onUnselect = onEvent<MiddlewareMethod<'onUnselect'>>()
 
@@ -22,6 +25,22 @@ export abstract class Selection<
       this.onSelect(this.parent.onSelect.emit)
       this.onUnselect(this.parent.onUnselect.emit)
     }
+  }
+
+  public isFetching: boolean = false
+
+  public fetching() {
+    if (this.isFetching) return
+
+    this.onFetching.emit()
+    this.isFetching = true
+  }
+
+  public notFetching() {
+    if (!this.isFetching) return
+
+    this.onNotFetching.emit()
+    this.isFetching = false
   }
 
   public getField(compare: (selection: TSelections) => boolean) {
@@ -37,46 +56,6 @@ export abstract class Selection<
 
     return path
   }
-
-  // public get unresolvedSelection(): Selection<any> {
-  //   if (this.value !== undefined) return null
-
-  //   if (this.parent) {
-  //     const { unresolvedSelection } = this.parent
-  //     if (unresolvedSelection) return unresolvedSelection
-  //   }
-
-  //   return this
-  // }
-
-  // public get value() {
-  //   return this._value
-  // }
-
-  // public set value(value: NodeDataType<TNode>) {
-  //   const prevValue = this._value
-  //   this._value = value
-
-  //   if (prevValue !== value) {
-  //     this.onValueChange.emit(prevValue)
-  //   }
-  // }
-
-  // protected computeValue() {}
-
-  // public onValueChange = onEvent<(prevValue: NodeDataType<TNode>) => void>()
-
-  // public then(resolve: (value: NodeDataType<TNode>) => void) {
-  //   const attemptResolve = () => {
-  //     if (this.value !== undefined) {
-  //       dispose()
-  //       resolve(this.value)
-  //     }
-  //   }
-  //   const dispose = this.onValueChange(attemptResolve)
-  //   attemptResolve()
-  //   return this
-  // }
 
   public unselect() {
     const [...selections] = this.selections

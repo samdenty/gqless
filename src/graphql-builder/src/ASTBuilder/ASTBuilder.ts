@@ -117,6 +117,7 @@ export class ASTBuilder {
       }
     }
 
+    // Fill AstMap up
     selections.forEach(selection => {
       // Ensure this node is referenced back to the root
       selection.path.forEach(s => {
@@ -158,6 +159,6 @@ export class ASTBuilder {
       ],
     }
 
-    return doc
+    return { doc, astMap }
   }
 }

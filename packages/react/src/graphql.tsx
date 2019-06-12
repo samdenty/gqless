@@ -1,27 +1,44 @@
 import * as React from 'react'
 
-import { DeferContext } from './Defer'
 import { useForceUpdate } from './hooks/useForceUpdate'
-import { Selection, Accessor, Recorder, Query, Batcher } from 'graphql-builder'
+import { Accessor, Recorder, Query, Batcher, Selection } from 'graphql-builder'
+import { StackContext } from './Query'
 
 export interface IQueryOptions {
   name?: string
   seperateRequest?: boolean
+  /**
+   * Whether or not child components can use their own queries.
+   *
+   * true  | child components can use their own queries
+   * false | all queries will be merged into this components query
+   * null  | (default) inherited with React context
+   */
+  allowInheritance?: boolean | null
 }
-
-export const QueryStack = React.createContext<Query[]>([])
 
 export const graphql = <Props extends any>(
   component: (props: Props) => any,
-  { name, seperateRequest = false }: IQueryOptions = {}
+  { name, allowInheritance = null, seperateRequest = false }: IQueryOptions = {}
 ) => {
-  const query = new Query(name)
+  const query = new Query(name, false)
 
   const GraphQLComponent = (props: Props) => {
-    const parentStack = React.useContext(QueryStack)
+    const parentStack = React.useContext(StackContext)
 
     const stack = React.useMemo(
-      (): Query[] => (seperateRequest ? [query] : [...parentStack, query]),
+      (): StackContext => {
+        if (!parentStack.inheritance) return parentStack
+
+        return {
+          ...parentStack,
+          inheritance:
+            allowInheritance === null
+              ? parentStack.inheritance
+              : allowInheritance,
+          frames: seperateRequest ? [query] : [...parentStack.frames, query],
+        }
+      },
       [seperateRequest || parentStack]
     )
 
@@ -47,7 +64,7 @@ export const graphql = <Props extends any>(
       if (recordedBatchers.has(batcher)) return
       recordedBatchers.add(batcher)
 
-      stack.forEach(query => {
+      stack.frames.forEach(query => {
         batcher.beginQuery(query)
       })
     })
@@ -73,9 +90,17 @@ export const graphql = <Props extends any>(
         )
       })
 
+      const fetchingSelections = new Set<Selection>()
+
       // Remove unused accessors
       accessors.forEach(accessor => {
-        if (record.accessors.has(accessor)) return
+        if (record.accessors.has(accessor)) {
+          if (accessor.selection.isFetching) {
+            fetchingSelections.add(accessor.selection)
+          }
+
+          return
+        }
 
         const dispose = accessorDisposers.get(accessor)
         if (dispose) {
@@ -87,36 +112,55 @@ export const graphql = <Props extends any>(
 
       // Cleanup batcher calls
       recordedBatchers.forEach(batcher => {
-        stack.forEach(query => {
+        stack.frames.forEach(query => {
           batcher.endQuery(query)
         })
       })
 
-      // const unresolvedSelections = record.selections
-      //   .map(selection => selection.unresolvedSelection)
-      //   .filter(Boolean)
-
-      // if (unresolvedSelections.length) {
-      //   const promise = Promise.all(unresolvedSelections)
-      //   const SuspendComponent = () => {
-      //     throw promise
-      //   }
-
-      //   return (
-      //     <DeferContext.Provider value={{ defer: true }}>
-      //       {returnValue}
-      //       <SuspendComponent />
-      //     </DeferContext.Provider>
-      //   )
-      // }
-
-      return (
-        <QueryStack.Provider value={stack}>{returnValue}</QueryStack.Provider>
+      returnValue = (
+        <StackContext.Provider value={stack}>
+          {returnValue}
+        </StackContext.Provider>
       )
+
+      // React suspense
+      if (fetchingSelections.size) {
+        let resolve: Function
+        let resolved = false
+        const promise = new Promise(r => (resolve = r))
+
+        fetchingSelections.forEach(selection => {
+          const dispose = selection.onNotFetching(() => {
+            fetchingSelections.delete(selection)
+
+            if (!fetchingSelections.size) {
+              resolved = true
+              resolve()
+            }
+            dispose()
+          })
+        })
+
+        const SuspendComponent = () => {
+          if (resolved) return null
+
+          throw promise
+        }
+
+        return (
+          <>
+            {returnValue}
+            <SuspendComponent />
+          </>
+        )
+      }
+
+      return returnValue
     }
   }
 
   GraphQLComponent.displayName = (component as any).displayName
+  GraphQLComponent.query = query
 
   return GraphQLComponent
 }

@@ -14,7 +14,7 @@ export class Batcher extends Disposable {
     private fetchSelections: (
       selections: Selection<any>[],
       queryName?: string
-    ) => any,
+    ) => Promise<any>,
     public defaultQuery = new Query(),
     public interval: number = 50
   ) {
@@ -45,26 +45,30 @@ export class Batcher extends Disposable {
     this.queryStack = []
   }
 
-  // private getCurrentSelections() {
-  //   const query =
-  //     this.queryStack[this.queryStack.length - 1] || this.defaultQuery
-
-  //   let selections = this.querySelections.get(query)
-  //   if (!selections) {
-  //     selections = new Set()
-  //     this.querySelections.set(query, selections)
-  //   }
-
-  //   return selections
-  // }
-
   public stage(selection: Selection<any, any>) {
-    if (this.commits.has(selection)) return
+    // If the selection is in this current commit,
+    // or being fetched from a previous commit, don't re-fetch it
+    if (selection.isFetching) return
+
+    // If we already have the parent, remove the
+    // parent to narrow down the selections. This is used when a selection is created
+    // this could cause issues later, may need to add a recurse field to handle polling etc.
+    if (selection.parent && this.commits.has(selection.parent)) {
+      this.unstage(selection.parent)
+    }
+
+    selection.fetching()
 
     this.commits.set(selection, [...this.queryStack])
   }
 
   public unstage(selection: Selection<any, any>) {
+    // Only if the selection is in our commits, set it as not fetching
+    // otherwise it could be from a previous commit
+    if (this.commits.has(selection)) {
+      selection.notFetching()
+    }
+
     this.commits.delete(selection)
   }
 
@@ -90,11 +94,21 @@ export class Batcher extends Disposable {
     this.commits.clear()
 
     try {
-      await Promise.all(
-        Array.from(queries).map(([query, selections]) => {
-          return this.fetchSelections(selections, query && query.name)
+      const promises = Array.from(queries)
+        .map(([query, selections]) => {
+          const promise = this.fetchSelections(selections, query && query.name)
+
+          const notFetchingSelections = () => {
+            selections.forEach(selection => selection.notFetching())
+          }
+
+          promise.then(notFetchingSelections).catch(notFetchingSelections)
+
+          return promise
         })
-      )
+        .filter(Boolean) as Promise<any>[]
+
+      await Promise.all(promises)
     } catch {}
   }
 

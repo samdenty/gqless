@@ -48,6 +48,8 @@ export abstract class Accessor<
           disposeVA()
           disposeVA = undefined
         }
+
+        // Hook for onDataUpdate event
         const check = () => {
           const newData = value ? value.data : undefined
           if (prevData === newData) return
@@ -68,6 +70,8 @@ export abstract class Accessor<
       }
 
       this.disposers.add(this.onValueAssociated(valueAssociated))
+
+      valueAssociated()
 
       // Sync the Value class to this accessor (using parent)
       let disposeParentVA: Function | undefined

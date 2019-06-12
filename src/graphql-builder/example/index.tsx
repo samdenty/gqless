@@ -10,7 +10,7 @@ import { LoggerMiddleware } from '@graphql-builder/logger'
 import { print } from 'graphql'
 import { types as typesFaker, User } from './graphql'
 import * as Imports from 'graphql-builder'
-import { graphql, ReactMiddleware } from '@graphql-builder/react'
+import { graphql, ReactMiddleware, Query } from '@graphql-builder/react'
 import { Codegen, fetchSchema } from '@graphql-builder/schema'
 
 Object.assign(window, { ...Imports, typesFaker })
@@ -96,20 +96,18 @@ async function bootstrap() {
     { name: 'DescriptionComponent' }
   )
 
-  // Description.displayName = 'Description'
-
   const UserComponent = graphql(
     ({ user }: { user: User }) => {
       return (
         <div>
-          <img src={user.avatarUrl({ size: 200 })} />
+          <img src={user.avatarUrl({ size: 200 })!} />
           <h2>{user.name}</h2>
           <div>age: {user.age}</div>
           {/*<Description user={user} />*/}
         </div>
       )
     },
-    { name: 'UserComponent', seperateRequest: true }
+    { name: 'UserComponent' }
   )
 
   const Component = graphql(
@@ -124,7 +122,9 @@ async function bootstrap() {
           <button onClick={() => setShowDescription(!showDescription)}>
             {showDescription ? 'Hide' : 'Show'} description
           </button>
-          {showDescription && <Description user={query.me!} />}
+          <Suspense fallback={<>Loading description</>}>
+            {showDescription && <Description user={query.me!} />}
+          </Suspense>
           {/*<Defer fallback="Loading">
 
           </Defer>
