@@ -2,6 +2,7 @@ import { DocumentNode } from 'graphql'
 import { QueryResponse } from '../GraphQL'
 import { Selection } from '../Selection'
 import { Accessor } from '../Accessor'
+import { Query } from '../Batcher'
 
 export type ScalarProxyHandler = (prop: string | symbol) => any
 export interface Middleware {
@@ -11,11 +12,15 @@ export interface Middleware {
   // Called each time a selection is destroyed
   onUnselect?(selection: Selection<any>): void
 
-  // // Called each time a new selection is created
-  // onDataAccessed?(selection: Selection<any>): void
-
   // // Called each time a selection has changed
   // onSelectUpdate?(selection: Selection<any>): void
+
+  onCommit?(data: {
+    selections: Selection[]
+    stacks: Query[][]
+    stackQueries: Query[]
+    queries: Map<Query | undefined, Selection[]>
+  }): void
 
   onFetch?(
     queryAst: DocumentNode,

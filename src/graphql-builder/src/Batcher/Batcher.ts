@@ -2,6 +2,7 @@ import { Selection } from '../Selection'
 import { Disposable } from '../mixins'
 import { queriesFromStacks } from './queriesFromStacks'
 import { Query } from './Query'
+import { MiddlewareEngine } from '../Middleware'
 
 export class Batcher extends Disposable {
   private timer: any
@@ -11,6 +12,7 @@ export class Batcher extends Disposable {
   private queryStack: Query[] = []
 
   constructor(
+    private middleware: MiddlewareEngine,
     private fetchSelections: (
       selections: Selection<any>[],
       queryName?: string
@@ -75,7 +77,8 @@ export class Batcher extends Disposable {
   public async fetchCommits() {
     if (!this.commits.size) return
     const selections = Array.from(this.commits.keys())
-    const stackQueries = queriesFromStacks(Array.from(this.commits.values()))
+    const stacks = Array.from(this.commits.values())
+    const stackQueries = queriesFromStacks(stacks)
 
     const queries = new Map<Query | undefined, Selection[]>()
 
@@ -90,6 +93,8 @@ export class Batcher extends Disposable {
 
       queries.set(query, [selection])
     })
+
+    this.middleware.all.onCommit({ stacks, stackQueries, selections, queries })
 
     this.commits.clear()
 

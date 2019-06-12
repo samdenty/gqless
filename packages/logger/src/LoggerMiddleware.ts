@@ -20,6 +20,30 @@ const format = (...parts: any[][]) => {
 export class LoggerMiddleware implements Middleware {
   constructor(protected graphql: GraphQL) {}
 
+  public onCommit = (({ stacks, stackQueries, queries, selections }) => {
+    console.groupCollapsed(
+      ...format(
+        ['GraphQL ', 'color: gray'],
+        ['fetching ', 'color: darkgrey'],
+        [queries.size, 'color: hsl(252, 100%, 75%)'],
+        [` quer${queries.size === 1 ? 'y' : 'ies'}`, 'color: darkgrey']
+      )
+    )
+
+    const obj = {}
+
+    selections.forEach((selection, idx) => {
+      obj[selection.path.toString()] = {
+        Stack: `[${stacks[idx].join(', ')}]`,
+        'Chosen query': stackQueries[idx].toString(),
+      }
+    })
+
+    console.table(obj)
+
+    console.groupEnd()
+  }) as MiddlewareMethod<'onCommit'>
+
   public onFetch = (async (query, responsePromise, queryName, selections) => {
     const start = Date.now()
 
@@ -35,7 +59,7 @@ export class LoggerMiddleware implements Middleware {
 
     console.groupCollapsed(
       ...format(
-        ['GraphQL ', 'color: gray; font-weight: lighter'],
+        ['GraphQL ', 'color: gray'],
         ['query ', `color: ${error ? 'red' : '#03A9F4'}; font-weight: bold`],
         [
           `${queryName ? queryName : '(unnamed)'} `,

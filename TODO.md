@@ -13,6 +13,7 @@
   // Component will be rendered X amount of isOfType calls
   ```
 
+- Batcher not calling `endQuery` on `Component` after render
 - Need to implement keys
 - accessor->getData should be static as accessor->data
   - `query.data.user === query.data.user` should be true

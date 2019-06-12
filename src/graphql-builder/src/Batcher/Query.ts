@@ -8,4 +8,8 @@ export class Query {
       Query.instances.set(name, this)
     }
   }
+
+  public toString() {
+    return this.name || 'default'
+  }
 }

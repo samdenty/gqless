@@ -33,8 +33,10 @@ export type ProxyInterceptor = (
 export class GraphQL<
   TNode extends ObjectNode<any, any, any> = ObjectNode<any, any, any>
 > extends Disposable {
+  public middleware = new MiddlewareEngine()
   public astBuilder = new ASTBuilder()
   public batcher = new Batcher(
+    this.middleware,
     (selections, name) => this.fetchSelections(selections, name)!
   )
   public cache = new Cache()
@@ -43,7 +45,6 @@ export class GraphQL<
   public accessor = new RootAccessor(this.selection, this.cache, this.batcher)
 
   public query = this.accessor.data
-  public middleware = new MiddlewareEngine()
 
   constructor(protected node: TNode, protected fetchQuery: QueryFetcher) {
     super()
@@ -166,7 +167,7 @@ export class GraphQL<
       result.doc,
       responsePromise,
       queryName,
-      Array.from(result.astMap.keys())
+      selections
     )
 
     return responsePromise
