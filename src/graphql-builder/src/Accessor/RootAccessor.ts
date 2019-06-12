@@ -1,12 +1,17 @@
 import { RootSelection } from '../Selection'
 import { Accessor } from './Accessor'
 import { Cache, Value } from '../Cache'
+import { Batcher } from '../Batcher'
 
 export class RootAccessor<
   TSelection extends RootSelection = RootSelection,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelection, TChildren> {
-  constructor(rootSelection: TSelection, protected cache: Cache) {
+  constructor(
+    rootSelection: TSelection,
+    public cache: Cache,
+    public batcher: Batcher
+  ) {
     super(undefined, rootSelection)
     this.value = new Value(rootSelection.node, {})
 

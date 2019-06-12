@@ -10,7 +10,7 @@ import { ScalarNode } from '../Node'
 import { sortByPathLength } from './sortByPathLength'
 
 export class ASTBuilder {
-  constructor(private queryName?: string) {}
+  constructor() {}
 
   private getValue(value: any): ValueNode {
     return value === null
@@ -77,7 +77,7 @@ export class ASTBuilder {
     }
   }
 
-  public buildDocument(...selections: Selection<any>[]) {
+  public buildDocument(queryName?: string, ...selections: Selection<any>[]) {
     if (!selections.length) return undefined
     selections.sort(sortByPathLength)
 
@@ -142,10 +142,10 @@ export class ASTBuilder {
         {
           kind: 'OperationDefinition',
           operation: root.node.name === 'Mutation' ? 'mutation' : 'query',
-          ...(this.queryName && {
+          ...(queryName && {
             name: {
               kind: 'Name',
-              value: this.queryName,
+              value: queryName,
             },
           }),
           variableDefinitions: [],

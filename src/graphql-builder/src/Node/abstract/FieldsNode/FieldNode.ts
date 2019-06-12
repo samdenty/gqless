@@ -7,22 +7,29 @@ import isEqual from 'fast-deep-equal'
 import { Outputable } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { invariant } from '../../../utils'
+import { Mix, Generic } from 'mix-classes'
 
-export class FieldNode<
+export interface FieldNode<
   TNode extends Node<any>,
   TArguments extends Arguments<any, any> = any,
   TNullable extends boolean = false
-> extends NodeContainer<TNode, TNullable> {
+> extends NodeContainer<TNode, TNullable> {}
+export class FieldNode<TNode, TArguments, TNullable> extends Mix(
+  Generic(NodeContainer),
+  Outputable
+) {
   // Set in FieldsNode
   public name: string = ''
 
   constructor(node: TNode, public args?: TArguments, nullable?: TNullable) {
-    super(node, nullable)
+    super([node, nullable])
   }
 
   public getData(
     fieldsAccessor: Accessor<Selection<FieldsNode<any, any, any>>>
   ) {
+    super.getData(fieldsAccessor)
+
     const getSelection = (args?: Record<string, any>) => {
       const selection = fieldsAccessor.selection.getField(selection => {
         if (!(selection instanceof FieldSelection)) return false

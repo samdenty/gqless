@@ -89,9 +89,12 @@ async function bootstrap() {
 
   // test(typesFaker, fetchQuery)
 
-  const Description = graphql(({ user }: { user: User }) => {
-    return <p>{user.description}</p>
-  })
+  const Description = graphql(
+    ({ user }: { user: User }) => {
+      return <p>{user.description}</p>
+    },
+    { name: 'DescriptionComponent' }
+  )
 
   // Description.displayName = 'Description'
 
@@ -106,7 +109,7 @@ async function bootstrap() {
         </div>
       )
     },
-    { name: 'UserComponent' }
+    { name: 'UserComponent', seperateRequest: true }
   )
 
   const Component = graphql(
@@ -124,12 +127,13 @@ async function bootstrap() {
           {showDescription && <Description user={query.me!} />}
           {/*<Defer fallback="Loading">
 
-        </Defer>
-    <div>*/}
+          </Defer>
+      <div>*/}
           <b>Other users:</b>
           {query.users.map(user => <UserComponent key={user.id} user={user} />)}
         </div>
       )
+
       // return (
       //   <>
       //     <div>

@@ -22,6 +22,7 @@
   "peerDependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.4",
-    "@types/json-stable-stringify": "^1.0.32"
+    "@types/json-stable-stringify": "^1.0.32",
+    "template-literal-table": "^2.0.2"
   }
 }

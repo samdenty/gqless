@@ -1,4 +1,18 @@
 - Support for interfaces + unions
+
+  - In a react component, you will check for the `typename` property.
+
+  ```js
+  // Babel plugin compiles this
+  if (person.__typename === 'Man') {
+  }
+  // to
+  if (isOfType(person, 'Man')) {
+  }
+
+  // Component will be rendered X amount of isOfType calls
+  ```
+
 - Need to implement keys
 - accessor->getData should be static as accessor->data
   - `query.data.user === query.data.user` should be true

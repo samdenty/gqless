@@ -18,8 +18,9 @@ export interface Middleware {
   // onSelectUpdate?(selection: Selection<any>): void
 
   onFetch?(
-    query: DocumentNode,
+    queryAst: DocumentNode,
     response: Promise<QueryResponse>,
+    queryName: string | undefined,
     selections: Selection<any>[]
   ): void
 

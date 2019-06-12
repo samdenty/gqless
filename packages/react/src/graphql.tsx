@@ -2,17 +2,29 @@ import * as React from 'react'
 
 import { DeferContext } from './Defer'
 import { useForceUpdate } from './hooks/useForceUpdate'
-import { Selection, Accessor, Recorder } from 'graphql-builder'
+import { Selection, Accessor, Recorder, Query, Batcher } from 'graphql-builder'
 
 export interface IQueryOptions {
   name?: string
+  seperateRequest?: boolean
 }
 
-export const graphql = <T extends (...args: any[]) => any>(
-  component: T,
-  { name }: IQueryOptions = {}
+export const QueryStack = React.createContext<Query[]>([])
+
+export const graphql = <Props extends any>(
+  component: (props: Props) => any,
+  { name, seperateRequest = false }: IQueryOptions = {}
 ) => {
-  const GraphQLComponent = (...args: Parameters<T>) => {
+  const query = new Query(name)
+
+  const GraphQLComponent = (props: Props) => {
+    const parentStack = React.useContext(QueryStack)
+
+    const stack = React.useMemo(
+      (): Query[] => (seperateRequest ? [query] : [...parentStack, query]),
+      [seperateRequest || parentStack]
+    )
+
     const accessorDisposers = React.useMemo(
       () => new Map<Accessor, Function>(),
       []
@@ -27,9 +39,22 @@ export const graphql = <T extends (...args: any[]) => any>(
     }, [])
 
     const record = new Recorder()
+
+    // Get the batchers associated with accessors, and link
+    // them up to the query
+    const recordedBatchers = new Set<Batcher>()
+    record.onAccessor(({ batcher }) => {
+      if (recordedBatchers.has(batcher)) return
+      recordedBatchers.add(batcher)
+
+      stack.forEach(query => {
+        batcher.beginQuery(query)
+      })
+    })
+
     try {
       record.start()
-      var returnValue = component(...args)
+      var returnValue = component(props)
     } catch (e) {
       throw e
     } finally {
@@ -42,17 +67,8 @@ export const graphql = <T extends (...args: any[]) => any>(
         accessors.add(accessor)
         accessorDisposers.set(
           accessor,
-          accessor.onDataUpdate(prevData => {
+          accessor.onDataUpdate(() => {
             forceUpdate()
-            // console.log(
-            //   name,
-            //   accessor.path.toString(),
-            //   'changed',
-            //   'from',
-            //   prevData,
-            //   'to',
-            //   accessor.value!.data
-            // )
           })
         )
       })
@@ -67,6 +83,13 @@ export const graphql = <T extends (...args: any[]) => any>(
           dispose()
         }
         accessors.delete(accessor)
+      })
+
+      // Cleanup batcher calls
+      recordedBatchers.forEach(batcher => {
+        stack.forEach(query => {
+          batcher.endQuery(query)
+        })
       })
 
       // const unresolvedSelections = record.selections
@@ -87,7 +110,9 @@ export const graphql = <T extends (...args: any[]) => any>(
       //   )
       // }
 
-      return returnValue
+      return (
+        <QueryStack.Provider value={stack}>{returnValue}</QueryStack.Provider>
+      )
     }
   }
 

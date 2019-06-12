@@ -1,14 +1,14 @@
 import { print } from 'graphql/language/printer'
 import {
-  Query,
+  GraphQL,
   QueryResponse,
   Middleware,
   MiddlewareMethod,
 } from 'graphql-builder'
 
 const format = (...parts: any[][]) => {
-  const texts = []
-  const styles = []
+  const texts: string[] = []
+  const styles: string[] = []
   for (const [text, style] of parts.filter(Boolean)) {
     texts.push(text)
     styles.push(`font-weight: normal; ${style}`)
@@ -18,9 +18,9 @@ const format = (...parts: any[][]) => {
 }
 
 export class LoggerMiddleware implements Middleware {
-  constructor(protected query: Query<any>) {}
+  constructor(protected graphql: GraphQL) {}
 
-  public onFetch = (async (query, responsePromise, selections) => {
+  public onFetch = (async (query, responsePromise, queryName, selections) => {
     const start = Date.now()
 
     let response: QueryResponse | undefined = undefined
@@ -37,7 +37,10 @@ export class LoggerMiddleware implements Middleware {
       ...format(
         ['GraphQL ', 'color: gray; font-weight: lighter'],
         ['query ', `color: ${error ? 'red' : '#03A9F4'}; font-weight: bold`],
-        // [`${'(Unnamed)'} `, 'font-weight: bold; color: inherit'],
+        [
+          `${queryName ? queryName : '(unnamed)'} `,
+          'font-weight: bold; color: inherit',
+        ],
 
         [`(${time}ms)`, 'color: gray'],
         [` ${selections.length} selections`, 'color: gray'],
@@ -80,7 +83,7 @@ export class LoggerMiddleware implements Middleware {
     // Cache
     console.log(
       ...format(['Cache snapshot', headerStyles]),
-      this.query.cache.toJSON()
+      this.graphql.cache.toJSON()
     )
 
     console.groupEnd()

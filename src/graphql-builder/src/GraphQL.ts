@@ -33,11 +33,14 @@ export type ProxyInterceptor = (
 export class GraphQL<
   TNode extends ObjectNode<any, any, any> = ObjectNode<any, any, any>
 > extends Disposable {
-  public selection = new RootSelection(this.node)
+  public astBuilder = new ASTBuilder()
+  public batcher = new Batcher(
+    (selections, name) => this.fetchSelections(selections, name)!
+  )
   public cache = new Cache()
-  public accessor = new RootAccessor(this.selection, this.cache)
-  public astBuilder: ASTBuilder
-  public batcher: Batcher
+
+  public selection = new RootSelection(this.node)
+  public accessor = new RootAccessor(this.selection, this.cache, this.batcher)
 
   public query = this.accessor.data
   public middleware = new MiddlewareEngine()
@@ -45,8 +48,6 @@ export class GraphQL<
   constructor(protected node: TNode, protected fetchQuery: QueryFetcher) {
     super()
 
-    this.astBuilder = new ASTBuilder(name)
-    this.batcher = new Batcher(selections => this.fetchSelections(selections)!)
     this.middleware.add(...defaultMiddleware)
 
     this.selection.onSelect(selection => {
@@ -75,8 +76,8 @@ export class GraphQL<
     // })
   }
 
-  protected fetchSelections(selections: Selection<any>[]) {
-    const query = this.astBuilder.buildDocument(...selections)
+  protected fetchSelections(selections: Selection<any>[], queryName?: string) {
+    const query = this.astBuilder.buildDocument(queryName, ...selections)
     if (!query) return
 
     const responsePromise = (async () => {
@@ -161,7 +162,7 @@ export class GraphQL<
       return response
     })()
 
-    this.middleware.all.onFetch(query, responsePromise, selections)
+    this.middleware.all.onFetch(query, responsePromise, queryName, selections)
 
     return responsePromise
   }

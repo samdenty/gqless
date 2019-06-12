@@ -3,12 +3,15 @@ import { computed, onEvent } from '../utils'
 import { Node } from '../Node'
 import { Cache, Value } from '../Cache'
 import { Disposable } from '../mixins'
+import { Batcher } from '../Batcher'
 
 export abstract class Accessor<
   TSelection extends Selection = Selection,
   TChildren extends Accessor<any, any> = Accessor<any, any>
 > extends Disposable {
-  protected cache: Cache = this.parent ? this.parent.cache : undefined!
+  public batcher: Batcher = this.parent ? this.parent.batcher : undefined!
+  public cache: Cache = this.parent ? this.parent.cache : undefined!
+
   public children: TChildren[] = []
 
   // When the Value class associated with this accessor changes

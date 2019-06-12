@@ -10835,6 +10835,11 @@ temp-write@^3.4.0:
     temp-dir "^1.0.0"
     uuid "^3.0.1"
 
+template-literal-table@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/template-literal-table/-/template-literal-table-2.0.2.tgz#0e467c6c2b828a08b53539feccfbe49de71fcf76"
+  integrity sha512-GbndjgesecyA1gCASS8PNfoJcOnNk0HpM7mUeQbDwaI2pXF8SK5WclS/vxtmkgiuOpv40G50unDfyVS7V5LpGA==
+
 terser-webpack-plugin@^1.1.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/terser-webpack-plugin/-/terser-webpack-plugin-1.2.3.tgz#3f98bc902fac3e5d0de730869f50668561262ec8"
