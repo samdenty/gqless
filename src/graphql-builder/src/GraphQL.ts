@@ -9,7 +9,7 @@ import {
 } from './Node'
 import { defaultMiddleware, MiddlewareEngine } from './Middleware'
 import { ASTBuilder } from './ASTBuilder'
-import { Batcher } from './Batcher'
+import { Scheduler } from './Scheduler'
 import { Cache } from './Cache'
 import {
   RootAccessor,
@@ -35,14 +35,14 @@ export class GraphQL<
 > extends Disposable {
   public middleware = new MiddlewareEngine()
   public astBuilder = new ASTBuilder()
-  public batcher = new Batcher(
+  public scheduler = new Scheduler(
     this.middleware,
     (selections, name) => this.fetchSelections(selections, name)!
   )
   public cache = new Cache()
 
   public selection = new RootSelection(this.node)
-  public accessor = new RootAccessor(this.selection, this.cache, this.batcher)
+  public accessor = new RootAccessor(this.selection, this.cache, this.scheduler)
 
   public query = this.accessor.data
 
@@ -53,23 +53,13 @@ export class GraphQL<
 
     this.selection.onSelect(selection => {
       this.middleware.all.onSelect(selection)
-      this.batcher.stage(selection)
+      this.scheduler.stage(selection)
     })
 
     this.selection.onUnselect(selection => {
       this.middleware.all.onUnselect(selection)
-      this.batcher.unstage(selection)
+      this.scheduler.unstage(selection)
     })
-
-    // this.selectionRoot.onGetScalarData((selection, value) => {
-    //   return this.middleware.first.getScalarData(selection, value)(
-    //     value => value !== undefined
-    //   )
-    // })
-
-    // this.selectionRoot.onDataAccessed(selection => {
-    //   this.middleware.all.onDataAccessed(selection)
-    // })
 
     // this.selectionRoot.onSelectUpdate(selection => {
     //   this.middleware.all.onSelectUpdate(selection)
@@ -175,7 +165,7 @@ export class GraphQL<
 
   public dispose() {
     super.dispose()
-    this.batcher.dispose()
+    this.scheduler.dispose()
 
     this.middleware.all.dispose()
   }

@@ -2,7 +2,7 @@ import { DocumentNode } from 'graphql'
 import { QueryResponse } from '../GraphQL'
 import { Selection } from '../Selection'
 import { Accessor } from '../Accessor'
-import { Query } from '../Batcher'
+import { Query } from '../Scheduler'
 
 export type ScalarProxyHandler = (prop: string | symbol) => any
 export interface Middleware {

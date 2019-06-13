@@ -1,15 +1,16 @@
 import { Selection } from '../Selection'
+import { createEvent } from '@graphql-builder/utils'
 import { computed, onEvent } from '../utils'
 import { Node } from '../Node'
 import { Cache, Value } from '../Cache'
 import { Disposable } from '../mixins'
-import { Batcher } from '../Batcher'
+import { Scheduler } from '../Scheduler'
 
 export abstract class Accessor<
   TSelection extends Selection = Selection,
   TChildren extends Accessor<any, any> = Accessor<any, any>
 > extends Disposable {
-  public batcher: Batcher = this.parent ? this.parent.batcher : undefined!
+  public scheduler: Scheduler = this.parent ? this.parent.scheduler : undefined!
   public cache: Cache = this.parent ? this.parent.cache : undefined!
 
   public children: TChildren[] = []

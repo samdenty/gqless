@@ -4,12 +4,14 @@ import { queriesFromStacks } from './queriesFromStacks'
 import { Query } from './Query'
 import { MiddlewareEngine } from '../Middleware'
 
-export class Batcher extends Disposable {
-  private timer: any
+export class Scheduler extends Disposable {
+  private commitTimer: any
+  protected commits = new Map<Selection<any, any>, Query[]>()
+  protected defaultQuery: Query
 
-  private commits = new Map<Selection<any, any>, Query[]>()
+  public commitInterval: number
 
-  private queryStack: Query[] = []
+  public stack: Query[] = []
 
   constructor(
     private middleware: MiddlewareEngine,
@@ -17,34 +19,39 @@ export class Batcher extends Disposable {
       selections: Selection<any>[],
       queryName?: string
     ) => Promise<any>,
-    public defaultQuery = new Query(),
-    public interval: number = 50
+    {
+      defaultQuery = new Query(),
+      commitInterval = 15,
+    }: { defaultQuery?: Query; commitInterval?: number } = {}
   ) {
     super()
-    this.startTimer()
+    this.defaultQuery = defaultQuery
+    this.commitInterval = commitInterval
+
+    this.resume()
     this.resetQueryStack()
 
-    this.disposers.add(this.stopTimer)
+    this.disposers.add(this.pause)
   }
 
   public beginQuery(query: Query) {
-    if (this.queryStack.includes(query)) return
+    if (this.stack.includes(query)) return
 
-    this.queryStack.push(query)
+    this.stack.push(query)
   }
 
   public endQuery(query: Query) {
-    const idx = this.queryStack.indexOf(query)
+    const idx = this.stack.indexOf(query)
 
     // If it's the last in the stack, remove it
     // otherwise previous endQuery's need to be called first
-    if (idx === this.queryStack.length - 1) {
-      this.queryStack.splice(idx, 1)
+    if (idx === this.stack.length - 1) {
+      this.stack.splice(idx, 1)
     }
   }
 
   public resetQueryStack() {
-    this.queryStack = []
+    this.stack = []
   }
 
   public stage(selection: Selection<any, any>) {
@@ -61,7 +68,7 @@ export class Batcher extends Disposable {
 
     selection.fetching()
 
-    this.commits.set(selection, [...this.queryStack])
+    this.commits.set(selection, [...this.stack])
   }
 
   public unstage(selection: Selection<any, any>) {
@@ -82,6 +89,7 @@ export class Batcher extends Disposable {
 
     const queries = new Map<Query | undefined, Selection[]>()
 
+    // Iterate over stacks and convert into query map
     stackQueries.forEach((query, idx) => {
       if (query === undefined) {
         stackQueries[idx] = query = this.defaultQuery
@@ -121,18 +129,18 @@ export class Batcher extends Disposable {
     } catch {}
   }
 
-  public startTimer() {
-    this.stopTimer()
-    this.timer = setTimeout(async () => {
+  protected resume() {
+    this.pause()
+    this.commitTimer = setTimeout(async () => {
       this.fetchCommits()
-      this.startTimer()
-    }, this.interval)
+      this.resume()
+    }, this.commitInterval)
   }
 
-  public stopTimer() {
-    if (!this.timer) return
+  protected pause() {
+    if (!this.commitTimer) return
 
-    clearTimeout(this.timer)
-    this.timer = null
+    clearTimeout(this.commitTimer)
+    this.commitTimer = null
   }
 }

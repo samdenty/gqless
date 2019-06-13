@@ -1,7 +1,13 @@
 import * as React from 'react'
 
 import { useForceUpdate } from './hooks/useForceUpdate'
-import { Accessor, Recorder, Query, Batcher, Selection } from 'graphql-builder'
+import {
+  Accessor,
+  Recorder,
+  Query,
+  Scheduler,
+  Selection,
+} from 'graphql-builder'
 import { StackContext } from './Query'
 
 export interface IQueryOptions {
@@ -57,15 +63,15 @@ export const graphql = <Props extends any>(
 
     const record = new Recorder()
 
-    // Get the batchers associated with accessors, and link
+    // Get the schedulers associated with accessors, and link
     // them up to the query
-    const recordedBatchers = new Set<Batcher>()
-    record.onAccessor(({ batcher }) => {
-      if (recordedBatchers.has(batcher)) return
-      recordedBatchers.add(batcher)
+    const schedulers = new Set<Scheduler>()
+    record.onAccessor(({ scheduler }) => {
+      if (schedulers.has(scheduler)) return
+      schedulers.add(scheduler)
 
       stack.frames.forEach(query => {
-        batcher.beginQuery(query)
+        scheduler.beginQuery(query)
       })
     })
 
@@ -77,10 +83,10 @@ export const graphql = <Props extends any>(
     } finally {
       record.stop()
 
-      // Cleanup batcher calls
-      recordedBatchers.forEach(batcher => {
+      // Cleanup scheduler calls
+      schedulers.forEach(scheduler => {
         stack.frames.forEach(query => {
-          batcher.endQuery(query)
+          scheduler.endQuery(query)
         })
       })
     }

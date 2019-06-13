@@ -13,6 +13,7 @@
   // Component will be rendered X amount of isOfType calls
   ```
 
+- Make `__typename` a StringNode on InterfaceNode + ObjectNode, and remove from DataProxy
 - Batcher not calling `endQuery` on `Component` after render
 - Need to implement keys
 - accessor->getData should be static as accessor->data
@@ -25,13 +26,6 @@
       - Merge
     - Not keyed
       - Delete all entries that start with the array key
-
-* React `graphql()` component wrapper
-
-  - Query batcher should provide an API for creating individual queries - and use the passed name option
-  - Updates component when values change
-  - Renders all the components, combining into one query
-  - Extracts the React component name and uses it as the GraphQL query name
 
 * Rename Middleware to plugins
 

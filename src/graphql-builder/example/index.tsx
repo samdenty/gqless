@@ -57,7 +57,7 @@ async function bootstrap() {
 
   const graphqlInstance = new GraphQL(typesFaker.Query, fetchQuery)
   graphqlInstance.middleware.add(
-    new LoggerMiddleware(graphqlInstance),
+    new LoggerMiddleware(graphqlInstance, true),
     new ReactMiddleware(),
     {
       // async onFetch(_, response) {

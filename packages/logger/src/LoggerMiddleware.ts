@@ -18,9 +18,11 @@ const format = (...parts: any[][]) => {
 }
 
 export class LoggerMiddleware implements Middleware {
-  constructor(protected graphql: GraphQL) {}
+  constructor(protected graphql: GraphQL, private verbose = false) {}
 
   public onCommit = (({ stacks, stackQueries, queries, selections }) => {
+    if (!this.verbose) return
+
     console.groupCollapsed(
       ...format(
         ['GraphQL ', 'color: gray'],
