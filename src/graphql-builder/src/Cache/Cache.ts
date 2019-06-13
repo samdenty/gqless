@@ -1,4 +1,4 @@
-import { onEvent } from '../utils'
+import { createEvent } from '@graphql-builder/utils'
 import { Accessor, RootAccessor } from '../Accessor'
 import { Value } from './Value'
 import { ArrayNode, ScalarNode } from '../Node'
@@ -17,7 +17,7 @@ export class Cache {
     return obj
   }
 
-  public onUpdate = onEvent()
+  public onUpdate = createEvent()
 
   public update(accessor: Accessor, data: any) {
     const createValue = (accessor: Accessor, data?: any) => {

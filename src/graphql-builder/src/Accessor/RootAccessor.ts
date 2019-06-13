@@ -26,9 +26,6 @@ export class RootAccessor<
     return this.selection.toString()
   }
 
-  // public onDataAccessed = onEvent<Middleware['onDataAccessed']>()
-  // public dataAccessed = this.onDataAccessed.emit
-
   // public onSelectUpdate = onEvent<Middleware['onSelectUpdate']>()
   // public selectUpdate = this.onSelectUpdate.emit
 

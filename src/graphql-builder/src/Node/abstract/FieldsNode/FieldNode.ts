@@ -11,7 +11,7 @@ import { Mix, Generic } from 'mix-classes'
 
 export interface FieldNode<
   TNode extends Node<any>,
-  TArguments extends Arguments<any, any> = any,
+  TArguments extends Arguments<any, any> = Arguments<any, any>,
   TNullable extends boolean = false
 > extends NodeContainer<TNode, TNullable> {}
 export class FieldNode<TNode, TArguments, TNullable> extends Mix(

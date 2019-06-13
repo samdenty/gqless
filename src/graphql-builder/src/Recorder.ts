@@ -1,6 +1,6 @@
 import { Accessor } from './Accessor'
 import { IAccessorRecorder, accessorRecorders } from './Node'
-import { onEvent } from './utils'
+import { createEvent } from '@graphql-builder/utils'
 
 export class Recorder {
   public accessors = new Set<Accessor>()
@@ -11,7 +11,7 @@ export class Recorder {
     this.accessors.add(accessor)
   }
 
-  public onAccessor = onEvent<(accessor: Accessor) => void>()
+  public onAccessor = createEvent<(accessor: Accessor) => void>()
 
   public start() {
     accessorRecorders.add(this.recordAccessor)

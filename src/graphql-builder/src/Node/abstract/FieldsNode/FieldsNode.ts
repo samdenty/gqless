@@ -14,14 +14,11 @@ export type UFieldsNode =
   | UScalarNode
 
 export type UFieldsNodeRecord<T extends keyof any> = {
-  [K in T]: FieldNode<UFieldsNode, any, any>
+  [K in T]: FieldNode<UFieldsNode>
 }
 
-export type FieldsDataType<
-  T extends UFieldsNodeRecord<any>,
-  Typename extends string
-> = { [P in keyof T]: NodeDataType<T[P]['ofNode']> } & {
-  __typename: Typename
+export type FieldsDataType<TNode extends UFieldsNodeRecord<any>> = {
+  [P in keyof TNode]: NodeDataType<TNode[P]['ofNode']>
 }
 
 export class FieldsNode<
@@ -29,9 +26,7 @@ export class FieldsNode<
   T,
   Typename extends string = string,
   TDataType = unknown
-> extends Node<
-  TDataType extends unknown ? FieldsDataType<TNode, Typename> : TDataType
-> {
+> extends Node<TDataType extends unknown ? FieldsDataType<TNode> : TDataType> {
   public name?: Typename
   public fields: TNode
 

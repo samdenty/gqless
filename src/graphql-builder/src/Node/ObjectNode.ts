@@ -7,10 +7,12 @@ import {
   KeyFn,
   Node,
   defaultKey,
+  FieldNode,
 } from './abstract'
 import { DataProxy } from '../DataProxy'
 import { Accessor } from '../Accessor'
 import { Mix, Generic } from 'mix-classes'
+import { StringNode } from './ScalarNode'
 
 export type IObjectNodeOptions<
   TNode extends ObjectNode<any, any, any>
@@ -25,8 +27,14 @@ export interface ObjectNode<
   T,
   Typename extends string = string
 >
-  extends FieldsNode<TNode, T, Typename>,
+  extends FieldsNode<
+      TNode & { __typename: FieldNode<StringNode<Typename>> },
+      T,
+      Typename
+    >,
     Keyable<ObjectNode<TNode, T, Typename>> {}
+
+const TYPENAME_NODE = new StringNode()
 
 export class ObjectNode<TNode, T, Typename> extends Mix(
   Generic(FieldsNode),
@@ -40,6 +48,9 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
       ...options
     }: IObjectNodeOptions<ObjectNode<TNode, T, Typename>> = {}
   ) {
+    // Add __typename node, not currently used.
+    ;(fields as any).__typename = new FieldNode(TYPENAME_NODE)
+
     super([fields as any, options])
 
     this.getKey = defaultKey(this as any)
@@ -56,9 +67,8 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
 
     return new Proxy({} as any, {
       get: (_, prop: keyof TNode) => {
-        if (prop === '__typename') {
-          return this.name
-        }
+        // Statically resolve __typename
+        if (prop === '__typename') return this.name
 
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]

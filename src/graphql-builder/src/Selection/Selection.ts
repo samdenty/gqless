@@ -1,5 +1,6 @@
 import { Node, ObjectNode } from '../Node'
-import { computed, onEvent } from '../utils'
+import { createEvent } from '@graphql-builder/utils'
+import { computed } from '../utils'
 import { RootSelection } from './RootSelection'
 import { FieldSelection } from './FieldSelection'
 import { MiddlewareMethod } from '../Middleware'
@@ -14,11 +15,11 @@ export abstract class Selection<
   public root: RootSelection<ObjectNode<any, any, any>> =
     this.parent! && this.parent!.root
 
-  public onFetching = onEvent<() => void>()
-  public onNotFetching = onEvent<() => void>()
+  public onFetching = createEvent<() => void>()
+  public onNotFetching = createEvent<() => void>()
 
-  public onSelect = onEvent<MiddlewareMethod<'onSelect'>>()
-  public onUnselect = onEvent<MiddlewareMethod<'onUnselect'>>()
+  public onSelect = createEvent<MiddlewareMethod<'onSelect'>>()
+  public onUnselect = createEvent<MiddlewareMethod<'onUnselect'>>()
 
   constructor(public parent: Selection<any> | undefined, public node: TNode) {
     if (this.parent) {

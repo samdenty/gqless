@@ -1,5 +1,5 @@
 import { Node, ScalarNode, ArrayNode } from '../Node'
-import { onEvent } from '../utils'
+import { createEvent } from '@graphql-builder/utils'
 
 export type UValueData =
   | string
@@ -12,7 +12,7 @@ export type UValueData =
 export class Value {
   constructor(public node: Node<any>, public data?: UValueData) {}
 
-  public onChange = onEvent<(prevData?: UValueData) => void>()
+  public onChange = createEvent<(prevData?: UValueData) => void>()
 
   public update(data: UValueData) {
     const prevData = this.data

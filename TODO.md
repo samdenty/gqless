@@ -13,7 +13,6 @@
   // Component will be rendered X amount of isOfType calls
   ```
 
-- Make `__typename` a StringNode on InterfaceNode + ObjectNode, and remove from DataProxy
 - Batcher not calling `endQuery` on `Component` after render
 - Need to implement keys
 - accessor->getData should be static as accessor->data

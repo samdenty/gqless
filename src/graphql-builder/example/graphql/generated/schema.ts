@@ -19,6 +19,7 @@ import {
   Node,
   IObjectNodeOptions,
   IInterfaceNodeOptions,
+  NodeDataType,
 } from 'graphql-builder'
 
 export const types = {

@@ -1,6 +1,6 @@
 import { Selection } from '../Selection'
 import { createEvent } from '@graphql-builder/utils'
-import { computed, onEvent } from '../utils'
+import { computed } from '../utils'
 import { Node } from '../Node'
 import { Cache, Value } from '../Cache'
 import { Disposable } from '../mixins'
@@ -16,10 +16,12 @@ export abstract class Accessor<
   public children: TChildren[] = []
 
   // When the Value class associated with this accessor changes
-  public onValueAssociated = onEvent<(prevValue: Value | undefined) => void>()
+  public onValueAssociated = createEvent<
+    (prevValue: Value | undefined) => void
+  >()
 
   // When the data changes (equality check)
-  public onDataUpdate = onEvent<(prevData: any) => void>()
+  public onDataUpdate = createEvent<(prevData: any) => void>()
 
   constructor(
     public parent: Accessor | undefined,
