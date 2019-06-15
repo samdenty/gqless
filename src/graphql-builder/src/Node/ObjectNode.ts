@@ -53,7 +53,7 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
 
     super([fields as any, options])
 
-    this.getKey = defaultKey(this as any)
+    this.keyGetter = defaultKey(this)
   }
 
   public getData(

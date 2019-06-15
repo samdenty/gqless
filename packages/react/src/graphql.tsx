@@ -32,21 +32,18 @@ export const graphql = <Props extends any>(
   const GraphQLComponent = (props: Props) => {
     const parentStack = React.useContext(StackContext)
 
-    const stack = React.useMemo(
-      (): StackContext => {
-        if (!parentStack.inheritance) return parentStack
+    const stack = React.useMemo((): StackContext => {
+      if (!parentStack.inheritance) return parentStack
 
-        return {
-          ...parentStack,
-          inheritance:
-            allowInheritance === null
-              ? parentStack.inheritance
-              : allowInheritance,
-          frames: seperateRequest ? [query] : [...parentStack.frames, query],
-        }
-      },
-      [seperateRequest || parentStack]
-    )
+      return {
+        ...parentStack,
+        inheritance:
+          allowInheritance === null
+            ? parentStack.inheritance
+            : allowInheritance,
+        frames: seperateRequest ? [query] : [...parentStack.frames, query],
+      }
+    }, [seperateRequest || parentStack])
 
     const accessorDisposers = React.useMemo(
       () => new Map<Accessor, Function>(),
@@ -85,9 +82,10 @@ export const graphql = <Props extends any>(
 
       // Cleanup scheduler calls
       schedulers.forEach(scheduler => {
-        stack.frames.forEach(query => {
+        for (let i = stack.frames.length - 1; i >= 0; --i) {
+          const query = stack.frames[i]
           scheduler.endQuery(query)
-        })
+        }
       })
     }
 

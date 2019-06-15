@@ -2,11 +2,26 @@ import { Node } from './Node'
 import { DataProxy } from '../../DataProxy'
 import { FieldsNode, FieldNode } from './FieldsNode'
 import { StringNode, NumberNode } from '../ScalarNode'
-import { computed } from '../../utils'
+import { Accessor } from '../../Accessor'
 
 export type KeyFn<TNode extends Node<any>> = (
   data: DataProxy<TNode>
 ) => string | number
+
+export class Keyable<TNode extends Node<any>> {
+  constructor(public keyGetter?: KeyFn<TNode>) {}
+
+  public getKey(accessor: Accessor) {
+    if (!this.keyGetter) return
+
+    // startRecordingSelections()
+    try {
+      return this.keyGetter!(accessor.data)
+    } finally {
+      // stopRecordingSelections()
+    }
+  }
+}
 
 export const defaultKey = <TNode extends Node<any>>(
   node: TNode
@@ -24,31 +39,4 @@ export const defaultKey = <TNode extends Node<any>>(
   }
 
   return undefined
-}
-
-export class Keyable<TNode extends Node<any>> {
-  constructor(getKey?: KeyFn<TNode>) {
-    this.getKey = getKey
-  }
-
-  private _getKey: KeyFn<TNode> | undefined
-  public set getKey(getKey: KeyFn<TNode> | undefined) {
-    this._getKey = getKey
-  }
-
-  @computed(function(this: Keyable<TNode>) {
-    return [this._getKey]
-  })
-  public get getKey(): KeyFn<TNode> | undefined {
-    if (!this._getKey) return undefined
-
-    return (...args) => {
-      // startRecordingSelections()
-      try {
-        return this._getKey!(...args)
-      } finally {
-        // stopRecordingSelections()
-      }
-    }
-  }
 }

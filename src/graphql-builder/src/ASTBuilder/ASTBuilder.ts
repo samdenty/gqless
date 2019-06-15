@@ -6,7 +6,7 @@ import {
   ValueNode,
 } from 'graphql'
 import { FieldSelection, Selection } from '../Selection'
-import { ScalarNode } from '../Node'
+import { ScalarNode, FieldsNode, Keyable, NodeContainer } from '../Node'
 import { sortByPathLength } from './sortByPathLength'
 
 export class ASTBuilder {
@@ -16,29 +16,29 @@ export class ASTBuilder {
     return value === null
       ? { kind: 'NullValue' }
       : typeof value === 'string'
-        ? { kind: 'StringValue', value }
-        : typeof value === 'number'
-          ? { kind: 'IntValue', value: `${value}` }
-          : typeof value === 'boolean'
-            ? { kind: 'BooleanValue', value: value }
-            : value instanceof Array
-              ? {
-                  kind: 'ListValue',
-                  values: value.map(value => this.getValue(value)),
-                }
-              : {
-                  kind: 'ObjectValue',
-                  fields: Object.entries(value).map(
-                    ([name, value]): ObjectFieldNode => ({
-                      kind: 'ObjectField',
-                      name: {
-                        kind: 'Name',
-                        value: name,
-                      },
-                      value: this.getValue(value),
-                    })
-                  ),
-                }
+      ? { kind: 'StringValue', value }
+      : typeof value === 'number'
+      ? { kind: 'IntValue', value: `${value}` }
+      : typeof value === 'boolean'
+      ? { kind: 'BooleanValue', value: value }
+      : value instanceof Array
+      ? {
+          kind: 'ListValue',
+          values: value.map(value => this.getValue(value)),
+        }
+      : {
+          kind: 'ObjectValue',
+          fields: Object.entries(value).map(
+            ([name, value]): ObjectFieldNode => ({
+              kind: 'ObjectField',
+              name: {
+                kind: 'Name',
+                value: name,
+              },
+              value: this.getValue(value),
+            })
+          ),
+        }
   }
 
   private getArguments(selection: FieldSelection<any, any>) {
@@ -101,6 +101,17 @@ export class ASTBuilder {
 
     const addSelectionNode = (selection: Selection<any>) => {
       if (astMap.has(selection)) return
+
+      const innerNode =
+        selection.node instanceof NodeContainer
+          ? selection.node.innerNode
+          : selection.node
+
+      if (innerNode instanceof Keyable) {
+        console.warn(selection.path.toString(), innerNode.keyGetter)
+        // selection.node.keysForSelection
+        // console.log(selection.path.toString(), selection.node.keyGetter)
+      }
 
       const subSelections = getInitialSubselections(selection)
       astMap.set(selection, subSelections)

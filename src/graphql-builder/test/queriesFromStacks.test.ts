@@ -1,5 +1,5 @@
 const each = require('template-literal-table')
-import { queriesFromStacks } from '../src/Batcher/queriesFromStacks'
+import { queriesFromStacks } from '../src/Scheduler/queriesFromStacks'
 
 describe('Extracts queries from stacks', () => {
   // describe.each for prettier
@@ -44,6 +44,14 @@ describe('Extracts queries from stacks', () => {
     ${['App', 'Profile']}                | ${'Profile'}
     ${['App', 'Profile', 'Description']} | ${'Profile'}
   `('Fairly complex stacks')
+
+  describe.each`
+    stack                                           | expected
+    ${['Description', 'Description', 'Profile']}    | ${'Profile'}
+    ${['App', 'App', 'Navbar']}                     | ${'App'}
+    ${['App', 'Profile']}                           | ${'Profile'}
+    ${['App', 'Profile', 'Profile', 'Description']} | ${'Profile'}
+  `('Duplicated queries in stacks')
 
   describe.each`
     stack                                | expected

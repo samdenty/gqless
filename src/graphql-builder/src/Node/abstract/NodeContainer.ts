@@ -1,4 +1,5 @@
 import { Node, NodeDataType } from './Node'
+import { computed } from '../../utils'
 
 export type NullableKeys<T> = ({
   [P in keyof T]: T[P] extends NodeContainer<any, true> ? P : never
@@ -20,7 +21,9 @@ export type InnerNode<T extends Node<any>> = T extends NodeContainer<
             ? U extends NodeContainer<infer T, any>
               ? NodeDataType<U> extends NodeDataType<T>
                 ? T extends NodeContainer<infer U, any>
-                  ? NodeDataType<U> extends NodeDataType<T> ? U : never
+                  ? NodeDataType<U> extends NodeDataType<T>
+                    ? U
+                    : never
                   : T
                 : never
               : U
@@ -38,5 +41,14 @@ export class NodeContainer<
 > extends Node<DataType> {
   constructor(public ofNode: TNode, public nullable = false as TNullable) {
     super()
+  }
+
+  @computed()
+  public get innerNode(): Node<any> {
+    if (this.ofNode instanceof NodeContainer) {
+      return this.ofNode.innerNode
+    }
+
+    return this.ofNode
   }
 }

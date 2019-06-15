@@ -1,7 +1,7 @@
 import { Selection } from '../Selection'
 import { createEvent } from '@graphql-builder/utils'
 import { computed } from '../utils'
-import { Node } from '../Node'
+import { Node, Keyable, NodeContainer } from '../Node'
 import { Cache, Value } from '../Cache'
 import { Disposable } from '../mixins'
 import { Scheduler } from '../Scheduler'
@@ -14,6 +14,7 @@ export abstract class Accessor<
   public cache: Cache = this.parent ? this.parent.cache : undefined!
 
   public children: TChildren[] = []
+  public data: any
 
   // When the Value class associated with this accessor changes
   public onValueAssociated = createEvent<
@@ -99,6 +100,14 @@ export abstract class Accessor<
 
       this.disposers.add(parent.onValueAssociated(parentValueAssociated))
       parentValueAssociated()
+    }
+
+    const innerNode = node instanceof NodeContainer ? node.innerNode : node
+
+    if (innerNode instanceof Keyable) {
+      setTimeout(() => console.log(this.path.toString(), 'getting key'))
+
+      innerNode.getKey(this)
     }
   }
 

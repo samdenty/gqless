@@ -9,7 +9,7 @@ export class FieldAccessor<
     super(parent, fieldSelection)
   }
 
-  public getData() {
+  public get data() {
     return this.selection.field.ofNode.getData(this)
   }
 

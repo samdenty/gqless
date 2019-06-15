@@ -31,6 +31,6 @@ export class InterfaceNode<TImplementations, TNode, T, Typename> extends Mix(
   ) {
     super([fields as any, options])
 
-    this.getKey = defaultKey(this as any)
+    this.keyGetter = defaultKey(this as any)
   }
 }

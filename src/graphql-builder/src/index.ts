@@ -1,5 +1,6 @@
 export * from './DataProxy'
 export * from './Node'
+export * from './Extension'
 export * from './Cache'
 export * from './Selection'
 export * from './ASTBuilder'

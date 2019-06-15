@@ -6,7 +6,7 @@ import { Accessor, FieldAccessor } from '../../../Accessor'
 import isEqual from 'fast-deep-equal'
 import { Outputable } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
-import { invariant } from '../../../utils'
+import { invariant } from '@graphql-builder/utils'
 import { Mix, Generic } from 'mix-classes'
 
 export interface FieldNode<
@@ -18,7 +18,7 @@ export class FieldNode<TNode, TArguments, TNullable> extends Mix(
   Generic(NodeContainer),
   Outputable
 ) {
-  // Set in FieldsNode
+  // This is set inside FieldsNode
   public name: string = ''
 
   constructor(node: TNode, public args?: TArguments, nullable?: TNullable) {

@@ -3,6 +3,7 @@ import { Disposable } from '../mixins'
 import { queriesFromStacks } from './queriesFromStacks'
 import { Query } from './Query'
 import { MiddlewareEngine } from '../Middleware'
+import { invariant } from '@graphql-builder/utils'
 
 export class Scheduler extends Disposable {
   private commitTimer: any
@@ -29,29 +30,25 @@ export class Scheduler extends Disposable {
     this.commitInterval = commitInterval
 
     this.resume()
-    this.resetQueryStack()
 
     this.disposers.add(this.pause)
   }
 
   public beginQuery(query: Query) {
-    if (this.stack.includes(query)) return
-
     this.stack.push(query)
   }
 
   public endQuery(query: Query) {
-    const idx = this.stack.indexOf(query)
+    const idx = this.stack.lastIndexOf(query)
 
-    // If it's the last in the stack, remove it
-    // otherwise previous endQuery's need to be called first
-    if (idx === this.stack.length - 1) {
-      this.stack.splice(idx, 1)
-    }
-  }
+    invariant(
+      idx === this.stack.length - 1,
+      `Scheduler#endQuery called with '${query}', but not last in stack [${this.stack.join(
+        ', '
+      )}]`
+    )
 
-  public resetQueryStack() {
-    this.stack = []
+    this.stack.splice(idx, 1)
   }
 
   public stage(selection: Selection<any, any>) {
@@ -81,7 +78,7 @@ export class Scheduler extends Disposable {
     this.commits.delete(selection)
   }
 
-  public async fetchCommits() {
+  public async fetch() {
     if (!this.commits.size) return
     const selections = Array.from(this.commits.keys())
     const stacks = Array.from(this.commits.values())
@@ -132,7 +129,7 @@ export class Scheduler extends Disposable {
   protected resume() {
     this.pause()
     this.commitTimer = setTimeout(async () => {
-      this.fetchCommits()
+      this.fetch()
       this.resume()
     }, this.commitInterval)
   }

@@ -1,4 +1,5 @@
 import { typeOptions } from '../typeOptions'
+import * as extensions from '../extensions'
 import { lazyGetters } from '@graphql-builder/utils'
 import {
   ObjectNode,
@@ -166,7 +167,11 @@ export const types = {
           return new FieldNode(types.String, undefined, true)
         },
       },
-      { name: 'User', ...((typeOptions as any).User as {}) }
+      {
+        name: 'User',
+        extension: extensions.User,
+        ...((typeOptions as any).User as {}),
+      }
     )
   },
   get ID() {
@@ -643,10 +648,10 @@ export type examples__JSON = DataProxy<typeof types.examples__JSON>
 type NodeOptions<T extends Node<any>> = T extends ScalarNode<any>
   ? IScalarNodeOptions
   : T extends ObjectNode<infer TNode, infer T, infer Typename>
-    ? IObjectNodeOptions<ObjectNode<TNode, T, Typename>>
-    : T extends InterfaceNode<any, any, any, infer Typename>
-      ? IInterfaceNodeOptions<Typename>
-      : never
+  ? IObjectNodeOptions<ObjectNode<TNode, T, Typename>>
+  : T extends InterfaceNode<any, any, any, infer Typename>
+  ? IInterfaceNodeOptions<Typename>
+  : never
 
 export type ITypeOptions = {
   [K in keyof typeof types]?: NodeOptions<typeof types[K]>

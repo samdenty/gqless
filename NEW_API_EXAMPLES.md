@@ -26,7 +26,7 @@ export * from './User'
 
 ## Mutations
 
-The reason why apollo optimistic is shit is because you have to manually update a cache entry to perform a mutation. You always have to deal with the ugly side - cache. What about instead of Mutation -> Update cache -> Result -> Update cache, we did update cache -> Mutation.
+The reason why apollo optimistic is shitty is because you have to manually update a cache entry to perform a mutation. You always have to deal with the ugly side - cache. What about instead of Mutation -> Update cache -> Result -> Update cache, we did update cache -> Mutation.
 
 That way instead of optimism being a second-thought, it's first nature.
 
@@ -175,37 +175,104 @@ const FeedData = ({ match }) => {
 
 Extensions are additions to a Node's proxy.
 
-```js
+They are pluggable, composable and statically typed.
+Similiar to GraphQL resolvers that you use in Apollo, they let you extend your schema.
 
-class User extends types.User {
-  constructor(private user: types.User, private accessor: Accessor) {}
+But they're just javascript objects
 
-  get fullName() {
-    return this.user.firstName + this.user.lastName
-  }
+---
+
+Could expose the proxy get / set, but I want to eventually move away from proxies. With the data field, means we dont need to expose them.
+
+- Default extensions such as Keyable, should be statically defined in the schema, instead of in runtime.
+- If an ArrayNode contains Keyable, could expose `getByKey()`
+- Export a `composeExtensions` function, that respect combining proxies and overloads getKey
+
+```ts
+type User = {
+  id: string
+  name: string
+  father?: User
+
+  email?: string
 }
 
-const typeOptions = {
-  User: {
-    extend: {
-      // Like mobx.computed
-      get fullName() {
-        return user.firstName + user.lastName
-      },
-      setNickname(user: DataProxy, nickname: string)  {
-        user.nickname = nickname
-        return mutation.data.updateUser({ connect: { id: user.id }}, { nickname })
-      },
-      setUsername(user: DataProxy, username: string)  {
-        user.username = username
-        return mutation.data.updateUser({ connect: { id: user.id }}, { nickname })
-      },
-    },
-    getKey(user) {
-      return user.id
+type Query = {
+  me?: User
+  users: User[]
+}
+
+export const User = {
+  [GET_KEY]: (data: User) => data.id,
+}
+
+export const Query: Extension<Query> = {
+  isQuery: true,
+  me: {
+    father: {
+      hasChild: true,
     },
   },
+  users: data => ({
+    asd: data.length,
+    [GET_KEY](data) {
+      return data.id
+    },
+    [OF_NODE]: {
+      name: 'asd',
+    },
+  }),
+  [GET_KEY]() {
+    return 1
+  },
 }
+```
+
+```ts
+type Extension = {
+  [newData: string]: any
+  [existingField: string]: Extension
+
+  [ofNode]: Extension
+  [getKey]: Function
+}
+const AddTest = {
+  test: true
+}
+
+const indexedArray = (fieldKey?: Function) => ({
+  get() {},
+})
+
+export const Query = {
+  ...AddTest,
+
+  QueryType: true,
+  users: {
+    ...indexedArray<types.User>(data => data.id),
+    path: 'Query.users',
+
+    [ofNode]: accessor => ({
+      path: 'Query.users[index]',
+    }),
+
+    [getKey]: accessor => {
+      // Key query.users by index, instead of `User.id`
+      return accessor.index
+    }
+  },
+}
+
+export const User = ((user) => ({
+  get fullName() {
+    return user.firstName + user.lastName
+  },
+  setNickname() {},
+
+  [getKey]: {
+    return data.id
+  }
+})
 
 const FeedData = ({ match }) => {
   const me = query.data.user.me

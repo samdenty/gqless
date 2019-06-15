@@ -19,7 +19,7 @@ export class IndexAccessor<
     )
   }
 
-  public getData() {
+  public get data() {
     return this.selection.node.ofNode.getData(this)
   }
 

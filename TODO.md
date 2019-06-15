@@ -13,12 +13,15 @@
   // Component will be rendered X amount of isOfType calls
   ```
 
-- Batcher not calling `endQuery` on `Component` after render
-- Need to implement keys
-- accessor->getData should be static as accessor->data
+- !!Need to implement keys
+
+* If a fieldNode is a pointer to a ScalarNode, don't create the argumentlessData
+  - Scalarnodes always need to be called, so argumentlessData is never used
+
+* accessor->getData should be static as accessor->data
   - `query.data.user === query.data.user` should be true
-- Variables
-- When we get an array
+* Variables
+* When we get an array
 
   - If it's already fetched
     - Keyed
@@ -26,19 +29,19 @@
     - Not keyed
       - Delete all entries that start with the array key
 
-* Rename Middleware to plugins
+- Rename Middleware to plugins
 
   - LoggerMiddleware to Logger
 
-* Babel plugin
+- Babel plugin
   - Statically know all the GraphQL data accessed in a JS file
     - Automatically remove all unused fields from the schema
   * Could automatically detect components that use graphql data and wrap in graphql()
   * Adds the displayName to the graphql() fn
 
-- Codegen
+* Codegen
 
   - CLI
 
-- MISC
+* MISC
   - Consider instead of using the GraphQL AST, to instead generate the query by hand. It seems it could be a bottleneck, should investigate though.
