@@ -13,9 +13,20 @@
   // Component will be rendered X amount of isOfType calls
   ```
 
+- Extensions
+
+  - Accessor is in charge of managing extensions, and passing them to Outputable#getData.
+  - ObjectNode looks up Accessor#extensions to resolve proxy fields
+
+- No default key
+
+  - Default key logic, should instead be moved to codegen. More explicit and no magic happening
+
 - !!Need to implement keys
+  - Extensions
 
 * If a fieldNode is a pointer to a ScalarNode, don't create the argumentlessData
+
   - Scalarnodes always need to be called, so argumentlessData is never used
 
 * accessor->getData should be static as accessor->data

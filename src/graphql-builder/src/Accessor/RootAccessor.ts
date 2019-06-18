@@ -16,6 +16,8 @@ export class RootAccessor<
     this.value = new Value(rootSelection.node, {})
 
     cache.store.set(this.toString(), this.value)
+
+    this.updateExtensions()
   }
 
   public data: TSelection extends RootSelection<infer TNode>

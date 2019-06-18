@@ -11,7 +11,6 @@
     "strict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-    "strictPropertyInitialization": false,
     "noImplicitThis": true,
     "alwaysStrict": true,
     "downlevelIteration": true,

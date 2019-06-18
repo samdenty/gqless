@@ -1,5 +1,7 @@
 import { FieldSelection } from '../Selection'
 import { Accessor } from './Accessor'
+import { ScalarNode } from '../Node'
+import { IExtension } from '../Extension'
 
 export class FieldAccessor<
   TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
@@ -7,6 +9,23 @@ export class FieldAccessor<
 > extends Accessor<TFieldSelection, TChildren> {
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
+  }
+
+  protected getExtensions() {
+    if (!(this.node instanceof ScalarNode)) {
+      for (const parentExtension of this.parent.extensions) {
+        const extensionField = parentExtension[this.selection.field.name]
+        const extension: IExtension<any> =
+          typeof extensionField === 'function'
+            ? extensionField(this.data)
+            : extensionField
+        if (!extension) continue
+
+        this.extensions.push(extension)
+      }
+    }
+
+    super.getExtensions()
   }
 
   public get data() {

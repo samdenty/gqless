@@ -1,4 +1,3 @@
-import { typeOptions } from '../typeOptions'
 import * as extensions from '../extensions'
 import { lazyGetters } from '@graphql-builder/utils'
 import {
@@ -16,11 +15,7 @@ import {
   BooleanNode,
   ScalarNode,
   DataProxy,
-  IScalarNodeOptions,
   Node,
-  IObjectNodeOptions,
-  IInterfaceNodeOptions,
-  NodeDataType,
 } from 'graphql-builder'
 
 export const types = {
@@ -119,7 +114,7 @@ export const types = {
           )
         },
       },
-      { name: 'Query', ...((typeOptions as any).Query as {}) }
+      { name: 'Query', extension: (extensions as any).Query as any }
     )
   },
   get User() {
@@ -167,24 +162,26 @@ export const types = {
           return new FieldNode(types.String, undefined, true)
         },
       },
-      {
-        name: 'User',
-        extension: extensions.User,
-        ...((typeOptions as any).User as {}),
-      }
+      { name: 'User', extension: (extensions as any).User as any }
     )
   },
   get ID() {
-    return new StringNode({ name: 'ID', ...((typeOptions as any).ID as {}) })
+    return new StringNode({
+      name: 'ID',
+      extension: (extensions as any).ID as any,
+    })
   },
   get String() {
     return new StringNode({
       name: 'String',
-      ...((typeOptions as any).String as {}),
+      extension: (extensions as any).String as any,
     })
   },
   get Int() {
-    return new NumberNode({ name: 'Int', ...((typeOptions as any).Int as {}) })
+    return new NumberNode({
+      name: 'Int',
+      extension: (extensions as any).Int as any,
+    })
   },
   get A() {
     return new ObjectNode(
@@ -193,7 +190,7 @@ export const types = {
           return new FieldNode(types.B, undefined, true)
         },
       },
-      { name: 'A', ...((typeOptions as any).A as {}) }
+      { name: 'A', extension: (extensions as any).A as any }
     )
   },
   get B() {
@@ -206,7 +203,7 @@ export const types = {
           return new FieldNode(types.Int, undefined, true)
         },
       },
-      { name: 'B', ...((typeOptions as any).B as {}) }
+      { name: 'B', extension: (extensions as any).B as any }
     )
   },
   get TestOrUser() {
@@ -222,7 +219,7 @@ export const types = {
           return new FieldNode(types.String, undefined, true)
         },
       },
-      { name: 'TestB', ...((typeOptions as any).TestB as {}) }
+      { name: 'TestB', extension: (extensions as any).TestB as any }
     )
   },
   get Test() {
@@ -233,7 +230,7 @@ export const types = {
         },
       },
       [types.TestB, types.TestC],
-      { name: 'Test', ...((typeOptions as any).Test as {}) }
+      { name: 'Test', extension: (extensions as any).Test as any }
     )
   },
   get InputObj() {
@@ -261,7 +258,7 @@ export const types = {
           )
         },
       },
-      { name: 'Mutation', ...((typeOptions as any).Mutation as {}) }
+      { name: 'Mutation', extension: (extensions as any).Mutation as any }
     )
   },
   get __Schema() {
@@ -306,7 +303,7 @@ export const types = {
           )
         },
       },
-      { name: '__Schema', ...((typeOptions as any).__Schema as {}) }
+      { name: '__Schema', extension: (extensions as any).__Schema as any }
     )
   },
   get __Type() {
@@ -368,7 +365,7 @@ export const types = {
           return new FieldNode(types.__Type, undefined, true)
         },
       },
-      { name: '__Type', ...((typeOptions as any).__Type as {}) }
+      { name: '__Type', extension: (extensions as any).__Type as any }
     )
   },
   get __TypeKind() {
@@ -377,7 +374,7 @@ export const types = {
   get Boolean() {
     return new BooleanNode({
       name: 'Boolean',
-      ...((typeOptions as any).Boolean as {}),
+      extension: (extensions as any).Boolean as any,
     })
   },
   get __Field() {
@@ -406,7 +403,7 @@ export const types = {
           return new FieldNode(types.String, undefined, true)
         },
       },
-      { name: '__Field', ...((typeOptions as any).__Field as {}) }
+      { name: '__Field', extension: (extensions as any).__Field as any }
     )
   },
   get __InputValue() {
@@ -428,7 +425,10 @@ export const types = {
           return new FieldNode(types.String, undefined, true)
         },
       },
-      { name: '__InputValue', ...((typeOptions as any).__InputValue as {}) }
+      {
+        name: '__InputValue',
+        extension: (extensions as any).__InputValue as any,
+      }
     )
   },
   get __EnumValue() {
@@ -447,7 +447,7 @@ export const types = {
           return new FieldNode(types.String, undefined, true)
         },
       },
-      { name: '__EnumValue', ...((typeOptions as any).__EnumValue as {}) }
+      { name: '__EnumValue', extension: (extensions as any).__EnumValue as any }
     )
   },
   get __Directive() {
@@ -492,7 +492,7 @@ export const types = {
           return new FieldNode(types.Boolean, undefined, false)
         },
       },
-      { name: '__Directive', ...((typeOptions as any).__Directive as {}) }
+      { name: '__Directive', extension: (extensions as any).__Directive as any }
     )
   },
   get __DirectiveLocation() {
@@ -511,7 +511,7 @@ export const types = {
           return new FieldNode(types.String, undefined, true)
         },
       },
-      { name: 'TestC', ...((typeOptions as any).TestC as {}) }
+      { name: 'TestC', extension: (extensions as any).TestC as any }
     )
   },
   get fake__Locale() {
@@ -600,13 +600,13 @@ export const types = {
   get Float() {
     return new NumberNode({
       name: 'Float',
-      ...((typeOptions as any).Float as {}),
+      extension: (extensions as any).Float as any,
     })
   },
   get examples__JSON() {
     return new ScalarNode({
       name: 'examples__JSON',
-      ...((typeOptions as any).examples__JSON as {}),
+      extension: (extensions as any).examples__JSON as any,
     })
   },
 }
@@ -644,15 +644,3 @@ export type fake__color = DataProxy<typeof types.fake__color>
 export type fake__options = DataProxy<typeof types.fake__options>
 export type Float = DataProxy<typeof types.Float>
 export type examples__JSON = DataProxy<typeof types.examples__JSON>
-
-type NodeOptions<T extends Node<any>> = T extends ScalarNode<any>
-  ? IScalarNodeOptions
-  : T extends ObjectNode<infer TNode, infer T, infer Typename>
-  ? IObjectNodeOptions<ObjectNode<TNode, T, Typename>>
-  : T extends InterfaceNode<any, any, any, infer Typename>
-  ? IInterfaceNodeOptions<Typename>
-  : never
-
-export type ITypeOptions = {
-  [K in keyof typeof types]?: NodeOptions<typeof types[K]>
-}

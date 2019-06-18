@@ -12,14 +12,14 @@ import {
 import { DataProxy } from '../DataProxy'
 import { Accessor } from '../Accessor'
 import { Mix, Generic } from 'mix-classes'
-import { StringNode } from './ScalarNode'
+import { StringNode, ScalarNode } from './ScalarNode'
+import { Extension } from '../Extension'
 
-export type IObjectNodeOptions<
-  TNode extends ObjectNode<any, any, any>
-> = IFieldsNodeOptions<
-  TNode extends ObjectNode<any, any, infer Typename> ? Typename : string
+export type IObjectNodeOptions<Typename extends string> = IFieldsNodeOptions<
+  Typename
 > & {
-  getKey?: KeyFn<TNode>
+  extension?: Extension
+  // getKey?: KeyFn<TNode>
 }
 
 export interface ObjectNode<
@@ -38,22 +38,19 @@ const TYPENAME_NODE = new StringNode()
 
 export class ObjectNode<TNode, T, Typename> extends Mix(
   Generic(FieldsNode),
-  Generic(Keyable),
-  Outputable
+  Outputable,
+  Generic(Keyable)
 ) {
   constructor(
     fields: TNode,
-    {
-      getKey,
-      ...options
-    }: IObjectNodeOptions<ObjectNode<TNode, T, Typename>> = {}
+    { extension, ...options }: IObjectNodeOptions<Typename> = {}
   ) {
     // Add __typename node, not currently used.
     ;(fields as any).__typename = new FieldNode(TYPENAME_NODE)
 
-    super([fields as any, options])
+    super([fields as any, options], [extension])
 
-    this.keyGetter = defaultKey(this)
+    this.keyGetter = defaultKey(this) as any
   }
 
   public getData(
@@ -61,6 +58,7 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
   ): DataProxy<ObjectNode<TNode, T, Typename>> {
     super.getData(accessor)
 
+    // If the value is nulled, return null
     if (accessor.value && accessor.value!.data === null) {
       return null as any
     }
@@ -70,17 +68,40 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
         // Statically resolve __typename
         if (prop === '__typename') return this.name
 
+        // check fields first
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
 
+          // if it's scalar, check extensions
+          if (field.ofNode instanceof ScalarNode) {
+            for (const extension of accessor.extensions) {
+              if (prop in extension) return extension[prop]
+            }
+          }
+
           return field.getData(accessor as any)
+        }
+
+        // fallback to extensions
+        for (const extension of accessor.extensions) {
+          if (prop in extension) return extension[prop]
         }
       },
 
       set: (_, prop: keyof TNode, data) => {
         if (prop === '__typename') return true
 
+        // check fields first
         if (this.fields.hasOwnProperty(prop)) {
+          const field = this.fields[prop]
+
+          // if it's scalar, check extensions
+          if (field.ofNode instanceof ScalarNode) {
+            for (const extension of accessor.extensions) {
+              if (prop in extension) return (extension[prop] = data)
+            }
+          }
+
           const fieldAccessor = accessor.getChild(
             a => a.selection.dataProp === prop
           )
@@ -88,6 +109,11 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
           if (fieldAccessor) {
             fieldAccessor.setData(data)
           }
+        }
+
+        // fallback to extensions
+        for (const extension of accessor.extensions) {
+          if (prop in extension) return (extension[prop] = data)
         }
 
         return true

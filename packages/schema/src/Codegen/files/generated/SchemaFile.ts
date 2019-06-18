@@ -16,10 +16,8 @@ import {
 } from 'graphql-builder'
 import { File, UTILS, CORE } from '../../File'
 import { Codegen } from '../../Codegen'
-import { TypeOptionsFile, TYPE_OPTIONS_VAR } from '../TypeOptionsFile'
 
 export const TYPES_VAR = 'types'
-export const TYPE_OPTIONS = 'ITypeOptions'
 
 export class SchemaFile extends File {
   constructor(private codegen: Codegen) {
@@ -27,8 +25,8 @@ export class SchemaFile extends File {
   }
 
   public generate() {
-    this.addImports(`../typeOptions`, TYPE_OPTIONS_VAR)
-    this.addImports(UTILS, 'lazyGetters')
+    this.importAll(`../extensions`, 'extensions')
+    this.import(UTILS, 'lazyGetters')
 
     const body = `
       export const ${TYPES_VAR} = ${this.generateTypes()}
@@ -46,15 +44,12 @@ export class SchemaFile extends File {
   }
 
   private generateTypescriptExports() {
-    this.addImports(
+    this.import(
       CORE,
       'DataProxy',
       'ScalarNode',
-      'IScalarNodeOptions',
       'Node',
       'ObjectNode',
-      'IObjectNodeOptions',
-      'IInterfaceNodeOptions',
       'InterfaceNode'
     )
 
@@ -67,18 +62,7 @@ export class SchemaFile extends File {
           )}>`
       )
       .join('\n')}
-
-    type NodeOptions<T extends Node<any>> = T extends ScalarNode<any>
-      ? IScalarNodeOptions
-      : T extends ObjectNode<infer TNode, infer T, infer Typename>
-      ? IObjectNodeOptions<ObjectNode<TNode, T, Typename>>
-      : T extends InterfaceNode<any, any, any, infer Typename>
-      ? IInterfaceNodeOptions<Typename>
-      : never
-
-    export type ${TYPE_OPTIONS} = {
-      [K in keyof typeof ${TYPES_VAR}]?: NodeOptions<typeof ${TYPES_VAR}[K]>
-    }`
+    `
   }
 
   private generateTypes() {
@@ -97,14 +81,14 @@ export class SchemaFile extends File {
     return `${TYPES_VAR}.${name}`
   }
 
-  private getSchemaOption(name: string) {
+  private getExtension(name: string) {
     if (this.codegen.options.typescript) {
       // Typescript has a circular type problem, resulting in `any` for nodes
       // this fixes that.
-      return `((${TYPE_OPTIONS_VAR} as any).${name} as {})`
+      return `((extensions as any).${name} as any)`
     }
 
-    return `${TYPE_OPTIONS_VAR}.${name}`
+    return `extensions.${name}`
   }
 
   private generateFieldComment(field: SchemaField) {
@@ -136,7 +120,7 @@ export class SchemaFile extends File {
   }
 
   private generateFieldGetter(field: SchemaField) {
-    this.addImports(CORE, FieldNode.name)
+    this.import(CORE, FieldNode.name)
 
     return (
       this.generateFieldComment(field) +
@@ -150,19 +134,19 @@ export class SchemaFile extends File {
 
   private generateNode(type: SchemaType) {
     if (type.kind === 'OBJECT') {
-      this.addImports(CORE, ObjectNode.name)
+      this.import(CORE, ObjectNode.name)
 
       return `new ${ObjectNode.name}({
         ${Object.values(type.fields)
           .map(field => this.generateFieldGetter(field))
           .join(',')}
-      }, { name: ${JSON.stringify(type.name)}, ...${this.getSchemaOption(
+      }, { name: ${JSON.stringify(type.name)}, extension: ${this.getExtension(
         type.name
       )} })`
     }
 
     if (type.kind === 'INTERFACE') {
-      this.addImports(CORE, InterfaceNode.name)
+      this.import(CORE, InterfaceNode.name)
 
       return `new ${InterfaceNode.name}({
         ${Object.values(type.fields)
@@ -170,13 +154,13 @@ export class SchemaFile extends File {
           .join(',')}
       },
       [${type.possibleTypes.map(type => this.getNode(type)).join(',')}],
-      { name: ${JSON.stringify(type.name)}, ...${this.getSchemaOption(
+      { name: ${JSON.stringify(type.name)}, extension: ${this.getExtension(
         type.name
       )} })`
     }
 
     if (type.kind === 'UNION') {
-      this.addImports(CORE, UnionNode.name)
+      this.import(CORE, UnionNode.name)
 
       return `new ${UnionNode.name}([${type.possibleTypes.map(type =>
         this.getNode(type)
@@ -188,25 +172,25 @@ export class SchemaFile extends File {
         type.name === 'Int' || type.name === 'Float'
           ? NumberNode.name
           : type.name === 'ID' || type.name === 'String'
-            ? StringNode.name
-            : type.name === 'Boolean'
-              ? BooleanNode.name
-              : ScalarNode.name
+          ? StringNode.name
+          : type.name === 'Boolean'
+          ? BooleanNode.name
+          : ScalarNode.name
 
-      this.addImports(CORE, className)
+      this.import(CORE, className)
 
       return `new ${className}({ name: ${JSON.stringify(
         type.name
-      )}, ...${this.getSchemaOption(type.name)} })`
+      )}, extension: ${this.getExtension(type.name)} })`
     }
 
     if (type.kind === 'INPUT_OBJECT') {
-      this.addImports(CORE, InputNode.name)
+      this.import(CORE, InputNode.name)
 
       return `new ${InputNode.name}({
         ${Object.values(type.inputFields)
           .map(field => {
-            this.addImports(CORE, InputNodeField.name)
+            this.import(CORE, InputNodeField.name)
 
             return `get ${field.name}() {
               return new ${InputNodeField.name}(${this.generateType(
@@ -222,7 +206,7 @@ export class SchemaFile extends File {
   }
 
   private generateType(type: Type): string {
-    this.addImports(CORE, ArrayNode.name)
+    this.import(CORE, ArrayNode.name)
 
     if (type.kind === 'LIST') {
       return `new ${ArrayNode.name}(${this.generateType(type.ofType)}, ${
@@ -236,12 +220,12 @@ export class SchemaFile extends File {
   public generateArguments(args?: SchemaFieldArgs) {
     if (!args) return undefined
 
-    this.addImports(CORE, Arguments.name)
+    this.import(CORE, Arguments.name)
 
     return `new ${Arguments.name}({
       ${Object.entries(args)
         .map(([name, type]) => {
-          this.addImports(CORE, ArgumentsField.name)
+          this.import(CORE, ArgumentsField.name)
 
           return `get ${name}() {
             return new ${ArgumentsField.name}(${this.generateType(type)}, ${

@@ -1,15 +1,18 @@
 import { Selection } from '../Selection'
 import { createEvent } from '@graphql-builder/utils'
 import { computed } from '../utils'
-import { Node, Keyable, NodeContainer } from '../Node'
+import { Node, Keyable, NodeContainer, Outputable } from '../Node'
 import { Cache, Value } from '../Cache'
 import { Disposable } from '../mixins'
 import { Scheduler } from '../Scheduler'
+import { Extension, IExtension } from '../Extension'
 
 export abstract class Accessor<
   TSelection extends Selection = Selection,
   TChildren extends Accessor<any, any> = Accessor<any, any>
 > extends Disposable {
+  public extensions: Extension[] = []
+
   public scheduler: Scheduler = this.parent ? this.parent.scheduler : undefined!
   public cache: Cache = this.parent ? this.parent.cache : undefined!
 
@@ -24,10 +27,12 @@ export abstract class Accessor<
   // When the data changes (equality check)
   public onDataUpdate = createEvent<(prevData: any) => void>()
 
+  public onExtensionsUpdate = createEvent()
+
   constructor(
     public parent: Accessor | undefined,
     public selection: TSelection,
-    public node: Node<any> = selection.node
+    public node = selection.node as Node<any> & Outputable
   ) {
     super()
 
@@ -102,13 +107,37 @@ export abstract class Accessor<
       parentValueAssociated()
     }
 
-    const innerNode = node instanceof NodeContainer ? node.innerNode : node
+    const updateExtensions = () => this.updateExtensions()
 
-    if (innerNode instanceof Keyable) {
-      setTimeout(() => console.log(this.path.toString(), 'getting key'))
+    this.disposers.add(this.onDataUpdate(updateExtensions))
+    if (parent) this.disposers.add(parent.onExtensionsUpdate(updateExtensions))
 
-      innerNode.getKey(this)
-    }
+    // TODO
+    // const innerNode = node instanceof NodeContainer ? node.innerNode : node
+    // if (innerNode instanceof Keyable) {
+    //   setTimeout(() => console.log(this.path.toString(), 'getting key'))
+
+    //   innerNode.getKey(this)
+    // }
+  }
+
+  protected getExtensions() {
+    if (!this.node.extension) return
+
+    const extension: IExtension<any> =
+      typeof this.node.extension === 'function'
+        ? this.node.extension(this.data)
+        : this.node.extension
+
+    if (!extension) return
+
+    this.extensions.push(extension)
+  }
+
+  protected updateExtensions() {
+    this.extensions = []
+    this.getExtensions()
+    this.onExtensionsUpdate.emit()
   }
 
   private _value: Value | undefined

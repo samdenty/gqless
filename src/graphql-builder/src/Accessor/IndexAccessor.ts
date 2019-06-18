@@ -1,6 +1,7 @@
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
-import { ArrayNode, Node } from '../Node'
+import { ArrayNode, Node, ScalarNode } from '../Node'
+import { OF_NODE, IExtension } from '../Extension'
 
 export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any, any>> = Selection<
@@ -17,6 +18,23 @@ export class IndexAccessor<
         : parent.selection.node
       ).ofNode
     )
+  }
+
+  protected getExtensions() {
+    if (!(this.node instanceof ScalarNode)) {
+      for (const parentExtension of this.parent.extensions) {
+        const extensionOfNode = parentExtension[OF_NODE]
+        const extension: IExtension<any> =
+          typeof extensionOfNode === 'function'
+            ? extensionOfNode(this.data)
+            : extensionOfNode
+        if (!extension) continue
+
+        this.extensions.push(extension)
+      }
+    }
+
+    super.getExtensions()
   }
 
   public get data() {

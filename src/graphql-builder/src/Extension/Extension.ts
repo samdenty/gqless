@@ -1,9 +1,9 @@
 import { Accessor } from '../Accessor'
 
-export const GET_KEY = Symbol('NodeExtension(getKey)')
-export const OF_NODE = Symbol('NodeExtension(ofNode)')
+export const GET_KEY = Symbol('Extension#getKey')
+export const OF_NODE = Symbol('Extension#ofNode')
 
-type IExtension<TData> = TData extends object
+export type IExtension<TData> = TData extends object
   ? ({ [K in string]: any } &
       (TData extends any[]
         ? {
@@ -15,7 +15,7 @@ type IExtension<TData> = TData extends object
           })))
   : TData
 
-export type Extension<TData, TParentData = any> =
+export type Extension<TData = any, TParentData = any> =
   | IExtension<TData>
   | ((
       data: TData,

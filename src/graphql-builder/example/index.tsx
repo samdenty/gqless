@@ -15,10 +15,11 @@ import { Codegen, fetchSchema } from '@graphql-builder/schema'
 
 Object.assign(window, { ...Imports, typesFaker })
 
-const endpoint = 'http://localhost:9002/graphql'
+const endpoint = `http://${location.hostname}:9002/graphql`
 const client = new ApolloClient({
   uri: endpoint,
 })
+
 async function bootstrap() {
   const fetchQuery = async query => {
     const response = await fetch(endpoint, {
@@ -53,7 +54,7 @@ async function bootstrap() {
 
   // const schema = await fetchSchema(fetchQuery, { includeInfo: true })
   // const codegen = new Codegen(schema)
-  // console.log(schema, codegen.generate())
+  // console.log(codegen.generate())
 
   const graphqlInstance = new GraphQL(typesFaker.Query, fetchQuery)
   graphqlInstance.middleware.add(
@@ -114,6 +115,8 @@ async function bootstrap() {
     () => {
       const [showDescription, setShowDescription] = React.useState(false)
 
+      query.me.following[0].name
+
       return (
         <div>
           <b>My name:</b> {query.me!.name}
@@ -130,7 +133,9 @@ async function bootstrap() {
           </Defer>
       <div>*/}
           <b>Other users:</b>
-          {query.users.map(user => <UserComponent key={user.id} user={user} />)}
+          {query.users.map(user => (
+            <UserComponent key={user.id} user={user} />
+          ))}
         </div>
       )
 
