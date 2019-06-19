@@ -15,13 +15,13 @@ const User = ({ user }: { user: User }) => (
   </div>
 )
 
-const App = graphql(() => (
+const App = () => (
   <div>
     {query.users.map(user => (
       <User key={user.id} user={user} />
     ))}
   </div>
-))
+)
 ```
 
 **Resulting query:**
@@ -42,6 +42,9 @@ query App {
 - [**TypeScript safe**](#Typescript) - without code generation
 - [**Inbuilt cache**](#Cache) - can be used without apollo-client
 - [**Type extensions**](#Type-extensions) - add custom properties and functions to types (similiar to [apollo-link-state](https://www.apollographql.com/docs/link/links/state/))
+- [**React integration**](#React) - uses suspense out the box, and updates components when data changes
+
+## React
 
 ## Type extensions
 
@@ -71,3 +74,26 @@ query.something
 ```
 
 ## Cache
+
+Apollo encourages you to manually update the cache, and makes it hard to express complex relations.
+
+graphqless's cache is inspired by [`mobx`](https://github.com/mobxjs/mobx). You use normal JS methods and assignments, which automatically updates the cache for you.
+
+```ts
+// Increment my age
+query.me.age += 1
+
+// Use pattern-matching to find an existing node
+query.me.following.push({ username: 'bob' })
+
+// Or you can pass the node
+query.me.following.push(query.users[0])
+```
+
+###
+
+---
+
+## Credits
+
+- Inspired by [babel-blade](https://github.com/sw-yx/babel-blade), but with the idea of being entirely runtime-based
