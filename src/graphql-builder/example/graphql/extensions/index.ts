@@ -11,25 +11,27 @@ export const User /*: Extension<g.User>*/ = {
   [GET_KEY]: (data: g.User) => data.id,
 }
 
-export const Query /*: Extension<g.User>*/ = query => ({
-  whatIsMyName() {
-    return query.me.name
-  },
-  users: {
-    get(id: string) {},
-  },
-  me: {
-    name: 'me' as const,
-    isMe: true,
-    following: {
-      isMeFollowing: true,
-      doesIt: {
-        work: true,
-      },
-      [OF_NODE]: {
-        meIsFollowing: true,
+export const Query /*: Extension<g.User>*/ = query => {
+  return {
+    whatIsMyName() {
+      return query.me.name
+    },
+    users: {
+      get(id: string) {},
+    },
+    me: {
+      name: 'me' as const,
+      isMe: true,
+      following: {
+        isMeFollowing: true,
+        doesIt: {
+          work: true,
+        },
+        [OF_NODE]: {
+          meIsFollowing: true,
+        },
       },
     },
-  },
-  isQuery: true,
-})
+    isQuery: true,
+  }
+}

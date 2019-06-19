@@ -108,7 +108,8 @@ export class ASTBuilder {
           : selection.node
 
       if (innerNode instanceof Keyable) {
-        console.warn(selection.path.toString(), innerNode.keyGetter)
+        // TODO
+        // console.warn(selection.path.toString(), innerNode.keyGetter)
         // selection.node.keysForSelection
         // console.log(selection.path.toString(), selection.node.keyGetter)
       }

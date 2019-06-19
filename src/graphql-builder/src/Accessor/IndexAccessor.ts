@@ -21,20 +21,19 @@ export class IndexAccessor<
   }
 
   protected getExtensions() {
-    if (!(this.node instanceof ScalarNode)) {
-      for (const parentExtension of this.parent.extensions) {
-        const extensionOfNode = parentExtension[OF_NODE]
-        const extension: IExtension<any> =
-          typeof extensionOfNode === 'function'
-            ? extensionOfNode(this.data)
-            : extensionOfNode
-        if (!extension) continue
-
-        this.extensions.push(extension)
-      }
-    }
-
     super.getExtensions()
+    if (this.node instanceof ScalarNode) return
+
+    for (const parentExtension of this.parent.extensions) {
+      const extensionOfNode = parentExtension[OF_NODE]
+      const extension: IExtension<any> =
+        typeof extensionOfNode === 'function'
+          ? extensionOfNode(this.data)
+          : extensionOfNode
+      if (!extension) continue
+
+      this.extensions.push(extension)
+    }
   }
 
   public get data() {

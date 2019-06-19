@@ -1,29 +1,3 @@
-## Type options
-
-Would it be cleaner to use classes?
-
-```js
-
-export class UserResolver {
-  get fullName() {
-    constructor(private user: User) {}
-
-    get fullName() {
-      return this.user.data.firstName + this.user.data.lastName
-    }
-  }
-}
-export class User {
-  public resolver = new UserResolver(this)
-
-  getKey() {
-    return this.data.id
-  }
-}
-
-export * from './User'
-```
-
 ## Mutations
 
 The reason why apollo optimistic is shitty is because you have to manually update a cache entry to perform a mutation. You always have to deal with the ugly side - cache. What about instead of Mutation -> Update cache -> Result -> Update cache, we did update cache -> Mutation.
@@ -47,46 +21,45 @@ Disadvantages:
 ### Using setters
 
 ```js
-const typeOptions = {
-  User: {
-    setters(user: DataProxy)  {
-      const data = {}
-
-      return {
-        set(key: string, user: DataProxy, accessor: Accessor) {
-          data[key] = user[key]
-        },
-        finish() {
-          mutation.data.updateUser({ connect: { id: user.id }}, data)
-        }
-      }
-    },
-
-    setters: {
-      set: {
-        nickname: (user: DataProxy) => mutation.data.updateNickName(user.id, user.nickname),
-        username: (user: DataProxy) => mutation.data.updateUsername(user.id, user.nickname),
-        age: (user: DataProxy) => mutation.data.updateAge(user.id, user.age)
-      },
-      set(key: string, user: DataProxy, accessor: Accessor) {
-        if (key === 'nickname') {
-          mutation.data.updateNickname(user.id, user.nickname)
-        }
-
-        if (key === 'username') {
-          mutation.data.updateUsername(user.id, user.username)
-        }
-
-        if (key === 'age') {
-          mutation.data.updateAge(user.id, user.username)
-        }
-      }
-    }
-
-    getKey(user) {
-      return user.id
-    },
+export const User = user => ({
+  // If only a setter is provided, then it will be called when nickname is set.
+  // If you do `query.me = { id: 'bob' }` and `set me(user)`
+  // user will be a dataProxy.
+  set nickname(newValue) {
+    mutation.data.updateNickname(user.id, newValue)
   },
+  set username(newValue) {
+    mutation.data.updateUsername(user.id, newValue)
+  },
+  set age(newValue) {
+    mutation.data.updateAge(user.id, newValue)
+  },
+})
+
+export const User = user => {
+  // CommitStorage accepts an optional default value, which #data is set to on each new commit cycle
+  // When you do `.nickname = 'bob'`, it's added to the data
+  // Once the current commit is about to be completed, onBeforeCommit is called
+  // and create a new mutation, adding to the current commit, then it's fetched
+  //
+  // Scheduler API should be exposed possibly in Recorder
+  const storage = new CommitStorage({})
+
+  storage.onBeforeCommit(() => {
+    mutation.data.updateUser(storage.data)
+  })
+
+  return {
+    set nickname(newValue) {
+      storage.data.nickname = newValue
+    },
+    set username(newValue) {
+      storage.data.username = newValue
+    },
+    set age(newValue) {
+      storage.data.age = newValue
+    },
+  }
 }
 
 const FeedData = ({ match }) => {
@@ -100,50 +73,6 @@ const FeedData = ({ match }) => {
       }}
     />
   )
-}
-```
-
-```js
-const typeOptions = {
-  User: {
-    setters(user: DataProxy)  {
-      const data = {}
-
-      return {
-        set(key: string, user: DataProxy, accessor: Accessor) {
-          data[key] = user[key]
-        },
-        finish() {
-          mutation.data.updateUser({ connect: { id: user.id }}, data)
-        }
-      }
-    },
-
-    setters: {
-      set: {
-        nickname: (user: DataProxy) => mutation.data.updateNickName(user.id, user.nickname),
-        username: (user: DataProxy) => mutation.data.updateUsername(user.id, user.nickname),
-        age: (user: DataProxy) => mutation.data.updateAge(user.id, user.age)
-      },
-      set(key: string, user: DataProxy, accessor: Accessor) {
-        if (key === 'nickname') {
-          mutation.data.updateNickname(user.id, user.nickname)
-        }
-
-        if (key === 'username') {
-          mutation.data.updateUsername(user.id, user.username)
-        }
-
-        if (key === 'age') {
-          mutation.data.updateAge(user.id, user.username)
-        }
-      }
-    }
-
-    getKey(user) {
-      return user.id
-    },
-  },
 }
 
 const FeedData = ({ match }) => {

@@ -115,7 +115,7 @@ async function bootstrap() {
     () => {
       const [showDescription, setShowDescription] = React.useState(false)
 
-      query.me.following[0].name
+      // query.me.following[0].name
 
       return (
         <div>

@@ -74,7 +74,8 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
 
           // if it's scalar, check extensions
           if (field.ofNode instanceof ScalarNode) {
-            for (const extension of accessor.extensions) {
+            for (let i = accessor.extensions.length - 1; i >= 0; --i) {
+              const extension = accessor.extensions[i]
               if (prop in extension) return extension[prop]
             }
           }
@@ -83,7 +84,8 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
         }
 
         // fallback to extensions
-        for (const extension of accessor.extensions) {
+        for (let i = accessor.extensions.length - 1; i >= 0; --i) {
+          const extension = accessor.extensions[i]
           if (prop in extension) return extension[prop]
         }
       },
@@ -97,7 +99,8 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
 
           // if it's scalar, check extensions
           if (field.ofNode instanceof ScalarNode) {
-            for (const extension of accessor.extensions) {
+            for (let i = accessor.extensions.length - 1; i >= 0; --i) {
+              const extension = accessor.extensions[i]
               if (prop in extension) return (extension[prop] = data)
             }
           }
@@ -112,7 +115,8 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
         }
 
         // fallback to extensions
-        for (const extension of accessor.extensions) {
+        for (let i = accessor.extensions.length - 1; i >= 0; --i) {
+          const extension = accessor.extensions[i]
           if (prop in extension) return (extension[prop] = data)
         }
 

@@ -12,20 +12,19 @@ export class FieldAccessor<
   }
 
   protected getExtensions() {
-    if (!(this.node instanceof ScalarNode)) {
-      for (const parentExtension of this.parent.extensions) {
-        const extensionField = parentExtension[this.selection.field.name]
-        const extension: IExtension<any> =
-          typeof extensionField === 'function'
-            ? extensionField(this.data)
-            : extensionField
-        if (!extension) continue
-
-        this.extensions.push(extension)
-      }
-    }
-
     super.getExtensions()
+    if (this.node instanceof ScalarNode) return
+
+    for (const parentExtension of this.parent.extensions) {
+      const extensionField = parentExtension[this.selection.field.name]
+      const extension: IExtension<any> =
+        typeof extensionField === 'function'
+          ? extensionField(this.data)
+          : extensionField
+      if (!extension) continue
+
+      this.extensions.push(extension)
+    }
   }
 
   public get data() {

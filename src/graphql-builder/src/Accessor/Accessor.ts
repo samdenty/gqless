@@ -50,12 +50,12 @@ export abstract class Accessor<
       )
 
       // Sync up data changes
-      let disposeVA: Function | undefined
+      let disposeListener: Function | undefined
       let prevData: any
       const valueAssociated = () => {
-        if (disposeVA) {
-          disposeVA()
-          disposeVA = undefined
+        if (disposeListener) {
+          disposeListener()
+          disposeListener = undefined
         }
 
         // Hook for onDataUpdate event
@@ -74,7 +74,7 @@ export abstract class Accessor<
           return
         }
 
-        disposeVA = value.onChange(check)
+        disposeListener = value.onChange(check)
         check()
       }
 
@@ -83,21 +83,21 @@ export abstract class Accessor<
       valueAssociated()
 
       // Sync the Value class to this accessor (using parent)
-      let disposeParentVA: Function | undefined
+      let disposeParentListener: Function | undefined
       const parentValueAssociated = () => {
-        if (disposeParentVA) {
-          this.disposers.delete(disposeParentVA)
-          disposeParentVA()
-          disposeParentVA = undefined
+        if (disposeParentListener) {
+          this.disposers.delete(disposeParentListener)
+          disposeParentListener()
+          disposeParentListener = undefined
         }
 
         if (parent.value) {
           this.value = parent.value!.get(this.toString())
 
-          disposeParentVA = parent.value!.onChange(() => {
+          disposeParentListener = parent.value!.onChange(() => {
             this.value = parent.value!.get(this.toString())
           })
-          this.disposers.add(disposeParentVA)
+          this.disposers.add(disposeParentListener)
         } else {
           this.value = undefined
         }
@@ -107,8 +107,8 @@ export abstract class Accessor<
       parentValueAssociated()
     }
 
+    // Extensions
     const updateExtensions = () => this.updateExtensions()
-
     this.disposers.add(this.onDataUpdate(updateExtensions))
     if (parent) this.disposers.add(parent.onExtensionsUpdate(updateExtensions))
 
