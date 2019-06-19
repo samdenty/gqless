@@ -8,20 +8,20 @@ Auto-generates GraphQL queries based on the data your application consumes.
 ```tsx
 import { query, User } from './generated'
 
-const User = ({ user }: { user: User }) => (
+const User = graphql(({ user }: { user: User }) => (
   <div>
     <h2>{user.name}</h2>
     <img src={user.avatarUrl({ size: 100 })} />
   </div>
-)
+))
 
-const App = () => (
+const App = graphql(() => (
   <div>
     {query.users.map(user => (
       <User key={user.id} user={user} />
     ))}
   </div>
-)
+))
 ```
 
 **Resulting query:**
@@ -45,6 +45,29 @@ query App {
 - [**React integration**](#React) - uses suspense out the box, and updates components when data changes
 
 ## React
+
+### Individual queries
+
+By default, all the fields are merged into one query. With `Query` component, you seperate them
+
+```tsx
+const Description = graphql(({ user }) => <p>{user.description}</p>)
+
+const App = graphql(() => (
+  <div>
+    <h1>{query.me.name}</h1>
+    <Query>
+      <Description user={query.me} />
+    </Query>
+  </div>
+))
+```
+
+<!-- prettier-ignore -->
+```graphql
+query App { me { name }}
+query Description { me { description }}
+```
 
 ## Type extensions
 
@@ -100,8 +123,6 @@ export const User = user => ({
   },
 })
 ```
-
-###
 
 ---
 
