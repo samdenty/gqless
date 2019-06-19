@@ -75,9 +75,9 @@ query.something
 
 ## Cache
 
-Apollo encourages you to manually update the cache, and makes it hard to express complex relations.
+Apollo encourages you to manually update the cache, which leads to loads of boilerplate.
 
-graphqless's cache is inspired by [`mobx`](https://github.com/mobxjs/mobx). You use normal JS methods and assignments, which automatically updates the cache for you.
+graphqless's cache is inspired by [`mobx`](https://github.com/mobxjs/mobx). You use normal JS methods/assignments, and the cache is auto-updated.
 
 ```ts
 // Increment my age
@@ -88,6 +88,17 @@ query.me.following.push({ username: 'bob' })
 
 // Or you can pass the node
 query.me.following.push(query.users[0])
+```
+
+Combined with [Type extensions](#Type-extensions), you can automatically dispatch mutations when the cache is updated
+
+```ts
+// src/extensions/index
+export const User = user => ({
+  set age(age: number) {
+    mutation.updateAge({ id: user.id, age })
+  },
+})
 ```
 
 ###
