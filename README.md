@@ -2,6 +2,16 @@
 
 Auto-generates GraphQL queries based on the data your application consumes.
 
+## Features
+
+- **No need to write queries** - auto-generated at runtime
+- [**TypeScript safe**](#Typescript) - without running code-generation on each change
+- [**Inbuilt cache**](#Cache) - can be used without apollo-client
+- [**Type extensions**](#Type-extensions) - add custom properties and functions to types (similiar to [apollo-link-state](https://www.apollographql.com/docs/link/links/state/))
+- [**React integration**](#React) - uses suspense out the box, and updates components when data changes
+
+## Example
+
 <!-- prettier-ignore -->
 **Your application:**
 
@@ -36,19 +46,11 @@ query App {
 }
 ```
 
-## Features
-
-- **No need to write queries** - auto-generated at runtime
-- [**TypeScript safe**](#Typescript) - without code generation
-- [**Inbuilt cache**](#Cache) - can be used without apollo-client
-- [**Type extensions**](#Type-extensions) - add custom properties and functions to types (similiar to [apollo-link-state](https://www.apollographql.com/docs/link/links/state/))
-- [**React integration**](#React) - uses suspense out the box, and updates components when data changes
-
 ## React
 
 ### Individual queries
 
-By default, all the fields are merged into one query. With `Query` component, you seperate them
+By default, all the fields are merged into one query. With `Query` component, you can seperate them
 
 ```tsx
 const Description = graphql(({ user }) => <p>{user.description}</p>)
@@ -65,8 +67,8 @@ const App = graphql(() => (
 
 <!-- prettier-ignore -->
 ```graphql
-query App { me { name }}
-query Description { me { description }}
+query App { me { name } }
+query Description { me { description } }
 ```
 
 ## Type extensions
