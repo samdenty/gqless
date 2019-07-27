@@ -5,7 +5,7 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
-      "graphql-builder": ["../../src/graphql-builder/src"]
+      "gqless": ["../../src/gqless/src"]
     }
   }
 }

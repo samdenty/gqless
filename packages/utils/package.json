@@ -1,9 +1,9 @@
 {
-  "name": "@graphql-builder/utils",
+  "name": "@gqless/utils",
   "version": "0.1.0",
   "main": "dist/index.js",
-  "umd:main": "dist/graphql-builderutils.umd.production.js",
-  "module": "dist/graphql-builderutils.es.production.js",
+  "umd:main": "dist/gqlessutils.umd.production.js",
+  "module": "dist/gqlessutils.es.production.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"

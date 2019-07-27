@@ -1,3 +1,14 @@
+# Rewrite typescripts types using codegen
+
+- Typescript is very slow currently, and show infinite depth errors
+- Needs to support typed-extensions
+
+# Scalar extensions
+
+```js
+export const Date = value => new Date(value)
+```
+
 - Support for interfaces + unions
 
   - In a react component, you will check for the `typename` property.

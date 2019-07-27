@@ -1,9 +1,9 @@
 {
-  "name": "@graphql-builder/react",
+  "name": "@gqless/react",
   "version": "0.1.0",
   "main": "dist/index.js",
-  "umd:main": "dist/graphql-builderreact.umd.production.js",
-  "module": "dist/graphql-builderreact.es.production.js",
+  "umd:main": "dist/gqlessreact.umd.production.js",
+  "module": "dist/gqlessreact.es.production.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"

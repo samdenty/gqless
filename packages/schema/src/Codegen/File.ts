@@ -1,5 +1,5 @@
-export const CORE = 'graphql-builder'
-export const UTILS = '@graphql-builder/utils'
+export const CORE = 'gqless'
+export const UTILS = '@gqless/utils'
 
 export abstract class File {
   constructor(public path: string, public overwrite: boolean = true) {}

@@ -1,5 +1,5 @@
 import { createElement } from 'react'
-import { Middleware } from 'graphql-builder'
+import { Middleware } from 'gqless'
 import { isRecording, recordSelection } from './recorder'
 
 export class ReactMiddleware implements Middleware {

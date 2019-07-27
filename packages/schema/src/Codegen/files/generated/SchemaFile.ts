@@ -13,7 +13,7 @@ import {
   Arguments,
   ArgumentsField,
   FieldNode,
-} from 'graphql-builder'
+} from 'gqless'
 import { File, UTILS, CORE } from '../../File'
 import { Codegen } from '../../Codegen'
 

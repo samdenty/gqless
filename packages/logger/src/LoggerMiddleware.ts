@@ -4,7 +4,7 @@ import {
   QueryResponse,
   Middleware,
   MiddlewareMethod,
-} from 'graphql-builder'
+} from 'gqless'
 
 const format = (...parts: any[][]) => {
   const texts: string[] = []

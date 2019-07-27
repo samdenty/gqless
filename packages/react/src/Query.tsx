@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Query as QueryCl } from 'graphql-builder'
+import { Query as QueryCl } from 'gqless'
 
 export interface StackContext {
   frames: QueryCl[]

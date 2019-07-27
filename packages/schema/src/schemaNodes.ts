@@ -1,4 +1,4 @@
-import { lazyGetters } from '@graphql-builder/utils'
+import { lazyGetters } from '@gqless/utils'
 import {
   ArrayNode,
   Arguments,
@@ -15,7 +15,7 @@ import {
   Node,
   UUnionNode,
   UInputNode,
-} from 'graphql-builder'
+} from 'gqless'
 import { SchemaFieldArgs, Type, SchemaType, Schema } from './Schema'
 
 export const schemaNodes = (schema: Schema) => {

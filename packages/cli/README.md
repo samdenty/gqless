@@ -22,13 +22,13 @@ example multi-command CLI built with typescript
 
 ```sh-session
 $ npm install -g @oclif/example-multi-ts
-$ graphql-builder COMMAND
+$ gqless COMMAND
 running command...
-$ graphql-builder (-v|--version|version)
+$ gqless (-v|--version|version)
 @oclif/example-multi-ts/1.10.7 linux-x64 node-v10.15.1
-$ graphql-builder --help [COMMAND]
+$ gqless --help [COMMAND]
 USAGE
-  $ graphql-builder COMMAND
+  $ gqless COMMAND
 ...
 ```
 
@@ -38,16 +38,16 @@ USAGE
 
 <!-- commands -->
 
-- [`graphql-builder generate OUTPUT_DIR`](#graphql-builder-generate-output_dir)
-- [`graphql-builder help [COMMAND]`](#graphql-builder-help-command)
+- [`gqless generate OUTPUT_DIR`](#gqless-generate-output_dir)
+- [`gqless help [COMMAND]`](#gqless-help-command)
 
-## `graphql-builder generate OUTPUT_DIR`
+## `gqless generate OUTPUT_DIR`
 
 generate a client from a GraphQL endpoint
 
 ```
 USAGE
-  $ graphql-builder generate OUTPUT_DIR
+  $ gqless generate OUTPUT_DIR
 
 OPTIONS
   -h, --help        show CLI help
@@ -55,16 +55,16 @@ OPTIONS
   -u, --url=url     (required) url to the GraphQL endpoint
 
 EXAMPLE
-  $ graphql-builder generate https://example.com/graphql
+  $ gqless generate https://example.com/graphql
 ```
 
-## `graphql-builder help [COMMAND]`
+## `gqless help [COMMAND]`
 
-display help for graphql-builder
+display help for gqless
 
 ```
 USAGE
-  $ graphql-builder help [COMMAND]
+  $ gqless help [COMMAND]
 
 ARGUMENTS
   COMMAND  command to show help for

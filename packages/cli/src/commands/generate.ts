@@ -1,9 +1,9 @@
 import '@babel/polyfill'
 import { Command, flags } from '@oclif/command'
-import { Codegen, fetchSchema } from '@graphql-builder/schema'
+import { Codegen, fetchSchema } from '@gqless/schema'
 import { get } from 'got'
 import { print } from 'graphql'
-import { QueryFetcher } from 'graphql-builder'
+import { QueryFetcher } from 'gqless'
 import * as fs from 'fs'
 import * as prettier from 'prettier'
 import * as mkdirp from 'mkdirp'
@@ -13,7 +13,7 @@ export default class Generate extends Command {
   static description = 'generate a client from a GraphQL endpoint'
 
   static examples = [
-    `$ graphql-builder generate https://example.com/graphql
+    `$ gqless generate https://example.com/graphql
 `,
   ]
 
@@ -22,6 +22,9 @@ export default class Generate extends Command {
 
     noComments: flags.boolean({
       description: `don't output comments (only useful for IDE intellisense)`,
+    }),
+    noPrettier: flags.boolean({
+      description: `don't run prettier on the resulting code`,
     }),
 
     url: flags.string({
@@ -61,7 +64,8 @@ export default class Generate extends Command {
 
     const rootDir = path.join(process.cwd(), args.output_dir)
 
-    const prettierConfig = await prettier.resolveConfig(rootDir)
+    const prettierConfig =
+      !flags.noPrettier && (await prettier.resolveConfig(rootDir))
 
     for (const file of files) {
       const filePath = path.join(rootDir, file.path)
@@ -69,12 +73,14 @@ export default class Generate extends Command {
 
       if (!file.overwrite && fs.existsSync(filePath)) continue
 
-      const prettifiedSource = prettier.format(file.contents, {
-        ...prettierConfig,
-        parser: 'typescript',
-      })
+      const source = flags.noPrettier
+        ? file.contents
+        : prettier.format(file.contents, {
+            ...prettierConfig,
+            parser: 'typescript',
+          })
 
-      fs.writeFileSync(filePath, prettifiedSource)
+      fs.writeFileSync(filePath, source)
     }
   }
 }

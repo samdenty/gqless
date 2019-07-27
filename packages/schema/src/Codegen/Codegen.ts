@@ -22,8 +22,13 @@ export class Codegen {
 
       new graphql.generated.SchemaFile(this),
       new graphql.generated.GraphQLFile(this),
+      new graphql.generated.TypesFile(this),
       new graphql.generated.IndexFile(),
     ]
+  }
+
+  public getSchemaType(name: string) {
+    return this.schema.types[name]
   }
 
   public generate() {

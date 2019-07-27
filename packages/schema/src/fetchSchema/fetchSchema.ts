@@ -1,6 +1,6 @@
 import { introspectionQuery } from './introspectionQuery'
 import { introspectionToSchema } from './introspectionToSchema'
-import { QueryFetcher } from 'graphql-builder'
+import { QueryFetcher } from 'gqless'
 
 export type IFetchSchemaOptions = {
   includeInfo?: boolean

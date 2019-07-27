@@ -1,9 +1,9 @@
 {
-  "name": "@graphql-builder/schema",
+  "name": "@gqless/schema",
   "version": "0.1.0",
   "main": "dist/index.js",
-  "umd:main": "dist/graphql-builderschema.umd.production.js",
-  "module": "dist/graphql-builderschema.es.production.js",
+  "umd:main": "dist/gqlessschema.umd.production.js",
+  "module": "dist/gqlessschema.es.production.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
@@ -15,10 +15,10 @@
   },
   "dependencies": {
     "graphql-tag": "^2.*",
-    "@graphql-builder/utils": "^0.1.0"
+    "@gqless/utils": "^0.1.0"
   },
   "peerDependencies": {
-    "graphql-builder": "^0.*"
+    "gqless": "^0.*"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.7"

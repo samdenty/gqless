@@ -7,7 +7,7 @@ import {
   Query,
   Scheduler,
   Selection,
-} from 'graphql-builder'
+} from 'gqless'
 import { StackContext } from './Query'
 
 export interface IQueryOptions {

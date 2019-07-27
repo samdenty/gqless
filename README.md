@@ -1,4 +1,4 @@
-# graphqless
+# graphqless (work in progress)
 
 Auto-generates GraphQL queries based on the data your application consumes.
 

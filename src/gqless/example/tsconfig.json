@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react",
+    "moduleResolution": "node",
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "removeComments": true,
+    "strictNullChecks": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "lib": ["es2015", "es2016", "dom"],
+    "baseUrl": ".",
+    "types": ["node"],
+    "paths": {
+      "gqless": ["../src"],
+      "@gqless/logger": ["../../../packages/logger/src"],
+      "@gqless/schema": ["../../../packages/schema/src"],
+      "@gqless/utils": ["../../../packages/utils/src"],
+      "@gqless/react": ["../../../packages/react/src"]
+    }
+  }
+}

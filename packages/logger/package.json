@@ -1,9 +1,9 @@
 {
-  "name": "@graphql-builder/logger",
+  "name": "@gqless/logger",
   "version": "0.1.0",
   "main": "dist/index.js",
-  "umd:main": "dist/graphql-builderlogger.umd.production.js",
-  "module": "dist/graphql-builderlogger.es.production.js",
+  "umd:main": "dist/gqlesslogger.umd.production.js",
+  "module": "dist/gqlesslogger.es.production.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
@@ -17,7 +17,7 @@
     "graphql": "^14.3.0"
   },
   "peerDependencies": {
-    "graphql-builder": "*"
+    "gqless": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4"

@@ -1,10 +1,10 @@
 {
-  "name": "@graphql-builder/cli",
+  "name": "@gqless/cli",
   "description": "example multi-command CLI built with typescript",
   "version": "1.10.7",
   "author": "Jeff Dickey @jdxcode",
   "bin": {
-    "graphql-builder": "./bin/run"
+    "gqless": "./bin/run"
   },
   "bugs": "https://github.com/oclif/example-multi-ts/issues",
   "dependencies": {
@@ -39,7 +39,7 @@
   "main": "dist/index.js",
   "oclif": {
     "commands": "./dist/commands",
-    "bin": "graphql-builder",
+    "bin": "gqless",
     "plugins": [
       "@oclif/plugin-help"
     ]
