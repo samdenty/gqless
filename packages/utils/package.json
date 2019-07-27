@@ -1,6 +1,6 @@
 {
   "name": "@gqless/utils",
-  "version": "0.1.0",
+  "version": "0.0.1-alpha.0",
   "main": "dist/index.js",
   "umd:main": "dist/gqlessutils.umd.production.js",
   "module": "dist/gqlessutils.es.production.js",
@@ -12,7 +12,5 @@
     "watch": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test"
-  },
-  "peerDependencies": {},
-  "devDependencies": {}
+  }
 }

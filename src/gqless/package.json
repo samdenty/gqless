@@ -1,6 +1,6 @@
 {
   "name": "gqless",
-  "version": "0.1.0",
+  "version": "0.0.1-alpha.0",
   "main": "dist/index.js",
   "umd:main": "dist/gqless.umd.production.js",
   "module": "dist/gqless.es.production.js",
@@ -14,12 +14,11 @@
     "test": "tsdx test"
   },
   "dependencies": {
-    "@gqless/utils": "^0.1.0",
+    "@gqless/utils": "^0.0.1-alpha.0",
     "fast-deep-equal": "^2.0.1",
     "json-stable-stringify": "^1.0.1",
     "mix-classes": "^1.1.6"
   },
-  "peerDependencies": {},
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@types/json-stable-stringify": "^1.0.32",
