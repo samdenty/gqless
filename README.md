@@ -1,4 +1,4 @@
-# graphqless (work in progress)
+# gqless (work in progress)
 
 Auto-generates GraphQL queries based on the data your application consumes.
 
@@ -102,7 +102,7 @@ query.something
 
 Apollo encourages you to manually update the cache, which leads to loads of boilerplate.
 
-graphqless's cache is inspired by [`mobx`](https://github.com/mobxjs/mobx). You use normal JS methods/assignments, and the cache is auto-updated.
+gqless's cache is inspired by [`mobx`](https://github.com/mobxjs/mobx). You use normal JS methods/assignments, and the cache is auto-updated.
 
 ```ts
 // Increment my age
