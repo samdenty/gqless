@@ -32,28 +32,22 @@ export const Query = ({
 }) => {
   const parentStack = React.useContext(StackContext)
 
-  const stack: StackContext = React.useMemo(
-    () => {
-      const frames =
-        value === null
-          ? parentStack.frames
-          : value instanceof QueryCl
-            ? [value]
-            : (Array.isArray(value) ? value : [value]).map(
-                value =>
-                  new QueryCl(typeof value === 'string' ? value : undefined)
-              )
+  const stack: StackContext = React.useMemo(() => {
+    const frames =
+      value === null
+        ? parentStack.frames
+        : value instanceof QueryCl
+        ? [value]
+        : (Array.isArray(value) ? value : [value]).map(
+            value => new QueryCl(typeof value === 'string' ? value : undefined)
+          )
 
-      return {
-        frames,
-        inheritance:
-          allowInheritance === null
-            ? parentStack.inheritance
-            : allowInheritance,
-      }
-    },
-    [value, allowInheritance]
-  )
+    return {
+      frames,
+      inheritance:
+        allowInheritance === null ? parentStack.inheritance : allowInheritance,
+    }
+  }, [value, allowInheritance])
 
   return <StackContext.Provider value={stack}>{children}</StackContext.Provider>
 }

@@ -62,10 +62,10 @@ export const schemaNodes = (schema: Schema) => {
       return type.name === 'Int' || type.name === 'Float'
         ? new NumberNode({ name: type.name })
         : type.name === 'ID' || type.name === 'String'
-          ? new StringNode({ name: type.name })
-          : type.name === 'Boolean'
-            ? new BooleanNode({ name: type.name })
-            : new ScalarNode({ name: type.name })
+        ? new StringNode({ name: type.name })
+        : type.name === 'Boolean'
+        ? new BooleanNode({ name: type.name })
+        : new ScalarNode({ name: type.name })
     }
 
     if (type.kind === 'OBJECT') {

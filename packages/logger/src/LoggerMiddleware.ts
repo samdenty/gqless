@@ -1,10 +1,5 @@
 import { print } from 'graphql/language/printer'
-import {
-  GraphQL,
-  QueryResponse,
-  Middleware,
-  MiddlewareMethod,
-} from 'gqless'
+import { GraphQL, QueryResponse, Middleware, MiddlewareMethod } from 'gqless'
 
 const format = (...parts: any[][]) => {
   const texts: string[] = []

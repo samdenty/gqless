@@ -71,17 +71,17 @@ export const introspectionToSchema = (introspection: any) => {
       ...(type.kind === 'UNION'
         ? { possibleTypes: type.possibleTypes.map(({ name }: any) => name) }
         : type.kind === 'INTERFACE'
-          ? {
-              possibleTypes: type.possibleTypes.map(({ name }: any) => name),
-              fields: getFields(type.fields),
-            }
-          : type.kind === 'OBJECT'
-            ? { fields: getFields(type.fields) }
-            : type.kind === 'INPUT_OBJECT'
-              ? {
-                  inputFields: getInputObjectFields(type.inputFields),
-                }
-              : null),
+        ? {
+            possibleTypes: type.possibleTypes.map(({ name }: any) => name),
+            fields: getFields(type.fields),
+          }
+        : type.kind === 'OBJECT'
+        ? { fields: getFields(type.fields) }
+        : type.kind === 'INPUT_OBJECT'
+        ? {
+            inputFields: getInputObjectFields(type.inputFields),
+          }
+        : null),
     }
   }
 

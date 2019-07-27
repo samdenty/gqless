@@ -1,13 +1,7 @@
 import * as React from 'react'
 
 import { useForceUpdate } from './hooks/useForceUpdate'
-import {
-  Accessor,
-  Recorder,
-  Query,
-  Scheduler,
-  Selection,
-} from 'gqless'
+import { Accessor, Recorder, Query, Scheduler, Selection } from 'gqless'
 import { StackContext } from './Query'
 
 export interface IQueryOptions {
