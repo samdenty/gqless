@@ -14,5 +14,5 @@
     "prepublish": "yarn build",
     "test": "tsdx test"
   },
-  "gitHead": "80d4aaa2ec558c4198416cc63c7d69e780d67557"
+  "gitHead": "e747b8b9133ea5c348f5107f51fda46fdfaf27cb"
 }

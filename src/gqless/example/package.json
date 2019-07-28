@@ -29,8 +29,7 @@
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "graphql-faker": "^1.9.0",
-    "parcel": "^1.12.3",
-    "typescript": "^3.4.5"
+    "parcel": "^1.12.3"
   },
-  "gitHead": "80d4aaa2ec558c4198416cc63c7d69e780d67557"
+  "gitHead": "e747b8b9133ea5c348f5107f51fda46fdfaf27cb"
 }

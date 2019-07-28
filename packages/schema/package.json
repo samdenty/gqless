@@ -25,5 +25,5 @@
     "@types/graphql": "^14.0.7",
     "@types/lodash.lowercase": "^4.3.6"
   },
-  "gitHead": "80d4aaa2ec558c4198416cc63c7d69e780d67557"
+  "gitHead": "e747b8b9133ea5c348f5107f51fda46fdfaf27cb"
 }

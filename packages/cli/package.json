@@ -26,8 +26,7 @@
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^10",
     "@types/prettier": "^1.16.4",
-    "ts-node": "^8",
-    "typescript": "^3.3"
+    "ts-node": "^8"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -53,5 +52,5 @@
     "prepublish": "yarn build"
   },
   "types": "dist/index.d.ts",
-  "gitHead": "80d4aaa2ec558c4198416cc63c7d69e780d67557"
+  "gitHead": "e747b8b9133ea5c348f5107f51fda46fdfaf27cb"
 }
