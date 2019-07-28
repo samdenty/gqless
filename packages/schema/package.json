@@ -19,11 +19,11 @@
     "graphql-tag": "^2.*"
   },
   "peerDependencies": {
-    "gqless": "^0.*"
+    "gqless": "*"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.7",
     "@types/lodash.lowercase": "^4.3.6"
   },
-  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
+  "gitHead": "80d4aaa2ec558c4198416cc63c7d69e780d67557"
 }

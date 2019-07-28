@@ -27,7 +27,7 @@ export class LoggerMiddleware implements Middleware {
       )
     )
 
-    const obj = {}
+    const obj = {} as any
 
     selections.forEach((selection, idx) => {
       obj[selection.path.toString()] = {

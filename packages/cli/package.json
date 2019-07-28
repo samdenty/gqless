@@ -8,6 +8,7 @@
   },
   "bugs": "https://github.com/oclif/example-multi-ts/issues",
   "dependencies": {
+    "@gqless/schema": "^0.0.1-alpha.2",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
@@ -15,6 +16,9 @@
     "mkdirp": "^0.5.1",
     "prettier": "^1",
     "tslib": "^1"
+  },
+  "peerDependencies": {
+    "gqless": "*"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
@@ -45,8 +49,9 @@
     ]
   },
   "scripts": {
-    "build": "rm -rf dist; tsc -b && oclif-dev readme"
+    "build": "rm -rf dist; tsc -b && oclif-dev readme",
+    "prepublish": "yarn build"
   },
   "types": "dist/index.d.ts",
-  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
+  "gitHead": "80d4aaa2ec558c4198416cc63c7d69e780d67557"
 }

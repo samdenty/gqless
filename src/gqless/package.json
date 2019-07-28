@@ -11,7 +11,7 @@
   "scripts": {
     "watch": "tsdx watch",
     "build": "tsdx build",
-    "prepublish": "yarn build",
+    "prepublish": "cp ../../README.md .; yarn build",
     "test": "tsdx test"
   },
   "dependencies": {
@@ -25,5 +25,5 @@
     "@types/json-stable-stringify": "^1.0.32",
     "template-literal-table": "^2.0.2"
   },
-  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
+  "gitHead": "80d4aaa2ec558c4198416cc63c7d69e780d67557"
 }

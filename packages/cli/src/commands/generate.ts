@@ -1,4 +1,3 @@
-import '@babel/polyfill'
 import { Command, flags } from '@oclif/command'
 import { Codegen, fetchSchema } from '@gqless/schema'
 import { get } from 'got'

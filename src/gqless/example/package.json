@@ -24,7 +24,6 @@
     "@gqless/react": "../../../packages/react/src"
   },
   "devDependencies": {
-    "@babel/polyfill": "^7.4.4",
     "@types/react": "^16.8.15",
     "@types/react-dom": "^16.8.4",
     "babel-core": "^6.26.3",
@@ -33,5 +32,5 @@
     "parcel": "^1.12.3",
     "typescript": "^3.4.5"
   },
-  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
+  "gitHead": "80d4aaa2ec558c4198416cc63c7d69e780d67557"
 }
