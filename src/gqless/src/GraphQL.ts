@@ -31,7 +31,7 @@ export type ProxyInterceptor = (
 ) => unknown
 
 // @ts-ignore
-export class GraphQL<TNode extends ObjectNode = ObjectNode> extends Disposable {
+export class GraphQL<TData = any> extends Disposable {
   public middleware = new MiddlewareEngine()
   public astBuilder = new ASTBuilder()
   public scheduler = new Scheduler(
@@ -43,9 +43,9 @@ export class GraphQL<TNode extends ObjectNode = ObjectNode> extends Disposable {
   public selection = new RootSelection(this.node)
   public accessor = new RootAccessor(this.selection, this.cache, this.scheduler)
 
-  public query = this.accessor.data
+  public query: TData = this.accessor.data
 
-  constructor(protected node: TNode, protected fetchQuery: QueryFetcher) {
+  constructor(protected node: ObjectNode, protected fetchQuery: QueryFetcher) {
     super()
 
     this.middleware.add(...defaultMiddleware)

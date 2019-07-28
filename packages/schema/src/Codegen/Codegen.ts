@@ -17,11 +17,11 @@ export class Codegen {
     }
 
     this.files = [
-      new graphql.TypeOptionsFile(),
+      new graphql.ExtensionsFile(),
       new graphql.IndexFile(),
 
       new graphql.generated.SchemaFile(this),
-      new graphql.generated.GraphQLFile(this),
+      new graphql.GraphQLFile(this),
       new graphql.generated.TypesFile(this),
       new graphql.generated.IndexFile(),
     ]

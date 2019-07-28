@@ -1,4 +1,3 @@
-import * as types from './types'
 import * as extensions from '../extensions'
 import { lazyGetters } from '@gqless/utils'
 import {
@@ -16,7 +15,7 @@ import {
 
 export const schema = {
   get Query() {
-    return new ObjectNode<types.Query>(
+    return new ObjectNode(
       {
         get me() {
           return new FieldNode(schema.User, undefined, true)
@@ -99,7 +98,7 @@ export const schema = {
     )
   },
   get User() {
-    return new ObjectNode<types.User>(
+    return new ObjectNode(
       {
         get id() {
           return new FieldNode(schema.ID, undefined, false)
@@ -158,28 +157,22 @@ export const schema = {
     )
   },
   get ID() {
-    return new ScalarNode<types.ID>({
-      name: 'ID',
-      extension: (extensions as any).ID,
-    })
+    return new ScalarNode({ name: 'ID', extension: (extensions as any).ID })
   },
   get MyEnum() {
     return undefined
   },
   get String() {
-    return new ScalarNode<types.String>({
+    return new ScalarNode({
       name: 'String',
       extension: (extensions as any).String,
     })
   },
   get Int() {
-    return new ScalarNode<types.Int>({
-      name: 'Int',
-      extension: (extensions as any).Int,
-    })
+    return new ScalarNode({ name: 'Int', extension: (extensions as any).Int })
   },
   get A() {
-    return new ObjectNode<types.A>(
+    return new ObjectNode(
       {
         get b() {
           return new FieldNode(schema.B, undefined, true)
@@ -189,7 +182,7 @@ export const schema = {
     )
   },
   get B() {
-    return new ObjectNode<types.B>(
+    return new ObjectNode(
       {
         get c() {
           return new FieldNode(schema.Int, undefined, true)
@@ -205,7 +198,7 @@ export const schema = {
     return new UnionNode([schema.User, schema.TestB])
   },
   get TestB() {
-    return new ObjectNode<types.TestB>(
+    return new ObjectNode(
       {
         get a() {
           return new FieldNode(schema.String, undefined, true)
@@ -229,7 +222,7 @@ export const schema = {
     )
   },
   get InputObj() {
-    return new InputNode<types.InputObj>(
+    return new InputNode(
       {
         get a() {
           return new InputNodeField(schema.String, false)
@@ -239,7 +232,7 @@ export const schema = {
     )
   },
   get Mutation() {
-    return new ObjectNode<types.Mutation>(
+    return new ObjectNode(
       {
         get deleteUser() {
           return new FieldNode(
@@ -257,7 +250,7 @@ export const schema = {
     )
   },
   get __Schema() {
-    return new ObjectNode<types.__Schema>(
+    return new ObjectNode(
       {
         get types() {
           return new FieldNode(
@@ -287,7 +280,7 @@ export const schema = {
     )
   },
   get __Type() {
-    return new ObjectNode<types.__Type>(
+    return new ObjectNode(
       {
         get kind() {
           return new FieldNode(schema.__TypeKind, undefined, false)
@@ -352,13 +345,13 @@ export const schema = {
     return undefined
   },
   get Boolean() {
-    return new ScalarNode<types.Boolean>({
+    return new ScalarNode({
       name: 'Boolean',
       extension: (extensions as any).Boolean,
     })
   },
   get __Field() {
-    return new ObjectNode<types.__Field>(
+    return new ObjectNode(
       {
         get name() {
           return new FieldNode(schema.String, undefined, false)
@@ -387,7 +380,7 @@ export const schema = {
     )
   },
   get __InputValue() {
-    return new ObjectNode<types.__InputValue>(
+    return new ObjectNode(
       {
         get name() {
           return new FieldNode(schema.String, undefined, false)
@@ -406,7 +399,7 @@ export const schema = {
     )
   },
   get __EnumValue() {
-    return new ObjectNode<types.__EnumValue>(
+    return new ObjectNode(
       {
         get name() {
           return new FieldNode(schema.String, undefined, false)
@@ -425,7 +418,7 @@ export const schema = {
     )
   },
   get __Directive() {
-    return new ObjectNode<types.__Directive>(
+    return new ObjectNode(
       {
         get name() {
           return new FieldNode(schema.String, undefined, false)
@@ -467,7 +460,7 @@ export const schema = {
     return undefined
   },
   get TestC() {
-    return new ObjectNode<types.TestC>(
+    return new ObjectNode(
       {
         get a() {
           return new FieldNode(schema.String, undefined, true)
@@ -492,7 +485,7 @@ export const schema = {
     return undefined
   },
   get fake__color() {
-    return new InputNode<types.fake__color>(
+    return new InputNode(
       {
         get red255() {
           return new InputNodeField(schema.Int, true)
@@ -508,7 +501,7 @@ export const schema = {
     )
   },
   get fake__options() {
-    return new InputNode<types.fake__options>(
+    return new InputNode(
       {
         get useFullAddress() {
           return new InputNodeField(schema.Boolean, true)
@@ -563,13 +556,13 @@ export const schema = {
     )
   },
   get Float() {
-    return new ScalarNode<types.Float>({
+    return new ScalarNode({
       name: 'Float',
       extension: (extensions as any).Float,
     })
   },
   get examples__JSON() {
-    return new ScalarNode<types.examples__JSON>({
+    return new ScalarNode({
       name: 'examples__JSON',
       extension: (extensions as any).examples__JSON,
     })

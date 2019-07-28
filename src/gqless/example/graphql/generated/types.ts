@@ -15,40 +15,40 @@ type Extension<TName extends string> = TName extends keyof typeof extensions
  * @name Query
  * @type OBJECT
  */
-type QueryType = FieldsType<
+type t_Query = FieldsType<
   {
-    __typename: StringType<'Query'>
+    __typename: t_String<'Query'>
 
     /**
      * Current signed in user
      */
-    me: UserType | null
+    me: t_User | null
 
     /**
      * Fetch a user by ID
      */
-    user: FieldsTypeArg<{ id?: string | null }, UserType | null>
+    user: FieldsTypeArg<{ id?: string | null }, t_User | null>
 
     /**
      * All users stored in the database
      */
-    users: FieldsTypeArg<{ limit?: number | null }, (UserType)[]>
-    a: AType | null
+    users: FieldsTypeArg<{ limit?: number | null }, (t_User)[]>
+    a: t_A | null
 
     /**
      * @deprecated use the user field instead
      */
-    getUser: FieldsTypeArg<{ id?: string | null }, UserType | null>
+    getUser: FieldsTypeArg<{ id?: string | null }, t_User | null>
 
     /**
      * @deprecated use the users field instead
      */
-    getUsers: FieldsTypeArg<{ id?: string | null }, (UserType)[]>
-    testOrUser: TestOrUserType | null
-    test: TestBType | TestCType | null
+    getUsers: FieldsTypeArg<{ id?: string | null }, (t_User)[]>
+    testOrUser: t_TestOrUser | null
+    test: t_TestB | t_TestC | null
     testWithInput: FieldsTypeArg<
       { id?: string | null; ids: (string)[]; input?: InputObj | null },
-      IntType | null
+      t_Int | null
     >
   },
   Extension<'Query'>
@@ -58,21 +58,21 @@ type QueryType = FieldsType<
  * @name User
  * @type OBJECT
  */
-type UserType = FieldsType<
+type t_User = FieldsType<
   {
-    __typename: StringType<'User'>
-    id: IDType
-    test: MyEnumType | null
-    name: StringType | null
-    age: IntType | null
-    description: StringType | null
-    avatarUrl: FieldsTypeArg<{ size?: number | null }, StringType | null>
-    profileUrl: StringType | null
-    following: (UserType | null)[] | null
-    followers: (UserType | null)[] | null
-    b: StringType | null
-    c: StringType | null
-    d: StringType | null
+    __typename: t_String<'User'>
+    id: t_ID
+    test: t_MyEnum | null
+    name: t_String | null
+    age: t_Int | null
+    description: t_String | null
+    avatarUrl: FieldsTypeArg<{ size?: number | null }, t_String | null>
+    profileUrl: t_String | null
+    following: (t_User | null)[] | null
+    followers: (t_User | null)[] | null
+    b: t_String | null
+    c: t_String | null
+    d: t_String | null
   },
   Extension<'User'>
 >
@@ -81,34 +81,34 @@ type UserType = FieldsType<
  * @name ID
  * @type SCALAR
  */
-type IDType<T extends string = string> = ScalarType<T, Extension<'ID'>>
+type t_ID<T extends string = string> = ScalarType<T, Extension<'ID'>>
 
 /**
  * @name MyEnum
  * @type ENUM
  */
-type MyEnumType = EnumType<'ACTIVE' | 'DISABLED'>
+type t_MyEnum = EnumType<'ACTIVE' | 'DISABLED'>
 
 /**
  * @name String
  * @type SCALAR
  */
-type StringType<T extends string = string> = ScalarType<T, Extension<'String'>>
+type t_String<T extends string = string> = ScalarType<T, Extension<'String'>>
 
 /**
  * @name Int
  * @type SCALAR
  */
-type IntType<T extends number = number> = ScalarType<T, Extension<'Int'>>
+type t_Int<T extends number = number> = ScalarType<T, Extension<'Int'>>
 
 /**
  * @name A
  * @type OBJECT
  */
-type AType = FieldsType<
+type t_A = FieldsType<
   {
-    __typename: StringType<'A'>
-    b: BType | null
+    __typename: t_String<'A'>
+    b: t_B | null
   },
   Extension<'A'>
 >
@@ -117,11 +117,11 @@ type AType = FieldsType<
  * @name B
  * @type OBJECT
  */
-type BType = FieldsType<
+type t_B = FieldsType<
   {
-    __typename: StringType<'B'>
-    c: IntType | null
-    d: IntType | null
+    __typename: t_String<'B'>
+    c: t_Int | null
+    d: t_Int | null
   },
   Extension<'B'>
 >
@@ -130,18 +130,18 @@ type BType = FieldsType<
  * @name TestOrUser
  * @type UNION
  */
-type TestOrUserType = UserType | TestBType
+type t_TestOrUser = t_User | t_TestB
 
 /**
  * @name TestB
  * @type OBJECT
  * @implements Test
  */
-type TestBType = FieldsType<
+type t_TestB = FieldsType<
   {
-    __typename: StringType<'TestB'>
-    a: StringType | null
-    b: StringType | null
+    __typename: t_String<'TestB'>
+    a: t_String | null
+    b: t_String | null
   },
   Extension<'TestB'>
 >
@@ -150,7 +150,7 @@ type TestBType = FieldsType<
  * @name Test
  * @type INTERFACE
  */
-type TestType = TestBType | TestCType
+type t_Test = t_TestB | t_TestC
 
 /**
  * @name InputObj
@@ -162,10 +162,10 @@ export type InputObj = { a: string }
  * @name Mutation
  * @type OBJECT
  */
-type MutationType = FieldsType<
+type t_Mutation = FieldsType<
   {
-    __typename: StringType<'Mutation'>
-    deleteUser: FieldsTypeArg<{ id: string }, IntType>
+    __typename: t_String<'Mutation'>
+    deleteUser: FieldsTypeArg<{ id: string }, t_Int>
   },
   Extension<'Mutation'>
 >
@@ -174,34 +174,34 @@ type MutationType = FieldsType<
  * @name __Schema
  * @type OBJECT
  */
-type __SchemaType = FieldsType<
+type t___Schema = FieldsType<
   {
-    __typename: StringType<'__Schema'>
+    __typename: t_String<'__Schema'>
 
     /**
      * A list of all types supported by this server.
      */
-    types: (__TypeType)[]
+    types: (t___Type)[]
 
     /**
      * The type that query operations will be rooted at.
      */
-    queryType: __TypeType
+    queryType: t___Type
 
     /**
      * If this server supports mutation, the type that mutation operations will be rooted at.
      */
-    mutationType: __TypeType | null
+    mutationType: t___Type | null
 
     /**
      * If this server support subscription, the type that subscription operations will be rooted at.
      */
-    subscriptionType: __TypeType | null
+    subscriptionType: t___Type | null
 
     /**
      * A list of all directives supported by this server.
      */
-    directives: (__DirectiveType)[]
+    directives: (t___Directive)[]
   },
   Extension<'__Schema'>
 >
@@ -210,24 +210,24 @@ type __SchemaType = FieldsType<
  * @name __Type
  * @type OBJECT
  */
-type __TypeType = FieldsType<
+type t___Type = FieldsType<
   {
-    __typename: StringType<'__Type'>
-    kind: __TypeKindType
-    name: StringType | null
-    description: StringType | null
+    __typename: t_String<'__Type'>
+    kind: t___TypeKind
+    name: t_String | null
+    description: t_String | null
     fields: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
-      (__FieldType)[] | null
+      (t___Field)[] | null
     >
-    interfaces: (__TypeType)[] | null
-    possibleTypes: (__TypeType)[] | null
+    interfaces: (t___Type)[] | null
+    possibleTypes: (t___Type)[] | null
     enumValues: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
-      (__EnumValueType)[] | null
+      (t___EnumValue)[] | null
     >
-    inputFields: (__InputValueType)[] | null
-    ofType: __TypeType | null
+    inputFields: (t___InputValue)[] | null
+    ofType: t___Type | null
   },
   Extension<'__Type'>
 >
@@ -236,7 +236,7 @@ type __TypeType = FieldsType<
  * @name __TypeKind
  * @type ENUM
  */
-type __TypeKindType = EnumType<
+type t___TypeKind = EnumType<
   | 'SCALAR'
   | 'OBJECT'
   | 'INTERFACE'
@@ -251,7 +251,7 @@ type __TypeKindType = EnumType<
  * @name Boolean
  * @type SCALAR
  */
-type BooleanType<T extends boolean = boolean> = ScalarType<
+type t_Boolean<T extends boolean = boolean> = ScalarType<
   T,
   Extension<'Boolean'>
 >
@@ -260,15 +260,15 @@ type BooleanType<T extends boolean = boolean> = ScalarType<
  * @name __Field
  * @type OBJECT
  */
-type __FieldType = FieldsType<
+type t___Field = FieldsType<
   {
-    __typename: StringType<'__Field'>
-    name: StringType
-    description: StringType | null
-    args: (__InputValueType)[]
-    type: __TypeType
-    isDeprecated: BooleanType
-    deprecationReason: StringType | null
+    __typename: t_String<'__Field'>
+    name: t_String
+    description: t_String | null
+    args: (t___InputValue)[]
+    type: t___Type
+    isDeprecated: t_Boolean
+    deprecationReason: t_String | null
   },
   Extension<'__Field'>
 >
@@ -277,17 +277,17 @@ type __FieldType = FieldsType<
  * @name __InputValue
  * @type OBJECT
  */
-type __InputValueType = FieldsType<
+type t___InputValue = FieldsType<
   {
-    __typename: StringType<'__InputValue'>
-    name: StringType
-    description: StringType | null
-    type: __TypeType
+    __typename: t_String<'__InputValue'>
+    name: t_String
+    description: t_String | null
+    type: t___Type
 
     /**
      * A GraphQL-formatted string representing the default value for this input value.
      */
-    defaultValue: StringType | null
+    defaultValue: t_String | null
   },
   Extension<'__InputValue'>
 >
@@ -296,13 +296,13 @@ type __InputValueType = FieldsType<
  * @name __EnumValue
  * @type OBJECT
  */
-type __EnumValueType = FieldsType<
+type t___EnumValue = FieldsType<
   {
-    __typename: StringType<'__EnumValue'>
-    name: StringType
-    description: StringType | null
-    isDeprecated: BooleanType
-    deprecationReason: StringType | null
+    __typename: t_String<'__EnumValue'>
+    name: t_String
+    description: t_String | null
+    isDeprecated: t_Boolean
+    deprecationReason: t_String | null
   },
   Extension<'__EnumValue'>
 >
@@ -311,28 +311,28 @@ type __EnumValueType = FieldsType<
  * @name __Directive
  * @type OBJECT
  */
-type __DirectiveType = FieldsType<
+type t___Directive = FieldsType<
   {
-    __typename: StringType<'__Directive'>
-    name: StringType
-    description: StringType | null
-    locations: (__DirectiveLocationType)[]
-    args: (__InputValueType)[]
+    __typename: t_String<'__Directive'>
+    name: t_String
+    description: t_String | null
+    locations: (t___DirectiveLocation)[]
+    args: (t___InputValue)[]
 
     /**
      * @deprecated Use `locations`.
      */
-    onOperation: BooleanType
+    onOperation: t_Boolean
 
     /**
      * @deprecated Use `locations`.
      */
-    onFragment: BooleanType
+    onFragment: t_Boolean
 
     /**
      * @deprecated Use `locations`.
      */
-    onField: BooleanType
+    onField: t_Boolean
   },
   Extension<'__Directive'>
 >
@@ -341,7 +341,7 @@ type __DirectiveType = FieldsType<
  * @name __DirectiveLocation
  * @type ENUM
  */
-type __DirectiveLocationType = EnumType<
+type t___DirectiveLocation = EnumType<
   | 'QUERY'
   | 'MUTATION'
   | 'SUBSCRIPTION'
@@ -366,18 +366,18 @@ type __DirectiveLocationType = EnumType<
  * @name Episode
  * @type ENUM
  */
-type EpisodeType = EnumType<'NEWHOPE' | 'EMPIRE' | 'JEDI'>
+type t_Episode = EnumType<'NEWHOPE' | 'EMPIRE' | 'JEDI'>
 
 /**
  * @name TestC
  * @type OBJECT
  * @implements Test
  */
-type TestCType = FieldsType<
+type t_TestC = FieldsType<
   {
-    __typename: StringType<'TestC'>
-    a: StringType | null
-    c: StringType | null
+    __typename: t_String<'TestC'>
+    a: t_String | null
+    c: t_String | null
   },
   Extension<'TestC'>
 >
@@ -386,7 +386,7 @@ type TestCType = FieldsType<
  * @name fake__Locale
  * @type ENUM
  */
-type fake__LocaleType = EnumType<
+type t_fake__Locale = EnumType<
   | 'az'
   | 'cz'
   | 'de'
@@ -430,7 +430,7 @@ type fake__LocaleType = EnumType<
  * @name fake__Types
  * @type ENUM
  */
-type fake__TypesType = EnumType<
+type t_fake__Types = EnumType<
   | 'zipCode'
   | 'city'
   | 'streetName'
@@ -501,7 +501,7 @@ type fake__TypesType = EnumType<
  * @name fake__imageCategory
  * @type ENUM
  */
-type fake__imageCategoryType = EnumType<
+type t_fake__imageCategory = EnumType<
   | 'abstract'
   | 'animals'
   | 'business'
@@ -521,7 +521,7 @@ type fake__imageCategoryType = EnumType<
  * @name fake__loremSize
  * @type ENUM
  */
-type fake__loremSizeType = EnumType<
+type t_fake__loremSize = EnumType<
   'word' | 'words' | 'sentence' | 'sentences' | 'paragraph' | 'paragraphs'
 >
 
@@ -562,43 +562,43 @@ export type fake__options = {
  * @name Float
  * @type SCALAR
  */
-type FloatType<T extends number = number> = ScalarType<T, Extension<'Float'>>
+type t_Float<T extends number = number> = ScalarType<T, Extension<'Float'>>
 
 /**
  * @name examples__JSON
  * @type SCALAR
  */
-type examples__JSONType<T extends any = any> = ScalarType<
+type t_examples__JSON<T extends any = any> = ScalarType<
   T,
   Extension<'examples__JSON'>
 >
 
-export type Query = TypeData<QueryType>
-export type User = TypeData<UserType>
-export type ID = TypeData<IDType>
-export type MyEnum = TypeData<MyEnumType>
-export type String = TypeData<StringType>
-export type Int = TypeData<IntType>
-export type A = TypeData<AType>
-export type B = TypeData<BType>
-export type TestOrUser = TypeData<TestOrUserType>
-export type TestB = TypeData<TestBType>
-export type Test = TypeData<TestType>
-export type Mutation = TypeData<MutationType>
-export type __Schema = TypeData<__SchemaType>
-export type __Type = TypeData<__TypeType>
-export type __TypeKind = TypeData<__TypeKindType>
-export type Boolean = TypeData<BooleanType>
-export type __Field = TypeData<__FieldType>
-export type __InputValue = TypeData<__InputValueType>
-export type __EnumValue = TypeData<__EnumValueType>
-export type __Directive = TypeData<__DirectiveType>
-export type __DirectiveLocation = TypeData<__DirectiveLocationType>
-export type Episode = TypeData<EpisodeType>
-export type TestC = TypeData<TestCType>
-export type fake__Locale = TypeData<fake__LocaleType>
-export type fake__Types = TypeData<fake__TypesType>
-export type fake__imageCategory = TypeData<fake__imageCategoryType>
-export type fake__loremSize = TypeData<fake__loremSizeType>
-export type Float = TypeData<FloatType>
-export type examples__JSON = TypeData<examples__JSONType>
+export type Query = TypeData<t_Query>
+export type User = TypeData<t_User>
+export type ID = TypeData<t_ID>
+export type MyEnum = TypeData<t_MyEnum>
+export type String = TypeData<t_String>
+export type Int = TypeData<t_Int>
+export type A = TypeData<t_A>
+export type B = TypeData<t_B>
+export type TestOrUser = TypeData<t_TestOrUser>
+export type TestB = TypeData<t_TestB>
+export type Test = TypeData<t_Test>
+export type Mutation = TypeData<t_Mutation>
+export type __Schema = TypeData<t___Schema>
+export type __Type = TypeData<t___Type>
+export type __TypeKind = TypeData<t___TypeKind>
+export type Boolean = TypeData<t_Boolean>
+export type __Field = TypeData<t___Field>
+export type __InputValue = TypeData<t___InputValue>
+export type __EnumValue = TypeData<t___EnumValue>
+export type __Directive = TypeData<t___Directive>
+export type __DirectiveLocation = TypeData<t___DirectiveLocation>
+export type Episode = TypeData<t_Episode>
+export type TestC = TypeData<t_TestC>
+export type fake__Locale = TypeData<t_fake__Locale>
+export type fake__Types = TypeData<t_fake__Types>
+export type fake__imageCategory = TypeData<t_fake__imageCategory>
+export type fake__loremSize = TypeData<t_fake__loremSize>
+export type Float = TypeData<t_Float>
+export type examples__JSON = TypeData<t_examples__JSON>

@@ -1,3 +1,7 @@
+# SchemaFile
+
+- Fix types : get() { ObjectNode } => get(): ObjectNode<>
+
 # Scalar extensions
 
 ```js
