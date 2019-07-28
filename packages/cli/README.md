@@ -12,6 +12,7 @@ example multi-command CLI built with typescript
 
 <!-- toc -->
 
+- [@oclif/example-multi-ts](#oclifexample-multi-ts)
 - [Usage](#usage)
 - [Commands](#commands)
   <!-- tocstop -->
@@ -21,11 +22,11 @@ example multi-command CLI built with typescript
 <!-- usage -->
 
 ```sh-session
-$ npm install -g @oclif/example-multi-ts
+$ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@oclif/example-multi-ts/1.10.7 linux-x64 node-v10.15.1
+@gqless/cli/0.0.1-alpha.4 linux-x64 node-v12.4.0
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND
@@ -53,6 +54,8 @@ OPTIONS
   -h, --help        show CLI help
   -t, --typescript  output typescript (instead of javascript)
   -u, --url=url     (required) url to the GraphQL endpoint
+  --noComments      don't output comments (only useful for IDE intellisense)
+  --noPrettier      don't run prettier on the resulting code
 
 EXAMPLE
   $ gqless generate https://example.com/graphql

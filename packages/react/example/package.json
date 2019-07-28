@@ -1,4 +1,5 @@
 {
+  "private": true,
   "name": "example",
   "version": "0.0.1-alpha.4",
   "main": "index.js",
@@ -19,5 +20,5 @@
     "@types/react-dom": "^16.8.4",
     "parcel": "^1.12.3"
   },
-  "gitHead": "e747b8b9133ea5c348f5107f51fda46fdfaf27cb"
+  "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb"
 }
