@@ -1,7 +1,7 @@
 {
   "name": "gqless-example",
   "private": true,
-  "version": "0.0.1-alpha.9",
+  "version": "0.0.1-alpha.10",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@gqless/react": "^0.0.1-alpha.6",
-    "@gqless/schema": "^0.0.1-alpha.9",
+    "@gqless/schema": "^0.0.1-alpha.10",
     "apollo-boost": "^0.3.1",
     "babel-plugin-add-react-displayname": "^0.0.5",
     "react-app-polyfill": "^1.0.1"
