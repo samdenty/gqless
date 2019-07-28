@@ -1,7 +1,7 @@
 {
   "name": "@gqless/cli",
   "description": "example multi-command CLI built with typescript",
-  "version": "0.0.1-alpha.7",
+  "version": "0.0.1-alpha.8",
   "author": "Jeff Dickey @jdxcode",
   "bin": {
     "gqless": "./bin/run"
@@ -13,10 +13,10 @@
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
     "got": "^9.6.0",
+    "graphql": "^14.4.2",
     "mkdirp": "^0.5.1",
     "prettier": "^1",
-    "tslib": "^1",
-    "graphql": "^14.4.2"
+    "tslib": "^1"
   },
   "peerDependencies": {
     "gqless": "*"
