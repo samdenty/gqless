@@ -1,4 +1,4 @@
-import { File } from '../../File'
+import { File, CORE } from '../../File'
 import { Codegen } from '../../Codegen'
 import {
   SchemaType,
@@ -6,73 +6,127 @@ import {
   Type,
   SchemaInterfaceType,
   SchemaFieldArgs,
+  SchemaKind,
 } from '../../../Schema'
 
-const extensions = 'gql_extensions'
-const Scalar = 'gql_Scalar'
-const ExtensionData = 'gql_ExtensionData'
-const FieldsExtension = 'gql_FieldsExtension'
-const MergeExtension = 'gql_MergeExtension'
-const BothObject = 'gql_BothObject'
+const TYPE_PREFIX = 'Type'
+
+type TypeResolver = (name: string) => string
 
 export class TypesFile extends File {
   constructor(private codegen: Codegen) {
     super('generated/types')
   }
 
+  private createUniqueNames<TName extends string>(names: TName[]) {
+    const reservedNames = [
+      ...Object.keys(this.codegen.schema.types).map(
+        name => `${name}${TYPE_PREFIX}`
+      ),
+      ...Object.keys(this.codegen.schema.types),
+    ]
+
+    const namesObj = {} as Record<TName, string>
+
+    const uniqueName = (desiredName: string): string => {
+      if (reservedNames.includes(desiredName))
+        return uniqueName(`gqless_${desiredName}`)
+
+      return desiredName
+    }
+
+    for (const name of names) {
+      namesObj[name] = uniqueName(name)
+    }
+
+    return namesObj
+  }
+
+  private names = this.createUniqueNames([
+    'Extension',
+    'EnumType',
+    'FieldsType',
+    'FieldsTypeArg',
+    'ScalarType',
+    'TypeData',
+    'extensions',
+  ])
+
+  private typeReference = (name: string): string => {
+    const schemaType = this.codegen.getSchemaType(name)
+
+    if (schemaType.kind === 'INPUT_OBJECT') return name
+
+    return `${name}${TYPE_PREFIX}`
+  }
+
+  private typeValue = (name: string) => {
+    const type = this.codegen.getSchemaType(name)
+
+    if (type.kind === 'SCALAR') {
+      return this.defaultScalarType(type)
+    }
+
+    return type.name
+  }
+
   public generate() {
-    this.importAll('../extensions', extensions)
+    this.import(CORE, this.names.TypeData)
+    this.importAll('../extensions', this.names.extensions)
 
     const body = Object.values(this.codegen.schema.types)
       .map(type => {
         const definition = this.generateSchemaType(type)
+        if (!definition) return ''
 
-        return definition ? `export ${definition}` : ''
+        const comments: string[] = [`@name ${type.name}`, `@type ${type.kind}`]
+
+        if (type.kind === 'OBJECT' && type.interfaces.length) {
+          comments.push(`@implements ${type.interfaces.join(', ')}`)
+        }
+        return this.generateComments(comments) + definition
       })
       .join('\n\n')
 
     return `
       ${super.generate()}
 
-      type ${ExtensionData}<TExtension> = TExtension extends (...args: any[]) => infer U ? U : TExtension
-
-      type ${Scalar}<
-        TName extends string,
-        TDefaultType
-      > = TName extends keyof typeof ${extensions}
-        ? ${ExtensionData}<typeof ${extensions}[TName]>
-        : TDefaultType
-
-      type ${BothObject}<A, B, Y, N> = A extends object
-        ? B extends object
-          ? Y
-          : N
-        : N
-
-      type ${MergeExtension}<TExtension, TType> = ${BothObject}<
-        TExtension,
-        TType,
-        Omit<TType, keyof TExtension> &
-          {
-            [K in keyof TExtension]: K extends keyof TType
-              ? ${MergeExtension}<${ExtensionData}<TExtension[K]>, TType[K]>
-              : ${ExtensionData}<TExtension[K]>
-          },
-        TExtension
-      >
-
-      type ${FieldsExtension}<
-        TName extends string,
-        TType
-      > = TName extends keyof typeof ${extensions}
-        ? ${MergeExtension}<gql_ExtensionData<typeof ${extensions}[TName]>, TType>
-        : TType
+      type ${
+        this.names.Extension
+      }<TName extends string> = TName extends keyof typeof ${
+      this.names.extensions
+    }
+        ? typeof ${this.names.extensions}[TName]
+        : any
 
       ${body}
+
+      ${Object.values(this.codegen.schema.types)
+        .filter(type => type.kind !== 'INPUT_OBJECT')
+        .map(
+          type =>
+            `export type ${type.name} = ${
+              this.names.TypeData
+            }<${this.typeReference(type.name)}>`
+        )
+        .join('\n')}
     `
   }
 
-  private generateFieldComment(field: SchemaField) {
+  private generateComments(comments: string[]) {
+    if (comments.length) {
+      return (
+        `\n` +
+        `/**\n` +
+        ` * ${comments.join('\n* ').replace(/\*\//gm, '*\u200B/')}\n` +
+        ` */\n`
+      )
+    }
+
+    return ''
+  }
+
+  private generateFieldComments(field: SchemaField) {
     const comments: string[] = []
     if (field.isDeprecated) {
       comments.push(
@@ -88,16 +142,7 @@ export class TypesFile extends File {
       comments.push(...field.description.split('\n'))
     }
 
-    if (comments.length) {
-      return (
-        `\n` +
-        `/**\n` +
-        ` * ${comments.join('\n* ').replace(/\*\//gm, '*\u200B/')}\n` +
-        ` */\n`
-      )
-    }
-
-    return ''
+    return this.generateComments(comments)
   }
 
   public generateSchemaType(type: SchemaType): string | undefined {
@@ -106,20 +151,38 @@ export class TypesFile extends File {
         return this.generateScalarType(type)
 
       case 'UNION':
-        return `type ${type.name} = ${type.possibleTypes.join(' | ')}`
-
       case 'INTERFACE':
-      case 'OBJECT':
-        return `type ${type.name} = ${FieldsExtension}<'${
+        return `type ${this.typeReference(
           type.name
-        }', {\n${Object.values(type.fields)
-          .map(field => this.generateField(field))
-          .join('\n')}\n}>`
+        )} = ${type.possibleTypes
+          .map(name => this.typeReference(name))
+          .join(' | ')}`
+
+      case 'OBJECT': {
+        this.import(CORE, this.names.FieldsType)
+
+        return `type ${this.typeReference(type.name)} = ${
+          this.names.FieldsType
+        }<{\n${[
+          `__typename: ${this.typeReference('String')}<'${type.name}'>`,
+          ...Object.values(type.fields).map(field => this.generateField(field)),
+        ].join('\n')}\n}, ${this.names.Extension}<'${type.name}'>>`
+      }
 
       case 'INPUT_OBJECT':
-        return `interface ${type.name} {${Object.values(type.inputFields)
-          .map(field => this.generateField(field))
+        return `export type ${this.typeReference(type.name)} = {${Object.values(
+          type.inputFields
+        )
+          .map(field => this.generateField(field, this.typeValue))
           .join('\n')}}`
+
+      case 'ENUM': {
+        this.import(CORE, this.names.EnumType)
+
+        return `type ${this.typeReference(type.name)} = ${
+          this.names.EnumType
+        }<${type.enumValues.map(value => `'${value}'`).join(' | ')}>`
+      }
 
       default:
         return
@@ -131,35 +194,27 @@ export class TypesFile extends File {
       .map(([name, type]) => {
         const NULLABLE = type.nullable ? '?' : ''
 
-        return `${name}${NULLABLE}: ${this.generateType(type, false)}`
+        return `${name}${NULLABLE}: ${this.generateType(type, this.typeValue)}`
       })
       .join(',')}}`
   }
 
-  public generateField(field: SchemaField) {
-    const dataWithoutFnCall =
-      field.type.kind !== 'SCALAR' &&
-      field.args &&
-      !Object.values(field.args).find(field => field.nullable === false)
+  public generateField(field: SchemaField, resolveType?: TypeResolver) {
+    const fieldType = this.generateType(field.type, resolveType)
 
-    const couldBeNull = !field.args
+    if (field.args) this.import(CORE, this.names.FieldsTypeArg)
 
-    const NULLABLE = field.type.nullable && couldBeNull ? '?' : ''
-    const ARGS = field.args
-      ? `(args: ${this.generateArgs(field.args)}) => `
-      : ''
-
-    const FN_TYPE = `${ARGS}${this.generateType(field.type, !couldBeNull)}`
-
-    return `${this.generateFieldComment(field)}${field.name}${NULLABLE}: ${
-      dataWithoutFnCall
-        ? `(${FN_TYPE}) & ${this.generateType(field.type, false)}`
-        : FN_TYPE
+    return `${this.generateFieldComments(field)}${field.name}: ${
+      field.args
+        ? `${this.names.FieldsTypeArg}<${this.generateArgs(
+            field.args
+          )}, ${fieldType}>`
+        : fieldType
     }`
   }
 
-  public generateType(type: Type, includeNullType = true): string {
-    const nullType = type.nullable && includeNullType ? ' | null' : ''
+  public generateType(type: Type, resolveType = this.typeReference): string {
+    const nullType = type.nullable ? ' | null' : ''
 
     switch (type.kind) {
       case 'OBJECT':
@@ -167,43 +222,53 @@ export class TypesFile extends File {
       case 'INPUT_OBJECT':
       case 'UNION':
       case 'SCALAR':
-        return `${type.name}${nullType}`
+        return `${resolveType(type.name)}${nullType}`
 
       case 'INTERFACE':
         return `${(this.codegen.getSchemaType(
           type.name
-        ) as SchemaInterfaceType).possibleTypes.join(' | ')}${nullType}`
+        ) as SchemaInterfaceType).possibleTypes
+          .map(type => resolveType(type))
+          .join(' | ')}${nullType}`
 
       case 'LIST':
-        return `(${this.generateType(type.ofType)})[]${nullType}`
+        return `(${this.generateType(type.ofType, resolveType)})[]${nullType}`
 
       default:
         return 'any'
     }
   }
 
+  public defaultScalarType(scalar: SchemaType) {
+    switch (scalar.name) {
+      case 'ID':
+      case 'String':
+      case 'Date':
+      case 'URI':
+        return `string`
+
+      case 'Int':
+      case 'Float':
+        return `number`
+
+      case 'Boolean':
+        return `boolean`
+
+      case 'JSON':
+        return `{ [K: string]: any }`
+    }
+    return 'any'
+  }
+
   public generateScalarType(scalar: SchemaType) {
-    const type = (() => {
-      switch (scalar.name) {
-        case 'ID':
-        case 'String':
-        case 'Date':
-        case 'URI':
-          return `string`
+    this.import(CORE, this.names.ScalarType)
 
-        case 'Int':
-        case 'Float':
-          return `number`
+    const type = this.defaultScalarType(scalar)
 
-        case 'Boolean':
-          return `boolean`
-
-        case 'JSON':
-          return `{ [K: string]: ${scalar.name} }`
-      }
-      return 'any'
-    })()
-
-    return `type ${scalar.name} = ${Scalar}<'${scalar.name}', ${type}>`
+    return `type ${this.typeReference(
+      scalar.name
+    )}<T extends ${type} = ${type}> = ${this.names.ScalarType}<T, ${
+      this.names.Extension
+    }<'${scalar.name}'>>`
   }
 }

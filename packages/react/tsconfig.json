@@ -3,9 +3,6 @@
   "include": ["src", "types"],
   "compilerOptions": {
     "rootDir": "./",
-    "baseUrl": "./",
-    "paths": {
-      "gqless": ["../../src/gqless/src"]
-    }
+    "baseUrl": "./"
   }
 }

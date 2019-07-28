@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "parcel index.html",
-    "generate": "../../../packages/cli/bin/run generate -t -u http://172.23.182.220:9002/graphql ./graphql",
+    "generate": "../../../packages/cli/bin/run generate -t -u http://172.18.5.212:9002/graphql ./graphql",
     "start:server": "graphql-faker",
     "build": "parcel build index.html"
   },
@@ -32,5 +32,6 @@
     "graphql-faker": "^1.9.0",
     "parcel": "^1.12.3",
     "typescript": "^3.4.5"
-  }
+  },
+  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
 }

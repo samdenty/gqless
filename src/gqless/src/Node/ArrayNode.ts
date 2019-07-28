@@ -4,24 +4,16 @@ import { Selection } from '../Selection'
 import { Accessor, IndexAccessor } from '../Accessor'
 import { Mix, Generic } from 'mix-classes'
 
-export interface ArrayNode<
-  TNode extends Node<any>,
-  TNullable extends boolean = false
-> extends NodeContainer<TNode, TNullable, NodeDataType<TNode>[]> {}
+export interface ArrayNode<TNode extends Node<any>>
+  extends NodeContainer<TNode, NodeDataType<TNode>[]> {}
 
-export class ArrayNode<TNode, TNullable> extends Mix(
-  Generic(NodeContainer),
-  Outputable
-) {
-  constructor(ofNode: TNode, nullable?: TNullable) {
+export class ArrayNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
+  constructor(ofNode: TNode, nullable?: boolean) {
     super([ofNode, nullable])
   }
 
   public getData(
-    arrayAccessor: Accessor<
-      Selection<ArrayNode<TNode, TNullable>>,
-      IndexAccessor
-    >
+    arrayAccessor: Accessor<Selection<ArrayNode<TNode>>, IndexAccessor>
   ) {
     super.getData(arrayAccessor)
 

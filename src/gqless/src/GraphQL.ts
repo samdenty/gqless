@@ -30,9 +30,8 @@ export type ProxyInterceptor = (
   prop: string | symbol
 ) => unknown
 
-export class GraphQL<
-  TNode extends ObjectNode<any, any, any> = ObjectNode<any, any, any>
-> extends Disposable {
+// @ts-ignore
+export class GraphQL<TNode extends ObjectNode = ObjectNode> extends Disposable {
   public middleware = new MiddlewareEngine()
   public astBuilder = new ASTBuilder()
   public scheduler = new Scheduler(
@@ -75,11 +74,7 @@ export class GraphQL<
       const response = await this.fetchQuery(result.doc)
 
       const recurseFieldsAccessor = (
-        accessor: Accessor<
-          Selection<
-            ObjectNode<any, any> | InterfaceNode<any, any, any> | UnionNode
-          >
-        >,
+        accessor: Accessor<Selection<ObjectNode | InterfaceNode | UnionNode>>,
         data: Record<string, unknown>
       ) => {
         if (data === null) return

@@ -39,6 +39,9 @@ export const introspectionQuery = (includeInfo = false) => gql`
         ...TypeRef
       }
     }
+    enumValues {
+      name
+    }
     inputFields {
       type {
         ...TypeRef

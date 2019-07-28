@@ -19,5 +19,6 @@
     "@types/react-dom": "^16.8.4",
     "parcel": "^1.12.3",
     "typescript": "^3.4.5"
-  }
+  },
+  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
 }

@@ -1,2 +1,3 @@
 export * from './schema'
-export * from './GraphQL'
+export * from './types'
+// export * from './GraphQL'

@@ -1,291 +1,604 @@
-import * as gql_extensions from '../extensions'
+import * as extensions from '../extensions'
+import {
+  TypeData,
+  FieldsType,
+  FieldsTypeArg,
+  ScalarType,
+  EnumType,
+} from 'gqless'
 
-type gql_ExtensionData<TExtension> = TExtension extends (
-  ...args: any[]
-) => infer U
-  ? U
-  : TExtension
+type Extension<TName extends string> = TName extends keyof typeof extensions
+  ? typeof extensions[TName]
+  : any
 
-type gql_Scalar<
-  TName extends string,
-  TDefaultType
-> = TName extends keyof typeof gql_extensions
-  ? gql_ExtensionData<typeof gql_extensions[TName]>
-  : TDefaultType
-
-type gql_MergeExtension<TExtension, TType> = Omit<TType, keyof TExtension> &
+/**
+ * @name Query
+ * @type OBJECT
+ */
+type QueryType = FieldsType<
   {
-    [K in keyof TExtension]: K extends keyof TType
-      ? gql_MergeExtension<gql_ExtensionData<TExtension[K]>, TType[K]>
-      : gql_ExtensionData<TExtension[K]>
-  }
+    __typename: StringType<'Query'>
 
-type gql_FieldsExtension<
-  TName extends string,
-  TType
-> = TName extends keyof typeof gql_extensions
-  ? gql_MergeExtension<gql_ExtensionData<typeof gql_extensions[TName]>, TType>
-  : TType
-
-export type Query = gql_FieldsExtension<
-  'Query',
-  {
     /**
      * Current signed in user
      */
-    me?: User
+    me: UserType | null
 
     /**
      * Fetch a user by ID
      */
-    user: ((args: { id?: ID }) => User | null) & User
+    user: FieldsTypeArg<{ id?: string | null }, UserType | null>
 
     /**
      * All users stored in the database
      */
-    users: ((args: { limit?: Int }) => (User)[]) & (User)[]
-    a?: A
+    users: FieldsTypeArg<{ limit?: number | null }, (UserType)[]>
+    a: AType | null
 
     /**
      * @deprecated use the user field instead
      */
-    getUser: ((args: { id?: ID }) => User | null) & User
+    getUser: FieldsTypeArg<{ id?: string | null }, UserType | null>
 
     /**
      * @deprecated use the users field instead
      */
-    getUsers: ((args: { id?: ID }) => (User)[]) & (User)[]
-    testOrUser?: TestOrUser
-    test?: TestB | TestC
-    testWithInput: (args: {
-      id?: String
-      ids: (String)[]
-      input?: InputObj
-    }) => Int | null
-  }
+    getUsers: FieldsTypeArg<{ id?: string | null }, (UserType)[]>
+    testOrUser: TestOrUserType | null
+    test: TestBType | TestCType | null
+    testWithInput: FieldsTypeArg<
+      { id?: string | null; ids: (string)[]; input?: InputObj | null },
+      IntType | null
+    >
+  },
+  Extension<'Query'>
 >
 
-export type User = gql_FieldsExtension<
-  'User',
+/**
+ * @name User
+ * @type OBJECT
+ */
+type UserType = FieldsType<
   {
-    id: ID
-    name?: String
-    age?: Int
-    description?: String
-    avatarUrl: (args: { size?: Int }) => String | null
-    profileUrl?: String
-    following?: (User | null)[]
-    followers?: (User | null)[]
-    b?: String
-    c?: String
-    d?: String
-  }
+    __typename: StringType<'User'>
+    id: IDType
+    test: MyEnumType | null
+    name: StringType | null
+    age: IntType | null
+    description: StringType | null
+    avatarUrl: FieldsTypeArg<{ size?: number | null }, StringType | null>
+    profileUrl: StringType | null
+    following: (UserType | null)[] | null
+    followers: (UserType | null)[] | null
+    b: StringType | null
+    c: StringType | null
+    d: StringType | null
+  },
+  Extension<'User'>
 >
 
-export type ID = gql_Scalar<'ID', string>
+/**
+ * @name ID
+ * @type SCALAR
+ */
+type IDType<T extends string = string> = ScalarType<T, Extension<'ID'>>
 
-export type String = gql_Scalar<'String', string>
+/**
+ * @name MyEnum
+ * @type ENUM
+ */
+type MyEnumType = EnumType<'ACTIVE' | 'DISABLED'>
 
-export type Int = gql_Scalar<'Int', number>
+/**
+ * @name String
+ * @type SCALAR
+ */
+type StringType<T extends string = string> = ScalarType<T, Extension<'String'>>
 
-export type A = gql_FieldsExtension<
-  'A',
+/**
+ * @name Int
+ * @type SCALAR
+ */
+type IntType<T extends number = number> = ScalarType<T, Extension<'Int'>>
+
+/**
+ * @name A
+ * @type OBJECT
+ */
+type AType = FieldsType<
   {
-    b?: B
-  }
+    __typename: StringType<'A'>
+    b: BType | null
+  },
+  Extension<'A'>
 >
 
-export type B = gql_FieldsExtension<
-  'B',
+/**
+ * @name B
+ * @type OBJECT
+ */
+type BType = FieldsType<
   {
-    c?: Int
-    d?: Int
-  }
+    __typename: StringType<'B'>
+    c: IntType | null
+    d: IntType | null
+  },
+  Extension<'B'>
 >
 
-export type TestOrUser = User | TestB
+/**
+ * @name TestOrUser
+ * @type UNION
+ */
+type TestOrUserType = UserType | TestBType
 
-export type TestB = gql_FieldsExtension<
-  'TestB',
+/**
+ * @name TestB
+ * @type OBJECT
+ * @implements Test
+ */
+type TestBType = FieldsType<
   {
-    a?: String
-    b?: String
-  }
+    __typename: StringType<'TestB'>
+    a: StringType | null
+    b: StringType | null
+  },
+  Extension<'TestB'>
 >
 
-export type Test = gql_FieldsExtension<
-  'Test',
+/**
+ * @name Test
+ * @type INTERFACE
+ */
+type TestType = TestBType | TestCType
+
+/**
+ * @name InputObj
+ * @type INPUT_OBJECT
+ */
+export type InputObj = { a: string }
+
+/**
+ * @name Mutation
+ * @type OBJECT
+ */
+type MutationType = FieldsType<
   {
-    a?: String
-  }
+    __typename: StringType<'Mutation'>
+    deleteUser: FieldsTypeArg<{ id: string }, IntType>
+  },
+  Extension<'Mutation'>
 >
 
-export interface InputObj {
-  a: String
-}
-
-export type Mutation = gql_FieldsExtension<
-  'Mutation',
+/**
+ * @name __Schema
+ * @type OBJECT
+ */
+type __SchemaType = FieldsType<
   {
-    deleteUser: (args: { id: ID }) => Int
-  }
->
+    __typename: StringType<'__Schema'>
 
-export type __Schema = gql_FieldsExtension<
-  '__Schema',
-  {
     /**
      * A list of all types supported by this server.
      */
-    types: (__Type)[]
+    types: (__TypeType)[]
 
     /**
      * The type that query operations will be rooted at.
      */
-    queryType: __Type
+    queryType: __TypeType
 
     /**
      * If this server supports mutation, the type that mutation operations will be rooted at.
      */
-    mutationType?: __Type
+    mutationType: __TypeType | null
 
     /**
      * If this server support subscription, the type that subscription operations will be rooted at.
      */
-    subscriptionType?: __Type
+    subscriptionType: __TypeType | null
 
     /**
      * A list of all directives supported by this server.
      */
-    directives: (__Directive)[]
-  }
+    directives: (__DirectiveType)[]
+  },
+  Extension<'__Schema'>
 >
 
-export type __Type = gql_FieldsExtension<
-  '__Type',
+/**
+ * @name __Type
+ * @type OBJECT
+ */
+type __TypeType = FieldsType<
   {
-    kind: __TypeKind
-    name?: String
-    description?: String
-    fields: ((args: { includeDeprecated?: Boolean }) => (__Field)[] | null) &
-      (__Field)[]
-    interfaces?: (__Type)[]
-    possibleTypes?: (__Type)[]
-    enumValues: ((args: {
-      includeDeprecated?: Boolean
-    }) => (__EnumValue)[] | null) &
-      (__EnumValue)[]
-    inputFields?: (__InputValue)[]
-    ofType?: __Type
-  }
+    __typename: StringType<'__Type'>
+    kind: __TypeKindType
+    name: StringType | null
+    description: StringType | null
+    fields: FieldsTypeArg<
+      { includeDeprecated?: boolean | null },
+      (__FieldType)[] | null
+    >
+    interfaces: (__TypeType)[] | null
+    possibleTypes: (__TypeType)[] | null
+    enumValues: FieldsTypeArg<
+      { includeDeprecated?: boolean | null },
+      (__EnumValueType)[] | null
+    >
+    inputFields: (__InputValueType)[] | null
+    ofType: __TypeType | null
+  },
+  Extension<'__Type'>
 >
 
-export type Boolean = gql_Scalar<'Boolean', boolean>
-
-export type __Field = gql_FieldsExtension<
-  '__Field',
-  {
-    name: String
-    description?: String
-    args: (__InputValue)[]
-    type: __Type
-    isDeprecated: Boolean
-    deprecationReason?: String
-  }
+/**
+ * @name __TypeKind
+ * @type ENUM
+ */
+type __TypeKindType = EnumType<
+  | 'SCALAR'
+  | 'OBJECT'
+  | 'INTERFACE'
+  | 'UNION'
+  | 'ENUM'
+  | 'INPUT_OBJECT'
+  | 'LIST'
+  | 'NON_NULL'
 >
 
-export type __InputValue = gql_FieldsExtension<
-  '__InputValue',
+/**
+ * @name Boolean
+ * @type SCALAR
+ */
+type BooleanType<T extends boolean = boolean> = ScalarType<
+  T,
+  Extension<'Boolean'>
+>
+
+/**
+ * @name __Field
+ * @type OBJECT
+ */
+type __FieldType = FieldsType<
   {
-    name: String
-    description?: String
-    type: __Type
+    __typename: StringType<'__Field'>
+    name: StringType
+    description: StringType | null
+    args: (__InputValueType)[]
+    type: __TypeType
+    isDeprecated: BooleanType
+    deprecationReason: StringType | null
+  },
+  Extension<'__Field'>
+>
+
+/**
+ * @name __InputValue
+ * @type OBJECT
+ */
+type __InputValueType = FieldsType<
+  {
+    __typename: StringType<'__InputValue'>
+    name: StringType
+    description: StringType | null
+    type: __TypeType
 
     /**
      * A GraphQL-formatted string representing the default value for this input value.
      */
-    defaultValue?: String
-  }
+    defaultValue: StringType | null
+  },
+  Extension<'__InputValue'>
 >
 
-export type __EnumValue = gql_FieldsExtension<
-  '__EnumValue',
+/**
+ * @name __EnumValue
+ * @type OBJECT
+ */
+type __EnumValueType = FieldsType<
   {
-    name: String
-    description?: String
-    isDeprecated: Boolean
-    deprecationReason?: String
-  }
+    __typename: StringType<'__EnumValue'>
+    name: StringType
+    description: StringType | null
+    isDeprecated: BooleanType
+    deprecationReason: StringType | null
+  },
+  Extension<'__EnumValue'>
 >
 
-export type __Directive = gql_FieldsExtension<
-  '__Directive',
+/**
+ * @name __Directive
+ * @type OBJECT
+ */
+type __DirectiveType = FieldsType<
   {
-    name: String
-    description?: String
-    locations: (__DirectiveLocation)[]
-    args: (__InputValue)[]
+    __typename: StringType<'__Directive'>
+    name: StringType
+    description: StringType | null
+    locations: (__DirectiveLocationType)[]
+    args: (__InputValueType)[]
 
     /**
      * @deprecated Use `locations`.
      */
-    onOperation: Boolean
+    onOperation: BooleanType
 
     /**
      * @deprecated Use `locations`.
      */
-    onFragment: Boolean
+    onFragment: BooleanType
 
     /**
      * @deprecated Use `locations`.
      */
-    onField: Boolean
-  }
+    onField: BooleanType
+  },
+  Extension<'__Directive'>
 >
 
-export type TestC = gql_FieldsExtension<
-  'TestC',
+/**
+ * @name __DirectiveLocation
+ * @type ENUM
+ */
+type __DirectiveLocationType = EnumType<
+  | 'QUERY'
+  | 'MUTATION'
+  | 'SUBSCRIPTION'
+  | 'FIELD'
+  | 'FRAGMENT_DEFINITION'
+  | 'FRAGMENT_SPREAD'
+  | 'INLINE_FRAGMENT'
+  | 'SCHEMA'
+  | 'SCALAR'
+  | 'OBJECT'
+  | 'FIELD_DEFINITION'
+  | 'ARGUMENT_DEFINITION'
+  | 'INTERFACE'
+  | 'UNION'
+  | 'ENUM'
+  | 'ENUM_VALUE'
+  | 'INPUT_OBJECT'
+  | 'INPUT_FIELD_DEFINITION'
+>
+
+/**
+ * @name Episode
+ * @type ENUM
+ */
+type EpisodeType = EnumType<'NEWHOPE' | 'EMPIRE' | 'JEDI'>
+
+/**
+ * @name TestC
+ * @type OBJECT
+ * @implements Test
+ */
+type TestCType = FieldsType<
   {
-    a?: String
-    c?: String
-  }
+    __typename: StringType<'TestC'>
+    a: StringType | null
+    c: StringType | null
+  },
+  Extension<'TestC'>
 >
 
-export interface fake__color {
-  red255?: Int
-  green255?: Int
-  blue255?: Int
+/**
+ * @name fake__Locale
+ * @type ENUM
+ */
+type fake__LocaleType = EnumType<
+  | 'az'
+  | 'cz'
+  | 'de'
+  | 'de_AT'
+  | 'de_CH'
+  | 'en'
+  | 'en_AU'
+  | 'en_BORK'
+  | 'en_CA'
+  | 'en_GB'
+  | 'en_IE'
+  | 'en_IND'
+  | 'en_US'
+  | 'en_au_ocker'
+  | 'es'
+  | 'es_MX'
+  | 'fa'
+  | 'fr'
+  | 'fr_CA'
+  | 'ge'
+  | 'id_ID'
+  | 'it'
+  | 'ja'
+  | 'ko'
+  | 'nb_NO'
+  | 'nep'
+  | 'nl'
+  | 'pl'
+  | 'pt_BR'
+  | 'ru'
+  | 'sk'
+  | 'sv'
+  | 'tr'
+  | 'uk'
+  | 'vi'
+  | 'zh_CN'
+  | 'zh_TW'
+>
+
+/**
+ * @name fake__Types
+ * @type ENUM
+ */
+type fake__TypesType = EnumType<
+  | 'zipCode'
+  | 'city'
+  | 'streetName'
+  | 'streetAddress'
+  | 'secondaryAddress'
+  | 'county'
+  | 'country'
+  | 'countryCode'
+  | 'state'
+  | 'stateAbbr'
+  | 'latitude'
+  | 'longitude'
+  | 'colorName'
+  | 'productCategory'
+  | 'productName'
+  | 'money'
+  | 'productMaterial'
+  | 'product'
+  | 'companyName'
+  | 'companyCatchPhrase'
+  | 'companyBS'
+  | 'dbColumn'
+  | 'dbType'
+  | 'dbCollation'
+  | 'dbEngine'
+  | 'pastDate'
+  | 'futureDate'
+  | 'recentDate'
+  | 'financeAccountName'
+  | 'financeTransactionType'
+  | 'currencyCode'
+  | 'currencyName'
+  | 'currencySymbol'
+  | 'bitcoinAddress'
+  | 'internationalBankAccountNumber'
+  | 'bankIdentifierCode'
+  | 'hackerAbbr'
+  | 'hackerPhrase'
+  | 'imageUrl'
+  | 'avatarUrl'
+  | 'email'
+  | 'url'
+  | 'domainName'
+  | 'ipv4Address'
+  | 'ipv6Address'
+  | 'userAgent'
+  | 'colorHex'
+  | 'macAddress'
+  | 'password'
+  | 'lorem'
+  | 'firstName'
+  | 'lastName'
+  | 'fullName'
+  | 'jobTitle'
+  | 'phoneNumber'
+  | 'number'
+  | 'uuid'
+  | 'word'
+  | 'words'
+  | 'locale'
+  | 'filename'
+  | 'mimeType'
+  | 'fileExtension'
+  | 'semver'
+>
+
+/**
+ * @name fake__imageCategory
+ * @type ENUM
+ */
+type fake__imageCategoryType = EnumType<
+  | 'abstract'
+  | 'animals'
+  | 'business'
+  | 'cats'
+  | 'city'
+  | 'food'
+  | 'nightlife'
+  | 'fashion'
+  | 'people'
+  | 'nature'
+  | 'sports'
+  | 'technics'
+  | 'transport'
+>
+
+/**
+ * @name fake__loremSize
+ * @type ENUM
+ */
+type fake__loremSizeType = EnumType<
+  'word' | 'words' | 'sentence' | 'sentences' | 'paragraph' | 'paragraphs'
+>
+
+/**
+ * @name fake__color
+ * @type INPUT_OBJECT
+ */
+export type fake__color = {
+  red255: number | null
+  green255: number | null
+  blue255: number | null
 }
 
-export interface fake__options {
-  useFullAddress?: Boolean
-  minMoney?: Float
-  maxMoney?: Float
-  decimalPlaces?: Int
-  imageWidth?: Int
-  imageHeight?: Int
-  imageCategory?: fake__imageCategory
-  randomizeImageUrl?: Boolean
-  emailProvider?: String
-  passwordLength?: Int
-  loremSize?: fake__loremSize
-  dateFormat?: String
-  baseColor?: fake__color
-  minNumber?: Float
-  maxNumber?: Float
-  precisionNumber?: Float
+/**
+ * @name fake__options
+ * @type INPUT_OBJECT
+ */
+export type fake__options = {
+  useFullAddress: boolean | null
+  minMoney: number | null
+  maxMoney: number | null
+  decimalPlaces: number | null
+  imageWidth: number | null
+  imageHeight: number | null
+  imageCategory: fake__imageCategory | null
+  randomizeImageUrl: boolean | null
+  emailProvider: string | null
+  passwordLength: number | null
+  loremSize: fake__loremSize | null
+  dateFormat: string | null
+  baseColor: fake__color | null
+  minNumber: number | null
+  maxNumber: number | null
+  precisionNumber: number | null
 }
 
-export type Float = gql_Scalar<'Float', number>
+/**
+ * @name Float
+ * @type SCALAR
+ */
+type FloatType<T extends number = number> = ScalarType<T, Extension<'Float'>>
 
-export type examples__JSON = gql_Scalar<'examples__JSON', any>
+/**
+ * @name examples__JSON
+ * @type SCALAR
+ */
+type examples__JSONType<T extends any = any> = ScalarType<
+  T,
+  Extension<'examples__JSON'>
+>
 
-var q: Query
-q.isQuery
-var u: User
-// u.isAUser
-// u.following.isFollowing
-
-// q.isQuery
-// q.me.name
-// q.users[0].name
+export type Query = TypeData<QueryType>
+export type User = TypeData<UserType>
+export type ID = TypeData<IDType>
+export type MyEnum = TypeData<MyEnumType>
+export type String = TypeData<StringType>
+export type Int = TypeData<IntType>
+export type A = TypeData<AType>
+export type B = TypeData<BType>
+export type TestOrUser = TypeData<TestOrUserType>
+export type TestB = TypeData<TestBType>
+export type Test = TypeData<TestType>
+export type Mutation = TypeData<MutationType>
+export type __Schema = TypeData<__SchemaType>
+export type __Type = TypeData<__TypeType>
+export type __TypeKind = TypeData<__TypeKindType>
+export type Boolean = TypeData<BooleanType>
+export type __Field = TypeData<__FieldType>
+export type __InputValue = TypeData<__InputValueType>
+export type __EnumValue = TypeData<__EnumValueType>
+export type __Directive = TypeData<__DirectiveType>
+export type __DirectiveLocation = TypeData<__DirectiveLocationType>
+export type Episode = TypeData<EpisodeType>
+export type TestC = TypeData<TestCType>
+export type fake__Locale = TypeData<fake__LocaleType>
+export type fake__Types = TypeData<fake__TypesType>
+export type fake__imageCategory = TypeData<fake__imageCategoryType>
+export type fake__loremSize = TypeData<fake__loremSizeType>
+export type Float = TypeData<FloatType>
+export type examples__JSON = TypeData<examples__JSONType>

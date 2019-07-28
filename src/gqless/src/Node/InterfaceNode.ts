@@ -9,25 +9,20 @@ import {
 import { ObjectNode } from './ObjectNode'
 import { Mix, Generic } from 'mix-classes'
 
-export type IInterfaceNodeOptions<Typename> = IFieldsNodeOptions<Typename> & {}
+export type IInterfaceNodeOptions = IFieldsNodeOptions & {}
 
-export interface InterfaceNode<
-  TImplementations extends ObjectNode<any, any, any>,
-  TNode extends UFieldsNodeRecord<keyof T>,
-  T,
-  Typename extends string = string
->
-  extends FieldsNode<TNode, T, any, NodeDataType<TImplementations>>,
-    Keyable<InterfaceNode<TImplementations, TNode, T, Typename>> {}
+export interface InterfaceNode<TImplementations extends ObjectNode<any>>
+  extends FieldsNode<NodeDataType<TImplementations>>,
+    Keyable<InterfaceNode<TImplementations>> {}
 
-export class InterfaceNode<TImplementations, TNode, T, Typename> extends Mix(
+export class InterfaceNode<TImplementations = any> extends Mix(
   Generic(FieldsNode),
   Generic(Keyable)
 ) {
   constructor(
-    fields: TNode,
+    fields: UFieldsNodeRecord,
     public implementations: TImplementations[],
-    options?: IFieldsNodeOptions<Typename>
+    options?: IFieldsNodeOptions
   ) {
     super([fields as any, options])
 

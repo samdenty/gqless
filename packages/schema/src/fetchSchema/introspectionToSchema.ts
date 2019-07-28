@@ -57,6 +57,12 @@ const getInputObjectFields = (introspectionFields: any) => {
   return fields
 }
 
+const getInterfaces = (interfaces: any) =>
+  interfaces.map((_interface: any) => _interface.name)
+
+const getEnumValues = (enumValues: any) =>
+  enumValues.map((enumValues: any) => enumValues.name)
+
 export const introspectionToSchema = (introspection: any) => {
   const schema: Schema = {
     queryType: introspection.queryType.name,
@@ -76,11 +82,16 @@ export const introspectionToSchema = (introspection: any) => {
             fields: getFields(type.fields),
           }
         : type.kind === 'OBJECT'
-        ? { fields: getFields(type.fields) }
+        ? {
+            fields: getFields(type.fields),
+            interfaces: getInterfaces(type.interfaces),
+          }
         : type.kind === 'INPUT_OBJECT'
         ? {
             inputFields: getInputObjectFields(type.inputFields),
           }
+        : type.kind === 'ENUM'
+        ? { enumValues: getEnumValues(type.enumValues) }
         : null),
     }
   }

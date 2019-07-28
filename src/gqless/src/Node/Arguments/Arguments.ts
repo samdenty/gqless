@@ -1,35 +1,24 @@
 import { ArgumentsField } from './ArgumentsField'
 import { UScalarNode, ArrayNode, InputNode } from '../'
-import { NodeDataType, Node, NonNullableKeys, NullableKeys } from '../abstract'
+import { Node } from '../abstract'
 import { lazyGetters } from '@gqless/utils'
 
 export type UArguments =
   | UScalarNode
-  | ArrayNode<any, any>
-  | ArgumentsField<any, any>
-  | InputNode<any, any>
+  | ArrayNode<any>
+  | ArgumentsField
+  | InputNode<any>
 
-type UArgumentsRecord<T extends keyof any> = Record<
-  T,
-  ArgumentsField<UArguments>
->
+type UArgumentsRecord = Record<string, ArgumentsField>
 
-type ArgumentsDataType<T extends UArgumentsRecord<keyof T>> = {
-  [P in Exclude<keyof T, NonNullableKeys<T>>]?: NodeDataType<T[P]['ofNode']>
-} &
-  { [P in Exclude<keyof T, NullableKeys<T>>]: NodeDataType<T[P]['ofNode']> }
+export class Arguments<TData = any> extends Node<TData> {
+  public inputs: UArgumentsRecord
 
-export class Arguments<
-  T,
-  TInputs extends UArgumentsRecord<keyof T>
-> extends Node<ArgumentsDataType<TInputs>> {
-  public inputs: TInputs
-
-  constructor(inputs: TInputs) {
+  constructor(inputs: UArgumentsRecord) {
     super()
 
     this.inputs = lazyGetters(inputs)
   }
 
-  public provide(value: ArgumentsDataType<TInputs>) {}
+  public provide(value: TData) {}
 }

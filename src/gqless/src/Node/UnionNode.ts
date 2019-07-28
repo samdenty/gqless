@@ -2,9 +2,7 @@ import { Node, NodeDataType } from './abstract'
 import { ObjectNode } from './ObjectNode'
 import { InterfaceNode } from './InterfaceNode'
 
-export type UUnionNode =
-  | ObjectNode<any, any, any>
-  | InterfaceNode<any, any, any>
+export type UUnionNode = ObjectNode<any> | InterfaceNode<any>
 
 export class UnionNode<
   TNode extends UUnionNode = UUnionNode,

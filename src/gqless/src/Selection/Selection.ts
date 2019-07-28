@@ -12,8 +12,8 @@ export abstract class Selection<
   TSelections extends CircularSelectionField = CircularSelectionField
 > {
   public selections: TSelections[] = []
-  public root: RootSelection<ObjectNode<any, any, any>> =
-    this.parent! && this.parent!.root
+  // @ts-ignore
+  public root: RootSelection<ObjectNode> = this.parent! && this.parent!.root
 
   public onFetching = createEvent<() => void>()
   public onNotFetching = createEvent<() => void>()

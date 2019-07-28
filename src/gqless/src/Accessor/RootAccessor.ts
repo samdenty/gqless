@@ -2,6 +2,7 @@ import { RootSelection } from '../Selection'
 import { Accessor } from './Accessor'
 import { Cache, Value } from '../Cache'
 import { Scheduler } from '../Scheduler'
+import { NodeDataType } from '../Node'
 
 export class RootAccessor<
   TSelection extends RootSelection = RootSelection,
@@ -21,7 +22,7 @@ export class RootAccessor<
   }
 
   public data: TSelection extends RootSelection<infer TNode>
-    ? ReturnType<TNode['getData']>
+    ? NodeDataType<TNode>
     : never = this.selection.createProxy(this) as any
 
   public toString() {

@@ -22,5 +22,6 @@
     "@types/react-dom": "^16.8.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
-  }
+  },
+  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
 }

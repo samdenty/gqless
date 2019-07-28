@@ -1,13 +1,10 @@
 import { NodeContainer } from '../abstract'
 import { UArguments } from './Arguments'
 
-export class ArgumentsField<
-  T extends UArguments,
-  TNullable extends boolean = false
-> extends NodeContainer<T, TNullable> {
+export class ArgumentsField extends NodeContainer<UArguments> {
   public accessed = false
 
-  constructor(node: T, nullable?: TNullable) {
+  constructor(node: UArguments, nullable?: boolean) {
     super(node, nullable)
   }
 }

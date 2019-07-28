@@ -24,5 +24,6 @@
     "@babel/core": "^7.4.4",
     "@types/json-stable-stringify": "^1.0.32",
     "template-literal-table": "^2.0.2"
-  }
+  },
+  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
 }

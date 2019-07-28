@@ -2,9 +2,6 @@ import { lazyGetters } from '@gqless/utils'
 import {
   ArrayNode,
   Arguments,
-  NumberNode,
-  StringNode,
-  BooleanNode,
   ScalarNode,
   FieldNode,
   ObjectNode,
@@ -21,8 +18,8 @@ import { SchemaFieldArgs, Type, SchemaType, Schema } from './Schema'
 export const schemaNodes = (schema: Schema) => {
   const nodes = {} as {
     [key: string]: Node<any>
-    Query: ObjectNode<any, any, any>
-    Mutation: ObjectNode<any, any, any>
+    Query: ObjectNode<any>
+    Mutation: ObjectNode<any>
   }
 
   Object.values(schema.types).forEach(type => {
@@ -59,13 +56,7 @@ export const schemaNodes = (schema: Schema) => {
 
   const createNode = (type: SchemaType) => {
     if (type.kind === 'SCALAR') {
-      return type.name === 'Int' || type.name === 'Float'
-        ? new NumberNode({ name: type.name })
-        : type.name === 'ID' || type.name === 'String'
-        ? new StringNode({ name: type.name })
-        : type.name === 'Boolean'
-        ? new BooleanNode({ name: type.name })
-        : new ScalarNode({ name: type.name })
+      return new ScalarNode({ name: type.name })
     }
 
     if (type.kind === 'OBJECT') {
@@ -129,9 +120,7 @@ export const schemaNodes = (schema: Schema) => {
 
       return new InterfaceNode(
         fields,
-        type.possibleTypes.map(
-          type => nodes[type] as ObjectNode<any, any, any>
-        ),
+        type.possibleTypes.map(type => nodes[type] as ObjectNode<any>),
         { name: type.name }
       )
     }

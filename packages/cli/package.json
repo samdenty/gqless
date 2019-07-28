@@ -47,5 +47,6 @@
   "scripts": {
     "build": "rm -rf dist; tsc -b && oclif-dev readme"
   },
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
 }

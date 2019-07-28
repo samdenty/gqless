@@ -1,5 +1,4 @@
 import { GET_KEY, OF_NODE } from 'gqless'
-import * as g from '..'
 import * as T from '../generated/types'
 
 // export const String = () => new Map()
@@ -11,7 +10,7 @@ export const User /*: Extension<g.User>*/ = {
     isFollowing: true,
   },
 
-  [GET_KEY]: (data: g.User) => data.id,
+  [GET_KEY]: data => data.id,
 }
 export const Query /*: Extension<g.User>*/ = query => {
   return {
@@ -20,6 +19,9 @@ export const Query /*: Extension<g.User>*/ = query => {
     },
     users: {
       get(id: string) {},
+      [OF_NODE]: {
+        isAQueryUser: true,
+      },
     },
     getUser: {
       queryGetUsers: true as const,

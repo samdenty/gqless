@@ -17,8 +17,15 @@
 #   employees: [Employee!]
 # }
 
+enum MyEnum {
+  ACTIVE
+  DISABLED
+}
+
+# User
 type User {
   id: ID!
+  test:MyEnum
 
   name: String @fake(type: firstName, locale: en_CA)
   age: Int @fake(type: number)
@@ -68,6 +75,7 @@ input InputObj {
   a: String!
 }
 
+# Query
 type Query {
   # Current signed in user
   me: User

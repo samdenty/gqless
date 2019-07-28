@@ -12,7 +12,7 @@ export class FieldSelection<
   constructor(
     parent: Selection<any>,
     node: TNode,
-    public field: FieldNode<TNode, any, any>,
+    public field: FieldNode<TNode>,
     public args?: Record<string, any>
   ) {
     super(parent, node)

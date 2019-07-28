@@ -13,5 +13,6 @@
     "build": "tsdx build",
     "prepublish": "yarn build",
     "test": "tsdx test"
-  }
+  },
+  "gitHead": "cd2577fe6aafcec90713d88a116c0b9c1d32b7bb"
 }

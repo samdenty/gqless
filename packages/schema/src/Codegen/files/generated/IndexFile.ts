@@ -10,7 +10,8 @@ export class IndexFile extends File {
       ${super.generate()}
 
       export * from './schema'
-      export * from './GraphQL'
+      export * from './types'
+      // export * from './GraphQL'
     `
   }
 }

@@ -9,41 +9,30 @@ import {
   defaultKey,
   FieldNode,
 } from './abstract'
-import { DataProxy } from '../DataProxy'
 import { Accessor } from '../Accessor'
 import { Mix, Generic } from 'mix-classes'
 import { StringNode, ScalarNode } from './ScalarNode'
 import { Extension } from '../Extension'
 
-export type IObjectNodeOptions<Typename extends string> = IFieldsNodeOptions<
-  Typename
-> & {
+export type IObjectNodeOptions = IFieldsNodeOptions & {
   extension?: Extension
   // getKey?: KeyFn<TNode>
 }
 
-export interface ObjectNode<
-  TNode extends UFieldsNodeRecord<keyof T>,
-  T,
-  Typename extends string = string
->
-  extends FieldsNode<
-      TNode & { __typename: FieldNode<StringNode<Typename>> },
-      T,
-      Typename
-    >,
-    Keyable<ObjectNode<TNode, T, Typename>> {}
+export interface ObjectNode<TData>
+  extends FieldsNode<TData>,
+    Keyable<ObjectNode<TData>> {}
 
 const TYPENAME_NODE = new StringNode()
 
-export class ObjectNode<TNode, T, Typename> extends Mix(
+export class ObjectNode<TData = any> extends Mix(
   Generic(FieldsNode),
   Outputable,
   Generic(Keyable)
 ) {
   constructor(
-    fields: TNode,
-    { extension, ...options }: IObjectNodeOptions<Typename> = {}
+    fields: UFieldsNodeRecord,
+    { extension, ...options }: IObjectNodeOptions = {}
   ) {
     // Add __typename node, not currently used.
     ;(fields as any).__typename = new FieldNode(TYPENAME_NODE)
@@ -53,9 +42,7 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
     this.keyGetter = defaultKey(this) as any
   }
 
-  public getData(
-    accessor: Accessor
-  ): DataProxy<ObjectNode<TNode, T, Typename>> {
+  public getData(accessor: Accessor): TData {
     super.getData(accessor)
 
     // If the value is nulled, return null
@@ -64,7 +51,7 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
     }
 
     return new Proxy({} as any, {
-      get: (_, prop: keyof TNode) => {
+      get: (_, prop: string) => {
         // Statically resolve __typename
         if (prop === '__typename') return this.name
 
@@ -90,7 +77,7 @@ export class ObjectNode<TNode, T, Typename> extends Mix(
         }
       },
 
-      set: (_, prop: keyof TNode, data) => {
+      set: (_, prop: string, data) => {
         if (prop === '__typename') return true
 
         // check fields first

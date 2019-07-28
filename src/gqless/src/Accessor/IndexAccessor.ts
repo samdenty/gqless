@@ -4,9 +4,7 @@ import { ArrayNode, Node, ScalarNode } from '../Node'
 import { OF_NODE, IExtension } from '../Extension'
 
 export class IndexAccessor<
-  TSelectionArray extends Selection<ArrayNode<any, any>> = Selection<
-    ArrayNode<any, any>
-  >,
+  TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelectionArray, TChildren> {
   constructor(public parent: Accessor<TSelectionArray>, public index: number) {

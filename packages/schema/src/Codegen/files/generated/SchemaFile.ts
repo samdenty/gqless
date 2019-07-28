@@ -3,9 +3,6 @@ import {
   ObjectNode,
   ArrayNode,
   ScalarNode,
-  BooleanNode,
-  StringNode,
-  NumberNode,
   InputNode,
   InputNodeField,
   InterfaceNode,
@@ -17,7 +14,7 @@ import {
 import { File, UTILS, CORE } from '../../File'
 import { Codegen } from '../../Codegen'
 
-export const TYPES_VAR = 'types'
+export const SCHEMA_VAR = 'schema'
 
 export class SchemaFile extends File {
   constructor(private codegen: Codegen) {
@@ -25,15 +22,14 @@ export class SchemaFile extends File {
   }
 
   public generate() {
+    this.importAll(`./types`, 'types')
     this.importAll(`../extensions`, 'extensions')
     this.import(UTILS, 'lazyGetters')
 
     const body = `
-      export const ${TYPES_VAR} = ${this.generateTypes()}
+      export const ${SCHEMA_VAR} = ${this.generateSchema()}
 
-      lazyGetters(${TYPES_VAR})
-
-      ${this.codegen.options.typescript ? this.generateTypescriptExports() : ''}
+      lazyGetters(${SCHEMA_VAR})
     `
 
     return `
@@ -43,29 +39,11 @@ export class SchemaFile extends File {
     `
   }
 
-  private generateTypescriptExports() {
-    this.import(
-      CORE,
-      'DataProxy',
-      'ScalarNode',
-      'Node',
-      'ObjectNode',
-      'InterfaceNode'
-    )
-
-    return `
-    ${Object.values(this.codegen.schema.types)
-      .map(
-        type =>
-          `export type ${type.name} = DataProxy<typeof ${this.getNode(
-            type.name
-          )}>`
-      )
-      .join('\n')}
-    `
+  private resolveType(name: string) {
+    return `types.${name}`
   }
 
-  private generateTypes() {
+  private generateSchema() {
     return `{
       ${Object.values(this.codegen.schema.types)
         .map(
@@ -78,65 +56,32 @@ export class SchemaFile extends File {
   }
 
   private getNode(name: string) {
-    return `${TYPES_VAR}.${name}`
+    return `${SCHEMA_VAR}.${name}`
   }
 
   private getExtension(name: string) {
     if (this.codegen.options.typescript) {
-      // Typescript has a circular type problem, resulting in `any` for nodes
-      // this fixes that.
-      return `((extensions as any).${name} as any)`
+      return `(extensions as any).${name}`
     }
 
     return `extensions.${name}`
   }
 
-  private generateFieldComment(field: SchemaField) {
-    const comments: string[] = []
-    if (field.isDeprecated) {
-      comments.push(
-        `@deprecated${
-          field.deprecationReason
-            ? ` ${field.deprecationReason.replace(/\n/gm, ' ')}`
-            : ''
-        }`
-      )
-    }
-
-    if (field.description) {
-      comments.push(...field.description.split('\n'))
-    }
-
-    if (comments.length) {
-      return (
-        `\n` +
-        `/**\n` +
-        ` * ${comments.join('\n* ').replace(/\*\//gm, '*\u200B/')}\n` +
-        ` */\n`
-      )
-    }
-
-    return ''
-  }
-
   private generateFieldGetter(field: SchemaField) {
     this.import(CORE, FieldNode.name)
 
-    return (
-      this.generateFieldComment(field) +
-      `get ${field.name}() {
+    return `get ${field.name}() {
       return new ${FieldNode.name}(${this.generateType(
-        field.type
-      )}, ${this.generateArguments(field.args)}, ${field.type.nullable})
+      field.type
+    )}, ${this.generateArguments(field.args)}, ${field.type.nullable})
     }`
-    )
   }
 
   private generateNode(type: SchemaType) {
     if (type.kind === 'OBJECT') {
       this.import(CORE, ObjectNode.name)
 
-      return `new ${ObjectNode.name}({
+      return `new ${ObjectNode.name}<${this.resolveType(type.name)}>({
         ${Object.values(type.fields)
           .map(field => this.generateFieldGetter(field))
           .join(',')}
@@ -168,26 +113,19 @@ export class SchemaFile extends File {
     }
 
     if (type.kind === 'SCALAR') {
-      const className =
-        type.name === 'Int' || type.name === 'Float'
-          ? NumberNode.name
-          : type.name === 'ID' || type.name === 'String'
-          ? StringNode.name
-          : type.name === 'Boolean'
-          ? BooleanNode.name
-          : ScalarNode.name
+      this.import(CORE, ScalarNode.name)
 
-      this.import(CORE, className)
-
-      return `new ${className}({ name: ${JSON.stringify(
+      return `new ${ScalarNode.name}<${this.resolveType(
         type.name
-      )}, extension: ${this.getExtension(type.name)} })`
+      )}>({ name: ${JSON.stringify(type.name)}, extension: ${this.getExtension(
+        type.name
+      )} })`
     }
 
     if (type.kind === 'INPUT_OBJECT') {
       this.import(CORE, InputNode.name)
 
-      return `new ${InputNode.name}({
+      return `new ${InputNode.name}<${this.resolveType(type.name)}>({
         ${Object.values(type.inputFields)
           .map(field => {
             this.import(CORE, InputNodeField.name)

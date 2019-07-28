@@ -1,11 +1,10 @@
-import { Node } from './Node'
-import { DataProxy } from '../../DataProxy'
-import { FieldsNode, FieldNode } from './FieldsNode'
-import { StringNode, NumberNode } from '../ScalarNode'
+import { Node, NodeDataType } from './Node'
+import { FieldsNode } from './FieldsNode'
 import { Accessor } from '../../Accessor'
+import { ScalarNode } from '../ScalarNode'
 
 export type KeyFn<TNode extends Node<any>> = (
-  data: DataProxy<TNode>
+  data: NodeDataType<TNode>
 ) => string | number
 
 export class Keyable<TNode extends Node<any>> {
@@ -23,18 +22,15 @@ export class Keyable<TNode extends Node<any>> {
   }
 }
 
-export const defaultKey = <TNode extends Node<any>>(
+export const defaultKey = <TNode extends Node>(
   node: TNode
 ): KeyFn<TNode> | undefined => {
   if (node instanceof FieldsNode) {
-    const idField: FieldNode<Node<any>> = node.fields.id
+    const idField = node.fields.id
 
     if (idField) {
-      if (idField.ofNode instanceof StringNode)
+      if (idField.ofNode instanceof ScalarNode)
         return (data: { id: string }) => data.id
-
-      if (idField.ofNode instanceof NumberNode)
-        return (data: { id: number }) => data.id
     }
   }
 

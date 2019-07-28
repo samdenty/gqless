@@ -29,8 +29,12 @@ interface BaseSchemaType<TKind extends SchemaKind> {
 
 export type SchemaFields = Record<string, SchemaField>
 
+export type SchemaEnumType = BaseSchemaType<EnumKind> & {
+  enumValues: string[]
+}
 export type SchemaObjectType = BaseSchemaType<ObjectKind> & {
   fields: SchemaFields
+  interfaces: string[]
 }
 
 export type SchemaInterfaceType = BaseSchemaType<InterfaceKind> & {
@@ -48,6 +52,7 @@ export type SchemaInputType = BaseSchemaType<InputObjectKind> & {
 }
 
 export type SchemaType =
+  | SchemaEnumType
   | SchemaObjectType
   | SchemaUnionType
   | SchemaInterfaceType
@@ -55,7 +60,7 @@ export type SchemaType =
   | BaseSchemaType<
       Exclude<
         SchemaKind,
-        ObjectKind | InterfaceKind | UnionKind | InputObjectKind
+        ObjectKind | InterfaceKind | UnionKind | InputObjectKind | EnumKind
       >
     >
 

@@ -7,7 +7,7 @@ export const accessorRecorders = new Set<IAccessorRecorder>()
 export class Outputable {
   constructor(public extension?: Extension) {}
 
-  public getData(accessor: Accessor): any {
+  public getData(accessor: Accessor) {
     if (accessorRecorders.size) {
       accessorRecorders.forEach(record => record(accessor))
     }

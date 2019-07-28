@@ -1,8 +1,3 @@
-# Rewrite typescripts types using codegen
-
-- Typescript is very slow currently, and show infinite depth errors
-- Needs to support typed-extensions
-
 # Scalar extensions
 
 ```js

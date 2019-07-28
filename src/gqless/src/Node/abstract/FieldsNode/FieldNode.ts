@@ -9,25 +9,18 @@ import { FieldsNode } from './FieldsNode'
 import { invariant } from '@gqless/utils'
 import { Mix, Generic } from 'mix-classes'
 
-export interface FieldNode<
-  TNode extends Node<any>,
-  TArguments extends Arguments<any, any> = Arguments<any, any>,
-  TNullable extends boolean = false
-> extends NodeContainer<TNode, TNullable> {}
-export class FieldNode<TNode, TArguments, TNullable> extends Mix(
-  Generic(NodeContainer),
-  Outputable
-) {
+export interface FieldNode<TNode extends Node<any> = any>
+  extends NodeContainer<TNode> {}
+
+export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
   // This is set inside FieldsNode
   public name: string = ''
 
-  constructor(node: TNode, public args?: TArguments, nullable?: TNullable) {
+  constructor(node: TNode, public args?: Arguments, nullable?: boolean) {
     super([node, nullable])
   }
 
-  public getData(
-    fieldsAccessor: Accessor<Selection<FieldsNode<any, any, any>>>
-  ) {
+  public getData(fieldsAccessor: Accessor<Selection<FieldsNode>>) {
     super.getData(fieldsAccessor)
 
     const getSelection = (args?: Record<string, any>) => {
@@ -67,7 +60,7 @@ export class FieldNode<TNode, TArguments, TNullable> extends Mix(
     if (this.args) {
       // Return a proxy to a function
       return new Proxy(
-        (args: NodeDataType<TArguments> | undefined) => {
+        (args: any | undefined) => {
           if (!args) args = undefined
 
           // If we just created the argumentless selection

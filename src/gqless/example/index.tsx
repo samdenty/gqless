@@ -8,12 +8,12 @@ import ApolloClient from 'apollo-boost'
 import { GraphQL } from 'gqless'
 import { LoggerMiddleware } from '@gqless/logger'
 import { print } from 'graphql'
-import { types as typesFaker, User, Query } from './graphql'
+import { schema as schemaFaker, User, Query } from './graphql'
 import * as Imports from 'gqless'
-import { graphql, ReactMiddleware } from '@gqless/react'
+import { graphql } from '@gqless/react'
 import { Codegen, fetchSchema } from '@gqless/schema'
 
-Object.assign(window, { ...Imports, typesFaker })
+Object.assign(window, { ...Imports, schemaFaker })
 
 const endpoint = `http://${location.hostname}:9002/graphql`
 const client = new ApolloClient({
@@ -57,25 +57,21 @@ async function bootstrap() {
   // const codegen = new Codegen(schema)
   // console.log(codegen.generate())
 
-  const graphqlInstance = new GraphQL(typesFaker.Query, fetchQuery)
-  graphqlInstance.middleware.add(
-    new LoggerMiddleware(graphqlInstance, true),
-    new ReactMiddleware(),
-    {
-      // async onFetch(_, response) {
-      //   await response
-      //   getUsers({ limit: 1 })[1].age
-      //   getUsers({ limit: 1 })[1].avatarUrl
-      //   const user = query.query.user()
-      //   if (user) {
-      //     user.following![0]!.name
-      //   }
-      //   query.query.users[1].following![0]!.age
-      //   query.query.users[1].avatarUrl
-      //   query.query.users[1].avatarUrl({ size: 100 }) /
-      // },
-    }
-  )
+  const graphqlInstance = new GraphQL(schemaFaker.Query, fetchQuery)
+  graphqlInstance.middleware.add(new LoggerMiddleware(graphqlInstance, true), {
+    // async onFetch(_, response) {
+    //   await response
+    //   getUsers({ limit: 1 })[1].age
+    //   getUsers({ limit: 1 })[1].avatarUrl
+    //   const user = query.query.user()
+    //   if (user) {
+    //     user.following![0]!.name
+    //   }
+    //   query.query.users[1].following![0]!.age
+    //   query.query.users[1].avatarUrl
+    //   query.query.users[1].avatarUrl({ size: 100 }) /
+    // },
+  })
 
   // const getUsers = query.query.users
   // getUsers({ limit: 10 })[1].age
