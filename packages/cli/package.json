@@ -1,14 +1,14 @@
 {
   "name": "@gqless/cli",
   "description": "example multi-command CLI built with typescript",
-  "version": "0.0.1-alpha.4",
+  "version": "0.0.1-alpha.3",
   "author": "Jeff Dickey @jdxcode",
   "bin": {
     "gqless": "./bin/run"
   },
   "bugs": "https://github.com/oclif/example-multi-ts/issues",
   "dependencies": {
-    "@gqless/schema": "^0.0.1-alpha.4",
+    "@gqless/schema": "^0.0.1-alpha.3",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
