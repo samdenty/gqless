@@ -86,7 +86,12 @@ export class ASTBuilder {
     const getInitialSubselections = (selection: Selection<any>) => {
       const subSelections: SelectionNode[] = []
 
-      if (!(selection.node instanceof ScalarNode)) {
+      const innerNode =
+        selection.node instanceof NodeContainer
+          ? selection.node.innerNode
+          : selection.node
+
+      if (!(innerNode instanceof ScalarNode)) {
         subSelections.push({
           kind: 'Field',
           name: {
