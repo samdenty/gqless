@@ -56,10 +56,11 @@ export class SchemaFile extends File {
 
   private getExtension(name: string) {
     if (this.codegen.options.typescript) {
-      return `(extensions as any).${name}`
+      return `(extensions as any || {}).${name}`
     }
 
-    return `extensions.${name}`
+    // || {} is used to confuse webpack which displays errors if you don't export an extension
+    return `(extensions || {}).${name}`
   }
 
   private generateFieldGetter(field: SchemaField) {

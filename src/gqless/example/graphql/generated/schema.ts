@@ -94,7 +94,7 @@ export const schema = {
           )
         },
       },
-      { name: 'Query', extension: (extensions as any).Query }
+      { name: 'Query', extension: ((extensions as any) || {}).Query }
     )
   },
   get User() {
@@ -153,11 +153,14 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
       },
-      { name: 'User', extension: (extensions as any).User }
+      { name: 'User', extension: ((extensions as any) || {}).User }
     )
   },
   get ID() {
-    return new ScalarNode({ name: 'ID', extension: (extensions as any).ID })
+    return new ScalarNode({
+      name: 'ID',
+      extension: ((extensions as any) || {}).ID,
+    })
   },
   get MyEnum() {
     return undefined
@@ -165,11 +168,14 @@ export const schema = {
   get String() {
     return new ScalarNode({
       name: 'String',
-      extension: (extensions as any).String,
+      extension: ((extensions as any) || {}).String,
     })
   },
   get Int() {
-    return new ScalarNode({ name: 'Int', extension: (extensions as any).Int })
+    return new ScalarNode({
+      name: 'Int',
+      extension: ((extensions as any) || {}).Int,
+    })
   },
   get A() {
     return new ObjectNode(
@@ -178,7 +184,7 @@ export const schema = {
           return new FieldNode(schema.B, undefined, true)
         },
       },
-      { name: 'A', extension: (extensions as any).A }
+      { name: 'A', extension: ((extensions as any) || {}).A }
     )
   },
   get B() {
@@ -191,7 +197,7 @@ export const schema = {
           return new FieldNode(schema.Int, undefined, true)
         },
       },
-      { name: 'B', extension: (extensions as any).B }
+      { name: 'B', extension: ((extensions as any) || {}).B }
     )
   },
   get TestOrUser() {
@@ -207,7 +213,7 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
       },
-      { name: 'TestB', extension: (extensions as any).TestB }
+      { name: 'TestB', extension: ((extensions as any) || {}).TestB }
     )
   },
   get Test() {
@@ -218,7 +224,7 @@ export const schema = {
         },
       },
       [schema.TestB, schema.TestC],
-      { name: 'Test', extension: (extensions as any).Test }
+      { name: 'Test', extension: ((extensions as any) || {}).Test }
     )
   },
   get InputObj() {
@@ -246,7 +252,7 @@ export const schema = {
           )
         },
       },
-      { name: 'Mutation', extension: (extensions as any).Mutation }
+      { name: 'Mutation', extension: ((extensions as any) || {}).Mutation }
     )
   },
   get __Schema() {
@@ -276,7 +282,7 @@ export const schema = {
           )
         },
       },
-      { name: '__Schema', extension: (extensions as any).__Schema }
+      { name: '__Schema', extension: ((extensions as any) || {}).__Schema }
     )
   },
   get __Type() {
@@ -338,7 +344,7 @@ export const schema = {
           return new FieldNode(schema.__Type, undefined, true)
         },
       },
-      { name: '__Type', extension: (extensions as any).__Type }
+      { name: '__Type', extension: ((extensions as any) || {}).__Type }
     )
   },
   get __TypeKind() {
@@ -347,7 +353,7 @@ export const schema = {
   get Boolean() {
     return new ScalarNode({
       name: 'Boolean',
-      extension: (extensions as any).Boolean,
+      extension: ((extensions as any) || {}).Boolean,
     })
   },
   get __Field() {
@@ -376,7 +382,7 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
       },
-      { name: '__Field', extension: (extensions as any).__Field }
+      { name: '__Field', extension: ((extensions as any) || {}).__Field }
     )
   },
   get __InputValue() {
@@ -395,7 +401,10 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
       },
-      { name: '__InputValue', extension: (extensions as any).__InputValue }
+      {
+        name: '__InputValue',
+        extension: ((extensions as any) || {}).__InputValue,
+      }
     )
   },
   get __EnumValue() {
@@ -414,7 +423,10 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
       },
-      { name: '__EnumValue', extension: (extensions as any).__EnumValue }
+      {
+        name: '__EnumValue',
+        extension: ((extensions as any) || {}).__EnumValue,
+      }
     )
   },
   get __Directive() {
@@ -450,7 +462,10 @@ export const schema = {
           return new FieldNode(schema.Boolean, undefined, false)
         },
       },
-      { name: '__Directive', extension: (extensions as any).__Directive }
+      {
+        name: '__Directive',
+        extension: ((extensions as any) || {}).__Directive,
+      }
     )
   },
   get __DirectiveLocation() {
@@ -469,7 +484,7 @@ export const schema = {
           return new FieldNode(schema.String, undefined, true)
         },
       },
-      { name: 'TestC', extension: (extensions as any).TestC }
+      { name: 'TestC', extension: ((extensions as any) || {}).TestC }
     )
   },
   get fake__Locale() {
@@ -558,13 +573,13 @@ export const schema = {
   get Float() {
     return new ScalarNode({
       name: 'Float',
-      extension: (extensions as any).Float,
+      extension: ((extensions as any) || {}).Float,
     })
   },
   get examples__JSON() {
     return new ScalarNode({
       name: 'examples__JSON',
-      extension: (extensions as any).examples__JSON,
+      extension: ((extensions as any) || {}).examples__JSON,
     })
   },
 }
