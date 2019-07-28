@@ -1,7 +1,7 @@
 {
   "name": "@gqless/cli",
   "description": "example multi-command CLI built with typescript",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "author": "Jeff Dickey @jdxcode",
   "bin": {
     "gqless": "./bin/run"
