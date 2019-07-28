@@ -6,10 +6,9 @@ import {
   Type,
   SchemaInterfaceType,
   SchemaFieldArgs,
-  SchemaKind,
 } from '../../../Schema'
 
-const TYPE_PREFIX = 'Type'
+const TYPE_PREFIX = 't_'
 
 type TypeResolver = (name: string) => string
 
@@ -18,46 +17,61 @@ export class TypesFile extends File {
     super('generated/types')
   }
 
-  private createUniqueNames<TName extends string>(names: TName[]) {
-    const reservedNames = [
-      ...Object.keys(this.codegen.schema.types).map(
-        name => `${name}${TYPE_PREFIX}`
-      ),
-      ...Object.keys(this.codegen.schema.types),
-    ]
-
+  private createUniqueNames<TName extends string>(
+    reservedNames: string[],
+    names: TName[],
+    makeUnique: (name: string) => string
+  ) {
     const namesObj = {} as Record<TName, string>
 
     const uniqueName = (desiredName: string): string => {
       if (reservedNames.includes(desiredName))
-        return uniqueName(`gqless_${desiredName}`)
+        return uniqueName(makeUnique(desiredName))
 
       return desiredName
     }
 
     for (const name of names) {
-      namesObj[name] = uniqueName(name)
+      const chosenName = uniqueName(name)
+      reservedNames.push(chosenName)
+
+      namesObj[name] = chosenName
     }
 
     return namesObj
   }
 
-  private names = this.createUniqueNames([
-    'Extension',
-    'EnumType',
-    'FieldsType',
-    'FieldsTypeArg',
-    'ScalarType',
-    'TypeData',
-    'extensions',
-  ])
+  private typeNames = this.createUniqueNames(
+    Object.keys(this.codegen.schema.types),
+    Object.keys(this.codegen.schema.types),
+    name => {
+      return `${TYPE_PREFIX}${name}`
+    }
+  )
+
+  private names = this.createUniqueNames(
+    [
+      ...Object.keys(this.codegen.schema.types),
+      ...Object.values(this.typeNames),
+    ],
+    [
+      'Extension',
+      'EnumType',
+      'FieldsType',
+      'FieldsTypeArg',
+      'ScalarType',
+      'TypeData',
+      'extensions',
+    ],
+    name => `gqless_${name}`
+  )
 
   private typeReference = (name: string): string => {
     const schemaType = this.codegen.getSchemaType(name)
 
     if (schemaType.kind === 'INPUT_OBJECT') return name
 
-    return `${name}${TYPE_PREFIX}`
+    return this.typeNames[name]
   }
 
   private typeValue = (name: string) => {

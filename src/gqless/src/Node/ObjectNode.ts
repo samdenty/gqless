@@ -11,7 +11,7 @@ import {
 } from './abstract'
 import { Accessor } from '../Accessor'
 import { Mix, Generic } from 'mix-classes'
-import { StringNode, ScalarNode } from './ScalarNode'
+import { ScalarNode } from './ScalarNode'
 import { Extension } from '../Extension'
 
 export type IObjectNodeOptions = IFieldsNodeOptions & {
@@ -23,7 +23,7 @@ export interface ObjectNode<TData>
   extends FieldsNode<TData>,
     Keyable<ObjectNode<TData>> {}
 
-const TYPENAME_NODE = new StringNode()
+const TYPENAME_NODE = new ScalarNode()
 
 export class ObjectNode<TData = any> extends Mix(
   Generic(FieldsNode),

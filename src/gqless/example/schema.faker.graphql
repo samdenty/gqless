@@ -25,7 +25,7 @@ enum MyEnum {
 # User
 type User {
   id: ID!
-  test:MyEnum
+  test: MyEnum
 
   name: String @fake(type: firstName, locale: en_CA)
   age: Int @fake(type: number)
