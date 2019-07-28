@@ -1,6 +1,6 @@
 {
   "name": "@gqless/logger",
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.1-alpha.6",
   "main": "dist/index.js",
   "umd:main": "dist/gqlesslogger.umd.production.js",
   "module": "dist/gqlesslogger.es.production.js",
