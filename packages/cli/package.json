@@ -15,7 +15,8 @@
     "got": "^9.6.0",
     "mkdirp": "^0.5.1",
     "prettier": "^1",
-    "tslib": "^1"
+    "tslib": "^1",
+    "graphql": "^14.4.2"
   },
   "peerDependencies": {
     "gqless": "*"
