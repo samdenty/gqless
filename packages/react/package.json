@@ -1,6 +1,6 @@
 {
   "name": "@gqless/react",
-  "version": "0.0.1-alpha.2",
+  "version": "0.0.1-alpha.3",
   "main": "dist/index.js",
   "umd:main": "dist/gqlessreact.umd.production.js",
   "module": "dist/gqlessreact.es.production.js",
@@ -15,8 +15,8 @@
     "test": "tsdx test --env=jsdom"
   },
   "peerDependencies": {
-    "react": ">=16",
-    "gqless": "*"
+    "gqless": "*",
+    "react": ">=16"
   },
   "devDependencies": {
     "@types/react": "^16.8.17",
