@@ -1,13 +1,13 @@
 {
   "name": "@gqless/cli",
   "description": "Codegen for gqless",
-  "version": "0.0.1-alpha.15",
+  "version": "0.0.1-alpha.16",
   "author": "Sam Denty",
   "bin": {
     "gqless": "./bin/run"
   },
   "dependencies": {
-    "@gqless/schema": "^0.0.1-alpha.15",
+    "@gqless/schema": "^0.0.1-alpha.16",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",

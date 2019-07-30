@@ -1,6 +1,6 @@
 {
   "name": "@gqless/react",
-  "version": "0.0.1-alpha.15",
+  "version": "0.0.1-alpha.16",
   "main": "dist/index.js",
   "umd:main": "dist/gqlessreact.umd.production.js",
   "module": "dist/gqlessreact.es.production.js",
