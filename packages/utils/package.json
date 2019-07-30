@@ -1,6 +1,6 @@
 {
   "name": "@gqless/utils",
-  "version": "0.0.1-alpha.6",
+  "version": "0.0.1-alpha.12",
   "main": "dist/index.js",
   "umd:main": "dist/gqlessutils.umd.production.js",
   "module": "dist/gqlessutils.es.production.js",
