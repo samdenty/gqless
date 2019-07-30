@@ -51,5 +51,5 @@
     "prepublish": "in-publish && yarn build"
   },
   "types": "dist/index.d.ts",
-  "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb"
+  "gitHead": "7e0a3dcce37b09861294480abd5db803dc2f0656"
 }
