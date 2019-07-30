@@ -1,13 +1,13 @@
 {
   "name": "@gqless/cli",
   "description": "Codegen for gqless",
-  "version": "0.0.1-alpha.13",
+  "version": "0.0.1-alpha.14",
   "author": "Sam Denty",
   "bin": {
     "gqless": "./bin/run"
   },
   "dependencies": {
-    "@gqless/schema": "^0.0.1-alpha.13",
+    "@gqless/schema": "^0.0.1-alpha.14",
     "@oclif/command": "^1",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
@@ -48,8 +48,8 @@
   },
   "scripts": {
     "build": "rm -rf dist; tsc -b && oclif-dev readme",
-    "prepublish": "in-publish && yarn build"
+    "prepublishOnly": "yarn build"
   },
   "types": "dist/index.d.ts",
-  "gitHead": "7e0a3dcce37b09861294480abd5db803dc2f0656"
+  "gitHead": "3eb8405ff578ffa8ce9259abd37e5b40ea72ccf1"
 }

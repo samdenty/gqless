@@ -1,6 +1,6 @@
 {
   "name": "@gqless/react",
-  "version": "0.0.1-alpha.13",
+  "version": "0.0.1-alpha.14",
   "main": "dist/index.js",
   "umd:main": "dist/gqlessreact.umd.production.js",
   "module": "dist/gqlessreact.es.production.js",
@@ -11,7 +11,7 @@
   "scripts": {
     "watch": "tsdx watch",
     "build": "tsdx build",
-    "prepublish": "in-publish && yarn build",
+    "prepublishOnly": "yarn build",
     "test": "tsdx test --env=jsdom"
   },
   "peerDependencies": {
@@ -24,5 +24,5 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
-  "gitHead": "7e0a3dcce37b09861294480abd5db803dc2f0656"
+  "gitHead": "3eb8405ff578ffa8ce9259abd37e5b40ea72ccf1"
 }
