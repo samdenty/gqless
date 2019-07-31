@@ -51,5 +51,5 @@
     "prepublishOnly": "yarn build"
   },
   "types": "dist/index.d.ts",
-  "gitHead": "fa0dfdd64e43daa5616911ee80fa5d79db2984e8"
+  "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }
