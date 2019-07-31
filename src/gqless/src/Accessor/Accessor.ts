@@ -13,8 +13,10 @@ export abstract class Accessor<
 > extends Disposable {
   public extensions: Extension[] = []
 
-  public scheduler: Scheduler = this.parent ? this.parent.scheduler : undefined!
-  public cache: Cache = this.parent ? this.parent.cache : undefined!
+  public scheduler: Scheduler = this.parent
+    ? (this.parent as any).scheduler
+    : undefined!
+  public cache: Cache = this.parent ? (this.parent as any).cache : undefined!
 
   public children: TChildren[] = []
   public data: any

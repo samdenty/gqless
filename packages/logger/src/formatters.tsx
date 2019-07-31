@@ -1,3 +1,4 @@
+// @ts-ignore
 import { string } from 'to-style'
 import { Selection, RootSelection } from 'gqless'
 
@@ -70,6 +71,8 @@ export const selectionFormatter = {
               marginLeft: !selection.selections.length ? '14px' : 0,
             }}
           >
+            {/*
+            // @ts-ignore */}
             <object
               object={selection}
               config={{

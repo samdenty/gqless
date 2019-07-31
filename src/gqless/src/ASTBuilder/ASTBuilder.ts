@@ -112,7 +112,7 @@ export class ASTBuilder {
       },
       type: {
         kind: 'NamedType',
-        name: toTypeNode(variable.node!, variable.nullable!),
+        name: toTypeNode(variable.node!, variable.nullable!) as any,
       },
     }
   }
