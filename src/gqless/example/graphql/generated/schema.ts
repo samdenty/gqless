@@ -7,6 +7,7 @@ import {
   Arguments,
   ArgumentsField,
   ScalarNode,
+  EnumNode,
   UnionNode,
   InterfaceNode,
   InputNode,
@@ -39,6 +40,13 @@ export const schema = {
                 return new ArgumentsField(schema.Int, true)
               },
             }),
+            false
+          )
+        },
+        get stringArray() {
+          return new FieldNode(
+            new ArrayNode(new ArrayNode(schema.String, true), false),
+            undefined,
             false
           )
         },
@@ -104,7 +112,15 @@ export const schema = {
           return new FieldNode(schema.ID, undefined, false)
         },
         get test() {
-          return new FieldNode(schema.MyEnum, undefined, true)
+          return new FieldNode(
+            schema.MyEnum,
+            new Arguments({
+              get enum() {
+                return new ArgumentsField(schema.MyEnum, true)
+              },
+            }),
+            true
+          )
         },
         get name() {
           return new FieldNode(schema.String, undefined, true)
@@ -163,7 +179,7 @@ export const schema = {
     })
   },
   get MyEnum() {
-    return undefined
+    return new EnumNode({ name: 'MyEnum' })
   },
   get String() {
     return new ScalarNode({
@@ -243,11 +259,14 @@ export const schema = {
         get deleteUser() {
           return new FieldNode(
             schema.Int,
-            new Arguments({
-              get id() {
-                return new ArgumentsField(schema.ID, false)
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.ID, false)
+                },
               },
-            }),
+              true
+            ),
             false
           )
         },
@@ -348,7 +367,7 @@ export const schema = {
     )
   },
   get __TypeKind() {
-    return undefined
+    return new EnumNode({ name: '__TypeKind' })
   },
   get Boolean() {
     return new ScalarNode({
@@ -469,10 +488,10 @@ export const schema = {
     )
   },
   get __DirectiveLocation() {
-    return undefined
+    return new EnumNode({ name: '__DirectiveLocation' })
   },
   get Episode() {
-    return undefined
+    return new EnumNode({ name: 'Episode' })
   },
   get TestC() {
     return new ObjectNode(
@@ -488,16 +507,16 @@ export const schema = {
     )
   },
   get fake__Locale() {
-    return undefined
+    return new EnumNode({ name: 'fake__Locale' })
   },
   get fake__Types() {
-    return undefined
+    return new EnumNode({ name: 'fake__Types' })
   },
   get fake__imageCategory() {
-    return undefined
+    return new EnumNode({ name: 'fake__imageCategory' })
   },
   get fake__loremSize() {
-    return undefined
+    return new EnumNode({ name: 'fake__loremSize' })
   },
   get fake__color() {
     return new InputNode(

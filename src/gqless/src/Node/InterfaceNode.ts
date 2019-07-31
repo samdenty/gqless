@@ -8,8 +8,11 @@ import {
 } from './abstract'
 import { ObjectNode } from './ObjectNode'
 import { Mix, Generic } from 'mix-classes'
+import { Extension } from '../Extension'
 
-export type IInterfaceNodeOptions = IFieldsNodeOptions & {}
+export type IInterfaceNodeOptions = IFieldsNodeOptions & {
+  extension?: Extension
+}
 
 export interface InterfaceNode<TImplementations extends ObjectNode<any>>
   extends FieldsNode<NodeDataType<TImplementations>>,
@@ -22,7 +25,7 @@ export class InterfaceNode<TImplementations = any> extends Mix(
   constructor(
     fields: UFieldsNodeRecord,
     public implementations: TImplementations[],
-    options?: IFieldsNodeOptions
+    options: IInterfaceNodeOptions
   ) {
     super([fields as any, options])
 

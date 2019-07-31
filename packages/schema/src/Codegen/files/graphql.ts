@@ -14,7 +14,7 @@ export class GraphQLFile extends File {
     return `
       ${super.generate()}
 
-      const endpoint = ''
+      const endpoint = ${JSON.stringify(this.codegen.options.url || '')}
 
       const fetchQuery: QueryFetcher = async query => {
         const response = await fetch(endpoint, {

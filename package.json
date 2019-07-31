@@ -1,5 +1,6 @@
 {
   "workspaces": [
+    "examples/*",
     "packages/*",
     "src/*",
     "src/*/example",
@@ -15,9 +16,12 @@
     "@types/jest": "^24.0.13",
     "husky": "^2.4.1",
     "lerna": "^3.15.0",
+    "pretty-quick": "^1.11.1",
     "tsdx": "^0.6.1",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.2",
-    "pretty-quick": "^1.11.1"
+    "typescript": "^3.5.2"
+  },
+  "dependencies": {
+    "in-publish": "^2.0.0"
   }
 }

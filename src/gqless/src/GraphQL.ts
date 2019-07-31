@@ -7,7 +7,7 @@ import {
   UnionNode,
   InterfaceNode,
 } from './Node'
-import { defaultMiddleware, MiddlewareEngine } from './Middleware'
+import { Plugins } from './Plugin'
 import { ASTBuilder } from './ASTBuilder'
 import { Scheduler } from './Scheduler'
 import { Cache } from './Cache'
@@ -22,7 +22,8 @@ import { Disposable } from './mixins'
 export type QueryResponse<Data = any> = { data: Data; errors: any }
 
 export type QueryFetcher = (
-  query: DocumentNode
+  query: DocumentNode,
+  variables?: Record<string, any>
 ) => Promise<QueryResponse> | QueryResponse
 
 export type ProxyInterceptor = (
@@ -32,10 +33,10 @@ export type ProxyInterceptor = (
 
 // @ts-ignore
 export class GraphQL<TData = any> extends Disposable {
-  public middleware = new MiddlewareEngine()
+  public plugins = new Plugins()
   public astBuilder = new ASTBuilder()
   public scheduler = new Scheduler(
-    this.middleware,
+    this.plugins,
     (selections, name) => this.fetchSelections(selections, name)!
   )
   public cache = new Cache()
@@ -48,22 +49,15 @@ export class GraphQL<TData = any> extends Disposable {
   constructor(protected node: ObjectNode, protected fetchQuery: QueryFetcher) {
     super()
 
-    this.middleware.add(...defaultMiddleware)
-
     this.selection.onSelect(selection => {
-      this.middleware.all.onSelect(selection)
-      this.scheduler.stage(selection)
+      this.plugins.all.onSelect(selection)
+      // this.scheduler.stage(selection)
     })
 
     this.selection.onUnselect(selection => {
-      this.middleware.all.onUnselect(selection)
+      this.plugins.all.onUnselect(selection)
       this.scheduler.unstage(selection)
     })
-
-    // this.selectionRoot.onSelectUpdate(selection => {
-    //   this.middleware.all.onSelectUpdate(selection)
-    //   this.batcher.stage(selection)
-    // })
   }
 
   protected fetchSelections(selections: Selection<any>[], queryName?: string) {
@@ -71,7 +65,7 @@ export class GraphQL<TData = any> extends Disposable {
     if (!result) return
 
     const responsePromise = (async () => {
-      const response = await this.fetchQuery(result.doc)
+      const response = await this.fetchQuery(result.doc, result.variables)
 
       const recurseFieldsAccessor = (
         accessor: Accessor<Selection<ObjectNode | InterfaceNode | UnionNode>>,
@@ -148,11 +142,12 @@ export class GraphQL<TData = any> extends Disposable {
       return response
     })()
 
-    this.middleware.all.onFetch(
-      result.doc,
+    this.plugins.all.onFetch(
+      selections,
       responsePromise,
-      queryName,
-      selections
+      result.variables,
+      result.doc,
+      queryName
     )
 
     return responsePromise
@@ -162,6 +157,6 @@ export class GraphQL<TData = any> extends Disposable {
     super.dispose()
     this.scheduler.dispose()
 
-    this.middleware.all.dispose()
+    this.plugins.all.dispose()
   }
 }

@@ -10,6 +10,7 @@ import {
   Arguments,
   ArgumentsField,
   FieldNode,
+  EnumNode,
 } from 'gqless'
 import { File, UTILS, CORE } from '../../File'
 import { Codegen } from '../../Codegen'
@@ -74,64 +75,72 @@ export class SchemaFile extends File {
   }
 
   private generateNode(type: SchemaType) {
-    if (type.kind === 'OBJECT') {
-      this.import(CORE, ObjectNode.name)
+    switch (type.kind) {
+      case 'OBJECT': {
+        this.import(CORE, ObjectNode.name)
 
-      return `new ${ObjectNode.name}({
-        ${Object.values(type.fields)
-          .map(field => this.generateFieldGetter(field))
-          .join(',')}
-      }, { name: ${JSON.stringify(type.name)}, extension: ${this.getExtension(
-        type.name
-      )} })`
-    }
+        return `new ${ObjectNode.name}({
+          ${Object.values(type.fields)
+            .map(field => this.generateFieldGetter(field))
+            .join(',')}
+        }, { name: ${JSON.stringify(type.name)}, extension: ${this.getExtension(
+          type.name
+        )} })`
+      }
 
-    if (type.kind === 'INTERFACE') {
-      this.import(CORE, InterfaceNode.name)
+      case 'INTERFACE': {
+        this.import(CORE, InterfaceNode.name)
 
-      return `new ${InterfaceNode.name}({
-        ${Object.values(type.fields)
-          .map(field => this.generateFieldGetter(field))
-          .join(',')}
-      },
-      [${type.possibleTypes.map(type => this.getNode(type)).join(',')}],
-      { name: ${JSON.stringify(type.name)}, extension: ${this.getExtension(
-        type.name
-      )} })`
-    }
+        return `new ${InterfaceNode.name}({
+          ${Object.values(type.fields)
+            .map(field => this.generateFieldGetter(field))
+            .join(',')}
+        },
+        [${type.possibleTypes.map(type => this.getNode(type)).join(',')}],
+        { name: ${JSON.stringify(type.name)}, extension: ${this.getExtension(
+          type.name
+        )} })`
+      }
 
-    if (type.kind === 'UNION') {
-      this.import(CORE, UnionNode.name)
+      case 'UNION': {
+        this.import(CORE, UnionNode.name)
 
-      return `new ${UnionNode.name}([${type.possibleTypes.map(type =>
-        this.getNode(type)
-      )}])`
-    }
+        return `new ${UnionNode.name}([${type.possibleTypes.map(type =>
+          this.getNode(type)
+        )}])`
+      }
 
-    if (type.kind === 'SCALAR') {
-      this.import(CORE, ScalarNode.name)
+      case 'SCALAR': {
+        this.import(CORE, ScalarNode.name)
 
-      return `new ${ScalarNode.name}({ name: ${JSON.stringify(
-        type.name
-      )}, extension: ${this.getExtension(type.name)} })`
-    }
+        return `new ${ScalarNode.name}({ name: ${JSON.stringify(
+          type.name
+        )}, extension: ${this.getExtension(type.name)} })`
+      }
 
-    if (type.kind === 'INPUT_OBJECT') {
-      this.import(CORE, InputNode.name)
+      case 'INPUT_OBJECT': {
+        this.import(CORE, InputNode.name)
 
-      return `new ${InputNode.name}({
-        ${Object.values(type.inputFields)
-          .map(field => {
-            this.import(CORE, InputNodeField.name)
+        return `new ${InputNode.name}({
+          ${Object.values(type.inputFields)
+            .map(field => {
+              this.import(CORE, InputNodeField.name)
 
-            return `get ${field.name}() {
-              return new ${InputNodeField.name}(${this.generateType(
-              field.type
-            )}, ${field.type.nullable})
-            }`
-          })
-          .join(',')}
-      }, ${JSON.stringify({ name: type.name })})`
+              return `get ${field.name}() {
+                return new ${InputNodeField.name}(${this.generateType(
+                field.type
+              )}, ${field.type.nullable})
+              }`
+            })
+            .join(',')}
+        }, ${JSON.stringify({ name: type.name })})`
+      }
+
+      case 'ENUM': {
+        this.import(CORE, EnumNode.name)
+
+        return `new ${EnumNode.name}({ name: ${JSON.stringify(type.name)} })`
+      }
     }
 
     return undefined
@@ -154,6 +163,10 @@ export class SchemaFile extends File {
 
     this.import(CORE, Arguments.name)
 
+    const argsRequired = !Object.values(args).find(arg => arg.nullable)
+      ? ', true'
+      : ''
+
     return `new ${Arguments.name}({
       ${Object.entries(args)
         .map(([name, type]) => {
@@ -165,6 +178,6 @@ export class SchemaFile extends File {
           })}`
         })
         .join(',')}
-    })`
+    }${argsRequired})`
   }
 }

@@ -3,6 +3,7 @@ import * as graphql from './files'
 import { File } from './File'
 
 interface CodegenOptions {
+  url?: string
   typescript?: boolean
 }
 

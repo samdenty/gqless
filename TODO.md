@@ -1,12 +1,10 @@
-# SchemaFile
+- In ASTBuilder, selection names should not need to be globally unique.
+  - Instead they should only be unique per query
+    - This will require some changes in the `GraphQL` cache fulfillment logic
 
-- Fix types : get() { ObjectNode } => get(): ObjectNode<>
-
-# Scalar extensions
-
-```js
-export const Date = value => new Date(value)
-```
+* Add tests
+* Need to implement keys
+* Create something similiar to @apollo/link
 
 - Support for interfaces + unions
 
@@ -23,25 +21,13 @@ export const Date = value => new Date(value)
   // Component will be rendered X amount of isOfType calls
   ```
 
+* Rename `GraphQL` to gqless (conflicts with react plugin)
+
 - Extensions
 
   - No default key
     - Default key logic, should instead be moved to codegen. More explicit and no magic happening
 
-- !!Need to implement keys
-  - Extensions
-
-* If a fieldNode is a pointer to a ScalarNode, don't create the argumentlessData
-
-  - Scalarnodes always need to be called, so argumentlessData is never used
-
-* accessor->getData should be static as accessor->data
-
-  - `query.data.user === query.data.user` should be true
-  - getData calls should be cached
-    - WeakMap Accessor, Value => proxy
-
-* Variables
 * When we get an array
 
   - If it's already fetched
@@ -50,19 +36,36 @@ export const Date = value => new Date(value)
     - Not keyed
       - Delete all entries that start with the array key
 
-- Rename Middleware to plugins
+* Make FieldAccessor#data static, instead of a getter
 
-  - LoggerMiddleware to Logger
+# Config file
 
-- Babel plugin
-  - Statically know all the GraphQL data accessed in a JS file
-    - Automatically remove all unused fields from the schema
-  * Could automatically detect components that use graphql data and wrap in graphql()
-  * Adds the displayName to the graphql() fn
+Could create a config file, like apollo client. Or use https://github.com/prisma/graphql-config
 
-* Codegen
+# Babel plugin
 
-  - CLI
+- Add default query name to `graphql()` wrapper
+- Add variable definition name to `useVariable` hook
 
-* MISC
-  - Consider instead of using the GraphQL AST, to instead generate the query by hand. It seems it could be a bottleneck, should investigate though.
+## Macro
+
+Macro could be typed inside the codegen, preventing '../../..' etc.
+
+```ts
+import { graphql, query, User, useVariable } from 'gqless/macro'
+
+export const component = graphql(() => {})
+```
+
+# Future
+
+- Consider instead of using the GraphQL AST, to instead generate the query by hand.
+
+  - Reduce bundle size (should investigate gain)
+  - Could be a performance improvement (should investigate)
+  - Simplify ASTBuilder logic
+  - Remove GraphQL dependency
+
+- Babel: Static graph of all the GraphQL data accessed in a JS file
+  - Automatically remove all unused fields from the schema, resulting in a smaller bundle size
+  - Automatically detect components that use graphql data and wrap in `graphql()`

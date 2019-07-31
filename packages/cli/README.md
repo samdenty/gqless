@@ -1,20 +1,18 @@
-# @oclif/example-multi-ts
+# @gqless/cli
 
-example multi-command CLI built with typescript
+Create a typed gqless client from a graphql endpoint
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/@oclif/example-multi-ts.svg)](https://npmjs.org/package/@oclif/example-multi-ts)
-[![CircleCI](https://circleci.com/gh/oclif/example-multi-ts/tree/master.svg?style=shield)](https://circleci.com/gh/oclif/example-multi-ts/tree/master)
-[![Appveyor CI](https://ci.appveyor.com/api/projects/status/github/oclif/example-multi-ts?branch=master&svg=true)](https://ci.appveyor.com/project/oclif/example-multi-ts/branch/master)
-[![Codecov](https://codecov.io/gh/oclif/example-multi-ts/branch/master/graph/badge.svg)](https://codecov.io/gh/oclif/example-multi-ts)
-[![Downloads/week](https://img.shields.io/npm/dw/@oclif/example-multi-ts.svg)](https://npmjs.org/package/@oclif/example-multi-ts)
+[![Version](https://img.shields.io/npm/v/@gqless/cli.svg)](https://npmjs.org/package/@oclif/example-multi-ts)
+[![Downloads/week](https://img.shields.io/npm/dw/@gqless/cli.svg)](https://npmjs.org/package/@oclif/example-multi-ts)
 [![License](https://img.shields.io/npm/l/@oclif/example-multi-ts.svg)](https://github.com/oclif/example-multi-ts/blob/master/package.json)
 
 <!-- toc -->
 
-- [@oclif/example-multi-ts](#oclifexample-multi-ts)
+- [@gqless/cli](#gqlesscli)
 - [Usage](#usage)
 - [Commands](#commands)
+  - [`gqless generate OUTPUT_DIR`](#gqless-generate-outputdir)
+  - [`gqless help [COMMAND]`](#gqless-help-command)
   <!-- tocstop -->
 
 # Usage
@@ -26,7 +24,7 @@ $ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@gqless/cli/0.0.1-alpha.10 linux-x64 node-v12.4.0
+@gqless/cli/0.0.1-alpha.11 linux-x64 node-v12.4.0
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND
@@ -39,8 +37,11 @@ USAGE
 
 <!-- commands -->
 
-- [`gqless generate OUTPUT_DIR`](#gqless-generate-output_dir)
-- [`gqless help [COMMAND]`](#gqless-help-command)
+- [@gqless/cli](#gqlesscli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`gqless generate OUTPUT_DIR`](#gqless-generate-outputdir)
+  - [`gqless help [COMMAND]`](#gqless-help-command)
 
 ## `gqless generate OUTPUT_DIR`
 

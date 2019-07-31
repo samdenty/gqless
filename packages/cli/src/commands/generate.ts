@@ -58,7 +58,10 @@ export default class Generate extends Command {
     const schema = await fetchSchema(fetchQuery, {
       includeInfo: !flags.noComments,
     })
-    const codegen = new Codegen(schema, { typescript: flags.typescript })
+    const codegen = new Codegen(schema, {
+      typescript: flags.typescript,
+      url: flags.url,
+    })
     const files = codegen.generate()
 
     const rootDir = path.join(process.cwd(), args.output_dir)

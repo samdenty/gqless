@@ -1,10 +1,13 @@
 import { ArgumentsField } from './ArgumentsField'
-import { UScalarNode, ArrayNode, InputNode } from '../'
+import { ScalarNode, ArrayNode, InputNode } from '../'
 import { Node } from '../abstract'
-import { lazyGetters } from '@gqless/utils'
+import { lazyGetters, invariant } from '@gqless/utils'
+import { EnumNode } from '../EnumNode'
+import { Variable } from '../../Variable'
 
 export type UArguments =
-  | UScalarNode
+  | ScalarNode
+  | EnumNode
   | ArrayNode<any>
   | ArgumentsField
   | InputNode<any>
@@ -14,11 +17,12 @@ type UArgumentsRecord = Record<string, ArgumentsField>
 export class Arguments<TData = any> extends Node<TData> {
   public inputs: UArgumentsRecord
 
-  constructor(inputs: UArgumentsRecord) {
+  constructor(inputs: UArgumentsRecord, public required = false) {
     super()
 
-    this.inputs = lazyGetters(inputs)
+    this.inputs = lazyGetters(inputs, (fieldName, field) => {
+      // Called when the getter prop is evaluated
+      field.name = fieldName as string
+    })
   }
-
-  public provide(value: TData) {}
 }

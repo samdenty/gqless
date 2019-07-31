@@ -1,27 +1,32 @@
-# TSDX Bootstrap
+# @gqless/schema
 
-This project was bootstrapped with [TSDX](https://github.com/jaredpalmer/tsdx).
+Creates a `gqless` schema from a GraphQL endpoint.
 
-## Local Development
+- [**Codegen (typesafe)**](#Codegen) - outputs an array containing JS sourcecode, used by the CLI
+- [**Runtime (not-typesafe)**](#Runtime) - creates a schema in the browser/node without codegen
 
-Below is a list of commands you will probably find useful.
+## Usage
 
-### `npm start` or `yarn start`
+### Codegen
 
-Runs the project in development/watch mode. Your project will be rebuilt upon changes. TSDX has a special logger for you convenience. Error messages are pretty printed and formatted for compatibility VS Code's Problems tab.
+```js
+import { Codegen, fetchSchema } from '@gqless/schema'
 
-<img src="https://user-images.githubusercontent.com/4060187/52168303-574d3a00-26f6-11e9-9f3b-71dbec9ebfcb.gif" width="600" />
+const schemaDefs = await fetchSchema(fetchQuery)
+const codegen = new Codegen(schemaDefs, { typescript: true })
 
-Your library will be rebuilt if you make edits.
+const files = codegen.generate()
+// => { path: string, contents: string }[]
+```
 
-### `npm run build` or `yarn build`
+### Runtime
 
-Bundles the package to the `dist` folder.
-The package is optimized and bundled with Rollup into multiple formats (CommonJS, UMD, and ES Module).
+```ts
+import { schemaNodes, fetchSchema } from '@gqless/schema'
 
-<img src="https://user-images.githubusercontent.com/4060187/52168322-a98e5b00-26f6-11e9-8cf6-222d716b75ef.gif" width="600" />
+const schemaDefs = await fetchSchema(fetchQuery)
+const schema = schemaNodes(schemaDefs)
 
-### `npm test` or `yarn test`
-
-Runs the test watcher (Jest) in an interactive mode.
-By default, runs tests related to files changed since the last commit.
+// Usage in runtime:
+const graphql = new GraphQL(schema)
+```

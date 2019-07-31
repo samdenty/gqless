@@ -33,6 +33,7 @@ type t_Query = FieldsType<
      * All users stored in the database
      */
     users: FieldsTypeArg<{ limit?: number | null }, (t_User)[]>
+    stringArray: ((t_String)[] | null)[]
     a: t_A | null
 
     /**
@@ -62,7 +63,7 @@ type t_User = FieldsType<
   {
     __typename: t_String<'User'>
     id: t_ID
-    test: t_MyEnum | null
+    test: FieldsTypeArg<{ enum?: MyEnum | null }, t_MyEnum | null>
     name: t_String | null
     age: t_Int | null
     description: t_String | null

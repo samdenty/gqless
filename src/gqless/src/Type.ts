@@ -5,7 +5,7 @@ import {
   LastTupleValue,
   TupleKeys,
 } from '@gqless/utils'
-import { OF_NODE, GET_KEY } from 'gqless'
+import { INDEX, GET_KEY } from 'gqless'
 
 type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K
@@ -87,7 +87,7 @@ type MapExtensionData<T extends Tuple, Key extends TupleKeys<T>> = {
 // Add new properties from extension
 type CustomExtensionData<TExtensions extends Tuple> = Omit<
   UnionToIntersection<TExtensions[keyof TExtensions]>,
-  typeof OF_NODE | typeof GET_KEY
+  typeof INDEX | typeof GET_KEY
 >
 
 type FieldsData<TFields extends FieldsType, TExtensions extends Tuple> = {
@@ -102,11 +102,11 @@ type FieldsData<TFields extends FieldsType, TExtensions extends Tuple> = {
 
 type ArrayData<
   TArray extends ValidArrayType,
-  TExtensions extends Tuple<{ [OF_NODE]: any }>
+  TExtensions extends Tuple<{ [INDEX]: any }>
 > = Omit<
   {
     [K in keyof TArray]: TArray[K] extends ValidType
-      ? TypeData<TArray[K], MapExtensionData<TExtensions, typeof OF_NODE>>
+      ? TypeData<TArray[K], MapExtensionData<TExtensions, typeof INDEX>>
       : TArray[K]
   },
   keyof CustomExtensionData<TExtensions>

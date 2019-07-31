@@ -4,8 +4,6 @@ import {
   UFieldsNodeRecord,
   Outputable,
   Keyable,
-  KeyFn,
-  Node,
   defaultKey,
   FieldNode,
 } from './abstract'
@@ -16,7 +14,6 @@ import { Extension } from '../Extension'
 
 export type IObjectNodeOptions = IFieldsNodeOptions & {
   extension?: Extension
-  // getKey?: KeyFn<TNode>
 }
 
 export interface ObjectNode<TData>
@@ -32,7 +29,7 @@ export class ObjectNode<TData = any> extends Mix(
 ) {
   constructor(
     fields: UFieldsNodeRecord,
-    { extension, ...options }: IObjectNodeOptions = {}
+    { extension, ...options }: IObjectNodeOptions
   ) {
     // Add __typename node, not currently used.
     ;(fields as any).__typename = new FieldNode(TYPENAME_NODE)
@@ -58,14 +55,6 @@ export class ObjectNode<TData = any> extends Mix(
         // check fields first
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
-
-          // if it's scalar, check extensions
-          if (field.ofNode instanceof ScalarNode) {
-            for (let i = accessor.extensions.length - 1; i >= 0; --i) {
-              const extension = accessor.extensions[i]
-              if (prop in extension) return extension[prop]
-            }
-          }
 
           return field.getData(accessor as any)
         }

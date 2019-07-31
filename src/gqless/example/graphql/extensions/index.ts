@@ -1,10 +1,12 @@
-import { GET_KEY, OF_NODE } from 'gqless'
+import { GET_KEY, INDEX } from 'gqless'
 import * as T from '../generated/types'
 
-// export const String = () => new Map()
+// export const String = (value: string) => {
+//   return `string_${value}`
+// }
 
 export const User /*: Extension<g.User>*/ = {
-  name: 'bob' as const,
+  name: (name: string) => `user_${name}`,
   isAUser: true as const,
   following: {
     isFollowing: true,
@@ -19,7 +21,7 @@ export const Query /*: Extension<g.User>*/ = query => {
     },
     users: {
       get(id: string) {},
-      [OF_NODE]: {
+      [INDEX]: {
         isAQueryUser: true,
       },
     },
@@ -27,14 +29,14 @@ export const Query /*: Extension<g.User>*/ = query => {
       queryGetUsers: true as const,
     },
     me: {
-      name: 'me' as const,
+      name: (name: string) => `me_${name}`,
       isMe: true,
       following: {
         isMeFollowing: true,
         doesIt: {
           work: true,
         },
-        [OF_NODE]: {
+        [INDEX]: {
           meIsFollowing: true,
         },
       },

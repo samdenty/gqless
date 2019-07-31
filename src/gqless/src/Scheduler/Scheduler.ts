@@ -2,7 +2,7 @@ import { Selection } from '../Selection'
 import { Disposable } from '../mixins'
 import { queriesFromStacks } from './queriesFromStacks'
 import { Query } from './Query'
-import { MiddlewareEngine } from '../Middleware'
+import { Plugins } from '../Plugin'
 import { invariant } from '@gqless/utils'
 
 export class Scheduler extends Disposable {
@@ -15,7 +15,7 @@ export class Scheduler extends Disposable {
   public stack: Query[] = []
 
   constructor(
-    private middleware: MiddlewareEngine,
+    private plugins: Plugins,
     private fetchSelections: (
       selections: Selection<any>[],
       queryName?: string
@@ -103,7 +103,7 @@ export class Scheduler extends Disposable {
       queries.set(query, [selection])
     })
 
-    this.middleware.all.onCommit({ stacks, stackQueries, selections, queries })
+    this.plugins.all.onCommit({ stacks, stackQueries, selections, queries })
 
     this.commits.clear()
 
@@ -123,7 +123,9 @@ export class Scheduler extends Disposable {
         .filter(Boolean) as Promise<any>[]
 
       await Promise.all(promises)
-    } catch {}
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   protected resume() {

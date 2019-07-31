@@ -11,18 +11,19 @@
   "scripts": {
     "watch": "tsdx watch",
     "build": "tsdx build",
-    "prepublish": "cp ../../README.md .; yarn build",
+    "prepublish": "in-publish && cp ../../README.md .; yarn build",
     "test": "tsdx test"
   },
   "dependencies": {
     "@gqless/utils": "^0.0.1-alpha.6",
-    "fast-deep-equal": "^2.0.1",
     "json-stable-stringify": "^1.0.1",
+    "lodash": "^4.17.15",
     "mix-classes": "^1.1.6"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@types/json-stable-stringify": "^1.0.32",
+    "@types/lodash": "^4.14.136",
     "template-literal-table": "^2.0.2"
   },
   "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb"

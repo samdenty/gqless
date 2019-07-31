@@ -25,7 +25,7 @@ enum MyEnum {
 # User
 type User {
   id: ID!
-  test: MyEnum
+  test(enum:MyEnum): MyEnum
 
   name: String @fake(type: firstName, locale: en_CA)
   age: Int @fake(type: number)
@@ -84,6 +84,8 @@ type Query {
   # All users stored in the database
   users(limit: Int): [User!]!
 
+  stringArray:[[String!]]! @fake(type: city)
+  
   a: A
   getUser(id: ID): User @deprecated(reason: "use the user field instead")
   getUsers(id: ID): [User!]! @deprecated(reason: "use the users field instead")

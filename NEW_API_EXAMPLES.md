@@ -147,7 +147,7 @@ export const Query: Extension<Query> = {
     [GET_KEY](data) {
       return data.id
     },
-    [OF_NODE]: {
+    [INDEX]: {
       name: 'asd',
     },
   }),

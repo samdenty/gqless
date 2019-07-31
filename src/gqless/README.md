@@ -5,10 +5,11 @@ Auto-generates GraphQL queries based on the data your application consumes.
 ## Features
 
 - **No need to write queries** - auto-generated at runtime
+- **100% GraphQL spec supported** - unions, interfaces, scalars, field arguments, input, enums...
 - [**TypeScript safe**](#Typescript) - without running code-generation on each change
 - [**Inbuilt cache**](#Cache) - can be used without apollo-client
-- [**Type extensions**](#Type-extensions) - add custom properties and functions to types (similiar to [apollo-link-state](https://www.apollographql.com/docs/link/links/state/))
-- [**React integration**](#React) - uses suspense out the box, and updates components when data changes
+- [**Extensions**](#Extensions) - add custom properties and functions to types (similiar to [apollo-link-state](https://www.apollographql.com/docs/link/links/state/))
+- [**React integration**](#React) - uses suspense out the box, selectively updating components when data changes
 
 ## Example
 
@@ -50,7 +51,7 @@ query App {
 
 ### Individual queries
 
-By default, all the fields are merged into one query. With `Query` component, you can seperate them
+By default, all component data requirements are merged into one query. By using `<Query>` you can seperate components into different queries.
 
 ```tsx
 const Description = graphql(({ user }) => <p>{user.description}</p>)
@@ -71,41 +72,56 @@ query App { me { name } }
 query Description { me { description } }
 ```
 
-## Type extensions
+## Extensions
+
+Extensions allow you to expressively add custom properties to types, whilst being type-safe.
 
 ```js
-// src/extensions/index.ts
+// src/graphql/extensions/index.ts
+
+// Convert date strings into Date objects
+export const Date = (date_string: string) => new Date(date_string)
+
 export const User = user => ({
+  // Add a new property
   sendMessage(message: string) {
     console.log({ name: user.name, message })
   },
+
+  // Add a function to unf
+  following: {
+    [INDEX]: {
+      unfollow() {},
+    },
+  },
 })
 
-// Now access the added properties on all the User types
-query.users[0].sendMessage('test')
-// => { name: 'bob', message: 'test' }
+query.user.sendMessage('test') // => { name: 'bob', message: 'test' }
+query.user.following[0].unfollow()
+query.user.createdAt // => Date object
 ```
 
 ## Typescript
 
-Simply one-time generate using the CLI, and you'll automatically get type-safety
+Run the CLI each time your API changes, and get full type-safety & IDE support.
 
 ```ts
 // Error: Type 'string' is not assignable to type 'number'
+//            ~~~~~~~~~~~~
 query.users({ limit: 'asd' })
 
-// Property 'something' does not exist on type ...
-query.something
+// Property 'userss' does not exist on type ...
+query.userss
 ```
 
 ## Cache
 
 Apollo encourages you to manually update the cache, which leads to loads of boilerplate.
 
-gqless's cache is inspired by [`mobx`](https://github.com/mobxjs/mobx). You use normal JS methods/assignments, and the cache is auto-updated.
+gqless's cache is inspired by [`mobx`](https://github.com/mobxjs/mobx). By using normal JS methods/assignments, the cache is auto-magically updated.
 
 ```ts
-// Increment my age
+// Use setters to change type values
 query.me.age += 1
 
 // Use pattern-matching to find an existing node
@@ -115,7 +131,7 @@ query.me.following.push({ username: 'bob' })
 query.me.following.push(query.users[0])
 ```
 
-Combined with [Type extensions](#Type-extensions), you can automatically dispatch mutations when the cache is updated
+Combined with [Extensions](#Extensions), you can automatically dispatch mutations when the cache is updated
 
 ```ts
 // src/extensions/index

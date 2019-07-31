@@ -5,8 +5,8 @@ import { Suspense } from 'react'
 import * as ReactDOM from 'react-dom'
 import ApolloClient from 'apollo-boost'
 // import { useQuery, QueryProvider, graphql, Defer } from '@gqless/react'
-import { GraphQL } from 'gqless'
-import { LoggerMiddleware } from '@gqless/logger'
+import { GraphQL, Variable } from 'gqless'
+import { Logger } from '@gqless/logger'
 import { print } from 'graphql'
 import { schema as schemaFaker, User, Query } from './graphql'
 import * as Imports from 'gqless'
@@ -21,7 +21,7 @@ const client = new ApolloClient({
 })
 
 async function bootstrap() {
-  const fetchQuery = async query => {
+  const fetchQuery = async (query, variables) => {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -29,6 +29,7 @@ async function bootstrap() {
       },
       body: JSON.stringify({
         query: print(query),
+        variables,
       }),
       mode: 'cors',
     })
@@ -58,7 +59,7 @@ async function bootstrap() {
   // console.log(codegen.generate())
 
   const graphqlInstance = new GraphQL(schemaFaker.Query, fetchQuery)
-  graphqlInstance.middleware.add(new LoggerMiddleware(graphqlInstance, true), {
+  graphqlInstance.plugins.add(new Logger(graphqlInstance, true), {
     // async onFetch(_, response) {
     //   await response
     //   getUsers({ limit: 1 })[1].age
@@ -73,19 +74,9 @@ async function bootstrap() {
     // },
   })
 
-  // const getUsers = query.query.users
-  // getUsers({ limit: 10 })[1].age
-  // query.query.users[1].age
-
-  // graphql.query.user.name
-  // graphql.query.users[0].name
-
   const query = graphqlInstance.query as Query
 
   Object.assign(window, { query, graphql: graphqlInstance })
-  // return
-
-  // test(typesFaker, fetchQuery)
 
   const Description = graphql(
     ({ user }: { user: User }) => {
@@ -112,11 +103,24 @@ async function bootstrap() {
     () => {
       const [showDescription, setShowDescription] = React.useState(false)
 
+      const variable = React.useMemo(() => {
+        return new Variable(10, {
+          name: 'testingVariable',
+          // nullable: false,
+        })
+      }, [])
+      // console.log(variable)
+
       // query.me.following[0].name
 
       // query.asdasd
+
       return (
         <div>
+          {query.user({ id: variable })!.name}
+          {/*query.stringArray.map((t, i) => (
+            <div key={i}>{t!.join(',')}</div>
+          ))*/}
           <b>My name:</b> {query.me!.name}
           <br />
           <b>My description:</b>
@@ -218,8 +222,6 @@ async function bootstrap() {
   }
 
   ReactDOM.render(<App />, document.getElementById('root'))
-
-  // query.batcher.stageNode(query.root.fields[0])
 }
 
 bootstrap()

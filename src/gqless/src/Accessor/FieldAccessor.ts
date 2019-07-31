@@ -9,15 +9,17 @@ export class FieldAccessor<
 > extends Accessor<TFieldSelection, TChildren> {
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
+
+    this.stageIfRequired()
   }
 
   protected getExtensions() {
     super.getExtensions()
-    if (this.node instanceof ScalarNode) return
 
     for (const parentExtension of this.parent.extensions) {
       const extensionField = parentExtension[this.selection.field.name]
       const extension: IExtension<any> =
+        !(this.node instanceof ScalarNode) &&
         typeof extensionField === 'function'
           ? extensionField(this.data)
           : extensionField

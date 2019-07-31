@@ -31,15 +31,20 @@ export class ArrayNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
           if (!isNaN(index)) {
             // If the array is fetched, make sure index exists
             if (arr && index >= arr!.length) return undefined
+            if (!(this.ofNode instanceof Outputable)) return undefined
 
             const accessor =
               arrayAccessor.getChild(a => a.index === index) ||
               new IndexAccessor(arrayAccessor, index)
 
-            return this.ofNode instanceof ObjectNode
-              ? this.ofNode.getData(accessor)
-              : null
+            return this.ofNode.getData(accessor)
           }
+        }
+
+        // fallback to extensions
+        for (let i = arrayAccessor.extensions.length - 1; i >= 0; --i) {
+          const extension = arrayAccessor.extensions[i]
+          if (prop in extension) return extension[prop]
         }
 
         if (typeof target[prop] === 'function') {
@@ -49,10 +54,13 @@ export class ArrayNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
         return target[prop]
       },
       has: (target, prop) => {
-        // If the array is fetched, check against it
-        // if (accessor.value) {
-        //   return prop in accessor.value
-        // }
+        if (arrayAccessor.value) {
+          if (arrayAccessor.value.data) {
+            return prop in (arrayAccessor.value.data as any[])
+          }
+
+          return false
+        }
 
         if (typeof prop === 'string' && !isNaN(+prop)) {
           return true

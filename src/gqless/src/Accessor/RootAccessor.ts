@@ -28,12 +28,4 @@ export class RootAccessor<
   public toString() {
     return this.selection.toString()
   }
-
-  // public onSelectUpdate = onEvent<Middleware['onSelectUpdate']>()
-  // public selectUpdate = this.onSelectUpdate.emit
-
-  // public onGetScalarData = onEvent<Middleware['getScalarData']>()
-  // public getScalarData = this.onGetScalarData.first(
-  //   value => value !== undefined
-  // )
 }

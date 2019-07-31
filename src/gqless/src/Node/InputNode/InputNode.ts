@@ -1,10 +1,11 @@
-import { UScalarNode } from '../ScalarNode'
+import { ScalarNode } from '../ScalarNode'
 import { InputNodeField } from './InputNodeField'
 import { ArrayNode } from '../ArrayNode'
 import { Node } from '../abstract'
 import { lazyGetters } from '@gqless/utils'
+import { EnumNode } from '../EnumNode'
 
-export type UInputNode = UScalarNode | ArrayNode<any> | InputNode<any>
+export type UInputNode = ScalarNode | ArrayNode<any> | InputNode<any> | EnumNode
 
 type UInputNodeRecord = Record<string, InputNodeField>
 
@@ -22,5 +23,7 @@ export class InputNode<TData> extends Node<TData> {
     this.inputs = lazyGetters(inputs)
   }
 
-  public provide(value: TData) {}
+  public toString() {
+    return this.name || this.constructor.name
+  }
 }

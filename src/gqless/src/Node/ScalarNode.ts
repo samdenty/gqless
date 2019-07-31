@@ -1,71 +1,43 @@
-import { Outputable, Node } from './abstract'
+import { Outputable } from './abstract/Outputable'
+import { Node } from './abstract/Node'
 import { Selection } from '../Selection'
 import { Accessor } from '../Accessor'
 import { Mix, Generic } from 'mix-classes'
+import { Extension } from '../Extension'
 
 export type IScalarNodeOptions = {
   name?: string
+  extension?: Extension
 }
-
-export type UScalarNode = ScalarNode<any>
 
 export interface ScalarNode<T extends any = any> extends Node<T> {}
 
-export class ScalarNode<T> extends Mix(Generic(Node), Outputable) {
+export class ScalarNode<T> extends Mix(Outputable, Generic(Node)) {
   public name?: string
 
-  constructor({ name }: IScalarNodeOptions = {}) {
-    super()
+  constructor({ name, extension }: IScalarNodeOptions = {}) {
+    super([extension])
+
     this.name = name
   }
 
-  protected getPrototypeMethod(prop: any) {
-    return (
-      String.prototype[prop as keyof String] ||
-      Number.prototype[prop as keyof Number] ||
-      Boolean.prototype[prop as keyof Boolean]
-    )
+  public toString() {
+    return this.name || this.constructor.name
   }
 
-  private proxyGetter(
-    accessor: Accessor<Selection<UScalarNode>>,
-    prop: string | symbol
-  ) {
-    // if (prop === Symbol.toPrimitive) {
-    //   return (hint: string) => {
-    //     if (selection.value !== undefined) return selection.value
-    //     throw selection.unresolvedSelection
-    //   }
-    // }
-    // const method = this.getPrototypeMethod(prop)
-    // if (method !== undefined) {
-    //   if (typeof method === 'function') {
-    //     return interceptFunction(selection, prop)
-    //   }
-    //   const { unresolvedSelection } = selection
-    //   if (unresolvedSelection) {
-    //     throw unresolvedSelection
-    //   }
-    //   return selection.value[prop]
-    // }
-  }
-
-  public getData(accessor: Accessor<Selection<UScalarNode>>): T {
+  public getData(accessor: Accessor<Selection<ScalarNode>>): any {
     super.getData(accessor)
 
-    let value: any = accessor.value ? accessor.value.data : null
+    if (!accessor.value) return null
 
-    if (value === undefined) {
-      value = new Proxy(
-        {},
-        {
-          get: (_, prop: string) => this.proxyGetter(accessor, prop),
-        }
-      ) as T
+    let value: any = accessor.value.data
+
+    if (accessor.extensions.length) {
+      const extension = accessor.extensions[accessor.extensions.length - 1]
+
+      return typeof extension === 'function' ? extension(value) : extension
     }
 
-    // const returnValue = accessor.root.getScalarData(accessor, value)
-    // if (returnValue !== undefined) return returnValue
     return value
   }
 }

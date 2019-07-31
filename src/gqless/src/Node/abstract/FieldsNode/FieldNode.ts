@@ -1,13 +1,15 @@
-import { Node, NodeDataType } from '../Node'
+import { Node } from '../Node'
 import { NodeContainer } from '../NodeContainer'
 import { FieldSelection, Selection } from '../../../Selection'
 import { Arguments } from '../..'
 import { Accessor, FieldAccessor } from '../../../Accessor'
-import isEqual from 'fast-deep-equal'
 import { Outputable } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { invariant } from '@gqless/utils'
 import { Mix, Generic } from 'mix-classes'
+import { ScalarNode } from '../../ScalarNode'
+import { EnumNode } from '../../EnumNode'
+import { isArgsEqual } from './isArgsEqual'
 
 export interface FieldNode<TNode extends Node<any> = any>
   extends NodeContainer<TNode> {}
@@ -28,7 +30,8 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
         if (!(selection instanceof FieldSelection)) return false
 
         return (
-          selection.field.name === this.name && isEqual(selection.args, args)
+          selection.field.name === this.name &&
+          isArgsEqual(selection.args, args)
         )
       })! as FieldSelection<TNode>
 
@@ -54,24 +57,39 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
         ? this.ofNode.getData(accessor)
         : undefined
     }
+
+    const createArgsFn = (handler?: (args: any) => void) => (args: any) => {
+      const parsedArgs = args && Object.keys(args).length ? args : undefined
+
+      handler && handler(parsedArgs)
+
+      return getData(getSelection(parsedArgs).selection)
+    }
+
+    // If the arguments are required, skip creating an argumentless selection
+    if (
+      this.args &&
+      (this.args.required ||
+        this.ofNode instanceof ScalarNode ||
+        this.ofNode instanceof EnumNode)
+    ) {
+      return createArgsFn()
+    }
+
+    // Create an argumentless selection, that will be destroyed if
+    // the callback function is called
     const argumentless = getSelection()
     const argumentlessData = getData(argumentless.selection)
 
-    if (this.args) {
-      // Return a proxy to a function
+    if (this.args)
       return new Proxy(
-        (args: any | undefined) => {
-          if (!args) args = undefined
-
+        createArgsFn(args => {
           // If we just created the argumentless selection
           // + it didn't already exist then destroy it, as it's not required
           if (args && argumentless.justCreated) {
             argumentless.selection.unselect()
           }
-
-          const { selection } = getSelection(args)
-          return getData(selection)
-        },
+        }),
         {
           get: (_, prop) => {
             invariant(
@@ -107,7 +125,6 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
           },
         }
       )
-    }
 
     return argumentlessData
   }

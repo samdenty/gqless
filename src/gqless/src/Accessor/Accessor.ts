@@ -1,7 +1,7 @@
 import { Selection } from '../Selection'
 import { createEvent } from '@gqless/utils'
 import { computed } from '../utils'
-import { Node, Keyable, NodeContainer, Outputable } from '../Node'
+import { Node, Keyable, NodeContainer, Outputable, ScalarNode } from '../Node'
 import { Cache, Value } from '../Cache'
 import { Disposable } from '../mixins'
 import { Scheduler } from '../Scheduler'
@@ -39,7 +39,12 @@ export abstract class Accessor<
     if (parent) {
       parent.children.push(this)
 
-      // On un-select, delete accessor
+      /**
+       * On un-select, dispose of self
+       *
+       * used when you do `query.users()`, and an argumentless
+       * selection is created before the function call
+       */
       this.disposers.add(
         selection.onUnselect(s => {
           if (s === selection) {
@@ -49,65 +54,72 @@ export abstract class Accessor<
         })
       )
 
-      // Sync up data changes
-      let disposeListener: Function | undefined
-      let prevData: any
-      const valueAssociated = () => {
-        if (disposeListener) {
-          disposeListener()
-          disposeListener = undefined
-        }
+      /**
+       * When the value associated with this accessor,
+       * ensure types are different and emit onDataUpdate
+       */
+      {
+        let dispose: Function | undefined
+        let prevData: any
+        const onValueAssociated = () => {
+          if (dispose) {
+            dispose()
+            dispose = undefined
+          }
 
-        // Hook for onDataUpdate event
-        const check = () => {
-          const newData = value ? value.data : undefined
-          if (prevData === newData) return
+          // Hook for onDataUpdate event
+          const check = () => {
+            const newData = value ? value.data : undefined
+            if (prevData === newData) return
+            this.onDataUpdate.emit(prevData)
+            prevData = newData
+          }
 
-          this.onDataUpdate.emit(prevData)
-
-          prevData = newData
-        }
-
-        const value = this.value!
-        if (!value) {
+          const value = this.value!
+          if (!value) return check()
+          dispose = value.onChange(check)
           check()
-          return
         }
+        this.disposers.add(this.onValueAssociated(onValueAssociated))
 
-        disposeListener = value.onChange(check)
-        check()
+        onValueAssociated()
       }
 
-      this.disposers.add(this.onValueAssociated(valueAssociated))
+      /**
+       * When a value is associated with parent, update
+       * the value of this accessor, and emit onValueAssociated
+       */
+      {
+        let dispose: Function | undefined
+        const onParentValueAssociated = () => {
+          if (dispose) {
+            this.disposers.delete(dispose)
+            dispose()
+            dispose = undefined
+          }
 
-      valueAssociated()
-
-      // Sync the Value class to this accessor (using parent)
-      let disposeParentListener: Function | undefined
-      const parentValueAssociated = () => {
-        if (disposeParentListener) {
-          this.disposers.delete(disposeParentListener)
-          disposeParentListener()
-          disposeParentListener = undefined
-        }
-
-        if (parent.value) {
-          this.value = parent.value!.get(this.toString())
-
-          disposeParentListener = parent.value!.onChange(() => {
+          if (parent.value) {
             this.value = parent.value!.get(this.toString())
-          })
-          this.disposers.add(disposeParentListener)
-        } else {
-          this.value = undefined
-        }
-      }
 
-      this.disposers.add(parent.onValueAssociated(parentValueAssociated))
-      parentValueAssociated()
+            dispose = parent.value!.onChange(() => {
+              this.value = parent.value!.get(this.toString())
+            })
+            this.disposers.add(dispose)
+          } else {
+            this.value = undefined
+          }
+        }
+
+        this.disposers.add(parent.onValueAssociated(onParentValueAssociated))
+        onParentValueAssociated()
+      }
     }
 
-    // Extensions
+    /**
+     * Update the extensions change when:
+     * - data changes (from null -> object)
+     * - parent extensions change
+     */
     const updateExtensions = () => this.updateExtensions()
     this.disposers.add(this.onDataUpdate(updateExtensions))
     if (parent) this.disposers.add(parent.onExtensionsUpdate(updateExtensions))
@@ -121,10 +133,27 @@ export abstract class Accessor<
     // }
   }
 
+  /**
+   * Stage the accessor, if it doesn't have a value
+   * @TODO Instead of unstage, stage() should return a function
+   */
+  protected stageIfRequired() {
+    if (this.value) return
+
+    this.scheduler.stage(this.selection)
+
+    this.disposers.add(
+      this.onValueAssociated.once(() => {
+        this.scheduler.unstage(this.selection)
+      })
+    )
+  }
+
   protected getExtensions() {
     if (!this.node.extension) return
 
     const extension: IExtension<any> =
+      !(this.node instanceof ScalarNode) &&
       typeof this.node.extension === 'function'
         ? this.node.extension(this.data)
         : this.node.extension

@@ -3,7 +3,7 @@ import { createEvent } from '@gqless/utils'
 import { computed } from '../utils'
 import { RootSelection } from './RootSelection'
 import { FieldSelection } from './FieldSelection'
-import { MiddlewareMethod } from '../Middleware'
+import { PluginMethod } from '../Plugin'
 
 export interface CircularSelectionField extends FieldSelection {}
 
@@ -18,8 +18,8 @@ export abstract class Selection<
   public onFetching = createEvent<() => void>()
   public onNotFetching = createEvent<() => void>()
 
-  public onSelect = createEvent<MiddlewareMethod<'onSelect'>>()
-  public onUnselect = createEvent<MiddlewareMethod<'onUnselect'>>()
+  public onSelect = createEvent<PluginMethod<'onSelect'>>()
+  public onUnselect = createEvent<PluginMethod<'onUnselect'>>()
 
   constructor(public parent: Selection<any> | undefined, public node: TNode) {
     if (this.parent) {

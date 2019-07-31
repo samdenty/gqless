@@ -2,58 +2,78 @@ import {
   DocumentNode,
   SelectionNode,
   ArgumentNode,
-  ObjectFieldNode,
   ValueNode,
-} from 'graphql'
+  VariableDefinitionNode,
+} from 'graphql/language'
 import { FieldSelection, Selection } from '../Selection'
-import { ScalarNode, FieldsNode, Keyable, NodeContainer } from '../Node'
+import { Keyable, NodeContainer, UArguments } from '../Node'
 import { sortByPathLength } from './sortByPathLength'
+import { Variable } from '../Variable'
+import { toValueNode } from './toValueNode'
+import { toTypeNode } from './toTypeNode'
+import { initialSelections } from './initialSelections'
+import { VariableEntry, uniqueVariables } from './uniqueVariables'
+import { toVariableNode } from './toVariableNode'
+
+interface CurrentDocument {
+  variables: Map<Variable, VariableEntry>
+}
 
 export class ASTBuilder {
   constructor() {}
 
-  private getValue(value: any): ValueNode {
-    return value === null
-      ? { kind: 'NullValue' }
-      : typeof value === 'string'
-      ? { kind: 'StringValue', value }
-      : typeof value === 'number'
-      ? { kind: 'IntValue', value: `${value}` }
-      : typeof value === 'boolean'
-      ? { kind: 'BooleanValue', value: value }
-      : value instanceof Array
-      ? {
-          kind: 'ListValue',
-          values: value.map(value => this.getValue(value)),
-        }
-      : {
-          kind: 'ObjectValue',
-          fields: Object.entries(value).map(
-            ([name, value]): ObjectFieldNode => ({
-              kind: 'ObjectField',
-              name: {
-                kind: 'Name',
-                value: name,
-              },
-              value: this.getValue(value),
-            })
-          ),
-        }
+  private currentDocument: CurrentDocument | undefined
+
+  private getValue(
+    value: any,
+    node: UArguments,
+    nullable: boolean,
+    variablePath: string[]
+  ): ValueNode {
+    if (value) {
+      if (value instanceof Variable)
+        return toVariableNode(
+          this.currentDocument!.variables,
+          value,
+          node,
+          nullable,
+          variablePath
+        )
+
+      if (typeof value.toJSON === 'function') {
+        value = value.toJSON()
+      }
+    }
+
+    return toValueNode(value, node, (value, node, nullable) =>
+      this.getValue(value, node, nullable, variablePath)
+    )
   }
 
-  private getArguments(selection: FieldSelection<any, any>) {
+  private getArguments(selection: FieldSelection<any, any>, fieldName: string) {
     if (!selection.args) return []
 
-    return Object.entries(selection.args).map(
-      ([name, value]): ArgumentNode => ({
-        kind: 'Argument',
-        name: {
-          kind: 'Name',
-          value: name,
-        },
-        value: this.getValue(value),
-      })
-    )
+    const { inputs } = selection.field.args!
+
+    return Object.entries(selection.args)
+      .filter(([name]) => name in inputs)
+      .map(
+        ([name, value]): ArgumentNode => {
+          const field = inputs[name]
+
+          return {
+            kind: 'Argument',
+            name: {
+              kind: 'Name',
+              value: name,
+            },
+            value: this.getValue(value, field.ofNode, field.nullable, [
+              fieldName,
+              name,
+            ]),
+          }
+        }
+      )
   }
 
   private selectionNode(
@@ -69,7 +89,7 @@ export class ASTBuilder {
       ...(selection.alias && {
         alias: { kind: 'Name', value: selection.dataProp! },
       }),
-      arguments: this.getArguments(selection),
+      arguments: this.getArguments(selection, selection.field.name),
       directives: [],
       selectionSet: subSelections.length
         ? { kind: 'SelectionSet', selections: subSelections }
@@ -77,32 +97,30 @@ export class ASTBuilder {
     }
   }
 
-  public buildDocument(queryName?: string, ...selections: Selection<any>[]) {
-    if (!selections.length) return undefined
+  private variableDefinition(
+    variable: Variable,
+    name: string
+  ): VariableDefinitionNode {
+    return {
+      kind: 'VariableDefinition',
+      variable: {
+        kind: 'Variable',
+        name: {
+          kind: 'Name',
+          value: name,
+        },
+      },
+      type: {
+        kind: 'NamedType',
+        name: toTypeNode(variable.node!, variable.nullable!),
+      },
+    }
+  }
+
+  private getRootSelections(selections: Selection[]) {
     selections.sort(sortByPathLength)
 
-    const astMap = new Map<Selection<any>, SelectionNode[]>()
-
-    const getInitialSubselections = (selection: Selection<any>) => {
-      const subSelections: SelectionNode[] = []
-
-      const innerNode =
-        selection.node instanceof NodeContainer
-          ? selection.node.innerNode
-          : selection.node
-
-      if (!(innerNode instanceof ScalarNode)) {
-        subSelections.push({
-          kind: 'Field',
-          name: {
-            kind: 'Name',
-            value: '__typename',
-          },
-        })
-      }
-
-      return subSelections
-    }
+    const astMap = new Map<Selection, SelectionNode[]>()
 
     const addSelectionNode = (selection: Selection<any>) => {
       if (astMap.has(selection)) return
@@ -119,7 +137,7 @@ export class ASTBuilder {
         // console.log(selection.path.toString(), selection.node.keyGetter)
       }
 
-      const subSelections = getInitialSubselections(selection)
+      const subSelections = initialSelections(selection)
       astMap.set(selection, subSelections)
 
       if (selection.parent) {
@@ -152,7 +170,23 @@ export class ASTBuilder {
     })
 
     const { root } = selections[0]
+
     const rootSelections = astMap.get(root)!
+    return { rootSelections, root }
+  }
+
+  public buildDocument(queryName?: string, ...selections: Selection<any>[]) {
+    if (!selections.length) return
+
+    this.currentDocument = {
+      variables: new Map(),
+    }
+
+    const { root, rootSelections } = this.getRootSelections(selections)
+
+    const { variables, variablesObj } = uniqueVariables(
+      this.currentDocument.variables
+    )
 
     const doc: DocumentNode = {
       kind: 'Document',
@@ -166,7 +200,9 @@ export class ASTBuilder {
               value: queryName,
             },
           }),
-          variableDefinitions: [],
+          variableDefinitions: variables.map(({ variable, name }) =>
+            this.variableDefinition(variable, name)
+          ),
           directives: [],
           selectionSet: {
             kind: 'SelectionSet',
@@ -176,6 +212,6 @@ export class ASTBuilder {
       ],
     }
 
-    return { doc, astMap }
+    return { doc, variables: variablesObj }
   }
 }
