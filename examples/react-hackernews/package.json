@@ -1,21 +1,21 @@
 {
   "name": "react-hackernews",
-  "version": "0.0.1-alpha.16",
+  "version": "0.0.1-alpha.17",
   "private": true,
   "dependencies": {
-    "@gqless/logger": "^0.0.1-alpha.16",
-    "@gqless/react": "^0.0.1-alpha.16",
+    "@gqless/logger": "^0.0.1-alpha.17",
+    "@gqless/react": "^0.0.1-alpha.17",
     "@types/react": "16.8.23",
     "@types/react-dom": "16.8.5",
     "@types/styled-components": "^4.1.18",
-    "gqless": "^0.0.1-alpha.16",
+    "gqless": "^0.0.1-alpha.17",
     "parcel": "^1.12.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "styled-components": "^4.3.2"
   },
   "devDependencies": {
-    "@gqless/cli": "^0.0.1-alpha.16"
+    "@gqless/cli": "^0.0.1-alpha.17"
   },
   "scripts": {
     "generate": "gqless generate -u https://www.graphqlhub.com/graphql src/graphql -t",

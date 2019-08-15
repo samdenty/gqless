@@ -1,6 +1,6 @@
 {
   "name": "@gqless/schema",
-  "version": "0.0.1-alpha.16",
+  "version": "0.0.1-alpha.17",
   "main": "dist/index.js",
   "umd:main": "dist/gqlessschema.umd.production.js",
   "module": "dist/gqlessschema.es.production.js",
@@ -16,7 +16,7 @@
     "test": "tsdx test"
   },
   "dependencies": {
-    "@gqless/utils": "^0.0.1-alpha.16",
+    "@gqless/utils": "^0.0.1-alpha.17",
     "graphql-tag": "^2.*"
   },
   "peerDependencies": {
