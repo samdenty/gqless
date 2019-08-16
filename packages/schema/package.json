@@ -5,6 +5,7 @@
   "umd:main": "dist/gqlessschema.umd.production.js",
   "module": "dist/gqlessschema.es.production.js",
   "typings": "dist/index.d.ts",
+  "homepage": "https://github.com/samdenty/gqless",
   "files": [
     "dist"
   ],

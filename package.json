@@ -6,6 +6,7 @@
     "src/*/example",
     "packages/*/example"
   ],
+  "homepage": "https://github.com/samdenty/gqless",
   "private": true,
   "husky": {
     "hooks": {

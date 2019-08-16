@@ -5,6 +5,7 @@
   "umd:main": "dist/gqlessreact.umd.production.js",
   "module": "dist/gqlessreact.es.production.js",
   "typings": "dist/index.d.ts",
+  "homepage": "https://github.com/samdenty/gqless",
   "files": [
     "dist"
   ],

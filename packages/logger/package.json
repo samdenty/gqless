@@ -5,6 +5,7 @@
   "umd:main": "dist/gqlesslogger.umd.production.js",
   "module": "dist/gqlesslogger.es.production.js",
   "typings": "dist/index.d.ts",
+  "homepage": "https://github.com/samdenty/gqless",
   "files": [
     "dist"
   ],
