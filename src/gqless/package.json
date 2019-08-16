@@ -1,6 +1,6 @@
 {
   "name": "gqless",
-  "version": "0.0.1-alpha.17",
+  "version": "0.0.1-alpha.18",
   "main": "dist/index.js",
   "umd:main": "dist/gqless.umd.production.js",
   "module": "dist/gqless.es.production.js",
@@ -16,7 +16,7 @@
     "test": "tsdx test"
   },
   "dependencies": {
-    "@gqless/utils": "^0.0.1-alpha.17",
+    "@gqless/utils": "^0.0.1-alpha.18",
     "json-stable-stringify": "^1.0.1",
     "lodash": "^4.17.15",
     "mix-classes": "^1.1.6"
