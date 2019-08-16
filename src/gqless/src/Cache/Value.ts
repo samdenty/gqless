@@ -44,7 +44,7 @@ export class Value {
       return this.data
     }
 
-    if (this.data instanceof Array) {
+    if (Array.isArray(this.data)) {
       return this.data.map(value => value.toJSON())
     }
 

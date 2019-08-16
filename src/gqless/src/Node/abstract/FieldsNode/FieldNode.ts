@@ -22,40 +22,40 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
     super([node, nullable])
   }
 
+  public getSelection(
+    fieldsAccessor: Accessor,
+    args?: Record<string, any>
+  ): { justCreated: boolean; selection: FieldSelection<TNode> } {
+    const selection = fieldsAccessor.selection.getField(selection => {
+      if (!(selection instanceof FieldSelection)) return false
+
+      return (
+        selection.field.name === this.name && isArgsEqual(selection.args, args)
+      )
+    })! as FieldSelection<TNode>
+
+    if (selection) return { justCreated: false, selection }
+
+    return {
+      justCreated: true,
+      selection: new FieldSelection(
+        fieldsAccessor.selection,
+        this.ofNode,
+        this,
+        args
+      ),
+    }
+  }
+
   public getData(fieldsAccessor: Accessor<Selection<FieldsNode>>) {
     super.getData(fieldsAccessor)
-
-    const getSelection = (args?: Record<string, any>) => {
-      const selection = fieldsAccessor.selection.getField(selection => {
-        if (!(selection instanceof FieldSelection)) return false
-
-        return (
-          selection.field.name === this.name &&
-          isArgsEqual(selection.args, args)
-        )
-      })! as FieldSelection<TNode>
-
-      if (selection) return { justCreated: false, selection }
-
-      return {
-        justCreated: true,
-        selection: new FieldSelection(
-          fieldsAccessor.selection,
-          this.ofNode,
-          this,
-          args
-        ),
-      }
-    }
 
     const getData = (selection: FieldSelection<TNode>): any => {
       const accessor =
         fieldsAccessor.getChild(a => a.selection === selection) ||
         new FieldAccessor(fieldsAccessor, selection)
 
-      return this.ofNode instanceof Outputable
-        ? this.ofNode.getData(accessor)
-        : undefined
+      return ((this.ofNode as unknown) as Outputable).getData(accessor)
     }
 
     const createArgsFn = (handler?: (args: any) => void) => (args: any) => {
@@ -63,7 +63,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
 
       handler && handler(parsedArgs)
 
-      return getData(getSelection(parsedArgs).selection)
+      return getData(this.getSelection(fieldsAccessor, parsedArgs).selection)
     }
 
     // If the arguments are required, skip creating an argumentless selection
@@ -78,7 +78,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
 
     // Create an argumentless selection, that will be destroyed if
     // the callback function is called
-    const argumentless = getSelection()
+    const argumentless = this.getSelection(fieldsAccessor)
     const argumentlessData = getData(argumentless.selection)
 
     if (this.args)

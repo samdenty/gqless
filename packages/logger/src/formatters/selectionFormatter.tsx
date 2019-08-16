@@ -1,5 +1,4 @@
-// @ts-ignore
-import { string } from 'to-style'
+import * as React from './jsx'
 import { Selection, RootSelection } from 'gqless'
 
 export const selectionFormatter = {
@@ -87,26 +86,5 @@ export const selectionFormatter = {
 
   hasBody(selection: Selection) {
     return !!selection.selections.length
-  },
-}
-
-const React = {
-  createElement: (element: string, props: any, ...children: any) => {
-    if (props && props.style) {
-      props.style = string(props.style)
-    }
-
-    return [
-      element,
-      props,
-      ...children
-        .map((child: any) =>
-          Array.isArray(child) && !child.find(e => !Array.isArray(e))
-            ? child
-            : [child]
-        )
-        .flat()
-        .filter(Boolean),
-    ]
   },
 }

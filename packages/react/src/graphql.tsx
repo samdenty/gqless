@@ -1,7 +1,7 @@
+import { Accessor, Interceptor, Query, Scheduler, Selection } from 'gqless'
 import * as React from 'react'
 
 import { useForceUpdate } from './hooks/useForceUpdate'
-import { Accessor, Recorder, Query, Scheduler, Selection } from 'gqless'
 import { StackContext } from './Query'
 
 export interface IQueryOptions {
@@ -52,29 +52,41 @@ export const graphql = <Props extends any>(
       }
     }, [])
 
-    const record = new Recorder()
+    // Create a new Interceptor, which can tracks the usage
+    // of accessors
+    const interceptor = new Interceptor()
 
-    // Get the schedulers associated with accessors, and link
-    // them up to the query
+    // When a new accessor is found, retrieve the
+    // scheduler associated with it
+    //
+    // Then call Scheduler#beginQuery, with the
+    // component's stac
     const schedulers = new Set<Scheduler>()
-    record.onAccessor(({ scheduler }) => {
-      if (schedulers.has(scheduler)) return
-      schedulers.add(scheduler)
+    const interceptedAccessors = new Set<Accessor>()
+
+    interceptor.onAccessor(accessor => {
+      interceptedAccessors.add(accessor)
+
+      if (schedulers.has(accessor.scheduler)) return
+      schedulers.add(accessor.scheduler)
 
       stack.frames.forEach(query => {
-        scheduler.beginQuery(query)
+        accessor.scheduler.beginQuery(query)
       })
     })
 
     try {
-      record.start()
+      // Begin intercepting accessors, located inside
+      // within component's render method
+      interceptor.start()
       var returnValue = component(props)
     } catch (e) {
       throw e
     } finally {
-      record.stop()
+      interceptor.stop()
 
-      // Cleanup scheduler calls
+      // Cleanup the previous Scheduler#beginQuery
+      // calls made earlier
       schedulers.forEach(scheduler => {
         for (let i = stack.frames.length - 1; i >= 0; --i) {
           const query = stack.frames[i]
@@ -83,13 +95,14 @@ export const graphql = <Props extends any>(
       })
     }
 
-    // Add new accessors
-    record.accessors.forEach(accessor => {
+    // Find all the new accessors and add to Set
+    interceptedAccessors.forEach(accessor => {
       if (accessors.has(accessor)) return
 
       accessors.add(accessor)
       accessorDisposers.set(
         accessor,
+        // Make component update when data changes
         accessor.onDataUpdate(() => {
           forceUpdate()
         })
@@ -98,9 +111,10 @@ export const graphql = <Props extends any>(
 
     const fetchingSelections = new Set<Selection>()
 
-    // Remove unused accessors
     accessors.forEach(accessor => {
-      if (record.accessors.has(accessor)) {
+      // Locate accessors currently being fetched,
+      // and add to Set
+      if (interceptedAccessors.has(accessor)) {
         if (accessor.selection.isFetching) {
           fetchingSelections.add(accessor.selection)
         }
@@ -108,6 +122,8 @@ export const graphql = <Props extends any>(
         return
       }
 
+      // Remove previously used accessors, that
+      // aren't required anymore
       const dispose = accessorDisposers.get(accessor)
       if (dispose) {
         accessorDisposers.delete(accessor)
@@ -120,8 +136,9 @@ export const graphql = <Props extends any>(
       <StackContext.Provider value={stack}>{returnValue}</StackContext.Provider>
     )
 
-    // React suspense
+    // React suspense support
     if (fetchingSelections.size) {
+      // Promise that resolves when all selections are fetched
       let resolve: Function
       let resolved = false
       const promise = new Promise(r => (resolve = r))
@@ -137,7 +154,14 @@ export const graphql = <Props extends any>(
         })
       })
 
+      // We can't directly throw the promise, otherwise
+      // child components (with data requirements) won't
+      // render - meaning multiple requests
+      //
+      // To prevent this we instead return a Fragment,
+      // which contains a component that throws the Promise.
       const SuspendComponent = () => {
+        // This is necessary to prevent an infinite loop
         if (resolved) return null
 
         throw promise

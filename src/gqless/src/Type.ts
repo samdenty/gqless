@@ -6,6 +6,7 @@ import {
   TupleKeys,
 } from '@gqless/utils'
 import { INDEX, GET_KEY } from 'gqless'
+import { Variable } from './Variable'
 
 type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K
@@ -68,6 +69,14 @@ export type FieldsTypeArg<
   args: TArgs
 }
 
+type WithVariables<TArgs extends ArgsRecord> = TArgs extends object
+  ? {
+      [K in keyof TArgs]:
+        | WithVariables<TArgs[K]>
+        | Variable<WithVariables<Exclude<TArgs[K], undefined>>>
+    }
+  : TArgs
+
 type ArgsFn<
   TArgs extends ArgsRecord,
   TType extends ValidType,
@@ -95,7 +104,7 @@ type FieldsData<TFields extends FieldsType, TExtensions extends Tuple> = {
     infer TArgs,
     infer TType
   >
-    ? ArgsFn<TArgs, TType, MapExtensionData<TExtensions, K>>
+    ? ArgsFn<WithVariables<TArgs>, TType, MapExtensionData<TExtensions, K>>
     : TypeData<TFields['data'][K], MapExtensionData<TExtensions, K>>
 } &
   Omit<CustomExtensionData<TExtensions>, keyof TFields['data']>

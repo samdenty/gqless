@@ -1,8 +1,9 @@
-import { NodeContainer, Node, NodeDataType, Outputable } from './abstract'
-import { ObjectNode } from './ObjectNode'
-import { Selection } from '../Selection'
+import { Generic, Mix } from 'mix-classes'
+
 import { Accessor, IndexAccessor } from '../Accessor'
-import { Mix, Generic } from 'mix-classes'
+import { Selection } from '../Selection'
+import { ACCESSOR } from './../Accessor/Accessor'
+import { Node, NodeContainer, NodeDataType, Outputable } from './abstract'
 
 export interface ArrayNode<TNode extends Node<any>>
   extends NodeContainer<TNode, NodeDataType<TNode>[]> {}
@@ -18,7 +19,9 @@ export class ArrayNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
     super.getData(arrayAccessor)
 
     const proxy: any[] = new Proxy([] as any[], {
-      get: (target, prop: keyof any[]) => {
+      get: (target, prop: any) => {
+        if (prop === ACCESSOR) return arrayAccessor
+
         const arr = arrayAccessor.value && (arrayAccessor.value.data as any[])
 
         if (prop === 'length') {

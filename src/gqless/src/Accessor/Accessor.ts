@@ -1,11 +1,12 @@
-import { Selection } from '../Selection'
 import { createEvent } from '@gqless/utils'
-import { computed } from '../utils'
-import { Node, Keyable, NodeContainer, Outputable, ScalarNode } from '../Node'
+
 import { Cache, Value } from '../Cache'
-import { Disposable } from '../mixins'
+import { Extension, IExtension, Node, Outputable, ScalarNode } from '../Node'
 import { Scheduler } from '../Scheduler'
-import { Extension, IExtension } from '../Extension'
+import { Selection } from '../Selection'
+import { computed, Disposable } from '../utils'
+
+export const ACCESSOR = Symbol('accessor')
 
 export abstract class Accessor<
   TSelection extends Selection = Selection,
@@ -57,8 +58,8 @@ export abstract class Accessor<
       )
 
       /**
-       * When the value associated with this accessor,
-       * ensure types are different and emit onDataUpdate
+       * When value of this accessor changes
+       * & types are different -> emit onDataUpdate
        */
       {
         let dispose: Function | undefined
@@ -86,35 +87,6 @@ export abstract class Accessor<
 
         onValueAssociated()
       }
-
-      /**
-       * When a value is associated with parent, update
-       * the value of this accessor, and emit onValueAssociated
-       */
-      {
-        let dispose: Function | undefined
-        const onParentValueAssociated = () => {
-          if (dispose) {
-            this.disposers.delete(dispose)
-            dispose()
-            dispose = undefined
-          }
-
-          if (parent.value) {
-            this.value = parent.value!.get(this.toString())
-
-            dispose = parent.value!.onChange(() => {
-              this.value = parent.value!.get(this.toString())
-            })
-            this.disposers.add(dispose)
-          } else {
-            this.value = undefined
-          }
-        }
-
-        this.disposers.add(parent.onValueAssociated(onParentValueAssociated))
-        onParentValueAssociated()
-      }
     }
 
     /**
@@ -136,8 +108,37 @@ export abstract class Accessor<
   }
 
   /**
+   * When a value is associated with parent, update
+   * the value of this accessor, and emit onValueAssociated
+   */
+  protected associateValueFrom(accessor: Accessor) {
+    let dispose: Function | undefined
+    const associateValue = () => {
+      if (dispose) {
+        this.disposers.delete(dispose)
+        dispose()
+        dispose = undefined
+      }
+
+      if (accessor.value) {
+        this.value = accessor.value!.get(this.toString())
+
+        dispose = accessor.value!.onChange(() => {
+          this.value = accessor.value!.get(this.toString())
+        })
+        this.disposers.add(dispose)
+      } else {
+        this.value = undefined
+      }
+    }
+
+    this.disposers.add(accessor.onValueAssociated(associateValue))
+    associateValue()
+  }
+
+  /**
    * Stage the accessor, if it doesn't have a value
-   * @TODO Instead of unstage, stage() should return a function
+   * @TODO Race conditions: Instead of unstage, stage() should return a function
    */
   protected stageIfRequired() {
     if (this.value) return
@@ -154,15 +155,15 @@ export abstract class Accessor<
   protected getExtensions() {
     if (!this.node.extension) return
 
-    const extension: IExtension<any> =
+    const defaultExtension: IExtension<any> =
       !(this.node instanceof ScalarNode) &&
       typeof this.node.extension === 'function'
         ? this.node.extension(this.data)
         : this.node.extension
 
-    if (!extension) return
+    if (!defaultExtension) return
 
-    this.extensions.push(extension)
+    this.extensions.push(defaultExtension)
   }
 
   protected updateExtensions() {
@@ -188,7 +189,7 @@ export abstract class Accessor<
 
   public setData(data: any) {
     console.log('set', this.path.toString(), data)
-    this.cache.update(this, data)
+    this.cache.merge(this, data)
   }
 
   public getChild(compare: (child: TChildren) => boolean) {

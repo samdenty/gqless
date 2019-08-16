@@ -1,7 +1,6 @@
+import { ArrayNode, IExtension, INDEX, ScalarNode } from '../Node'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
-import { ArrayNode, ScalarNode } from '../Node'
-import { INDEX, IExtension } from '../Extension'
 
 export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
@@ -16,6 +15,8 @@ export class IndexAccessor<
         : parent.selection.node
       ).ofNode
     )
+
+    this.associateValueFrom(this.parent)
 
     this.stageIfRequired()
   }
@@ -41,6 +42,6 @@ export class IndexAccessor<
   }
 
   public toString() {
-    return this.index
+    return `${this.index}`
   }
 }

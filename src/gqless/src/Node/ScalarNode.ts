@@ -1,9 +1,10 @@
-import { Outputable } from './abstract/Outputable'
-import { Node } from './abstract/Node'
-import { Selection } from '../Selection'
+import { Generic, Mix } from 'mix-classes'
+
 import { Accessor } from '../Accessor'
-import { Mix, Generic } from 'mix-classes'
-import { Extension } from '../Extension'
+import { Selection } from '../Selection'
+import { Node } from './abstract/Node'
+import { Outputable } from './abstract/Outputable'
+import { Extension } from './Extension'
 
 export type IScalarNodeOptions = {
   name?: string

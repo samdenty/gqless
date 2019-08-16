@@ -74,7 +74,7 @@ export class Logger implements Plugin {
         [` ${selections.length} selections`, 'color: gray'],
 
         error && [
-          'FAILED ??',
+          'FAILED',
           'margin-left: 10px; border-radius: 2px; padding: 2px 6px; background: #e84343; color: white',
         ]
       )

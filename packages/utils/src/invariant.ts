@@ -1,6 +1,6 @@
 const isProduction: boolean = process.env.NODE_ENV === 'production'
 
-const prefix = `[GraphQL] `
+const prefix = `[GQLess] `
 
 export const invariant = (condition: boolean, message: string) => {
   if (condition) return

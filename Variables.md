@@ -1,7 +1,6 @@
 # TODO
 
 - Propagate variable updates through Selection -> Accessor
-- Add types
 
 # Selection.args
 

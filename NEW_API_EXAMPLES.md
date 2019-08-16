@@ -1,5 +1,9 @@
 ## Mutations
 
+### TODO
+
+- Add toJSON to ObjectNode (could be used for Mutations, eg. `mutation.deleteUser({ user: query.me })`)
+
 The reason why apollo optimistic is shitty is because you have to manually update a cache entry to perform a mutation. You always have to deal with the ugly side - cache. What about instead of Mutation -> Update cache -> Result -> Update cache, we did update cache -> Mutation.
 
 That way instead of optimism being a second-thought, it's first nature.

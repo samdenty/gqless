@@ -1,18 +1,19 @@
 import '@babel/polyfill'
 
-import * as React from 'react'
-import { Suspense } from 'react'
-import * as ReactDOM from 'react-dom'
-import ApolloClient from 'apollo-boost'
-// import { useQuery, QueryProvider, graphql, Defer } from '@gqless/react'
-import { GraphQL, Variable } from 'gqless'
 import { Logger } from '@gqless/logger'
-import { print } from 'graphql'
-import { schema as schemaFaker, User, Query } from './graphql'
+import { graphql, usePoll, useVariable } from '@gqless/react'
+import { fetchSchema } from '@gqless/schema'
+import ApolloClient from 'apollo-boost'
+import { GraphQL } from 'gqless'
 import * as Imports from 'gqless'
-import { graphql } from '@gqless/react'
-import { Codegen, fetchSchema } from '@gqless/schema'
+import { print } from 'graphql'
+import { Suspense } from 'react'
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 
+import { Query, schema as schemaFaker, User } from './graphql'
+
+// import { useQuery, QueryProvider, graphql, Defer } from '@gqless/react'
 Object.assign(window, { ...Imports, schemaFaker })
 
 const endpoint = `http://${location.hostname}:9002/graphql`
@@ -80,6 +81,8 @@ async function bootstrap() {
 
   const Description = graphql(
     ({ user }: { user: User }) => {
+      usePoll(user.description, 500)
+
       return <p>{user.description}</p>
     },
     { name: 'DescriptionComponent' }
@@ -103,21 +106,23 @@ async function bootstrap() {
     () => {
       const [showDescription, setShowDescription] = React.useState(false)
 
-      const variable = React.useMemo(() => {
-        return new Variable(10, {
-          name: 'testingVariable',
-          // nullable: false,
-        })
-      }, [])
-      // console.log(variable)
+      const userId = useVariable('asdasdasd', 'userId')
+      const usersLimit = useVariable(1, 'usersLimit')
 
-      // query.me.following[0].name
-
-      // query.asdasd
+      const [interval, setInterval] = React.useState(500)
+      const [polling, togglePolling] = usePoll(query.me, interval, false)
 
       return (
         <div>
-          {query.user({ id: variable })!.name}
+          <button onClick={() => togglePolling()}>
+            Polling: {String(polling)}
+          </button>
+          <input
+            type="number"
+            value={interval}
+            onChange={({ target }) => setInterval(+target.value)}
+          />
+          {query.user({ id: userId })!.name}
           {/*query.stringArray.map((t, i) => (
             <div key={i}>{t!.join(',')}</div>
           ))*/}
@@ -135,7 +140,7 @@ async function bootstrap() {
           </Defer>
       <div>*/}
           <b>Other users:</b>
-          {query.users.map(user => (
+          {query.users({ limit: usersLimit }).map(user => (
             <UserComponent key={user.id} user={user} />
           ))}
         </div>

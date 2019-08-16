@@ -1,15 +1,15 @@
 import { Accessor } from '../../Accessor'
-import { Extension } from '../../Extension'
+import { Extension } from '../Extension'
 
-export type IAccessorRecorder = (accessor: Accessor) => void
-export const accessorRecorders = new Set<IAccessorRecorder>()
+export type AccessorInterceptor = (accessor: Accessor) => void
+export const accessorInterceptors = new Set<AccessorInterceptor>()
 
 export class Outputable {
   constructor(public extension?: Extension) {}
 
   public getData(accessor: Accessor) {
-    if (accessorRecorders.size) {
-      accessorRecorders.forEach(record => record(accessor))
+    if (accessorInterceptors.size) {
+      accessorInterceptors.forEach(intercept => intercept(accessor))
     }
   }
 }

@@ -1,14 +1,8 @@
-import {
-  FieldsNode,
-  UFieldsNodeRecord,
-  IFieldsNodeOptions,
-  NodeDataType,
-  Keyable,
-  defaultKey,
-} from './abstract'
+import { Generic, Mix } from 'mix-classes'
+
+import { defaultKey, FieldsNode, IFieldsNodeOptions, Keyable, NodeDataType, UFieldsNodeRecord } from './abstract'
+import { Extension } from './Extension'
 import { ObjectNode } from './ObjectNode'
-import { Mix, Generic } from 'mix-classes'
-import { Extension } from '../Extension'
 
 export type IInterfaceNodeOptions = IFieldsNodeOptions & {
   extension?: Extension

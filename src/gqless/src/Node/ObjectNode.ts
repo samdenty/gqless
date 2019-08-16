@@ -1,16 +1,10 @@
-import {
-  FieldsNode,
-  IFieldsNodeOptions,
-  UFieldsNodeRecord,
-  Outputable,
-  Keyable,
-  defaultKey,
-  FieldNode,
-} from './abstract'
-import { Accessor } from '../Accessor'
-import { Mix, Generic } from 'mix-classes'
+import { Generic, Mix } from 'mix-classes'
+
+import { Accessor, FieldAccessor } from '../Accessor'
+import { ACCESSOR } from '../Accessor/Accessor'
+import { defaultKey, FieldNode, FieldsNode, IFieldsNodeOptions, Keyable, Outputable, UFieldsNodeRecord } from './abstract'
+import { Extension } from './Extension'
 import { ScalarNode } from './ScalarNode'
-import { Extension } from '../Extension'
 
 export type IObjectNodeOptions = IFieldsNodeOptions & {
   extension?: Extension
@@ -48,8 +42,9 @@ export class ObjectNode<TData = any> extends Mix(
     }
 
     return new Proxy({} as any, {
-      get: (_, prop: string) => {
+      get: (_, prop: any) => {
         // Statically resolve __typename
+        if (prop === ACCESSOR) return accessor
         if (prop === '__typename') return this.name
 
         // check fields first
@@ -69,31 +64,32 @@ export class ObjectNode<TData = any> extends Mix(
       set: (_, prop: string, data) => {
         if (prop === '__typename') return true
 
-        // check fields first
+        /**
+         * If setting a field, create a new accessor and set data
+         */
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
+          const selection = field.getSelection(accessor).selection
 
-          // if it's scalar, check extensions
-          if (field.ofNode instanceof ScalarNode) {
-            for (let i = accessor.extensions.length - 1; i >= 0; --i) {
-              const extension = accessor.extensions[i]
-              if (prop in extension) return (extension[prop] = data)
-            }
-          }
+          const fieldAccessor =
+            accessor.getChild(a => a.selection === selection) ||
+            new FieldAccessor(accessor, selection)
 
-          const fieldAccessor = accessor.getChild(
-            a => a.selection.dataProp === prop
-          )
+          fieldAccessor.setData(data)
 
-          if (fieldAccessor) {
-            fieldAccessor.setData(data)
-          }
+          return true
         }
 
-        // fallback to extensions
+        /**
+         * else set it on the first extension with the property
+         */
         for (let i = accessor.extensions.length - 1; i >= 0; --i) {
           const extension = accessor.extensions[i]
-          if (prop in extension) return (extension[prop] = data)
+
+          if (prop in extension) {
+            extension[prop] = data
+            return true
+          }
         }
 
         return true

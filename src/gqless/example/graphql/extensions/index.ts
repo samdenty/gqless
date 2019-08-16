@@ -1,18 +1,26 @@
 import { GET_KEY, INDEX } from 'gqless'
-import * as T from '../generated/types'
 
 // export const String = (value: string) => {
 //   return `string_${value}`
 // }
 
-export const User /*: Extension<g.User>*/ = {
-  name: (name: string) => `user_${name}`,
-  isAUser: true as const,
-  following: {
-    isFollowing: true,
-  },
+export const User /*: Extension<g.User>*/ = user => {
+  return {
+    testFn() {},
+    name: (name: string) => `user_${name}`,
+    // get name() {
+    //   return `user_${name}`
+    // },
+    // set name(name) {
+    //   mutation.renameUser(user.id, name)
+    // },
+    isAUser: true as const,
+    following: {
+      isFollowing: true,
+    },
 
-  [GET_KEY]: data => data.id,
+    [GET_KEY]: data => data.id,
+  }
 }
 export const Query /*: Extension<g.User>*/ = query => {
   return {

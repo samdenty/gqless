@@ -1,9 +1,10 @@
+import { invariant } from '@gqless/utils'
+
+import { Plugins } from '../Plugin'
 import { Selection } from '../Selection'
-import { Disposable } from '../mixins'
+import { Disposable } from '../utils'
 import { queriesFromStacks } from './queriesFromStacks'
 import { Query } from './Query'
-import { Plugins } from '../Plugin'
-import { invariant } from '@gqless/utils'
 
 export class Scheduler extends Disposable {
   private commitTimer: any
