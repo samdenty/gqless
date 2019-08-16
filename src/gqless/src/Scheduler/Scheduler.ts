@@ -18,7 +18,7 @@ export class Scheduler extends Disposable {
       selections: Selection<any>[],
       queryName?: string
     ) => Promise<any>,
-    interval = 15
+    interval = 20
   ) {
     super()
     this.interval = interval
@@ -45,18 +45,6 @@ export class Scheduler extends Disposable {
     this.stack.splice(idx, 1)
   }
 
-  public stage(selection: Selection<any, any>) {
-    return this.commit.stage(selection)
-  }
-
-  public unstage(selection: Selection<any, any>) {
-    return this.commit.unstage(selection)
-  }
-
-  public fetch() {
-    return this.commit.fetch()
-  }
-
   private start() {
     this.cancel()
 
@@ -68,7 +56,7 @@ export class Scheduler extends Disposable {
     }
 
     this.timer = setTimeout(() => {
-      this.fetch()
+      this.commit.fetch()
       this.start()
     }, this.interval)
   }

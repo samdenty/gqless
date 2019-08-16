@@ -1,7 +1,7 @@
-import { Node, NodeDataType } from './Node'
-import { FieldsNode } from './FieldsNode'
 import { Accessor } from '../../Accessor'
 import { ScalarNode } from '../ScalarNode'
+import { FieldsNode } from './FieldsNode'
+import { Node, NodeDataType } from './Node'
 
 export type KeyFn<TNode extends Node<any>> = (
   data: NodeDataType<TNode>
@@ -13,6 +13,7 @@ export class Keyable<TNode extends Node<any>> {
   public getKey(accessor: Accessor) {
     if (!this.keyGetter) return
 
+    // TODO
     // startRecordingSelections()
     try {
       return this.keyGetter!(accessor.data)

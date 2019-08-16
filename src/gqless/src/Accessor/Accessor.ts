@@ -142,7 +142,7 @@ export abstract class Accessor<
   protected stageIfRequired() {
     if (this.value) return
 
-    const unstage = this.scheduler.stage(this.selection)
+    const unstage = this.scheduler.commit.stage(this.selection)
 
     this.disposers.add(
       this.onValueAssociated.then(() => {
@@ -187,6 +187,7 @@ export abstract class Accessor<
   }
 
   public setData(data: any) {
+    // @TODO
     console.log('set', this.path.toString(), data)
     this.cache.merge(this, data)
   }

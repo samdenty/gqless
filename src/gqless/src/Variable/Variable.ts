@@ -1,5 +1,6 @@
-import { Node, UArguments } from '../Node'
 import { invariant } from '@gqless/utils'
+
+import { Node, UArguments } from '../Node'
 
 export interface IVariableOptions {
   node?: UArguments
@@ -37,9 +38,7 @@ export class Variable<TValue = any> {
     if (this.nullable === true && !nullable) {
       invariant(
         false,
-        `Can't convert a nullable variable of type ${
-          this.node
-        }, to non-nullable`
+        `Can't convert a nullable variable of type ${this.node}, to non-nullable`
       )
     }
 
@@ -52,6 +51,7 @@ export class Variable<TValue = any> {
     if (!this.node) {
       this.node = node
     } else {
+      // TODO
       console.warn('validate', node, 'against', this.node)
     }
 

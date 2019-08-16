@@ -60,7 +60,7 @@ export const graphql = <Props extends any>(
     // scheduler associated with it
     //
     // Then call Scheduler#beginQuery, with the
-    // component's stac
+    // component's stack
     const schedulers = new Set<Scheduler>()
     const interceptedAccessors = new Set<Accessor>()
 

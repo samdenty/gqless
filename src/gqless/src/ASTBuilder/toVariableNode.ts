@@ -1,8 +1,9 @@
-import { Variable } from '../Variable'
-import { UArguments } from '../Node'
 import { createEvent } from '@gqless/utils'
-import { VariableEntry } from './uniqueVariables'
 import { VariableNode } from 'graphql'
+
+import { UArguments } from '../Node'
+import { Variable } from '../Variable'
+import { VariableEntry } from './uniqueVariables'
 
 export const toVariableNode = (
   variables: Map<Variable, VariableEntry>,
@@ -32,7 +33,7 @@ export const toVariableNode = (
       variablePath,
     })
 
-  variables.get(variable)!.onNamed(name => {
+  variables.get(variable)!.onNamed((name: string) => {
     variableNode.name.value = name
   })
 

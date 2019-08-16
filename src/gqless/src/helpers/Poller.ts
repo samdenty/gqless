@@ -27,7 +27,7 @@ export class Poller extends Helper {
   private async poll() {
     const { selection, scheduler } = this.accessor
 
-    this.unstage = scheduler.stage(selection)
+    this.unstage = scheduler.commit.stage(selection)
     await selection.onFetched
     this.unstage = undefined
 

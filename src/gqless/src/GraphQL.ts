@@ -46,7 +46,7 @@ export class GraphQL<TData = any> extends Disposable {
 
     this.selection.onUnselect(selection => {
       this.plugins.all.onUnselect(selection)
-      this.scheduler.unstage(selection)
+      this.scheduler.commit.unstage(selection)
     })
   }
 
