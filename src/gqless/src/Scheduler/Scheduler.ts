@@ -3,17 +3,14 @@ import { invariant } from '@gqless/utils'
 import { Plugins } from '../Plugin'
 import { Selection } from '../Selection'
 import { Disposable } from '../utils'
-import { queriesFromStacks } from './queriesFromStacks'
+import { Commit } from './Commit'
 import { Query } from './Query'
 
 export class Scheduler extends Disposable {
-  private commitTimer: any
-  protected commits = new Map<Selection<any, any>, Query[]>()
-  protected defaultQuery: Query
-
-  public commitInterval: number
-
+  private timer: any
+  public interval: number
   public stack: Query[] = []
+  public commit: Commit = undefined!
 
   constructor(
     private plugins: Plugins,
@@ -21,18 +18,14 @@ export class Scheduler extends Disposable {
       selections: Selection<any>[],
       queryName?: string
     ) => Promise<any>,
-    {
-      defaultQuery = new Query(),
-      commitInterval = 15,
-    }: { defaultQuery?: Query; commitInterval?: number } = {}
+    interval = 15
   ) {
     super()
-    this.defaultQuery = defaultQuery
-    this.commitInterval = commitInterval
+    this.interval = interval
 
-    this.resume()
+    this.start()
 
-    this.disposers.add(this.pause)
+    this.disposers.add(this.cancel)
   }
 
   public beginQuery(query: Query) {
@@ -53,94 +46,34 @@ export class Scheduler extends Disposable {
   }
 
   public stage(selection: Selection<any, any>) {
-    // If the selection is in this current commit,
-    // or being fetched from a previous commit, don't re-fetch it
-    if (selection.isFetching) return
-
-    // If we already have the parent, remove the
-    // parent to narrow down the selections. This is used when a selection is created
-    // this could cause issues later, may need to add a recurse field to handle polling etc.
-    if (selection.parent && this.commits.has(selection.parent)) {
-      this.unstage(selection.parent)
-    }
-
-    selection.fetching()
-
-    this.commits.set(selection, [...this.stack])
+    return this.commit.stage(selection)
   }
 
   public unstage(selection: Selection<any, any>) {
-    // Only if the selection is in our commits, set it as not fetching
-    // otherwise it could be from a previous commit
-    if (this.commits.has(selection)) {
-      selection.notFetching()
-    }
-
-    this.commits.delete(selection)
+    return this.commit.unstage(selection)
   }
 
-  public async fetch() {
-    if (!this.commits.size) return
-    const selections = Array.from(this.commits.keys())
-    const stacks = Array.from(this.commits.values())
-    const stackQueries = queriesFromStacks(stacks)
-
-    const queries = new Map<Query | undefined, Selection[]>()
-
-    // Iterate over stacks and convert into query map
-    stackQueries.forEach((query, idx) => {
-      if (query === undefined) {
-        stackQueries[idx] = query = this.defaultQuery
-      }
-
-      const selection = selections[idx]
-
-      if (queries.has(query)) {
-        const selections = queries.get(query)!
-        selections.push(selection)
-        return
-      }
-
-      queries.set(query, [selection])
-    })
-
-    this.plugins.all.onCommit({ stacks, stackQueries, selections, queries })
-
-    this.commits.clear()
-
-    try {
-      const promises = Array.from(queries)
-        .map(([query, selections]) => {
-          const promise = this.fetchSelections(selections, query && query.name)
-
-          const notFetchingSelections = () => {
-            selections.forEach(selection => selection.notFetching())
-          }
-
-          promise.then(notFetchingSelections).catch(notFetchingSelections)
-
-          return promise
-        })
-        .filter(Boolean) as Promise<any>[]
-
-      await Promise.all(promises)
-    } catch (e) {
-      console.error(e)
-    }
+  public fetch() {
+    return this.commit.fetch()
   }
 
-  protected resume() {
-    this.pause()
-    this.commitTimer = setTimeout(async () => {
+  private start() {
+    this.cancel()
+
+    // Don't create new Commit, if prev one unused
+    if (!this.commit || this.commit.selections.size) {
+      if (this.commit) this.commit.dispose()
+
+      this.commit = new Commit(this.plugins, this.stack, this.fetchSelections)
+    }
+
+    this.timer = setTimeout(() => {
       this.fetch()
-      this.resume()
-    }, this.commitInterval)
+      this.start()
+    }, this.interval)
   }
 
-  protected pause() {
-    if (!this.commitTimer) return
-
-    clearTimeout(this.commitTimer)
-    this.commitTimer = null
+  private cancel() {
+    clearTimeout(this.timer)
   }
 }

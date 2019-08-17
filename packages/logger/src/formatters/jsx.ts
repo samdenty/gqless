@@ -1,9 +1,25 @@
 // @ts-ignore
 import { string } from 'to-style'
 
-export function createElement(element: string, props: any, ...children: any) {
+const JSX_ELEMENT = Symbol('JSX_ELEMENT')
+
+export function createElement(
+  element: string | Function,
+  props: any,
+  ...children: any
+) {
+  if (typeof element === 'function') {
+    children[JSX_ELEMENT] = true
+
+    return element({ ...props, children })
+  }
+
   if (props && props.style) {
     props.style = string(props.style)
+  }
+
+  if (Array.isArray(children) && children[0] && children[0][JSX_ELEMENT]) {
+    ;[children] = children
   }
 
   return [

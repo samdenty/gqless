@@ -7,16 +7,6 @@
 - Support for updating cache
 
 - `getAccessor` primitive
-
-  - Add custom formatters for graphql proxies
-  - If passed an ObjectNode, lookup Symbol
-  - If passed a ScalarNode
-
-    - If primitive, return last used accessed that has the same value
-    - If null, return the last accessed accessor
-      - Could warn if a microtask has occurred after the last accessed was set, and could be unstable
-    - lookup Symbol
-
   - Usage:
     - `skipCache()`
     - `update()` - Updates an accessor's value, merging in values.

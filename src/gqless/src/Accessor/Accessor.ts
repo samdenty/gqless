@@ -138,16 +138,15 @@ export abstract class Accessor<
 
   /**
    * Stage the accessor, if it doesn't have a value
-   * @TODO Race conditions: Instead of unstage, stage() should return a function
    */
   protected stageIfRequired() {
     if (this.value) return
 
-    this.scheduler.stage(this.selection)
+    const unstage = this.scheduler.stage(this.selection)
 
     this.disposers.add(
-      this.onValueAssociated.once(() => {
-        this.scheduler.unstage(this.selection)
+      this.onValueAssociated.then(() => {
+        unstage()
       })
     )
   }

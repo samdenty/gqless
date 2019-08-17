@@ -11,7 +11,7 @@ import { Suspense } from 'react'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
-import { Query, schema as schemaFaker, User } from './graphql'
+import { graphql as graphqlInstance, Query, schema as schemaFaker, User } from './graphql'
 
 // import { useQuery, QueryProvider, graphql, Defer } from '@gqless/react'
 Object.assign(window, { ...Imports, schemaFaker })
@@ -59,7 +59,6 @@ async function bootstrap() {
   // const codegen = new Codegen(schema)
   // console.log(codegen.generate())
 
-  const graphqlInstance = new GraphQL(schemaFaker.Query, fetchQuery)
   graphqlInstance.plugins.add(new Logger(graphqlInstance, true), {
     // async onFetch(_, response) {
     //   await response

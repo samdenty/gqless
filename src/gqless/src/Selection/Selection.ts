@@ -1,9 +1,10 @@
-import { Node, ObjectNode } from '../Node'
 import { createEvent } from '@gqless/utils'
-import { computed } from '../utils'
-import { RootSelection } from './RootSelection'
-import { FieldSelection } from './FieldSelection'
+
+import { Node, ObjectNode } from '../Node'
 import { PluginMethod } from '../Plugin'
+import { computed } from '../utils'
+import { FieldSelection } from './FieldSelection'
+import { RootSelection } from './RootSelection'
 
 export interface CircularSelectionField extends FieldSelection {}
 
@@ -15,10 +16,22 @@ export abstract class Selection<
   // @ts-ignore
   public root: RootSelection<ObjectNode> = this.parent! && this.parent!.root
 
+  /**
+   * Emitted when a selection is being fetched
+   */
   public onFetching = createEvent<() => void>()
-  public onNotFetching = createEvent<() => void>()
+  /**
+   * Emitted when selection has been fetched, or a previous fetch was cancelled
+   */
+  public onFetched = createEvent<() => void>()
 
+  /**
+   * Emitted when a child selection is created
+   */
   public onSelect = createEvent<PluginMethod<'onSelect'>>()
+  /**
+   * Emitted when a child selection is disposed
+   */
   public onUnselect = createEvent<PluginMethod<'onUnselect'>>()
 
   constructor(public parent: Selection<any> | undefined, public node: TNode) {
@@ -28,27 +41,31 @@ export abstract class Selection<
     }
   }
 
+  /**
+   * Whether or not the selection is currently
+   * being fetched over the network
+   */
   public isFetching: boolean = false
+  public toggleFetching(fetching = !this.isFetching) {
+    if (this.isFetching === fetching) return
 
-  public fetching() {
-    if (this.isFetching) return
+    this.isFetching = fetching
 
-    this.onFetching.emit()
-    this.isFetching = true
+    fetching ? this.onFetching.emit() : this.onFetched.emit()
   }
 
-  public notFetching() {
-    if (!this.isFetching) return
-
-    this.onNotFetching.emit()
-    this.isFetching = false
-  }
-
+  /**
+   * Find a selection in selections
+   */
   public getField(compare: (selection: TSelections) => boolean) {
     return this.selections.find(compare)
   }
 
   @computed()
+  /**
+   * An array containing all the selections from this
+   * back up to the selection root
+   */
   public get path(): Selection<any, any>[] {
     const basePath = this.parent ? this.parent.path : []
     const path = [...basePath, this]
@@ -58,6 +75,9 @@ export abstract class Selection<
     return path
   }
 
+  /**
+   * Dispose of selection, removing all references to it
+   */
   public unselect() {
     const [...selections] = this.selections
     selections.forEach(s => s.unselect())

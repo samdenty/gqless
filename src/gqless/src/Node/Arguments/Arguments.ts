@@ -1,9 +1,10 @@
-import { ArgumentsField } from './ArgumentsField'
-import { ScalarNode, ArrayNode, InputNode } from '../'
-import { Node } from '../abstract'
-import { lazyGetters, invariant } from '@gqless/utils'
-import { EnumNode } from '../EnumNode'
+import { invariant, lazyGetters } from '@gqless/utils'
+
+import { ArrayNode, InputNode, ScalarNode } from '../'
 import { Variable } from '../../Variable'
+import { Node } from '../abstract'
+import { EnumNode } from '../EnumNode'
+import { ArgumentsField } from './ArgumentsField'
 
 export type UArguments =
   | ScalarNode

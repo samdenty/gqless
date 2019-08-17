@@ -1,4 +1,8 @@
-export const createEvent = <TCallback extends (...args: any[]) => any>() => {
+type ToCallback<T> = T extends (...args: any[]) => any ? T : (data: T) => void
+
+export const createEvent = <T extends any>() => {
+  type TCallback = ToCallback<T>
+
   const listeners = new Set<TCallback>()
 
   const onEvent = (callback: TCallback) => {
@@ -7,9 +11,13 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
     return () => onEvent.off(callback)
   }
 
-  onEvent.once = (callback: TCallback) => {
-    const listener = ((...args) => {
-      onEvent.off(callback)
+  /**
+   * Called once, then disposed
+   */
+  onEvent.then = (callback: TCallback) => {
+    const listener = ((...args: any[]) => {
+      onEvent.off(listener)
+
       return callback(...args)
     }) as TCallback
 

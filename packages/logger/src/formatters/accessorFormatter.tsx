@@ -1,5 +1,7 @@
+import { Accessor, RootAccessor, ScalarNode } from 'gqless'
+
+import { Path, Preview, Tree, TreeItem } from './components'
 import * as React from './jsx'
-import { Accessor, RootAccessor } from 'gqless'
 
 export const accessorFormatter = {
   header(accessor: any, config: any = {}) {
@@ -12,49 +14,20 @@ export const accessorFormatter = {
     const { children } = accessor
     return (
       <div>
-        {path.map((accessor, i) => {
-          const isRoot = accessor instanceof RootAccessor
-
-          return (
-            <span>
-              <span
-                style={{
-                  color: config.objectDepth
-                    ? '#E36EEC'
-                    : isRoot
-                    ? '#03A9F4'
-                    : '#D2C057',
-                  fontWeight: isRoot && !config.objectDepth ? 'bold' : 'normal',
-                }}
-              >
-                {accessor.toString()}
-              </span>
-
-              {i !== path.length - 1 && <span style={{ opacity: 0.8 }}>.</span>}
-            </span>
-          )
-        })}
+        <Path
+          path={path}
+          objectDepth={config.objectDepth}
+          isRoot={accessor => accessor instanceof RootAccessor}
+        />
 
         {children.length ? (
-          <span style={{ fontStyle: config.objectDepth ? 'normal' : 'italic' }}>
-            {config.objectDepth && `:`}
-
-            {` {`}
-            {children.map((accessor, i) => (
-              <span>
-                <span style={{ opacity: 0.7 }}>
-                  {accessor.toString().replace(/\(.+$/, `(…)`)}
-                </span>
-
-                {i !== children.length - 1 && <span>, </span>}
-              </span>
-            ))}
-            {`}`}
-          </span>
+          <Preview elements={children} objectDepth={config.objectDepth} colon />
         ) : (
-          config.objectDepth && (
+          (config.objectDepth || accessor.node instanceof ScalarNode) && (
             <span>
               {`: `}
+              {/*
+              //@ts-ignore*/}
               <object
                 object={accessor.value ? accessor.value.toJSON() : null}
               />
@@ -65,33 +38,17 @@ export const accessorFormatter = {
     )
   },
 
-  body(accessor: Accessor, config: any = {}) {
+  body(accessor: Accessor) {
     return (
-      <ol
-        style={{
-          listStyleType: 'none',
-          padding: 0,
-          margin: '0 0 0 12px',
-          fontStyle: 'normal',
-        }}
-      >
+      <Tree>
         {accessor.children.map(accessor => (
-          <li
-            style={{
-              marginLeft: !accessor.children.length ? '14px' : 0,
-            }}
-          >
-            {/*
-            // @ts-ignore */}
-            <object
-              object={accessor}
-              config={{
-                objectDepth: accessor.path.length - 1,
-              }}
-            />
-          </li>
+          <TreeItem
+            object={accessor}
+            root={!!accessor.children.length}
+            objectDepth={accessor.path.length - 1}
+          />
         ))}
-      </ol>
+      </Tree>
     )
   },
 

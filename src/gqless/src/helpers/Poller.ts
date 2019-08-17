@@ -1,7 +1,12 @@
 import { Helper } from './Helper'
 
+// @TODO selection.onFetched should reset the timer
+// if it's been called from outside
+
 export class Poller extends Helper {
   private timer?: number
+  private unstage?: Function
+
   public polling = false
 
   constructor(data: any, public interval: number) {
@@ -12,12 +17,23 @@ export class Poller extends Helper {
     if (this.interval === interval) return
     this.interval = interval
 
-    // Reset timer
-    if (this.polling) this.toggle(true)
+    this.resetTimer()
   }
 
-  private poll() {
-    this.accessor.scheduler.stage(this.accessor.selection)
+  /**
+   * Polls the selection, scheduling a new poll
+   * only after it's been fetched
+   */
+  private async poll() {
+    const { selection, scheduler } = this.accessor
+
+    this.unstage = scheduler.stage(selection)
+    await selection.onFetched
+    this.unstage = undefined
+
+    // If we're still polling after we've fetched
+    // the selection, then poll again
+    if (!this.polling) return
 
     this.pollAfterInterval()
   }
@@ -26,9 +42,16 @@ export class Poller extends Helper {
     this.timer = setTimeout(() => this.poll(), this.interval)
   }
 
+  public resetTimer() {
+    if (this.polling) this.toggle(true)
+  }
+
   public toggle(poll = !this.polling) {
     this.polling = poll
+
+    this.unstage && this.unstage()
     clearTimeout(this.timer)
+
     if (!poll) return
 
     this.pollAfterInterval()

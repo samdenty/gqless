@@ -6,6 +6,6 @@ export class Disposable {
     if (this.disposed) return
 
     this.disposed = true
-    this.disposers.forEach(dispose => dispose())
+    this.disposers.forEach(dispose => dispose.call(this))
   }
 }

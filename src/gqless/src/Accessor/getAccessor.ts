@@ -3,9 +3,18 @@ import { invariant } from '@gqless/utils'
 import { Interceptor } from '../Interceptor'
 import { ACCESSOR, Accessor } from './Accessor'
 
-let lastAccessor: Accessor
+let lastAccessor: Accessor | null
+let timer: number
+
 const interceptor = new Interceptor()
-interceptor.onAccessor(accessor => (lastAccessor = accessor))
+interceptor.onAccessor(accessor => {
+  lastAccessor = accessor
+
+  clearTimeout(timer)
+  timer = setTimeout(() => {
+    lastAccessor = null
+  })
+})
 interceptor.start()
 
 export const getAccessor = (input: any): Accessor => {
@@ -18,6 +27,16 @@ export const getAccessor = (input: any): Accessor => {
     if (input instanceof Accessor) return input
   }
 
+  // If a microtask has run since the last referenced
+  // accessor was recorded, then it could be subject
+  // to race conditions
+  invariant(
+    lastAccessor !== null,
+    lastAccessorErrorMessage(
+      `microtask occurred since last accessor was intercepted`
+    )
+  )
+
   invariant(
     !!lastAccessor,
     lastAccessorErrorMessage(`no accessors have been referenced yet!`)
@@ -25,18 +44,18 @@ export const getAccessor = (input: any): Accessor => {
 
   // Check to see if lastAccessor is the same value as
   // input. If it is, then return it
-  const data = lastAccessor.data
+  const data = lastAccessor!.data
 
   invariant(
     data === input,
     lastAccessorErrorMessage(
       `'${input}' not equal to '${
-        lastAccessor.path
+        lastAccessor!.path
       }' (last referenced accessor)`
     )
   )
 
-  return lastAccessor
+  return lastAccessor!
 }
 
 const lastAccessorErrorMessage = (message: string) =>

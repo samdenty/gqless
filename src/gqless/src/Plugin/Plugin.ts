@@ -1,7 +1,8 @@
 import { DocumentNode } from 'graphql'
+
 import { QueryResponse } from '../GraphQL'
-import { Selection } from '../Selection'
 import { Query } from '../Scheduler'
+import { Selection } from '../Selection'
 
 export interface Plugin {
   // Called each time a new selection is created
@@ -9,9 +10,6 @@ export interface Plugin {
 
   // Called each time a selection is destroyed
   onUnselect?(selection: Selection<any>): void
-
-  // // Called each time a selection has changed
-  // onSelectUpdate?(selection: Selection<any>): void
 
   onCommit?(data: {
     selections: Selection[]

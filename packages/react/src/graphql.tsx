@@ -144,7 +144,7 @@ export const graphql = <Props extends any>(
       const promise = new Promise(r => (resolve = r))
 
       fetchingSelections.forEach(selection => {
-        selection.onNotFetching.once(() => {
+        selection.onFetched.then(() => {
           fetchingSelections.delete(selection)
 
           if (!fetchingSelections.size) {
