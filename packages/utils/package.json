@@ -1,6 +1,6 @@
 {
   "name": "@gqless/utils",
-  "version": "0.0.1-alpha.18",
+  "version": "0.0.1-alpha.19",
   "main": "dist/index.js",
   "module": "dist/utils.esm.js",
   "homepage": "https://github.com/samdenty/gqless",

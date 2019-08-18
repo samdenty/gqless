@@ -1,6 +1,6 @@
 {
   "name": "@gqless/schema",
-  "version": "0.0.1-alpha.18",
+  "version": "0.0.1-alpha.19",
   "main": "dist/index.js",
   "module": "dist/schema.esm.js",
   "typings": "dist/index.d.ts",
@@ -14,7 +14,7 @@
     "test": "tsdx test"
   },
   "dependencies": {
-    "@gqless/utils": "^0.0.1-alpha.18",
+    "@gqless/utils": "^0.0.1-alpha.19",
     "graphql-tag": "^2.*"
   },
   "peerDependencies": {
