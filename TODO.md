@@ -1,4 +1,17 @@
-- BUG: Extensions not loaded on first render,
+- Tests:
+
+  - Setup with lerna workspace
+  - React x amount of renders
+  - Test accessor extensions
+  - Extensions x amount of calls per update
+
+- ScalarNode consider returning undefined instead of null
+
+  - Make more sense
+  - Need to find fix for react throwing error for key
+    - Check if it's a valid error, and possibly need to provide key
+      - if it ain't consider just overriding console
+
 - In ASTBuilder, selection names should not need to be globally unique.
 
   - Instead they should only be unique per query

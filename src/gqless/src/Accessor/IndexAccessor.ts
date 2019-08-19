@@ -17,7 +17,7 @@ export class IndexAccessor<
     )
 
     this.associateValueFrom(this.parent)
-
+    this.updateExtensions()
     this.stageIfRequired()
   }
 
@@ -27,7 +27,6 @@ export class IndexAccessor<
     for (const parentExtension of this.parent.extensions) {
       const extensionOfNode = parentExtension[INDEX]
       const extension: IExtension<any> =
-        !(this.node instanceof ScalarNode) &&
         typeof extensionOfNode === 'function'
           ? extensionOfNode(this.data)
           : extensionOfNode

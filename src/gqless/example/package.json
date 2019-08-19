@@ -29,7 +29,6 @@
     "@types/react-dom": "^16.8.4",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
-    "graphql-faker": "^1.9.0",
     "parcel": "^1.12.3"
   },
   "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb"

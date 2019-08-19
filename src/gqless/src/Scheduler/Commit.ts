@@ -15,7 +15,7 @@ export class Commit extends Disposable {
     private fetchSelections: (
       selections: Selection<any>[],
       queryName?: string
-    ) => Promise<any>
+    ) => any
   ) {
     super()
   }
@@ -82,7 +82,7 @@ export class Commit extends Disposable {
 
     try {
       const promises = Array.from(queries)
-        .map(([query, selections]) => {
+        .map(async ([query, selections]) => {
           const promise = this.fetchSelections(selections, query && query.name)
 
           const notFetchingSelections = () => {
@@ -91,9 +91,11 @@ export class Commit extends Disposable {
             })
           }
 
-          promise.then(notFetchingSelections).catch(notFetchingSelections)
-
-          return promise
+          try {
+            await promise
+          } finally {
+            notFetchingSelections()
+          }
         })
         .filter(Boolean) as Promise<any>[]
 

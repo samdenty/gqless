@@ -1,6 +1,7 @@
-import { UArguments, InputNode, ArrayNode, EnumNode } from '../Node'
-import { ObjectFieldNode, ValueNode } from 'graphql'
 import { invariant } from '@gqless/utils'
+import { ObjectFieldNode, ValueNode } from 'graphql'
+
+import { ArrayNode, EnumNode, InputNode, UArguments } from '../Node'
 
 export const toValueNode = (
   value: any,
@@ -59,8 +60,12 @@ export const toValueNode = (
     }
   }
 
+  console.log(node.constructor === InputNode, node instanceof InputNode)
+
   throw invariant(
     false,
-    `Invalid value of ${value} for argument (expected type ${node})`
+    `Invalid value of ${JSON.stringify(
+      value
+    )} for argument (expected type ${node})`
   )
 }

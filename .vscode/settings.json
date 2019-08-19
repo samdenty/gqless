@@ -8,5 +8,6 @@
     "**/yarn.lock": true,
     "**/yarn-error.log": true
   },
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "jest.pathToJest": "yarn test"
 }

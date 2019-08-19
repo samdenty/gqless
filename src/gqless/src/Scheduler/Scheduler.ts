@@ -6,6 +6,10 @@ import { Disposable } from '../utils'
 import { Commit } from './Commit'
 import { Query } from './Query'
 
+export type SelectionFetcher = (
+  selections: Selection<any>[],
+  queryName?: string
+) => any
 export class Scheduler extends Disposable {
   private timer: any
   public interval: number
@@ -13,11 +17,8 @@ export class Scheduler extends Disposable {
   public commit: Commit = undefined!
 
   constructor(
-    private plugins: Plugins,
-    private fetchSelections: (
-      selections: Selection<any>[],
-      queryName?: string
-    ) => Promise<any>,
+    private fetchSelections: SelectionFetcher,
+    public plugins: Plugins = new Plugins(),
     interval = 20
   ) {
     super()

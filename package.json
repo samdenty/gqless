@@ -6,6 +6,12 @@
     "src/*/example",
     "packages/*/example"
   ],
+  "scripts": {
+    "test": "lerna run test --no-private --parallel -- --passWithNoTests",
+    "build": "lerna run build --no-private --parallel --since",
+    "build:all": "lerna run build --no-private --parallel --ignore @gqless/cli && lerna run build --scope @gqless/cli",
+    "release": "yarn build && lerna publish"
+  },
   "homepage": "https://github.com/samdenty/gqless",
   "private": true,
   "husky": {
@@ -18,6 +24,7 @@
     "husky": "^3.0.2",
     "lerna": "^3.16.4",
     "pretty-quick": "^1.11.1",
+    "graphql-faker": "^1.9.0",
     "tsdx": "^0.7.2",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"

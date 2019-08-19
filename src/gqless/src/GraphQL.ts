@@ -26,13 +26,13 @@ export class GraphQL<TData = any> extends Disposable {
   public plugins = new Plugins()
   public astBuilder = new ASTBuilder()
   public scheduler = new Scheduler(
-    this.plugins,
-    (selections, name) => this.fetchSelections(selections, name)!
+    (selections, name) => this.fetchSelections(selections, name)!,
+    this.plugins
   )
   public cache = new Cache()
 
   public selection = new RootSelection(this.node)
-  public accessor = new RootAccessor(this.selection, this.cache, this.scheduler)
+  public accessor = new RootAccessor(this.selection, this.scheduler, this.cache)
 
   public query: TData = this.accessor.data
 

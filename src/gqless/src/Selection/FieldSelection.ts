@@ -1,7 +1,8 @@
-import { Selection, CircularSelectionField } from './Selection'
-import { Node, FieldNode } from '../Node'
-import { generateFieldID } from './utils'
 import stringify from 'json-stable-stringify'
+
+import { FieldNode, Node } from '../Node'
+import { CircularSelectionField, Selection } from './Selection'
+import { generateFieldID } from './utils'
 
 export class FieldSelection<
   TNode extends Node<any> = Node<any>,
@@ -11,11 +12,10 @@ export class FieldSelection<
 
   constructor(
     parent: Selection<any>,
-    node: TNode,
     public field: FieldNode<TNode>,
     public args?: Record<string, any>
   ) {
-    super(parent, node)
+    super(parent, field.ofNode)
 
     const existingSelection = parent.selections.find(
       s => s.field === this.field

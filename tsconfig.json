@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@gqless/*": ["packages/*/src"],
+      "gqless": ["src/gqless/src"]
+    }
+  }
+}

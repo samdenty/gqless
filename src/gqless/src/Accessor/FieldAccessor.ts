@@ -10,7 +10,7 @@ export class FieldAccessor<
     super(parent, fieldSelection)
 
     this.associateValueFrom(this.parent)
-
+    this.updateExtensions()
     this.stageIfRequired()
   }
 
@@ -20,7 +20,6 @@ export class FieldAccessor<
     for (const parentExtension of this.parent.extensions) {
       const extensionField = parentExtension[this.selection.field.name]
       const extension: IExtension<any> =
-        !(this.node instanceof ScalarNode) &&
         typeof extensionField === 'function'
           ? extensionField(this.data)
           : extensionField

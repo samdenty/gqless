@@ -103,6 +103,7 @@ async function bootstrap() {
 
   const Component = graphql(
     () => {
+      console.log(query.me, query.me.name)
       const [showDescription, setShowDescription] = React.useState(false)
 
       const userId = useVariable('asdasdasd', 'userId')

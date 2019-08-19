@@ -1,8 +1,8 @@
+import { Cache, Value } from '../Cache'
+import { NodeDataType } from '../Node'
+import { Scheduler } from '../Scheduler'
 import { RootSelection } from '../Selection'
 import { Accessor } from './Accessor'
-import { Cache, Value } from '../Cache'
-import { Scheduler } from '../Scheduler'
-import { NodeDataType } from '../Node'
 
 export class RootAccessor<
   TSelection extends RootSelection = RootSelection,
@@ -10,8 +10,8 @@ export class RootAccessor<
 > extends Accessor<TSelection, TChildren> {
   constructor(
     rootSelection: TSelection,
-    public cache: Cache,
-    public scheduler: Scheduler
+    public scheduler: Scheduler,
+    public cache: Cache = new Cache()
   ) {
     super(undefined, rootSelection)
     this.value = new Value(rootSelection.node, {})

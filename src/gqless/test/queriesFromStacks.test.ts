@@ -1,6 +1,6 @@
-const each = require('template-literal-table')
 import { queriesFromStacks } from '../src/Scheduler/queriesFromStacks'
 
+const each = require('template-literal-table')
 describe('Extracts queries from stacks', () => {
   // describe.each for prettier
   const describe = { each: testStacks }

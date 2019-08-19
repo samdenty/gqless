@@ -1,14 +1,15 @@
-import { Node } from '../Node'
-import { NodeContainer } from '../NodeContainer'
-import { FieldSelection, Selection } from '../../../Selection'
+import { invariant } from '@gqless/utils'
+import { Generic, Mix } from 'mix-classes'
+
 import { Arguments } from '../..'
 import { Accessor, FieldAccessor } from '../../../Accessor'
+import { FieldSelection, Selection } from '../../../Selection'
+import { EnumNode } from '../../EnumNode'
+import { ScalarNode } from '../../ScalarNode'
+import { Node } from '../Node'
+import { NodeContainer } from '../NodeContainer'
 import { Outputable } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
-import { invariant } from '@gqless/utils'
-import { Mix, Generic } from 'mix-classes'
-import { ScalarNode } from '../../ScalarNode'
-import { EnumNode } from '../../EnumNode'
 import { isArgsEqual } from './isArgsEqual'
 
 export interface FieldNode<TNode extends Node<any> = any>
@@ -38,12 +39,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
 
     return {
       justCreated: true,
-      selection: new FieldSelection(
-        fieldsAccessor.selection,
-        this.ofNode,
-        this,
-        args
-      ),
+      selection: new FieldSelection(fieldsAccessor.selection, this, args),
     }
   }
 

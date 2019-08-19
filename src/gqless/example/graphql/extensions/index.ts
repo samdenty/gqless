@@ -1,27 +1,27 @@
-import { GET_KEY, INDEX } from 'gqless'
+import { GET_KEY, getAccessor, INDEX } from 'gqless'
 
 // export const String = (value: string) => {
-//   return `string_${value}`
+//   console.log(value)
+//   return value
 // }
 
-export const User /*: Extension<g.User>*/ = user => {
-  return {
-    testFn() {},
-    name: (name: string) => `user_${name}`,
-    // get name() {
-    //   return `user_${name}`
-    // },
-    // set name(name) {
-    //   mutation.renameUser(user.id, name)
-    // },
-    isAUser: true as const,
-    following: {
-      isFollowing: true,
-    },
+export const User /*: Extension<g.User>*/ = {
+  testFn() {},
+  name: (name: string) => `user_${name}`,
+  // get name() {
+  //   return `user_${name}`
+  // },
+  // set name(name) {
+  //   mutation.renameUser(user.id, name)
+  // },
+  isAUser: true as const,
+  following: {
+    isFollowing: true,
+  },
 
-    [GET_KEY]: data => data.id,
-  }
+  [GET_KEY]: data => data.id,
 }
+
 export const Query /*: Extension<g.User>*/ = query => {
   return {
     whatIsMyName() {
@@ -37,7 +37,10 @@ export const Query /*: Extension<g.User>*/ = query => {
       queryGetUsers: true as const,
     },
     me: {
-      name: (name: string) => `me_${name}`,
+      name: (name: string) => {
+        console.log({ meName: name })
+        return `me_${name}`
+      },
       isMe: true,
       following: {
         isMeFollowing: true,

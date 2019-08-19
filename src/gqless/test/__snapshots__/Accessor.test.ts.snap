@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`creates and schedules selections: accessors 1`] = `
+Query {
+  scalar
+  object {
+    scalar
+  }
+  arrayOfObjects {
+    0
+    1 {
+      scalar
+    }
+  }
+  arrayOfScalar
+}
+`;
+
+exports[`creates and schedules selections: selections 1`] = `
+Query {
+  scalar
+  object {
+    scalar
+  }
+  arrayOfObjects {
+    scalar
+  }
+  arrayOfScalar
+}
+`;
+
+exports[`supports arguments: accessors 1`] = `
+Query {
+  arrayOfObjects({"scalar":2}) {
+    0 {
+      scalar
+    }
+  }
+  arrayOfObjects({"scalar":3}) {
+    0
+  }
+  arrayOfObjects({"input":{"scalar":1}})
+}
+`;
+
+exports[`supports arguments: selections 1`] = `
+Query {
+  arrayOfObjects({"scalar":2}) {
+    scalar
+  }
+  arrayOfObjects({"scalar":3})
+  arrayOfObjects({"input":{"scalar":1}})
+}
+`;

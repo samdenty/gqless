@@ -38,7 +38,9 @@ export class Variable<TValue = any> {
     if (this.nullable === true && !nullable) {
       invariant(
         false,
-        `Can't convert a nullable variable of type ${this.node}, to non-nullable`
+        `Can't convert a nullable variable of type ${
+          this.node
+        }, to non-nullable`
       )
     }
 

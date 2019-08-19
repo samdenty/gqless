@@ -29,16 +29,12 @@ export class ScalarNode<T> extends Mix(Outputable, Generic(Node)) {
   public getData(accessor: Accessor<Selection<ScalarNode>>): any {
     super.getData(accessor)
 
-    if (!accessor.value) return null
-
-    let value: any = accessor.value.data
-
     if (accessor.extensions.length) {
       const extension = accessor.extensions[accessor.extensions.length - 1]
-
-      return typeof extension === 'function' ? extension(value) : extension
+      return extension
     }
 
-    return value
+    if (!accessor.value) return null
+    return accessor.value.data
   }
 }

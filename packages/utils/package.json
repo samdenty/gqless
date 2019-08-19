@@ -2,8 +2,7 @@
   "name": "@gqless/utils",
   "version": "0.0.1-alpha.18",
   "main": "dist/index.js",
-  "umd:main": "dist/gqlessutils.umd.production.js",
-  "module": "dist/gqlessutils.es.production.js",
+  "module": "dist/utils.esm.js",
   "homepage": "https://github.com/samdenty/gqless",
   "typings": "dist/index.d.ts",
   "files": [
@@ -11,8 +10,7 @@
   ],
   "scripts": {
     "watch": "tsdx watch",
-    "build": "tsdx build",
-    "prepublishOnly": "yarn build",
+    "build": "tsdx build --tsconfig ./tsconfig.build.json",
     "test": "tsdx test"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"

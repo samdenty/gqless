@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "include": ["src"],
+  "references": [
+    {
+      "path": "../../src/gqless/tsconfig.build.json"
+    }
+  ],
+  "compilerOptions": {
+    "rootDir": "./"
+  }
+}

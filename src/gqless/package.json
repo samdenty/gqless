@@ -2,8 +2,7 @@
   "name": "gqless",
   "version": "0.0.1-alpha.18",
   "main": "dist/index.js",
-  "umd:main": "dist/gqless.umd.production.js",
-  "module": "dist/gqless.es.production.js",
+  "module": "dist/gqless.esm.js",
   "homepage": "https://github.com/samdenty/gqless",
   "typings": "dist/index.d.ts",
   "files": [
@@ -11,15 +10,23 @@
   ],
   "scripts": {
     "watch": "tsdx watch",
-    "build": "tsdx build",
-    "prepublishOnly": "cp ../../README.md .; yarn build",
+    "build": "cp ../../README.md .; tsdx build --tsconfig ./tsconfig.build.json",
     "test": "tsdx test"
+  },
+  "jest": {
+    "snapshotSerializers": [
+      "<rootDir>/../../jest/snapshotSerializer.ts"
+    ],
+    "moduleNameMapper": {
+      "@gqless/(.*)$": "<rootDir>/../../packages/$1/src",
+      "gqless": "<rootDir>/src"
+    }
   },
   "dependencies": {
     "@gqless/utils": "^0.0.1-alpha.18",
     "json-stable-stringify": "^1.0.1",
     "lodash": "^4.17.15",
-    "mix-classes": "^1.1.6"
+    "mix-classes": "^1.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",

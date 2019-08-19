@@ -74,7 +74,15 @@ export abstract class Accessor<
           const check = () => {
             const newData = value ? value.data : undefined
             if (prevData === newData) return
-            this.onDataUpdate.emit(prevData)
+
+            if (
+              prevData !== undefined ||
+              newData === null ||
+              this.node instanceof ScalarNode
+            ) {
+              this.onDataUpdate.emit(prevData)
+            }
+
             prevData = newData
           }
 
