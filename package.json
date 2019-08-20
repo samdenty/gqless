@@ -11,7 +11,7 @@
     "test": "jest",
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --no-private --parallel --since",
-    "build:all": "lerna run build --no-private",
+    "build:all": "lerna run build --no-private --ignore @gqless/cli && lerna run build --scope @gqless/cli",
     "release": "yarn build && lerna publish"
   },
   "homepage": "https://github.com/samdenty/gqless",

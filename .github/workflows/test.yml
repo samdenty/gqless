@@ -22,8 +22,18 @@ jobs:
           yarn
           yarn bootstrap
 
-      - name: Build
-        run: yarn build:all
+      - run:
+        name: Setup Code Climate test-reporter
+        command: |
+        # download test reporter as a static binary
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
 
       - name: Test
-        run: yarn test --coverage
+        run: |
+          ./cc-test-reporter before-build
+          yarn test --coverage
+          ./cc-test-reporter after-build
+
+      - name: Build
+        run: yarn build:all
