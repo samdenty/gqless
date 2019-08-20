@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "bootstrap": "lerna bootstrap",
     "build": "lerna run build --no-private --parallel --since",
     "build:all": "lerna run build --no-private --parallel --ignore @gqless/cli && lerna run build --scope @gqless/cli",
     "release": "yarn build && lerna publish"
