@@ -15,10 +15,8 @@
   },
   "dependencies": {
     "graphql": "^14.3.0",
-    "to-style": "^1.3.3"
-  },
-  "peerDependencies": {
-    "gqless": "*"
+    "to-style": "^1.3.3",
+    "gqless": "^0.0.1-alpha.19"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4"

@@ -3,10 +3,5 @@
   "include": ["src"],
   "compilerOptions": {
     "rootDir": "./"
-  },
-  "references": [
-    {
-      "path": "../../packages/utils/tsconfig.build.json"
-    }
-  ]
+  }
 }

@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "composite": false,
     "baseUrl": ".",
     "paths": {
       "@gqless/*": ["packages/*/src"],

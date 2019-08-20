@@ -15,10 +15,8 @@
   },
   "dependencies": {
     "@gqless/utils": "^0.0.1-alpha.19",
+    "gqless": "^0.0.1-alpha.19",
     "graphql-tag": "^2.*"
-  },
-  "peerDependencies": {
-    "gqless": "*"
   },
   "devDependencies": {
     "@types/graphql": "^14.0.7"

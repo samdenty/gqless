@@ -14,8 +14,10 @@
     "test": "jest --env=jsdom"
   },
   "peerDependencies": {
-    "gqless": "*",
     "react": ">=16"
+  },
+  "dependencies": {
+    "gqless": "^0.0.1-alpha.19"
   },
   "devDependencies": {
     "@types/react": "^16.8.17",

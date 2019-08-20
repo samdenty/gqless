@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "composite": true,
     "target": "es5",
     "module": "esnext",
     "lib": ["dom", "esnext"],

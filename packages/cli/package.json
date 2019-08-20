@@ -16,10 +16,8 @@
     "graphql": "^14.4.2",
     "mkdirp": "^0.5.1",
     "prettier": "^1",
-    "tslib": "^1"
-  },
-  "peerDependencies": {
-    "gqless": "*"
+    "tslib": "^1",
+    "gqless": "^0.0.1-alpha.19"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
