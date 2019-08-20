@@ -8,17 +8,21 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [8.x, 10.x, 12.x]
+        node-version: [12.x]
 
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install -g yarn
       - name: Setup
         run: |
+          npm install -g yarn
           yarn
           yarn bootstrap
+
+      - name: Build
+        run: yarn build:all
+
       - name: Test
-        run: yarn test
+        run: yarn test --coverage
