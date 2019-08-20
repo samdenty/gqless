@@ -3,8 +3,8 @@
     "testing",
     "examples/*",
     "packages/*",
-    "src/*",
-    "src/*/example",
+    "gqless",
+    "gqless/example",
     "packages/*/example"
   ],
   "scripts": {

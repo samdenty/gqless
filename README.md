@@ -148,11 +148,11 @@ export const User = user => ({
 
 It works by creating an [ES6 Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) that follows the shape of your schema.
 
-When properties are accessed, it creates a [`Selection`](https://github.com/samdenty/gqless/tree/master/src/gqless/src/Selection) representing the path accessed, arguments and more.
+When properties are accessed, it creates a [`Selection`](https://github.com/samdenty/gqless/tree/master/gqless/src/Selection) representing the path accessed, arguments and more.
 
 If the React component being rendered contains unfetched data, it'll be suspended (using React suspense).
 
-Every 50ms the [`Scheduler`](https://github.com/samdenty/gqless/tree/master/src/gqless/src/Scheduler) takes in all the selections, and converts them into GraphQL queries. Once fetched, the result is written into the cache.
+Every 50ms the [`Scheduler`](https://github.com/samdenty/gqless/tree/master/gqless/src/Scheduler) takes in all the selections, and converts them into GraphQL queries. Once fetched, the result is written into the cache.
 
 Finally the React components unsuspend, with the newly populated data available.
 

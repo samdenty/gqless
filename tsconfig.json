@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@gqless/*": ["packages/*/src"],
-      "gqless": ["src/gqless/src"]
+      "gqless": ["gqless/src"]
     }
   }
 }
