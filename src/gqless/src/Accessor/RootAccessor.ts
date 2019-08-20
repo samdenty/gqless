@@ -21,6 +21,7 @@ export class RootAccessor<
     this.updateExtensions()
   }
 
+  // @TODO: This should be replace with a Generic
   public data: TSelection extends RootSelection<infer TNode>
     ? NodeDataType<TNode>
     : never = this.selection.createProxy(this) as any

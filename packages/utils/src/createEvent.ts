@@ -1,8 +1,6 @@
 type ToCallback<T> = T extends (...args: any[]) => any ? T : (data: T) => void
 
-export const createEvent = <T extends any>() => {
-  type TCallback = ToCallback<T>
-
+export const createEvent = <TCallback extends (...args: any[]) => any>() => {
   const listeners = new Set<TCallback>()
 
   const onEvent = (callback: TCallback) => {

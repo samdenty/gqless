@@ -1,7 +1,15 @@
 import { print } from 'graphql/language/printer'
 
-import { ASTBuilder, FieldSelection, NodeContainer, ObjectNode, RootSelection, Selection, Variable } from '../src'
-import { Query } from './data'
+import {
+  ASTBuilder,
+  FieldSelection,
+  NodeContainer,
+  ObjectNode,
+  RootSelection,
+  Selection,
+  Variable,
+} from '../src'
+import { schema } from 'testing'
 
 const buildQuery = (...selections: Selection[]) => {
   const astBuilder = new ASTBuilder()
@@ -25,160 +33,160 @@ const f = (selection: Selection, fieldName: string, args?: any) =>
   )
 
 it(`works with a basic query`, () => {
-  const root = new RootSelection(Query)
-  f(f(root, 'query'), 'scalar')
-  f(root, 'scalar')
-  f(f(root, 'object'), 'scalar')
-  f(f(root, 'arrayOfObjects'), 'scalar')
-  f(root, 'arrayOfScalar')
+  const root = new RootSelection(schema.Query)
+  f(f(root, 'query'), 'string')
+  f(root, 'string')
+  f(f(root, 'object'), 'string')
+  f(f(root, 'arrayOfObjects'), 'string')
+  f(root, 'arrayOfString')
 
   expect(buildQuery(root)).toMatchInlineSnapshot(`
-                                "query queryName {
-                                  __typename
-                                  query {
-                                    __typename
-                                    scalar
-                                  }
-                                  scalar
-                                  object {
-                                    __typename
-                                    scalar
-                                  }
-                                  arrayOfObjects {
-                                    __typename
-                                    scalar
-                                  }
-                                  arrayOfScalar
-                                }
-                                "
-                `)
+                                        "query queryName {
+                                          __typename
+                                          query {
+                                            __typename
+                                            string
+                                          }
+                                          string
+                                          object {
+                                            __typename
+                                            string
+                                          }
+                                          arrayOfObjects {
+                                            __typename
+                                            string
+                                          }
+                                          arrayOfString
+                                        }
+                                        "
+                    `)
 })
 
 it(`works with arguments`, () => {
   expect(
     buildQuery(
       f(
-        f(new RootSelection(Query), 'arrayOfObjects', {
-          scalar: 10,
-          input: { scalar: 20 },
+        f(new RootSelection(schema.Query), 'arrayOfObjects', {
+          string: 'test',
+          input: { string: 'test2' },
         }),
-        'scalar'
+        'string'
       )
     )
   ).toMatchInlineSnapshot(`
-        "query queryName {
-          __typename
-          arrayOfObjects(scalar: 10, input: {scalar: 20}) {
-            __typename
-            scalar
-          }
-        }
-        "
-    `)
+    "query queryName {
+      __typename
+      arrayOfObjects(string: \\"test\\", input: {string: \\"test2\\"}) {
+        __typename
+        string
+      }
+    }
+    "
+  `)
 })
 
 it(`works with variables`, () => {
   expect(
     buildQuery(
       f(
-        f(new RootSelection(Query), 'arrayOfObjects', {
-          scalar: new Variable(10, { name: 'var' }),
-          input: new Variable({ scalar: 10 }, { name: 'var' }),
+        f(new RootSelection(schema.Query), 'arrayOfObjects', {
+          string: new Variable('test', { name: 'var' }),
+          input: new Variable({ string: 'test2' }, { name: 'var' }),
         }),
-        'scalar'
+        'string'
       )
     )
   ).toMatchInlineSnapshot(`
     Object {
-      "query": "query queryName($var_1: ScalarNode, $var: Input) {
+      "query": "query queryName($var_1: String, $var: Input) {
       __typename
-      arrayOfObjects(scalar: $var_1, input: $var) {
+      arrayOfObjects(string: $var_1, input: $var) {
         __typename
-        scalar
+        string
       }
     }
     ",
       "variables": Object {
         "var": Object {
-          "scalar": 10,
+          "string": "test2",
         },
-        "var_1": 10,
+        "var_1": "test",
       },
     }
   `)
 })
 
 it(`combines selections correctly`, () => {
-  const root = new RootSelection(Query)
-  const queryScalar = f(root, 'scalar')
+  const root = new RootSelection(schema.Query)
+  const queryString = f(root, 'string')
   const queryObject = f(root, 'object')
-  const queryObjectScalar = f(queryObject, 'scalar')
-  const queryArrayOfScalar = f(root, 'arrayOfScalar')
+  const queryObjectString = f(queryObject, 'string')
+  const queryArrayOfString = f(root, 'arrayOfString')
   const queryArrayOfObjects = f(root, 'arrayOfObjects')
-  const queryArrayOfObjectsScalar = f(queryArrayOfObjects, 'scalar')
+  const queryArrayOfObjectsString = f(queryArrayOfObjects, 'string')
 
-  expect(buildQuery(queryScalar, queryObjectScalar)).toMatchInlineSnapshot(`
-                                            "query queryName {
-                                              __typename
-                                              scalar
-                                              object {
-                                                __typename
-                                                scalar
-                                              }
-                                            }
-                                            "
-                      `)
+  expect(buildQuery(queryString, queryObjectString)).toMatchInlineSnapshot(`
+                                                    "query queryName {
+                                                      __typename
+                                                      string
+                                                      object {
+                                                        __typename
+                                                        string
+                                                      }
+                                                    }
+                                                    "
+                          `)
 
   expect(
     buildQuery(
-      queryArrayOfScalar,
+      queryArrayOfString,
       queryArrayOfObjects,
-      queryArrayOfObjectsScalar
+      queryArrayOfObjectsString
     )
   ).toMatchInlineSnapshot(`
-                                        "query queryName {
-                                          __typename
-                                          arrayOfScalar
-                                          arrayOfObjects {
-                                            __typename
-                                            scalar
-                                          }
-                                        }
-                                        "
-                    `)
+                                                "query queryName {
+                                                  __typename
+                                                  arrayOfString
+                                                  arrayOfObjects {
+                                                    __typename
+                                                    string
+                                                  }
+                                                }
+                                                "
+                        `)
 })
 
 it(`handles duplicate fields`, () => {
-  const root = new RootSelection(Query)
+  const root = new RootSelection(schema.Query)
 
-  f(root, 'scalar')
-  f(root, 'scalar')
+  f(root, 'string')
+  f(root, 'string')
 
-  f(f(root, 'arrayOfObjects'), 'scalar')
+  f(f(root, 'arrayOfObjects'), 'string')
   const arrayOfObjects = f(root, 'arrayOfObjects')
-  f(arrayOfObjects, 'scalar')
-  f(arrayOfObjects, 'scalar')
+  f(arrayOfObjects, 'string')
+  f(arrayOfObjects, 'string')
 
-  f(root, 'arrayOfScalar')
-  f(root, 'arrayOfScalar')
+  f(root, 'arrayOfString')
+  f(root, 'arrayOfString')
 
   expect(buildQuery(root)).toMatchInlineSnapshot(`
-                        "query queryName {
-                          __typename
-                          scalar
-                          scalar__1: scalar
-                          arrayOfObjects {
-                            __typename
-                            scalar
-                          }
-                          arrayOfObjects__1: arrayOfObjects {
-                            __typename
-                            scalar
-                            scalar__1: scalar
-                          }
-                          arrayOfScalar
-                          arrayOfScalar__1: arrayOfScalar
-                        }
-                        "
-            `)
+                                "query queryName {
+                                  __typename
+                                  string
+                                  string__1: string
+                                  arrayOfObjects {
+                                    __typename
+                                    string
+                                  }
+                                  arrayOfObjects__1: arrayOfObjects {
+                                    __typename
+                                    string
+                                    string__1: string
+                                  }
+                                  arrayOfString
+                                  arrayOfString__1: arrayOfString
+                                }
+                                "
+                `)
 })

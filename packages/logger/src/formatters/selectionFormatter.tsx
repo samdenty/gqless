@@ -5,26 +5,30 @@ import * as React from './jsx'
 
 export const selectionFormatter = {
   header(selection: any, config: any = {}) {
-    if (!(selection instanceof Selection)) return null
+    try {
+      if (!(selection instanceof Selection)) return null
 
-    const path = config.objectDepth
-      ? selection.path.slice(config.objectDepth)
-      : selection.path
+      const path = config.objectDepth
+        ? selection.path.slice(config.objectDepth)
+        : selection.path
 
-    const { selections } = selection
-    return (
-      <div>
-        <Path
-          path={path}
-          objectDepth={config.objectDepth}
-          isRoot={selection => selection instanceof RootSelection}
-        />
+      const { selections } = selection
+      return (
+        <div>
+          <Path
+            path={path}
+            objectDepth={config.objectDepth}
+            isRoot={selection => selection instanceof RootSelection}
+          />
 
-        {selections.length && (
-          <Preview elements={selections} objectDepth={config.objectDepth} />
-        )}
-      </div>
-    )
+          {selections.length && (
+            <Preview elements={selections} objectDepth={config.objectDepth} />
+          )}
+        </div>
+      )
+    } catch {
+      return null
+    }
   },
 
   body(selection: Selection) {

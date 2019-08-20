@@ -11,9 +11,9 @@
   "scripts": {
     "watch": "tsdx watch",
     "build": "cp ../../README.md .; tsdx build --tsconfig ./tsconfig.build.json",
-    "test": "tsdx test"
+    "test": "jest"
   },
-  "jest": {
+  "jest2": {
     "snapshotSerializers": [
       "<rootDir>/../../jest/snapshotSerializer.ts"
     ],

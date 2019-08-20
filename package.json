@@ -1,5 +1,6 @@
 {
   "workspaces": [
+    "testing",
     "examples/*",
     "packages/*",
     "src/*",
@@ -7,7 +8,7 @@
     "packages/*/example"
   ],
   "scripts": {
-    "test": "lerna run test --no-private --parallel -- --passWithNoTests",
+    "test": "jest",
     "build": "lerna run build --no-private --parallel --since",
     "build:all": "lerna run build --no-private --parallel --ignore @gqless/cli && lerna run build --scope @gqless/cli",
     "release": "yarn build && lerna publish"

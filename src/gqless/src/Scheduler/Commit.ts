@@ -3,10 +3,12 @@ import { Selection } from '../Selection'
 import { Disposable } from '../utils'
 import { queriesFromStacks } from './queriesFromStacks'
 import { Query } from './Query'
+import { createEvent } from '@gqless/utils'
 
 const defaultQuery = new Query()
 
 export class Commit extends Disposable {
+  public onFetched = createEvent()
   public selections = new Map<Selection, Query[]>()
 
   constructor(
@@ -103,5 +105,7 @@ export class Commit extends Disposable {
     } catch (e) {
       console.error(e)
     }
+
+    this.onFetched.emit()
   }
 }

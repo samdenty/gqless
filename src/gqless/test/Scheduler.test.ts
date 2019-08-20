@@ -1,9 +1,9 @@
-import { Plugins, Query, RootSelection, Scheduler } from '../src'
-import * as demoSchema from './data'
+import { Query, RootSelection, Scheduler } from '../src'
+import { schema } from 'testing'
 
 jest.useFakeTimers()
 
-const root = new RootSelection(demoSchema.Query)
+const root = new RootSelection(schema.Query)
 const testQuery = new Query('TestQuery')
 
 it('schedules selections with stacks', () => {
@@ -35,15 +35,22 @@ it('unstages selections', () => {
 })
 
 it('calls plugin methods', () => {
-  const plugins = new Plugins()
   const onCommit = jest.fn()
-  plugins.add({ onCommit })
 
-  const scheduler = new Scheduler(() => {}, plugins)
+  const scheduler = new Scheduler(() => {})
+  scheduler.plugins.add({ onCommit })
 
   scheduler.commit.stage(root)
 
   jest.runOnlyPendingTimers()
 
   expect(onCommit).toBeCalled()
+})
+
+it('emits onFetched when complete', async () => {
+  const { commit } = new Scheduler(() => {})
+  commit.stage(root)
+  jest.runOnlyPendingTimers()
+
+  await commit.onFetched
 })

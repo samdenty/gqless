@@ -1,0 +1,26 @@
+enum Enum {
+  value1
+  value2
+}
+
+type Object {
+  string: String! @fake(type: firstName)
+  int: Int!
+  enum: Enum!
+
+  overriddenString: String! @fake(type: firstName)
+  overriddenInt: Int!
+}
+
+input Input {
+  string: String!
+}
+
+type Query {
+  object: Object!
+  string: String! @fake(type: firstName)
+
+  arrayOfObjects(string: String, input: Input): [Object!]!
+  arrayOfString: [String!]! @fake(type: firstName)
+  query: Query!
+}

@@ -11,7 +11,7 @@
   "scripts": {
     "watch": "tsdx watch",
     "build": "tsdx build --tsconfig ./tsconfig.build.json",
-    "test": "tsdx test"
+    "test": "jest"
   },
   "dependencies": {
     "graphql": "^14.3.0",

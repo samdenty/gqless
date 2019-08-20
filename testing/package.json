@@ -1,0 +1,9 @@
+{
+  "name": "testing",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "generate": "cd demoSchema; ts-node --skip-project generate"
+  }
+}

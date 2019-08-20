@@ -20,7 +20,7 @@ $ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@gqless/cli/0.0.1-alpha.18 linux-x64 node-v12.4.0
+@gqless/cli/0.0.1-alpha.19 linux-x64 node-v12.4.0
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND

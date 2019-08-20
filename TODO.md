@@ -2,9 +2,10 @@
 
   - Setup with lerna workspace
   - React x amount of renders
-  - Test accessor extensions
   - Extensions x amount of calls per update
 
+- FieldNode with arguments, ensure can be called twice
+- Codegen, auto add ts-ignore to all errors in schema.ts
 - ScalarNode consider returning undefined instead of null
 
   - Make more sense

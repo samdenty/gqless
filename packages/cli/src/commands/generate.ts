@@ -7,6 +7,7 @@ import * as fs from 'fs'
 import * as prettier from 'prettier'
 import * as mkdirp from 'mkdirp'
 import * as path from 'path'
+import { generateSchema } from '../generateSchema'
 
 export default class Generate extends Command {
   static description = 'generate a client from a GraphQL endpoint'
@@ -55,34 +56,9 @@ export default class Generate extends Command {
       return JSON.parse(response.body)
     }
 
-    const schema = await fetchSchema(fetchQuery, {
-      includeInfo: !flags.noComments,
+    await generateSchema(fetchQuery, {
+      ...flags,
+      outputDir: path.join(process.cwd(), args.output_dir),
     })
-    const codegen = new Codegen(schema, {
-      typescript: flags.typescript,
-      url: flags.url,
-    })
-    const files = codegen.generate()
-
-    const rootDir = path.join(process.cwd(), args.output_dir)
-
-    const prettierConfig =
-      !flags.noPrettier && (await prettier.resolveConfig(rootDir))
-
-    for (const file of files) {
-      const filePath = path.join(rootDir, file.path)
-      mkdirp.sync(path.dirname(filePath))
-
-      if (!file.overwrite && fs.existsSync(filePath)) continue
-
-      const source = flags.noPrettier
-        ? file.contents
-        : prettier.format(file.contents, {
-            ...prettierConfig,
-            parser: 'typescript',
-          })
-
-      fs.writeFileSync(filePath, source)
-    }
   }
 }
