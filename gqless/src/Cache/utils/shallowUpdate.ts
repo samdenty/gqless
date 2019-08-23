@@ -45,7 +45,7 @@ export const shallowUpdate = (accessor: Accessor, data?: any) => {
   const accessorValue = new Value(
     node,
     // Only initialize with data if it's a ScalarNode
-    node instanceof ScalarNode ? data : node instanceof ArrayNode ? [] : {}
+    node instanceof ScalarNode ? data : undefined
   )
 
   parent!.value!.set(accessor.toString(), accessorValue)

@@ -26,14 +26,15 @@ export class Keyable<TNode extends Node<any>> {
 export const defaultKey = <TNode extends Node>(
   node: TNode
 ): KeyFn<TNode> | undefined => {
-  if (node instanceof FieldsNode) {
-    const idField = node.fields.id
+  if (!(node instanceof FieldsNode)) return
+  const idField = node.fields.id
+  if (!idField) return
 
-    if (idField) {
-      if (idField.ofNode instanceof ScalarNode)
-        return (data: { id: string }) => data.id
-    }
-  }
+  // If args are required, don't use
+  if (idField.args && idField.args.required) return
 
-  return undefined
+  // Only accept scalars
+  if (!(idField.ofNode instanceof ScalarNode)) return
+
+  return (data: { id: string }) => data.id
 }

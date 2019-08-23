@@ -1,5 +1,11 @@
 import { Accessor, FieldAccessor, IndexAccessor } from '../../Accessor'
-import { ArrayNode, FieldsNode, InterfaceNode, ObjectNode, UnionNode } from '../../Node'
+import {
+  ArrayNode,
+  FieldsNode,
+  InterfaceNode,
+  ObjectNode,
+  UnionNode,
+} from '../../Node'
 import { Selection } from '../../Selection'
 import { shallowUpdate } from './shallowUpdate'
 

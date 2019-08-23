@@ -3,14 +3,53 @@ import { Generic, Mix } from 'mix-classes'
 import { Accessor, IndexAccessor } from '../Accessor'
 import { Selection } from '../Selection'
 import { ACCESSOR } from './../Accessor/Accessor'
-import { Node, NodeContainer, NodeDataType, Outputable } from './abstract'
+import {
+  Node,
+  NodeContainer,
+  NodeDataType,
+  Outputable,
+  Matchable,
+} from './abstract'
+import { Value } from '../Cache'
 
-export interface ArrayNode<TNode extends Node<any>>
+export interface ArrayNode<TNode extends Node<any> = Node<any>>
   extends NodeContainer<TNode, NodeDataType<TNode>[]> {}
 
-export class ArrayNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
+export class ArrayNode<TNode> extends Mix(
+  Generic(NodeContainer),
+  Matchable,
+  Outputable
+) {
   constructor(ofNode: TNode, nullable?: boolean) {
     super([ofNode, nullable])
+  }
+
+  public match(value: Value, data: any) {
+    const result = super.match(value, data)
+    if (result !== undefined) return result
+
+    // Whole array match
+    if (Array.isArray(data)) {
+      if (data.length !== (value.data! as []).length) return
+
+      const badMatch = data.find((match, i) => {
+        const iValue = value.get(i)
+        if (!iValue) return true
+
+        if (!(iValue.node instanceof Matchable)) return
+
+        return !iValue.node.match(iValue, data[i])
+      })
+      if (badMatch) return
+
+      return value
+    }
+
+    // Array index match
+    const innerNode = (value.node as ArrayNode).innerNode
+    if (!(innerNode instanceof Matchable)) return
+
+    return (value.data! as []).find((v, i) => innerNode.match(v, data[i]))
   }
 
   public getData(

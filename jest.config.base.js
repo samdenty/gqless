@@ -18,8 +18,14 @@ module.exports = root => {
     name: name,
     snapshotSerializers: ['testing/snapshotSerializer.ts'],
     moduleNameMapper: {
-      '@gqless/(.*)$': path.resolve(__dirname, './packages/$1/src'),
-      gqless: path.resolve(__dirname, './gqless/src'),
+      '@gqless/([^\\/]*)/(?:dist|src)(.*)$': path.resolve(
+        __dirname,
+        './packages/$1/src$2'
+      ),
+      '@gqless/([^\\/]*)$': path.resolve(__dirname, './packages/$1/src'),
+
+      'gqless/(?:dist|src)(.*)$': path.resolve(__dirname, './gqless/src$1'),
+      gqless$: path.resolve(__dirname, './gqless/src'),
     },
   }
 }

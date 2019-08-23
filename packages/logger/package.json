@@ -14,9 +14,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "flatted": "^2.0.1",
+    "gqless": "^0.0.1-alpha.19",
     "graphql": "^14.3.0",
-    "to-style": "^1.3.3",
-    "gqless": "^0.0.1-alpha.19"
+    "to-style": "^1.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4"

@@ -29,7 +29,7 @@ export class GraphQL<TData = any> extends Disposable {
     (selections, name) => this.fetchSelections(selections, name)!,
     this.plugins
   )
-  public cache = new Cache()
+  public cache = new Cache(this.node)
 
   public selection = new RootSelection(this.node)
   public accessor = new RootAccessor(this.selection, this.scheduler, this.cache)

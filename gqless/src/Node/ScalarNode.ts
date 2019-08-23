@@ -5,6 +5,8 @@ import { Selection } from '../Selection'
 import { Node } from './abstract/Node'
 import { Outputable } from './abstract/Outputable'
 import { Extension } from './Extension'
+import { Matchable } from './abstract/Matchable'
+import { Value } from '../Cache'
 
 export type IScalarNodeOptions = {
   name?: string
@@ -13,13 +15,25 @@ export type IScalarNodeOptions = {
 
 export interface ScalarNode<T extends any = any> extends Node<T> {}
 
-export class ScalarNode<T> extends Mix(Outputable, Generic(Node)) {
+export class ScalarNode<T> extends Mix(Outputable, Matchable, Generic(Node)) {
   public name?: string
 
   constructor({ name, extension }: IScalarNodeOptions = {}) {
     super([extension])
 
     this.name = name
+  }
+
+  public match(value: Value, data: any) {
+    const result = super.match(value, data)
+    if (result !== undefined) return result
+
+    if (data instanceof RegExp) {
+      const input = String(value.data)
+      return input.match(data) ? value : undefined
+    }
+
+    return
   }
 
   public toString() {

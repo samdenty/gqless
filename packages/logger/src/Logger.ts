@@ -1,4 +1,5 @@
 import './loadFormatters'
+import { parse, stringify } from 'flatted'
 import { print } from 'graphql/language/printer'
 import { GraphQL, QueryResponse, Plugin, PluginMethod } from 'gqless'
 
@@ -112,7 +113,7 @@ export class Logger implements Plugin {
     // Cache
     console.log(
       ...format(['Cache snapshot', headerStyles]),
-      this.graphql.cache.toJSON()
+      parse(stringify(this.graphql.cache))
     )
 
     console.groupEnd()

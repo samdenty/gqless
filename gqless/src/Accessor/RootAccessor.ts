@@ -11,10 +11,10 @@ export class RootAccessor<
   constructor(
     rootSelection: TSelection,
     public scheduler: Scheduler,
-    public cache: Cache = new Cache()
+    public cache: Cache = new Cache(rootSelection.node)
   ) {
     super(undefined, rootSelection)
-    this.value = new Value(rootSelection.node, {})
+    this.value = cache.rootValue
 
     cache.store.set(this.toString(), this.value)
 
