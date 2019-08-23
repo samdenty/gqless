@@ -16,14 +16,18 @@ exports[`fetches values 3`] = `"Miller"`;
 exports[`fetches values 4`] = `
 Object {
   "Query": Object {
+    "__typename": "Query",
     "arrayOfObjects": Array [
       Object {
+        "__typename": "Object",
         "string": "Miller",
       },
       Object {
+        "__typename": "Object",
         "string": "Millie",
       },
       Object {
+        "__typename": "Object",
         "string": "Jennings",
       },
     ],
@@ -45,17 +49,22 @@ exports[`shares cache for arguments with/without variables 2`] = `"Mervin"`;
 exports[`shares cache for arguments with/without variables 3`] = `
 Object {
   "Query": Object {
+    "__typename": "Query",
     "arrayOfObjects({\\"string\\":\\"test\\"})": Array [
       Object {
+        "__typename": "Object",
         "string": "Mervin",
       },
       Object {
+        "__typename": "Object",
         "string": "Edison",
       },
       Object {
+        "__typename": "Object",
         "string": "Hilbert",
       },
       Object {
+        "__typename": "Object",
         "string": "Danielle",
       },
     ],
