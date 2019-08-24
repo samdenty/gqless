@@ -1,0 +1,56 @@
+---
+name: Basic usage
+route: /react
+menu: React
+---
+
+import { Link } from 'docz'
+
+# Basic usage
+
+Using gqless with React is quite simple. All components that contain `gqless` data objects, should be wrapped in `graphql()` for:
+
+- Automatic updates
+- React suspense
+- Query combining
+
+## Example
+
+```jsx
+import { query } from './graphql'
+import { graphql } from '@gqless/react'
+
+const App = graphql(() => {
+  return <div>{query.hello}</div>
+})
+```
+
+## React suspense
+
+gqless was designed around the concept of React Suspense. Instead of components handling loading states, they should render as if the data was always there.
+
+## Automatic updates
+
+Selections referenced on render, will trigger components to update whenever they change.
+
+### Example
+
+Updating the cache when a button is pressed:
+
+```jsx
+import { query } from './graphql'
+import { graphql } from '@gqless/react'
+
+const App = graphql(() => {
+  return (
+    <>
+      <button onClick={() => (query.hello = 'Updates')}></button>
+      {query.hello}
+    </>
+  )
+})
+```
+
+## Query combining
+
+gqless combines component data requirements into a single query. See [custom queries](/react/custom-queries) for details on how to split them up

@@ -1,0 +1,32 @@
+---
+name: Variables
+route: /react/variables
+menu: React
+---
+
+# Variables
+
+The `useVariable` hook allows you to use variables.
+
+## Example
+
+```jsx
+import { graphql, useVariable } from '@gqless/react'
+
+const App = graphql(() => {
+  const [id, setId] = useVariable('bob')
+
+  return <div>{query.user({ id }).name}</div>
+})
+```
+
+## Difference to normal values
+
+It's good practise to use variables whenever arguments change based on state.
+
+Arguments are inlined without them:
+
+<!--prettier-ignore-->
+```graphql
+query App { user(id: "bob") { name } }
+```

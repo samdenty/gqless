@@ -1,0 +1,84 @@
+---
+name: Extensions
+route: /extensions
+---
+
+# Extensions
+
+Extensions are a way to enhance your schema, by adding typesafe client-only fields and specifying cache directives.
+
+## Custom fields
+
+### Example
+
+```ts
+import { INDEX } from 'gqless'
+
+export const Query = {
+  // Overwrite existing field
+  hello: 'world',
+  // or pass a function, to get the current value
+  hello: name => `hello ${name}`,
+
+  // Client-only properties can be
+  // any JS value
+  //   query.doSomething(1) => 1
+  doSomething(test) {
+    return test
+  },
+
+  // Add new extensions to a given path
+  users: {
+    isQueryUsers: true, // query.users.isQueryUsers => true
+    [INDEX]: {
+      isAQueryUser: true, // query.users[0].isAQueryUser => true
+    },
+  },
+
+  // You can pass functions to extract
+  // the value at any time
+  me: me => ({
+    name: name => `me ${name}`,
+  }),
+}
+
+// Turn all Date scalars into Date objects
+export const Date = date_string => new Date(date_string)
+```
+
+## Cache keys
+
+Keys are used to link up different paths in the schema, to the same value.
+
+`GET_KEY` should return a unique value corresponding to the node. Selections referenced are automatically inserted into every query, so all nodes have an unique ID.
+
+**The `id` field is used by default as a key.**
+
+### Example
+
+```ts
+export const User = {
+  [GET_KEY]: user => user.username,
+}
+```
+
+## Cache redirects
+
+Cache redirects let you search the cache for an existing value, instead of fetching from the network.
+
+### Example
+
+Redirect calls from `query.user({ id })`, to an existing `User` node with the same ID if it exists:
+
+```ts
+import { Redirect } from 'gqless'
+
+export const Query = {
+  user: {
+    [REDIRECT](args, { match }) {
+      // pattern match against all User values (User inferred from path)
+      return match({ id: args.id })
+    },
+  },
+}
+```

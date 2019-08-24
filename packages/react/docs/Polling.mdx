@@ -1,0 +1,24 @@
+---
+name: Polling
+route: /react/polling
+menu: React
+---
+
+# Polling
+
+The `usePoll` hook allows you re-fetch data at a set interval.
+Polling can be paused/resumed, and is automatically stopped when the component unmounts.
+
+## Example
+
+Simply call `usePoll` with the data you want polled, and the interval in which it should be:
+
+```jsx
+import { graphql, usePoll } from '@gqless/react'
+
+const App = graphql(() => {
+  usePoll(query.hello, 5000) // every 5s
+
+  return <div>{query.hello}</div>
+})
+```

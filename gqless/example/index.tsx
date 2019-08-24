@@ -1,10 +1,9 @@
 import '@babel/polyfill'
 
 import { Logger } from '@gqless/logger'
-import { graphql, usePoll, useVariable } from '@gqless/react'
+import { graphql, usePoll, useVariable, Query as QueryCm } from '@gqless/react'
 import { fetchSchema } from '@gqless/schema'
 import ApolloClient from 'apollo-boost'
-import { GraphQL } from 'gqless'
 import * as Imports from 'gqless'
 import { print } from 'graphql'
 import { Suspense } from 'react'

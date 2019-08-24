@@ -1,0 +1,46 @@
+---
+name: Custom queries
+route: /react/custom-queries
+menu: React
+---
+
+# Custom queries
+
+`<Query />` allows you customize the behaviour in which components are combined into queries
+
+## Basic example
+
+Make all selections from `<Component/>`, be fetched as `MyQuery`:
+
+```jsx
+import { Query } from '@gqless/react'
+
+const Example = () => (
+  <Query value="MyQuery">
+    <Component />
+  </Query>
+)
+```
+
+## Split queries
+
+Split selections into two separate queries, `Main` and `Comments`:
+
+```jsx
+import { Query } from '@gqless/react'
+
+const Example = () => (
+  <>
+    <Header />
+
+    <Query name="Main">
+      <Video />
+      <VideoSuggestions />
+    </Query>
+
+    <Query name="Comments">
+      <Comments />
+    </Query>
+  <>
+)
+```
