@@ -31,25 +31,25 @@ Query {
 
 exports[`supports arguments: accessors 1`] = `
 Query {
-  arrayOfObjects({"string":"test2"}) {
+  arrayOfObjects(string:"test2") {
     0 {
       string
     }
   }
-  arrayOfObjects({"string":"test3"}) {
+  arrayOfObjects(string:"test3") {
     0
   }
-  arrayOfObjects({"input":{"string":"test1"}})
+  arrayOfObjects(input:{string:"test1"})
 }
 `;
 
 exports[`supports arguments: selections 1`] = `
 Query {
-  arrayOfObjects({"string":"test2"}) {
+  arrayOfObjects(string:"test2") {
     string
   }
-  arrayOfObjects({"string":"test3"})
-  arrayOfObjects({"input":{"string":"test1"}})
+  arrayOfObjects(string:"test3")
+  arrayOfObjects(input:{string:"test1"})
 }
 `;
 

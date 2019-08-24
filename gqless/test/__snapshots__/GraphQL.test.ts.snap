@@ -50,7 +50,7 @@ exports[`shares cache for arguments with/without variables 3`] = `
 Object {
   "Query": Object {
     "__typename": "Query",
-    "arrayOfObjects({\\"string\\":\\"test\\"})": Array [
+    "arrayOfObjects(string:\\"test\\")": Array [
       Object {
         "__typename": "Object",
         "string": "Mervin",
