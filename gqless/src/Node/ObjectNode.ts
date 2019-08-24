@@ -90,8 +90,7 @@ export class ObjectNode<TData = any> extends Mix(
         }
 
         // fallback to extensions
-        for (let i = accessor.extensions.length - 1; i >= 0; --i) {
-          const extension = accessor.extensions[i]
+        for (const extension of accessor.extensions) {
           if (prop in extension) return extension[prop]
         }
       },
@@ -118,9 +117,7 @@ export class ObjectNode<TData = any> extends Mix(
         /**
          * else set it on the first extension with the property
          */
-        for (let i = accessor.extensions.length - 1; i >= 0; --i) {
-          const extension = accessor.extensions[i]
-
+        for (const extension of accessor.extensions) {
           if (prop in extension) {
             extension[prop] = data
             return true

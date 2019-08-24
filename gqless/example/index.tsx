@@ -11,7 +11,12 @@ import { Suspense } from 'react'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
-import { graphql as graphqlInstance, Query, schema as schemaFaker, User } from './graphql'
+import {
+  graphql as graphqlInstance,
+  Query,
+  schema as schemaFaker,
+  User,
+} from './graphql'
 
 // import { useQuery, QueryProvider, graphql, Defer } from '@gqless/react'
 Object.assign(window, { ...Imports, schemaFaker })
@@ -103,7 +108,7 @@ async function bootstrap() {
 
   const Component = graphql(
     () => {
-      console.log(query.me, query.me.name)
+      console.log(query.me, query.me!.name)
       const [showDescription, setShowDescription] = React.useState(false)
 
       const userId = useVariable('asdasdasd', 'userId')

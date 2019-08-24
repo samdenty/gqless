@@ -1,13 +1,27 @@
 # TODO
 
+- Make Object.set default to `match` instead of setData
 - Make ArrayNode memoized
-- Make ObjectNode matchable
 
 # Why do keys do?
 
 To express two different paths, leading to the same cache entry.
 
 They should be fetched with each request, so we always have keys for each Cache Value
+
+# Redirects
+
+A cache redirect is essentially a function which is used to prevent network calls.
+
+It is only called when the accessor doesn't have a value
+
+```ts
+query.user({ id: 'bob' }) // fetched
+query.me // Would have no way of getting match from previous iteration, so we'd resolve by id
+
+query.me.name // fetched
+query.user({ id: 'bob' }) // Redirect would now find correct match
+```
 
 # Cache
 
@@ -60,19 +74,6 @@ export const User = {
 }
 
 // Cache redirects:
-
-interface ValueFinder {
-  new(cache, node: Node) {}
-
-  byKey() {}
-  // !(node instanceof Matchable) throw
-  match() {}
-  byPath() {}
-}
-
-// ValueFinder.match is used when you do:
-// If match not found, it updates the cache
-query.me = { name: 'asd' }
 
 export const Query = {
   getUser: {

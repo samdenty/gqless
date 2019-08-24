@@ -1,6 +1,6 @@
 import { invariant } from '@gqless/utils'
 
-import { Node, UArguments } from '../Node'
+import { UArguments } from '../Node'
 
 export interface IVariableOptions {
   node?: UArguments

@@ -1,8 +1,10 @@
-import stringify from 'json-stable-stringify'
+import { buildArguments, Formatter } from '../QueryBuilder'
 
 import { FieldNode, Node } from '../Node'
 import { CircularSelectionField, Selection } from './Selection'
 import { generateFieldID } from './utils'
+
+const argsFormatter = new Formatter({ prettify: false, variables: false })
 
 export class FieldSelection<
   TNode extends Node<any> = Node<any>,
@@ -41,7 +43,9 @@ export class FieldSelection<
   }
 
   public toString() {
-    const args = this.args ? `(${stringify(this.args)})` : ''
+    const args = this.args
+      ? `(${buildArguments(argsFormatter, this.args)})`
+      : ''
 
     return this.field.name + args
   }

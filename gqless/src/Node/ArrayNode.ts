@@ -49,7 +49,12 @@ export class ArrayNode<TNode> extends Mix(
     const innerNode = (value.node as ArrayNode).innerNode
     if (!(innerNode instanceof Matchable)) return
 
-    return (value.data! as []).find((v, i) => innerNode.match(v, data[i]))
+    for (const indexValue of value.data as []) {
+      const match = innerNode.match(indexValue, data)
+      if (match) return match
+    }
+
+    return
   }
 
   public getData(
@@ -84,8 +89,7 @@ export class ArrayNode<TNode> extends Mix(
         }
 
         // fallback to extensions
-        for (let i = arrayAccessor.extensions.length - 1; i >= 0; --i) {
-          const extension = arrayAccessor.extensions[i]
+        for (const extension of arrayAccessor.extensions) {
           if (prop in extension) return extension[prop]
         }
 
@@ -113,5 +117,9 @@ export class ArrayNode<TNode> extends Mix(
     })
 
     return proxy
+  }
+
+  public toString() {
+    return `[${this.ofNode}${this.nullable ? '' : '!'}]`
   }
 }

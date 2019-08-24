@@ -17,7 +17,9 @@ export class FieldAccessor<
   protected getExtensions() {
     super.getExtensions()
 
-    for (const parentExtension of this.parent.extensions) {
+    for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
+      const parentExtension = this.parent.extensions[i]
+
       const extensionField = parentExtension[this.selection.field.name]
       const extension: IExtension<any> =
         typeof extensionField === 'function'
@@ -25,7 +27,7 @@ export class FieldAccessor<
           : extensionField
       if (!extension) continue
 
-      this.extensions.push(extension)
+      this.extensions.unshift(extension)
     }
   }
 

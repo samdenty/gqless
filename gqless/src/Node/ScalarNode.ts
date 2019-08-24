@@ -44,7 +44,7 @@ export class ScalarNode<T> extends Mix(Outputable, Matchable, Generic(Node)) {
     super.getData(accessor)
 
     if (accessor.extensions.length) {
-      const extension = accessor.extensions[accessor.extensions.length - 1]
+      const extension = accessor.extensions[0]
       return extension
     }
 

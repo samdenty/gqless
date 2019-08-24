@@ -1,16 +1,18 @@
-import { Helper } from './Helper'
+import { Accessor, getAccessor } from '../Accessor'
 
 // @TODO selection.onFetched should reset the timer
 // if it's been called from outside
 
-export class Poller extends Helper {
+export class Poller {
+  private accessor: Accessor
+
   private timer?: number
   private unstage?: Function
 
   public polling = false
 
   constructor(data: any, public interval: number) {
-    super(data)
+    this.accessor = getAccessor(data)
   }
 
   public updateInterval(interval: number) {

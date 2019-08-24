@@ -24,7 +24,9 @@ export class IndexAccessor<
   protected getExtensions() {
     super.getExtensions()
 
-    for (const parentExtension of this.parent.extensions) {
+    for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
+      const parentExtension = this.parent.extensions[i]
+
       const extensionOfNode = parentExtension[INDEX]
       const extension: IExtension<any> =
         typeof extensionOfNode === 'function'
@@ -32,7 +34,7 @@ export class IndexAccessor<
           : extensionOfNode
       if (!extension) continue
 
-      this.extensions.push(extension)
+      this.extensions.unshift(extension)
     }
   }
 

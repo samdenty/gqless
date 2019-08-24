@@ -1,7 +1,8 @@
 import { Accessor } from '../../Accessor'
 
+export const REDIRECT = Symbol('Extension#redirect')
 export const GET_KEY = Symbol('Extension#getKey')
-export const INDEX = Symbol('Extension#ofNode')
+export const INDEX = Symbol('Extension#index')
 
 export type IExtension<TData> = TData extends object
   ? ({ [K in string]: any } &

@@ -1,4 +1,4 @@
-name: Test
+name: Build & Test
 
 on: [push, pull_request]
 
@@ -52,6 +52,7 @@ jobs:
           yarn test --coverage
 
       - name: Upload to codecov
+        continue-on-error: true
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |

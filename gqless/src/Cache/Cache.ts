@@ -1,28 +1,8 @@
 import { Accessor } from '../Accessor'
 import { Value } from './Value'
 import { mergeUpdate, deepReference } from './utils'
-import { Node, ObjectNode, Matchable } from '../Node'
-import { invariant } from '@gqless/utils'
-
-export class GraphNode {
-  public instances = new Set<Value>()
-  public keys = new Map<string, Value>()
-
-  constructor(public node: Node) {}
-
-  public match(data: any) {
-    if (!(this.node instanceof Matchable)) {
-      throw invariant(false, `${this.node} does not support pattern matching`)
-    }
-
-    for (const value of Array.from(this.instances)) {
-      const result = this.node.match(value, data)
-      if (result) return result
-    }
-
-    return
-  }
-}
+import { Node, ObjectNode } from '../Node'
+import { Edge } from './Edge'
 
 export class Cache {
   // Emitted when a Value is referenced from within the graph
@@ -30,7 +10,7 @@ export class Cache {
   public onUnreference: ReturnType<typeof deepReference>['onUnreference']
 
   public rootValue: Value
-  public graph = new Map<Node, GraphNode>()
+  public edges = new Map<Node, Edge>()
   public store = new Map<string, Value>()
 
   constructor(node: ObjectNode) {
@@ -42,9 +22,9 @@ export class Cache {
     this.onUnreference = events.onUnreference
 
     this.onReference(value => {
-      if (!this.graph.has(value.node))
-        this.graph.set(value.node, new GraphNode(value.node))
-      const graphNode = this.graph.get(value.node)!
+      if (!this.edges.has(value.node))
+        this.edges.set(value.node, new Edge(value.node))
+      const graphNode = this.edges.get(value.node)!
 
       if (graphNode.instances.has(value)) return
 
@@ -52,8 +32,8 @@ export class Cache {
     })
 
     this.onUnreference(value => {
-      if (!this.graph.has(value.node)) return
-      const graphNode = this.graph.get(value.node)!
+      if (!this.edges.has(value.node)) return
+      const graphNode = this.edges.get(value.node)!
 
       graphNode.instances.delete(value)
     })

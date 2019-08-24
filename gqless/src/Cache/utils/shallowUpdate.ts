@@ -1,4 +1,4 @@
-import { ScalarNode, ArrayNode } from '../../Node'
+import { ScalarNode, ArrayNode, REDIRECT } from '../../Node'
 import { Value } from '../Value'
 import { Accessor } from '../../Accessor'
 

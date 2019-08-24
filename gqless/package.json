@@ -15,13 +15,11 @@
   },
   "dependencies": {
     "@gqless/utils": "^0.0.1-alpha.19",
-    "json-stable-stringify": "^1.0.1",
     "lodash": "^4.17.15",
     "mix-classes": "^1.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",
-    "@types/json-stable-stringify": "^1.0.32",
     "@types/lodash": "^4.14.136",
     "template-literal-table": "^2.0.2"
   },

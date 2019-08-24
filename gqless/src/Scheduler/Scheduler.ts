@@ -12,17 +12,16 @@ export type SelectionFetcher = (
 ) => any
 export class Scheduler extends Disposable {
   private timer: any
-  public interval: number
+
   public stack: Query[] = []
   public commit: Commit = undefined!
 
   constructor(
     private fetchSelections: SelectionFetcher,
     public plugins: Plugins = new Plugins(),
-    interval = 20
+    public interval = 20
   ) {
     super()
-    this.interval = interval
 
     this.start()
 

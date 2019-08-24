@@ -1,4 +1,4 @@
-import { GET_KEY, getAccessor, INDEX } from 'gqless'
+import { GET_KEY, getAccessor, INDEX, REDIRECT } from 'gqless'
 
 // export const String = (value: string) => {
 //   console.log(value)
@@ -26,6 +26,17 @@ export const Query /*: Extension<g.User>*/ = query => {
   return {
     whatIsMyName() {
       return query.me.name
+    },
+    user: {
+      [REDIRECT](args, { match }) {
+        if (!args) return
+        const a = JSON.parse(JSON.stringify(args))
+        const m = match({ id: a.id })
+
+        console.log('query.user redirected', a, m)
+
+        return m
+      },
     },
     users: {
       get(id: string) {},

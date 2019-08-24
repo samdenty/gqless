@@ -1,9 +1,16 @@
-import { createEvent } from '@gqless/utils'
+import { createEvent, invariant } from '@gqless/utils'
 
 import { Cache, Value } from '../Cache'
-import { Extension, IExtension, Node, Outputable, ScalarNode } from '../Node'
+import {
+  Extension,
+  IExtension,
+  Node,
+  Outputable,
+  ScalarNode,
+  REDIRECT,
+} from '../Node'
 import { Scheduler } from '../Scheduler'
-import { Selection } from '../Selection'
+import { Selection, FieldSelection } from '../Selection'
 import { computed, Disposable } from '../utils'
 
 export const ACCESSOR = Symbol('accessor')
@@ -12,6 +19,10 @@ export abstract class Accessor<
   TSelection extends Selection = Selection,
   TChildren extends Accessor<any, any> = Accessor<any, any>
 > extends Disposable {
+  /**
+   * Extensions for the accessor
+   * Ordered by most important -> least
+   */
   public extensions: Extension[] = []
 
   public scheduler: Scheduler = this.parent
@@ -170,13 +181,45 @@ export abstract class Accessor<
 
     if (!defaultExtension) return
 
-    this.extensions.push(defaultExtension)
+    this.extensions.unshift(defaultExtension)
   }
 
   protected updateExtensions() {
     this.extensions = []
     this.getExtensions()
     this.onExtensionsUpdate.emit()
+
+    if (this.value || !this.extensions.length) return
+
+    // Cache redirects
+    const edge = this.cache.edges.get(this.node)
+    if (!edge) return
+
+    const args = [
+      this.selection instanceof FieldSelection
+        ? // @TODO: toJSON everything
+          this.selection.args
+        : undefined,
+      {
+        match(data: any) {
+          const match = edge.match(data)
+          if (!match) return
+
+          return match.value
+        },
+      },
+    ] as const
+
+    for (const extension of this.extensions) {
+      const redirect = extension && extension[REDIRECT]
+      if (!redirect) continue
+
+      const value = redirect(...args)
+      if (!(value instanceof Value)) continue
+
+      this.updateValue(value)
+      return
+    }
   }
 
   private _value: Value | undefined
@@ -192,6 +235,23 @@ export abstract class Accessor<
     if (value !== prevValue) {
       this.onValueAssociated.emit(prevValue)
     }
+  }
+
+  /**
+   * Update the value, by modifying the cache
+   */
+  public updateValue(value: Value) {
+    if (!this.parent) {
+      // @TODO: Cache set.rootValue
+      this.value = value
+      return
+    }
+
+    if (!this.parent.value) {
+      throw invariant(false, `can't update accessor value without parent value`)
+    }
+
+    this.parent.value!.set(this.toString(), value)
   }
 
   public setData(data: any) {
