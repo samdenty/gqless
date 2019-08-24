@@ -1,9 +1,10 @@
 name: Test
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  build:
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
 
     strategy:
@@ -21,16 +22,28 @@ jobs:
           npm install -g yarn
           yarn
           yarn bootstrap
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
 
+  build:
+    name: Build
+    needs: setup
+
+    steps:
+      - name: Build
+        run: yarn build:all
+
+  test:
+    name: Test
+    needs: setup
+
+    steps:
       - name: Test
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         run: |
-          ./cc-test-reporter before-build
           yarn test --coverage
-          ./cc-test-reporter after-build
 
-      - name: Build
-        run: yarn build:all
+      - name: Upload to codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          codecov

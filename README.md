@@ -1,4 +1,4 @@
-# gqless (work in progress) [![Code Climate coverage](https://img.shields.io/codeclimate/coverage/samdenty/gqless)](https://codeclimate.com/github/samdenty/gqless)
+# gqless (work in progress) [![Codecov](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
 
 Auto-generates GraphQL queries based on the data your application consumes.
 
