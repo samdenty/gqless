@@ -3,8 +3,30 @@ name: Test
 on: [push, pull_request]
 
 jobs:
-  setup:
-    name: Setup
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Setup
+        run: |
+          npm install -g yarn
+          yarn
+          yarn bootstrap
+
+      - name: Build
+        run: yarn build:all
+
+  test:
+    name: Test
     runs-on: ubuntu-latest
 
     strategy:
@@ -23,21 +45,6 @@ jobs:
           yarn
           yarn bootstrap
 
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: setup
-
-    steps:
-      - name: Build
-        run: yarn build:all
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    needs: setup
-
-    steps:
       - name: Test
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
