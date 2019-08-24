@@ -1,9 +1,9 @@
 {
+  "license": "MIT",
   "name": "gqless-example",
   "private": true,
   "version": "0.0.1-alpha.19",
   "main": "index.js",
-  "license": "MIT",
   "scripts": {
     "start": "parcel index.html",
     "generate": "../../packages/cli/bin/run generate -t -u http://127.0.0.1:9002/graphql ./graphql",

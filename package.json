@@ -1,4 +1,5 @@
 {
+  "license": "MIT",
   "workspaces": [
     "testing",
     "examples/*",
@@ -10,7 +11,7 @@
   "scripts": {
     "test": "jest",
     "bootstrap": "lerna bootstrap",
-    "build": "lerna run build --no-private --parallel --since",
+    "build": "lerna run build --no-private --since",
     "build:all": "lerna run build --no-private",
     "release": "yarn build && lerna publish"
   },

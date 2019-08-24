@@ -1,9 +1,9 @@
 {
+  "license": "MIT",
   "name": "example",
   "private": true,
   "version": "0.0.1-alpha.14",
   "main": "index.js",
-  "license": "MIT",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html"
