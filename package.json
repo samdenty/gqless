@@ -19,6 +19,13 @@
   },
   "homepage": "https://github.com/samdenty/gqless",
   "private": true,
+  "jest": {
+    "projects": [
+      "<rootDir>/packages/*/jest.config.js",
+      "<rootDir>/gqless/jest.config.js"
+    ],
+    "coverageDirectory": "<rootDir>/coverage/"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"

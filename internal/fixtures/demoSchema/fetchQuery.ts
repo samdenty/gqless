@@ -1,11 +1,18 @@
 // @ts-ignore
 import { seed } from 'faker'
-import { Source, parse, concatAST, buildASTSchema, execute } from 'graphql'
+import {
+  Source,
+  parse,
+  concatAST,
+  buildASTSchema,
+  execute,
+  // @ts-ignore
+} from 'graphql-faker/node_modules/graphql'
 import * as fs from 'fs'
 import * as path from 'path'
 // @ts-ignore
 import { fakeSchema } from 'graphql-faker/dist/fake_schema'
-import { DocumentNode, ExecutionResult } from 'graphql'
+import { DocumentNode } from 'graphql'
 
 const SEED = 123
 
