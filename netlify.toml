@@ -1,0 +1,3 @@
+[build]
+  publish = "internal/website/build"
+  command = "yarn bootstrap && yarn docs:build"
