@@ -1,4 +1,4 @@
-import { createGraphQL } from 'testing'
+import { createGraphQL } from '@internal/fixtures'
 import { GraphQL, Variable } from 'gqless'
 
 jest.useFakeTimers()

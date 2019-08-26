@@ -1,5 +1,5 @@
 import { Query, RootSelection, Scheduler } from '../src'
-import { schema } from 'testing'
+import { schema } from '@internal/fixtures'
 
 jest.useFakeTimers()
 

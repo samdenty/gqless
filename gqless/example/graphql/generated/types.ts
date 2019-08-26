@@ -67,7 +67,18 @@ type t_User = FieldsType<
     name: t_String | null
     age: t_Int | null
     description: t_String | null
-    avatarUrl: FieldsTypeArg<{ size?: number | null }, t_String | null>
+    /**
+     * CDN URL of users avatar
+     */
+    avatarUrl: FieldsTypeArg<
+      {
+        /**
+         * Resolution for the image
+         */
+        size?: number | null
+      },
+      t_String | null
+    >
     profileUrl: t_String | null
     following: (t_User | null)[] | null
     followers: (t_User | null)[] | null

@@ -1,5 +1,5 @@
 import * as path from 'path'
-import { generateSchema } from '../../packages/cli'
+import { generateSchema } from '@gqless/cli'
 import { fetchQuery } from './fetchQuery'
 
 generateSchema(fetchQuery, {

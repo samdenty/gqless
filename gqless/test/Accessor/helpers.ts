@@ -4,7 +4,7 @@ import {
   RootAccessor,
   SelectionFetcher,
 } from 'gqless'
-import { schema, Query } from 'testing'
+import { schema, Query } from '@internal/fixtures'
 
 export const create = (fetchSelections: SelectionFetcher = () => {}) => {
   const selection = new RootSelection(schema.Query)

@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "workspaces": [
-    "testing",
+    "internal/*",
     "examples/*",
     "packages/*",
     "gqless",
@@ -12,10 +12,10 @@
     "bootstrap": "lerna bootstrap",
     "release": "yarn build && lerna publish",
     "test": "jest",
-    "build": "lerna run build --no-private --since",
+    "build": "yarn run build:all --since",
     "build:all": "lerna run build --no-private",
-    "docz": "docz dev",
-    "docz:build": "docz build"
+    "docs": "yarn workspace @internal/website start",
+    "docs:build": "yarn workspace @internal/website build"
   },
   "homepage": "https://github.com/samdenty/gqless",
   "private": true,
@@ -25,16 +25,13 @@
     }
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.4.4",
     "@types/jest": "^24.0.16",
     "codecov": "^3.5.0",
-    "docz": "^2.0.0-rc.1",
-    "scheduler": "0.14.0",
     "graphql-faker": "^1.9.0",
     "husky": "^3.0.2",
     "lerna": "^3.16.4",
     "pretty-quick": "^1.11.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
     "tsdx": "^0.7.2",
     "tslib": "^1.10.0",
     "typescript": "^3.5.3"

@@ -9,7 +9,7 @@ import {
   Selection,
   Variable,
 } from '../src'
-import { schema } from 'testing'
+import { schema } from '@internal/fixtures'
 
 const buildQuery = (...selections: Selection[]) => {
   const astBuilder = new ASTBuilder()

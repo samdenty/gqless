@@ -9,4 +9,5 @@ node_modules
 dist
 *.tsbuildinfo
 coverage
-.docz
+.docusaurus
+build

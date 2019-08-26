@@ -13,12 +13,7 @@ export const StackContext = React.createContext<StackContext>({
 
 type QueryFrame = QueryCl | string | undefined
 
-export const Query = ({
-  value = null,
-
-  allowInheritance = false,
-  children,
-}: {
+export const Query: React.SFC<{
   value?: QueryFrame[] | QueryFrame | null
   /**
    * Whether or not child components can use their own queries.
@@ -29,6 +24,11 @@ export const Query = ({
    */
   allowInheritance?: boolean | null
   children: any
+}> = ({
+  value = null,
+
+  allowInheritance = false,
+  children,
 }) => {
   const parentStack = React.useContext(StackContext)
 

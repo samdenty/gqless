@@ -1,4 +1,4 @@
-import { schema } from 'testing'
+import { schema } from '@internal/fixtures'
 import { Value } from 'gqless'
 import { deepReference } from 'gqless/src/Cache/utils'
 

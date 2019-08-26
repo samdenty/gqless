@@ -1,5 +1,5 @@
 import { Value } from 'gqless'
-import { schema } from 'testing'
+import { schema } from '@internal/fixtures'
 
 let value: Value
 beforeEach(() => {
