@@ -1,0 +1,46 @@
+---
+id: getAccessor
+title: getAccessor
+---
+
+Returns the Accessor for a given data reference. Useful building block for custom helpers
+
+## Example
+
+```ts
+import { getAccessor } from 'gqless'
+
+const meAccessor = getAccessor(query.me)
+meAccessor.path.toString()
+// => Query.me
+
+const nameAccessor = getAccessor(query.user({ id: 1 }).name)
+nameAccessor.path.toString()
+// => Query.user(id: 1).name
+```
+
+## Limitations
+
+`getAccessor` normally works, by searching for a special `Symbol` on the object.
+
+However when passed `null` or a scalar, this isn't possible. In these cases, it **relies upon you to de-reference before the call**
+
+```ts
+// GOOD, because Scalar was de-referenced last-thing before call
+getAccessor(query.me.name)
+const name = query.me.name
+getAccessor(name)
+
+// GOOD, because Query isn't nullable
+getAccessor(query)
+
+// BAD, because Scalar wasn't the last thing de-referenced inside the call
+const name = query.me.name
+query.users
+getAccessor(name)
+
+// BAD, because `me` could be null
+const me = query.me
+query.users
+getAccessor(me)
+```

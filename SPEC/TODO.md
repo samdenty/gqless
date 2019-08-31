@@ -1,5 +1,8 @@
 # MVP
 
+- Warn when \_\_typename is accessed for React, without an ofType call
+- Make `gqless` bin alias to `@gqless/cli`, so only need to install 1 set of deps
+- Make codegen default to typescript, add --js option
 - Need to implement keys
 
 * Support for interfaces + unions
@@ -57,6 +60,8 @@
     - This will require some changes in the cache fulfillment logic
 
 - Support for updating cache
+
+- `autorun`
 
 - `getAccessor` primitive
   - Usage:

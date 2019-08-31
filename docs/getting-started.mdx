@@ -3,6 +3,62 @@ id: getting-started
 title: Getting started
 ---
 
-> #### Prerequisites
->
-> Before we begin, we must make sure our development environment includes Node.js and npm.
+This guide will help you create a `gqless` client for a GraphQL endpoint.
+
+## Installation
+
+Install the following dependencies to your project:
+
+```bash
+yarn add gqless
+yarn add @gqless/cli -D
+
+# or
+npm install gqless
+npm install @gqless/cli --save-dev
+```
+
+## Codegen
+
+`gqless` requires information about your schema, which is generated using the CLI.
+
+Add the following to your package.json, replacing `ENDPOINT_URL`:
+
+```json
+// if you're NOT using Typescript, then add --js
+// see `gqless generate --help` for more
+"scripts": {
+  "generate": "gqless generate -u ENDPOINT_URL ./src/gqless"
+}
+```
+
+And then run the below to generate your schema:
+
+```bash
+yarn generate
+# or
+npm run generate
+```
+
+Once ran, a folder will be created with the following structure:
+
+```bash
+src/gqless
+├── extensions # All your extensions go in this folder
+├── generated # Ignore this folder
+├── gqless.ts # gqless instance is exported from here
+└── index.ts
+```
+
+## Usage
+
+Make sure the endpoint in `gqless.ts` is correct, and you can use the client
+
+```ts
+import { query } from './gqless'
+
+// eg.
+query.me.name
+```
+
+See also, [Usage with React](/docs/react/basic-usage)

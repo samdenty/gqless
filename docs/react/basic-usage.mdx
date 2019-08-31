@@ -3,16 +3,30 @@ id: basic-usage
 title: Basic usage
 ---
 
+> #### Prerequisites
+>
+> Make sure you've completed [Getting Started](/docs/getting-started) first, `./gqless` refers to the folder created there
+
 Using gqless with React is quite simple. All components that contain `gqless` data objects, should be wrapped in `graphql()` for:
 
 - Automatic updates
 - React suspense
 - Query combining
 
+## Installation
+
+First ensure you've installed the package from NPM:
+
+```bash
+yarn add @gqless/react
+# or
+npm install @gqless/react
+```
+
 ## Example
 
 ```jsx
-import { query } from './graphql'
+import { query } from './gqless'
 import { graphql } from '@gqless/react'
 
 const App = graphql(() => {
@@ -33,7 +47,7 @@ Selections referenced on render, will trigger components to update whenever they
 Updating the cache when a button is pressed:
 
 ```jsx
-import { query } from './graphql'
+import { query } from './gqless'
 import { graphql } from '@gqless/react'
 
 const App = graphql(() => {

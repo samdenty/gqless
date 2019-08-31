@@ -1,0 +1,40 @@
+---
+id: interfaces-unions
+title: Interfaces & unions
+---
+
+Interfaces and unions work out of the box.
+
+## Optimisation
+
+Whenever you access an interface / union inside a React component, it will make the component render once for each possible type:
+
+```jsx
+import { graphql } from '@gqless/react'
+
+const Person = graphql(({ person }) => {
+  console.log(person.__typename) // => null, Student, Owner, Employee ...
+
+  if (person.__typename === 'Student') {
+    return <div>{person.class}</div>
+  }
+
+  return <div>{person.name}</div>
+})
+```
+
+This is most likely unwanted, in which case you should use `ofType`:
+
+```jsx
+import { graphql } from '@gqless/react'
+
+const Person = graphql(({ person }) => {
+  console.log(person.__typename) // => null, Student
+
+  if (ofType(person, 'Student')) {
+    return <div>{person.class}</div>
+  }
+
+  return <div>{person.name}</div>
+})
+```

@@ -11,3 +11,4 @@ dist
 coverage
 .docusaurus
 build
+.env

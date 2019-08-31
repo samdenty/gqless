@@ -82,9 +82,9 @@ type t_User = FieldsType<
     profileUrl: t_String | null
     following: (t_User | null)[] | null
     followers: (t_User | null)[] | null
-    b: t_String | null
-    c: t_String | null
-    d: t_String | null
+    // b: t_String | null
+    // c: t_String | null
+    // d: t_String | null
   },
   Extension<'User'>
 >

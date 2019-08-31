@@ -1,0 +1,20 @@
+---
+id: update
+title: update
+---
+
+> Subject to [limitations of getAccessor](/docs/api/gqless/getAccessor)
+
+Updates the data for a given accessor, performing a merge-update (same as when fetched from the network).
+
+## Example
+
+```ts
+import { update } from 'gqless'
+
+// Update scalars
+update(query.me.name, 'bob')
+
+// Merge in new data (existing fields left untouched)
+update(query, { me: { name: 'bob' } })
+```

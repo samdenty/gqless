@@ -1,0 +1,22 @@
+---
+id: matchUpdate
+title: matchUpdate
+---
+
+> Subject to [limitations of getAccessor](/docs/api/gqless/getAccessor)
+
+Updates the value for a given accessor, by performing a pattern match against all other values of same type. See [Matchers](/docs/matchers) for more.
+
+## Example
+
+Set `query.me` to a User in the cache, with a name of `bob`:
+
+```ts
+import { matchUpdate } from 'gqless'
+
+const updated = matchUpdate(query.me, { name: 'bob' })
+
+if (!updated) {
+  throw new Error('bad match')
+}
+```

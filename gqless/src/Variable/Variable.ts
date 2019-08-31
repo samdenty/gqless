@@ -5,6 +5,11 @@ import { UArguments } from '../Node'
 export interface IVariableOptions {
   node?: UArguments
   nullable?: boolean
+  /**
+   * GraphQL variable name to use.
+   *
+   * Conflicts are handled automatically
+   */
   name?: string
 }
 
@@ -38,9 +43,7 @@ export class Variable<TValue = any> {
     if (this.nullable === true && !nullable) {
       invariant(
         false,
-        `Can't convert a nullable variable of type ${
-          this.node
-        }, to non-nullable`
+        `Can't convert a nullable variable of type ${this.node}, to non-nullable`
       )
     }
 

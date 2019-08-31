@@ -3,7 +3,7 @@ id: variables
 title: Variables
 ---
 
-The `useVariable` hook allows you to use variables.
+It's good practise to use variables whenever arguments change based upon state.
 
 ## Example
 
@@ -15,15 +15,4 @@ const App = graphql(() => {
 
   return <div>{query.user({ id }).name}</div>
 })
-```
-
-## Difference to normal values
-
-It's good practise to use variables whenever arguments change based on state.
-
-Arguments are inlined without them:
-
-<!--prettier-ignore-->
-```graphql
-query App { user(id: "bob") { name } }
 ```

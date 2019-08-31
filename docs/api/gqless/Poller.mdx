@@ -1,0 +1,20 @@
+---
+id: Poller
+title: Poller
+---
+
+> Subject to [limitations of getAccessor](/docs/api/gqless/getAccessor)
+
+Fetches an accessor at a set interval from the network.
+
+## Example
+
+Fetch `query.me.name` every one second:
+
+```ts
+import { Poller } from 'gqless'
+
+const poller = new Poller(query.me.name, 1000)
+// Start the poller
+poller.toggle(true)
+```

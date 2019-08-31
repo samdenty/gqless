@@ -7,6 +7,11 @@ module.exports = {
   organizationName: 'samdenty',
   projectName: 'gqless',
   themeConfig: {
+    algolia: {
+      apiKey: '', //TODO
+      indexName: 'docs',
+      algoliaOptions: {},
+    },
     navbar: {
       title: 'gqless',
       // logo: {
@@ -35,15 +40,6 @@ module.exports = {
             },
           ],
         },
-        // {
-        //   title: 'Community',
-        //   items: [
-        //     {
-        //       label: 'Discord',
-        //       href: 'https://discordapp.com/invite/docusaurus',
-        //     },
-        //   ],
-        // },
         {
           title: 'Social',
           items: [

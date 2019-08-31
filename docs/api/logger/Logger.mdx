@@ -1,0 +1,32 @@
+---
+id: Logger
+title: Logger
+---
+
+![Verbose log in devtools](/img/logger/devtools_query.png)
+
+Logs GraphQL queries to the console, with helpful debug information
+
+- **Devtools custom formatters** - Easily inspect data in devtools
+- **Cache snapshot** - current state of the cache after a query has been fetched.
+- **Result** - inspect the response from the GraphQL server
+- **Selections** - the selections that were used inside the query
+
+## Usage
+
+```ts
+import { gqless } from './gqless'
+import { Logger } from '@gqless/logger'
+
+gqless.plugins.add(new Logger(gqless))
+
+// To enable verbose mode: new Logger(graphql, true)
+```
+
+## Verbose mode
+
+![Verbose log in devtools](/img/logger/devtools_verbose.png)
+
+Shows additional information, useful for debugging.
+
+- **Stack for each query** - lets you see why queries were merged into one, or seperated

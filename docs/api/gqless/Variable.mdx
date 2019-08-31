@@ -1,0 +1,55 @@
+---
+id: Variable
+title: Variable
+---
+
+Creates a unique GraphQL variable, that can be used multiple times.
+
+## Example
+
+Create a new variable, and use it as an argument:
+
+```ts
+import { Variable } from 'gqless'
+
+const limit = new Variable(10)
+const users = query.users({ limit }) // => Array[10]
+
+// Update the variable, triggering a re-fetch
+limit.updateValue(15)
+users // => Array[15]
+```
+
+#### Generated query
+
+```graphql
+query($usersLimit: Int) {
+  users(limit: $usersLimit)
+}
+```
+
+## Options
+
+By default, options are auto-inferred based upon first-usage.
+
+Explicitly defining can be useful to prevent mistakes:
+
+```ts
+import { schema, Variable } from 'gqless'
+
+const limit = new Variable(5, {
+  node: schema.Int,
+  nullable: false,
+  name: 'example',
+})
+
+query.users({ limit })
+```
+
+#### Generated query
+
+```graphql
+query($example: Int!) {
+  users(limit: $example)
+}
+```

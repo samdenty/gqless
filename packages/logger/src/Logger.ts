@@ -15,7 +15,7 @@ const format = (...parts: any[][]) => {
 }
 
 export class Logger implements Plugin {
-  constructor(protected graphql: GraphQL, private verbose = false) {}
+  constructor(protected gqless: GraphQL, private verbose = false) {}
 
   public onCommit = (({ stacks, stackQueries, queries, selections }) => {
     if (!this.verbose) return
@@ -113,7 +113,7 @@ export class Logger implements Plugin {
     // Cache
     console.log(
       ...format(['Cache snapshot', headerStyles]),
-      parse(stringify(this.graphql.cache))
+      parse(stringify(this.gqless.cache))
     )
 
     console.groupEnd()
