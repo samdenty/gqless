@@ -1,11 +1,22 @@
 :root {
   --ifm-font-family-base: Colfax;
+  --ifm-color-primary: #e00097;
+  --ifm-font-family-monospace: 'Operator Mono';
+}
+
+button {
+  font-family: var(--ifm-font-family-base);
 }
 
 @font-face {
   font-family: Colfax;
   font-weight: 300;
   src: url('/fonts/ColfaxWebLight.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Operator Mono';
+  src: url('/fonts/OperatorMono.otf');
 }
 
 @font-face {

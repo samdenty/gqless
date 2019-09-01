@@ -14,7 +14,8 @@
     "@emotion/styled": "^10.0.15",
     "framer-motion": "^1.6.7",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {}
 }
