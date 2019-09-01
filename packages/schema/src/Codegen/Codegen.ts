@@ -22,7 +22,7 @@ export class Codegen {
       new graphql.IndexFile(),
 
       new graphql.generated.SchemaFile(this),
-      new graphql.GraphQLFile(this),
+      new graphql.ClientFile(this),
       new graphql.generated.TypesFile(this),
       new graphql.generated.IndexFile(),
     ]

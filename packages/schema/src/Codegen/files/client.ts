@@ -1,13 +1,13 @@
 import { File, CORE } from '../File'
 import { Codegen } from '../Codegen'
 
-export class GraphQLFile extends File {
+export class ClientFile extends File {
   constructor(private codegen: Codegen) {
     super('graphql', false)
   }
 
   public generate() {
-    this.import(CORE, 'GraphQL', 'QueryFetcher')
+    this.import(CORE, 'Client', 'QueryFetcher')
     this.import('./generated', 'schema', this.codegen.schema.queryType)
     this.import('graphql/language/printer', 'print')
 
@@ -37,11 +37,11 @@ export class GraphQLFile extends File {
         return json
       }
 
-      export const graphql = new GraphQL<${
+      export const client = new Client<${
         this.codegen.schema.queryType
       }>(schema.${this.codegen.schema.queryType}, fetchQuery)
 
-      export const query = graphql.query
+      export const query = client.query
     `
   }
 }

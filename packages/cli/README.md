@@ -20,7 +20,7 @@ $ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@gqless/cli/0.0.1-alpha.19 linux-x64 node-v12.4.0
+@gqless/cli/0.0.1-alpha.20 linux-x64 node-v12.4.0
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND
@@ -31,27 +31,7 @@ USAGE
 # Commands
 
 <!-- commands -->
-* [`gqless generate OUTPUT_DIR`](#gqless-generate-output_dir)
 * [`gqless help [COMMAND]`](#gqless-help-command)
-
-## `gqless generate OUTPUT_DIR`
-
-generate a client from a GraphQL endpoint
-
-```
-USAGE
-  $ gqless generate OUTPUT_DIR
-
-OPTIONS
-  -h, --help        show CLI help
-  -t, --typescript  output typescript (instead of javascript)
-  -u, --url=url     (required) url to the GraphQL endpoint
-  --noComments      don't output comments (only useful for IDE intellisense)
-  --noPrettier      don't run prettier on the resulting code
-
-EXAMPLE
-  $ gqless generate https://example.com/graphql
-```
 
 ## `gqless help [COMMAND]`
 

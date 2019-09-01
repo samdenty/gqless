@@ -28,5 +28,5 @@ const schemaDefs = await fetchSchema(fetchQuery)
 const schema = schemaNodes(schemaDefs)
 
 // Usage in runtime:
-const graphql = new GraphQL(schema)
+const graphql = new Client(schema)
 ```

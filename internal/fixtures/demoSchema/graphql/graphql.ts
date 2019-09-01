@@ -1,5 +1,5 @@
-import { GraphQL } from 'gqless'
+import { Client } from 'gqless'
 import { schema, Query } from './generated'
 import { fetchQuery } from '../fetchQuery'
 
-export const createGraphQL = () => new GraphQL<Query>(schema.Query, fetchQuery)
+export const createGraphQL = () => new Client<Query>(schema.Query, fetchQuery)

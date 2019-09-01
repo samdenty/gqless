@@ -10,6 +10,9 @@
   "dependencies": {
     "@docusaurus/core": "^2.0.0-alpha.24",
     "@docusaurus/preset-classic": "^2.0.0-alpha.24",
+    "@emotion/core": "^10.0.16",
+    "@emotion/styled": "^10.0.15",
+    "framer-motion": "^1.6.7",
     "react": "^16.8.4",
     "react-dom": "^16.8.4"
   },

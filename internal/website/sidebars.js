@@ -4,9 +4,9 @@ module.exports = {
     gqless: ['getting-started', 'extensions', 'matchers'],
     React: [
       'react/basic-usage',
-      'react/custom-queries',
       'react/polling',
       'react/variables',
+      'react/custom-queries',
       'react/interfaces-unions',
     ],
     API: [

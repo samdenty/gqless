@@ -15,12 +15,10 @@ Logs GraphQL queries to the console, with helpful debug information
 ## Usage
 
 ```ts
-import { gqless } from './gqless'
+import { client } from './gqless'
 import { Logger } from '@gqless/logger'
 
-gqless.plugins.add(new Logger(gqless))
-
-// To enable verbose mode: new Logger(graphql, true)
+new Logger(client) // pass true as second arg for verbose mode
 ```
 
 ## Verbose mode

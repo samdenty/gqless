@@ -11,7 +11,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
 import {
-  graphql as graphqlInstance,
+  client as graphqlInstance,
   Query,
   schema as schemaFaker,
   User,
@@ -63,20 +63,21 @@ async function bootstrap() {
   // const codegen = new Codegen(schema)
   // console.log(codegen.generate())
 
-  graphqlInstance.plugins.add(new Logger(graphqlInstance, true), {
-    // async onFetch(_, response) {
-    //   await response
-    //   getUsers({ limit: 1 })[1].age
-    //   getUsers({ limit: 1 })[1].avatarUrl
-    //   const user = query.query.user()
-    //   if (user) {
-    //     user.following![0]!.name
-    //   }
-    //   query.query.users[1].following![0]!.age
-    //   query.query.users[1].avatarUrl
-    //   query.query.users[1].avatarUrl({ size: 100 }) /
-    // },
-  })
+  new Logger(graphqlInstance, true),
+    {
+      // async onFetch(_, response) {
+      //   await response
+      //   getUsers({ limit: 1 })[1].age
+      //   getUsers({ limit: 1 })[1].avatarUrl
+      //   const user = query.query.user()
+      //   if (user) {
+      //     user.following![0]!.name
+      //   }
+      //   query.query.users[1].following![0]!.age
+      //   query.query.users[1].avatarUrl
+      //   query.query.users[1].avatarUrl({ size: 100 }) /
+      // },
+    }
 
   const query = graphqlInstance.query as Query
 

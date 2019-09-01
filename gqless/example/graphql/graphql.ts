@@ -1,4 +1,4 @@
-import { GraphQL, QueryFetcher } from 'gqless'
+import { Client, QueryFetcher } from 'gqless'
 import { print } from 'graphql/language/printer'
 
 import { Query, schema } from './generated'
@@ -26,6 +26,6 @@ export const fetchQuery: QueryFetcher = async query => {
   return json
 }
 
-export const graphql = new GraphQL<Query>(schema.Query, fetchQuery)
+export const client = new Client<Query>(schema.Query, fetchQuery)
 
-export const query = graphql.query
+export const query = client.query

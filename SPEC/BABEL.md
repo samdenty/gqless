@@ -42,3 +42,42 @@ const globalGraph = {
 - Able to provide a graph for component data
 - Generates a global graph of all the fields your app uses
   - uses that to optimize the codegenerated schema, removing unused fields / types
+
+## Static extractor
+
+Extracts selections at compile time instead of runtime
+
+### JS
+
+```ts
+const Fragment = staticFragment()
+await Fragment(query.me)
+
+query.me.name
+```
+
+### React
+
+```ts
+export const UserFragment = staticFragment()
+
+function User({ user }) {
+  UserFragment.is(user)
+
+  user.name
+}
+
+// Somewhere else in app
+UserFragment(query.user)
+```
+
+### React-specific
+
+```ts
+function User2({ user }) {
+  user.name
+}
+
+// All props are auto-converted into fragments
+User2.fragments.user(query.me)
+```

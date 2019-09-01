@@ -11,12 +11,12 @@ export class IndexFile extends File {
       ${super.generate()}
 
       export * from './generated'
-      export * from './graphql'
+      export * from './client'
     `
   }
 }
 
 export * from './extensions'
-export * from './graphql'
+export * from './client'
 
 export { generated }

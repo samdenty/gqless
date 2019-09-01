@@ -1,6 +1,6 @@
 module.exports = {
   title: 'gqless',
-  tagline: 'The tagline of my site',
+  tagline: `A GraphQL client without queries ✨`,
   url: 'https://gqless.netlify.com',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
@@ -19,7 +19,7 @@ module.exports = {
       //   src: 'img/logo.svg',
       // },
       links: [
-        { to: 'docs/getting-started', label: 'Docs', position: 'left' },
+        { to: 'docs/intro/what-and-why', label: 'Docs', position: 'left' },
         { to: 'blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/samdenty/gqless',
@@ -36,7 +36,7 @@ module.exports = {
           items: [
             {
               label: 'Getting started',
-              to: 'docs/getting-started',
+              to: 'docs/intro/what-and-why',
             },
           ],
         },
@@ -50,10 +50,10 @@ module.exports = {
           ],
         },
       ],
-      logo: {
-        alt: 'Facebook Open Source Logo',
-        src: 'https://docusaurus.io/img/oss_logo.png',
-      },
+      // logo: {
+      //   alt: 'Facebook Open Source Logo',
+      //   src: 'https://docusaurus.io/img/oss_logo.png',
+      // },
       copyright: `Copyright © ${new Date().getFullYear()} Sam Denty`,
     },
   },
@@ -64,6 +64,9 @@ module.exports = {
         docs: {
           path: '../../docs',
           sidebarPath: require.resolve('./sidebars.js'),
+        },
+        theme: {
+          customCss: require.resolve('./src/index.css'),
         },
       },
     ],

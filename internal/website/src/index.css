@@ -1,0 +1,25 @@
+:root {
+  --ifm-font-family-base: Colfax;
+}
+
+@font-face {
+  font-family: Colfax;
+  font-weight: 300;
+  src: url('/fonts/ColfaxWebLight.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Colfax;
+  font-weight: 400;
+  src: url('/fonts/ColfaxWebRegular.woff2') format('woff2');
+}
+@font-face {
+  font-family: Colfax;
+  font-weight: 500;
+  src: url('/fonts/ColfaxWebMedium.woff2') format('woff2');
+}
+@font-face {
+  font-family: Colfax;
+  font-weight: 600;
+  src: url('/fonts/ColfaxWebBold.woff2') format('woff2');
+}

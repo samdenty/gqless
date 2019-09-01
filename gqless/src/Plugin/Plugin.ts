@@ -1,6 +1,6 @@
 import { DocumentNode } from 'graphql'
 
-import { QueryResponse } from '../GraphQL'
+import { QueryResponse } from '../Client'
 import { Query } from '../Scheduler'
 import { Selection } from '../Selection'
 

@@ -1,7 +1,7 @@
 import './loadFormatters'
 import { parse, stringify } from 'flatted'
 import { print } from 'graphql/language/printer'
-import { GraphQL, QueryResponse, Plugin, PluginMethod } from 'gqless'
+import { Client, QueryResponse, Plugin, PluginMethod } from 'gqless'
 
 const format = (...parts: any[][]) => {
   const texts: string[] = []
@@ -15,7 +15,9 @@ const format = (...parts: any[][]) => {
 }
 
 export class Logger implements Plugin {
-  constructor(protected gqless: GraphQL, private verbose = false) {}
+  constructor(protected client: Client, private verbose = false) {
+    this.client.plugins.add(this)
+  }
 
   public onCommit = (({ stacks, stackQueries, queries, selections }) => {
     if (!this.verbose) return
@@ -113,7 +115,7 @@ export class Logger implements Plugin {
     // Cache
     console.log(
       ...format(['Cache snapshot', headerStyles]),
-      parse(stringify(this.gqless.cache))
+      parse(stringify(this.client.cache))
     )
 
     console.groupEnd()

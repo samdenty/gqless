@@ -22,7 +22,7 @@ export type ProxyInterceptor = (
 ) => unknown
 
 // @ts-ignore
-export class GraphQL<TData = any> extends Disposable {
+export class Client<TData = any> extends Disposable {
   public plugins = new Plugins()
   public astBuilder = new ASTBuilder()
   public scheduler = new Scheduler(
