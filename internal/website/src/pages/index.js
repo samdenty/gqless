@@ -93,8 +93,9 @@ const App = () => (
               </Feature>
             </FeatureLink>
             <FeatureLink to={withBaseUrl('docs/react/basic-usage')}>
-              <Feature title="React integration" imageUrl="img/react.svg">
-                React Suspense, hooks, automatic updates and more.
+              <Feature title="React.js" imageUrl="img/react.svg">
+                Uses React Suspense, hooks, automatic component updates and
+                more.
               </Feature>
             </FeatureLink>
             <FeatureLink to={withBaseUrl('docs/intro/features')}>
