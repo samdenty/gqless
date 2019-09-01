@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Build
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -22,11 +21,10 @@ jobs:
           yarn
           yarn bootstrap
 
-      - name: Build
+      - name: Build all packages
         run: yarn build:all
 
   test:
-    name: Test
     runs-on: ubuntu-latest
 
     strategy:
@@ -45,7 +43,7 @@ jobs:
           yarn
           yarn bootstrap
 
-      - name: Test
+      - name: Test all packages
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         run: |
