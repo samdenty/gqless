@@ -3,11 +3,11 @@ import { ScalarNode } from '../ScalarNode'
 import { FieldsNode } from './FieldsNode'
 import { Node, NodeDataType } from './Node'
 
-export type KeyFn<TNode extends Node<any>> = (
+export type KeyFn<TNode extends Node> = (
   data: NodeDataType<TNode>
 ) => string | number
 
-export class Keyable<TNode extends Node<any>> {
+export class Keyable<TNode extends Node> {
   constructor(public keyGetter?: KeyFn<TNode>) {}
 
   public getKey(accessor: Accessor) {

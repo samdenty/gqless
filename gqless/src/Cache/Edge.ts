@@ -13,7 +13,7 @@ export class Edge {
       throw invariant(false, `${this.node} does not support pattern matching`)
     }
 
-    for (const value of Array.from(this.instances)) {
+    for (const value of this.instances) {
       const exactValue = this.node.match(value, data)
       if (exactValue)
         return {
@@ -23,5 +23,11 @@ export class Edge {
     }
 
     return
+  }
+
+  public toJSON(deep = true) {
+    return Array.from(this.instances).map(instance =>
+      deep === true ? instance.toJSON() : instance
+    )
   }
 }

@@ -21,7 +21,7 @@ export class Cache {
     this.onReference = events.onReference
     this.onUnreference = events.onUnreference
 
-    this.onReference(value => {
+    const addToEdges = (value: Value) => {
       if (!this.edges.has(value.node))
         this.edges.set(value.node, new Edge(value.node))
       const graphNode = this.edges.get(value.node)!
@@ -29,8 +29,10 @@ export class Cache {
       if (graphNode.instances.has(value)) return
 
       graphNode.instances.add(value)
-    })
+    }
 
+    addToEdges(this.rootValue)
+    this.onReference(addToEdges)
     this.onUnreference(value => {
       if (!this.edges.has(value.node)) return
       const graphNode = this.edges.get(value.node)!
@@ -39,14 +41,17 @@ export class Cache {
     })
   }
 
-  public toJSON() {
-    const obj: any = {}
+  public toJSON(deep = true) {
+    const edges: any = {}
 
-    this.store.forEach((value, key) => {
-      obj[key] = value.toJSON()
+    this.edges.forEach(edge => {
+      edges[edge.node.toString()] = deep === true ? edge.toJSON() : edge
     })
 
-    return obj
+    return {
+      root: deep === true ? this.rootValue.toJSON() : this.rootValue,
+      edges,
+    }
   }
 
   public merge(accessor: Accessor, data: any) {

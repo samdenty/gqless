@@ -1,4 +1,4 @@
-import { createEvent, invariant } from '@gqless/utils'
+import { createEvent, invariant, createSetter } from '@gqless/utils'
 
 import { Cache, Value } from '../Cache'
 import {
@@ -15,14 +15,17 @@ import { computed, Disposable } from '../utils'
 
 export const ACCESSOR = Symbol('accessor')
 
+export enum NetworkStatus {
+  idle,
+  loading,
+  updating,
+}
+
 export abstract class Accessor<
   TSelection extends Selection = Selection,
   TChildren extends Accessor<any, any> = Accessor<any, any>
 > extends Disposable {
-  /**
-   * Extensions for the accessor
-   * Ordered by most important -> least
-   */
+  // Ordered by most important -> least
   public extensions: Extension[] = []
 
   public scheduler: Scheduler = this.parent
@@ -32,40 +35,42 @@ export abstract class Accessor<
 
   public children: TChildren[] = []
   public data: any
+  public value?: Value
+  public status: NetworkStatus = NetworkStatus.idle
 
   // When the Value class associated with this accessor changes
-  public onValueAssociated = createEvent<
-    (prevValue: Value | undefined) => void
-  >()
-
+  public onValueAssociated = createSetter(this as Accessor, 'value')
   // When the data changes (equality check)
-  public onDataUpdate = createEvent<(prevData: any) => void>()
-
-  public onExtensionsUpdate = createEvent()
+  public onDataChange = createEvent<(prevData: any) => void>()
+  public onInitializeExtensions = createEvent()
+  public onStatusChange = createSetter(this as Accessor, 'status')
 
   constructor(
     public parent: Accessor | undefined,
     public selection: TSelection,
-    public node = selection.node as Node<any> & Outputable
+    public node = selection.node as Node & Outputable
   ) {
     super()
 
     if (parent) {
       parent.children.push(this)
 
-      /**
-       * On un-select, dispose of self
-       *
-       * used when you do `query.users()`, and an argumentless
-       * selection is created before the function call
-       */
-      this.disposers.add(
-        selection.onUnselect(s => {
-          if (s === selection) {
-            const idx = parent.children.indexOf(this)
-            if (idx > -1) parent.children.splice(idx, 1)
-          }
-        })
+      this.disposer(
+        /**
+         * On un-select, dispose of self
+         *
+         * used when you do `query.users()`, and an argumentless
+         * selection is created before the function call
+         */
+        parent.selection.onUnselect.filter(s => s === selection)(() =>
+          this.dispose()
+        ),
+        () => {
+          const idx = parent.children.indexOf(this)
+          if (idx === -1) return
+          parent.children.splice(idx, 1)
+        },
+        () => this.scheduler.commit.unstage(this)
       )
 
       /**
@@ -91,7 +96,7 @@ export abstract class Accessor<
               newData === null ||
               this.node instanceof ScalarNode
             ) {
-              this.onDataUpdate.emit(prevData)
+              this.onDataChange.emit(prevData)
             }
 
             prevData = newData
@@ -102,7 +107,7 @@ export abstract class Accessor<
           dispose = value.onChange(check)
           check()
         }
-        this.disposers.add(this.onValueAssociated(onValueAssociated))
+        this.disposer(this.onValueAssociated(onValueAssociated))
 
         onValueAssociated()
       }
@@ -113,9 +118,11 @@ export abstract class Accessor<
      * - data changes (from null -> object)
      * - parent extensions change
      */
-    const updateExtensions = () => this.updateExtensions()
-    this.disposers.add(this.onDataUpdate(updateExtensions))
-    if (parent) this.disposers.add(parent.onExtensionsUpdate(updateExtensions))
+    const updateExtensions = () => this.loadExtensions()
+    this.disposer(
+      this.onDataChange(updateExtensions),
+      parent && parent.onInitializeExtensions(updateExtensions)
+    )
 
     // TODO
     // const innerNode = node instanceof NodeContainer ? node.innerNode : node
@@ -127,31 +134,36 @@ export abstract class Accessor<
   }
 
   /**
-   * When a value is associated with parent, update
-   * the value of this accessor, and emit onValueAssociated
+   * Sync value with an accessor
+   * Defaults to parent
    */
-  protected associateValueFrom(accessor: Accessor) {
+  protected syncValue(
+    getValue: (accessorValue: Value) => Value | undefined,
+    accessor = this.parent
+  ) {
+    if (!accessor) return
+
     let dispose: Function | undefined
     const associateValue = () => {
       if (dispose) {
-        this.disposers.delete(dispose)
+        this.deleteDiposer(dispose)
         dispose()
         dispose = undefined
       }
 
       if (accessor.value) {
-        this.value = accessor.value!.get(this.toString())
+        this.value = getValue(accessor.value!)
 
         dispose = accessor.value!.onChange(() => {
-          this.value = accessor.value!.get(this.toString())
+          this.value = getValue(accessor.value!)
         })
-        this.disposers.add(dispose)
+        this.disposer(dispose)
       } else {
         this.value = undefined
       }
     }
 
-    this.disposers.add(accessor.onValueAssociated(associateValue))
+    this.disposer(accessor.onValueAssociated(associateValue))
     associateValue()
   }
 
@@ -161,16 +173,16 @@ export abstract class Accessor<
   protected stageIfRequired() {
     if (this.value) return
 
-    const unstage = this.scheduler.commit.stage(this.selection)
+    const unstage = this.scheduler.commit.stage(this)
 
-    this.disposers.add(
+    this.disposer(
       this.onValueAssociated.then(() => {
         unstage()
       })
     )
   }
 
-  protected getExtensions() {
+  protected initializeExtensions() {
     if (!this.node.extension) return
 
     const defaultExtension: IExtension<any> =
@@ -184,10 +196,10 @@ export abstract class Accessor<
     this.extensions.unshift(defaultExtension)
   }
 
-  protected updateExtensions() {
+  protected loadExtensions() {
     this.extensions = []
-    this.getExtensions()
-    this.onExtensionsUpdate.emit()
+    this.initializeExtensions()
+    this.onInitializeExtensions.emit()
 
     if (this.value || !this.extensions.length) return
 
@@ -195,7 +207,8 @@ export abstract class Accessor<
     const edge = this.cache.edges.get(this.node)
     if (!edge) return
 
-    const args = [
+    // optimization - avoid re-creating for each extension
+    const redirectArgs = [
       this.selection instanceof FieldSelection
         ? // @TODO: toJSON everything
           this.selection.args
@@ -210,11 +223,12 @@ export abstract class Accessor<
       },
     ] as const
 
+    // Redirect all values
     for (const extension of this.extensions) {
       const redirect = extension && extension[REDIRECT]
       if (!redirect) continue
 
-      const value = redirect(...args)
+      const value = redirect(...redirectArgs)
       if (!(value instanceof Value)) continue
 
       this.updateValue(value)
@@ -222,24 +236,7 @@ export abstract class Accessor<
     }
   }
 
-  private _value: Value | undefined
-
-  public get value() {
-    return this._value
-  }
-
-  public set value(value: Value | undefined) {
-    const prevValue = this._value
-    this._value = value
-
-    if (value !== prevValue) {
-      this.onValueAssociated.emit(prevValue)
-    }
-  }
-
-  /**
-   * Update the value, by modifying the cache
-   */
+  // Update the value, by modifying the cache
   public updateValue(value: Value) {
     if (!this.parent) {
       // @TODO: Cache set.rootValue

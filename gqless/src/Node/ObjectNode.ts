@@ -8,7 +8,6 @@ import {
   FieldsNode,
   IFieldsNodeOptions,
   Keyable,
-  Outputable,
   UFieldsNodeRecord,
   Matchable,
 } from './abstract'
@@ -16,9 +15,7 @@ import { Extension } from './Extension'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
 
-export type IObjectNodeOptions = IFieldsNodeOptions & {
-  extension?: Extension
-}
+export type IObjectNodeOptions = IFieldsNodeOptions
 
 export interface ObjectNode<TData>
   extends FieldsNode<TData>,
@@ -28,18 +25,14 @@ const TYPENAME_NODE = new ScalarNode()
 
 export class ObjectNode<TData = any> extends Mix(
   Generic(FieldsNode),
-  Outputable,
   Matchable,
   Generic(Keyable)
 ) {
-  constructor(
-    fields: UFieldsNodeRecord,
-    { extension, ...options }: IObjectNodeOptions
-  ) {
-    // Add __typename node, not currently used.
-    ;(fields as any).__typename = new FieldNode(TYPENAME_NODE)
+  constructor(fields: UFieldsNodeRecord, options: IObjectNodeOptions) {
+    // Add __typename node
+    fields.__typename = new FieldNode(TYPENAME_NODE)
 
-    super([fields as any, options], [extension])
+    super([fields as any, options])
 
     this.keyGetter = defaultKey(this) as any
   }
@@ -69,6 +62,7 @@ export class ObjectNode<TData = any> extends Mix(
   }
 
   public getData(accessor: Accessor): TData {
+    // @ts-ignore typescript limitation for mix-classes
     super.getData(accessor)
 
     // If the value is nulled, return null
@@ -78,8 +72,8 @@ export class ObjectNode<TData = any> extends Mix(
 
     return new Proxy({} as any, {
       get: (_, prop: any) => {
-        // Statically resolve __typename
         if (prop === ACCESSOR) return accessor
+        // Statically resolve __typename
         if (prop === '__typename') return this.name
 
         // check fields first

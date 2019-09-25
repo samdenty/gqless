@@ -1,6 +1,5 @@
 import './loadFormatters'
 import { parse, stringify } from 'flatted'
-import { print } from 'graphql/language/printer'
 import { Client, QueryResponse, Plugin, PluginMethod } from 'gqless'
 
 const format = (...parts: any[][]) => {
@@ -92,10 +91,10 @@ export class Logger implements Plugin {
         ['  ', `background-image: url(https://graphql.org/img/logo.svg)`]
       )
     )
-    if (variables) {
+    if (variables)
       console.log(...format(['Variables', 'color: #25e1e1']), variables)
-    }
-    console.log(...format([print(query), 'color: gray']))
+
+    console.log(...format([query, 'color: gray']))
     console.groupEnd()
 
     // Result

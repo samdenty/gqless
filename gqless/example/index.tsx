@@ -1,7 +1,16 @@
+;(window as any).__DEV__ = process.env.NODE_ENV === 'development'
+
 import '@babel/polyfill'
 
 import { Logger } from '@gqless/logger'
-import { graphql, usePoll, useVariable, Query as QueryCm } from '@gqless/react'
+import { parse, stringify } from 'flatted'
+import {
+  graphql,
+  usePoll,
+  useFragment,
+  useVariable,
+  Query as QueryCm,
+} from '@gqless/react'
 import { fetchSchema } from '@gqless/schema'
 import ApolloClient from 'apollo-boost'
 import * as Imports from 'gqless'
@@ -9,6 +18,7 @@ import { print } from 'graphql'
 import { Suspense } from 'react'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import * as utils from '@gqless/utils'
 
 import {
   client as graphqlInstance,
@@ -18,7 +28,7 @@ import {
 } from './graphql'
 
 // import { useQuery, QueryProvider, graphql, Defer } from '@gqless/react'
-Object.assign(window, { ...Imports, schemaFaker })
+Object.assign(window, { ...utils, ...Imports, schemaFaker, stringify, parse })
 
 const endpoint = `http://${location.hostname}:9002/graphql`
 const client = new ApolloClient({
@@ -63,7 +73,7 @@ async function bootstrap() {
   // const codegen = new Codegen(schema)
   // console.log(codegen.generate())
 
-  new Logger(graphqlInstance, true),
+  new Logger(graphqlInstance),
     {
       // async onFetch(_, response) {
       //   await response
@@ -108,14 +118,15 @@ async function bootstrap() {
 
   const Component = graphql(
     () => {
-      console.log(query.me, query.me!.name)
       const [showDescription, setShowDescription] = React.useState(false)
 
-      const userId = useVariable('asdasdasd', 'userId')
+      const userId = useVariable('asdasdasd')
       const usersLimit = useVariable(1, 'usersLimit')
 
       const [interval, setInterval] = React.useState(500)
       const [polling, togglePolling] = usePoll(query.me, interval, false)
+
+      const testFragment = useFragment(query.me!, 'User', 'testFragment')
 
       return (
         <div>

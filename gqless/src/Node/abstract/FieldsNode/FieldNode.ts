@@ -12,7 +12,7 @@ import { Outputable } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { isArgsEqual } from './isArgsEqual'
 
-export interface FieldNode<TNode extends Node<any> = any>
+export interface FieldNode<TNode extends Node & Outputable = any>
   extends NodeContainer<TNode> {}
 
 export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
@@ -20,14 +20,14 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
   public name: string = ''
 
   constructor(node: TNode, public args?: Arguments, nullable?: boolean) {
-    super([node, nullable])
+    super([node, nullable], [])
   }
 
   public getSelection(
     fieldsAccessor: Accessor,
     args?: Record<string, any>
   ): { justCreated: boolean; selection: FieldSelection<TNode> } {
-    const selection = fieldsAccessor.selection.getField(selection => {
+    let selection = fieldsAccessor.selection.get(selection => {
       if (!(selection instanceof FieldSelection)) return false
 
       return (
@@ -37,10 +37,10 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
 
     if (selection) return { justCreated: false, selection }
 
-    return {
-      justCreated: true,
-      selection: new FieldSelection(fieldsAccessor.selection, this, args),
-    }
+    selection = new FieldSelection(this, args)
+    fieldsAccessor.selection.add(selection)
+
+    return { justCreated: true, selection }
   }
 
   public getData(fieldsAccessor: Accessor<Selection<FieldsNode>>) {
@@ -51,7 +51,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
         fieldsAccessor.getChild(a => a.selection === selection) ||
         new FieldAccessor(fieldsAccessor, selection)
 
-      return ((this.ofNode as unknown) as Outputable).getData(accessor)
+      return this.ofNode.getData(accessor)
     }
 
     const createArgsFn = (handler?: (args: any) => void) => (args: any) => {
@@ -83,7 +83,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
           // If we just created the argumentless selection
           // + it didn't already exist then destroy it, as it's not required
           if (args && argumentless.justCreated) {
-            argumentless.selection.unselect()
+            fieldsAccessor.selection.delete(argumentless.selection)
           }
         }),
         {
@@ -91,7 +91,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
             invariant(
               argumentlessData,
               `Cannot read property '${String(prop)}' on null [${
-                argumentless.selection.path
+                argumentless.selection
               }]\n\n` +
                 `You should check for null using \`${
                   argumentless.selection
@@ -110,7 +110,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
             invariant(
               argumentlessData,
               `Cannot set property '${String(prop)}' on null [${
-                argumentless.selection.path
+                argumentless.selection
               }]\n\n` +
                 `You should check for null using \`${
                   argumentless.selection

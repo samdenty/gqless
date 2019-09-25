@@ -13,7 +13,7 @@ export class Value {
   public references = new Map<Value, Set<string | number>>()
 
   constructor(
-    public node: Node<any>,
+    public node: Node,
     public data: UValueData = node instanceof ArrayNode ? [] : {}
   ) {
     this.onSet((key, value) => {

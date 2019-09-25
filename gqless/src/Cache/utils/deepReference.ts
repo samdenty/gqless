@@ -7,7 +7,7 @@ export const deepReference = (rootValue: Value) => {
   const onUnreference = createEvent<(value: Value) => void>()
 
   let valueReferences = new WeakMap<Value, { count: number }>([
-    [rootValue, { count: 1 }], // Prevent new watchers for the root
+    [rootValue, { count: 1 }], // Prevent RootValue from being unreferenced (handled on Cache)
   ])
 
   const watchAndEmit = (parentValue: Value) => {

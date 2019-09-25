@@ -24,8 +24,7 @@ export class Scheduler extends Disposable {
     super()
 
     this.start()
-
-    this.disposers.add(this.cancel)
+    this.disposer(this.cancel)
   }
 
   public beginQuery(query: Query) {
@@ -49,7 +48,7 @@ export class Scheduler extends Disposable {
     this.cancel()
 
     // Don't create new Commit, if prev one unused
-    if (!this.commit || this.commit.selections.size) {
+    if (!this.commit || this.commit.accessors.size) {
       if (this.commit) this.commit.dispose()
 
       this.commit = new Commit(this.plugins, this.stack, this.fetchSelections)

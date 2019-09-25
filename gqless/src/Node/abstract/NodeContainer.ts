@@ -10,7 +10,7 @@ export class NodeContainer<
   }
 
   @computed()
-  public get innerNode(): Node<any> {
+  public get innerNode(): Node {
     if (this.ofNode instanceof NodeContainer) {
       return this.ofNode.innerNode
     }

@@ -9,13 +9,13 @@ export class FieldAccessor<
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
 
-    this.associateValueFrom(this.parent)
-    this.updateExtensions()
+    this.syncValue(value => value.get(this.toString()))
+    this.loadExtensions()
     this.stageIfRequired()
   }
 
-  protected getExtensions() {
-    super.getExtensions()
+  protected initializeExtensions() {
+    super.initializeExtensions()
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
       const parentExtension = this.parent.extensions[i]

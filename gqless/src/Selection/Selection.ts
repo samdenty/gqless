@@ -1,87 +1,56 @@
 import { createEvent } from '@gqless/utils'
+import { Node } from '../Node'
 
-import { Node, ObjectNode } from '../Node'
-import { PluginMethod } from '../Plugin'
-import { computed } from '../utils'
-import { FieldSelection } from './FieldSelection'
-import { RootSelection } from './RootSelection'
-
-export interface CircularSelectionField extends FieldSelection {}
-
-export abstract class Selection<
-  TNode extends Node<any> = Node<any>,
-  TSelections extends CircularSelectionField = CircularSelectionField
-> {
-  public selections: TSelections[] = []
-  // @ts-ignore
-  public root: RootSelection<ObjectNode> = this.parent! && this.parent!.root
-
-  /**
-   * Emitted when a selection is being fetched
-   */
-  public onFetching = createEvent<() => void>()
-  /**
-   * Emitted when selection has been fetched, or a previous fetch was cancelled
-   */
-  public onFetched = createEvent<() => void>()
+export class Selection<TNode extends Node = Node> {
+  public selections = new Set<Selection>()
 
   /**
    * Emitted when a child selection is created
    */
-  public onSelect = createEvent<PluginMethod<'onSelect'>>()
+  public onSelect = createEvent<(selection: Selection) => void>()
   /**
    * Emitted when a child selection is disposed
    */
-  public onUnselect = createEvent<PluginMethod<'onUnselect'>>()
+  public onUnselect = createEvent<(selection: Selection) => void>()
 
-  constructor(public parent: Selection<any> | undefined, public node: TNode) {
-    if (this.parent) {
-      this.onSelect(this.parent.onSelect.emit)
-      this.onUnselect(this.parent.onUnselect.emit)
+  constructor(public node: TNode) {}
+
+  public add(selection: Selection) {
+    if (this.selections.has(selection)) return
+
+    this.selections.add(selection)
+    this.onSelect.emit(selection)
+
+    // Forward events
+    selection.onSelect(this.onSelect.emit)
+    selection.onUnselect(this.onUnselect.emit)
+  }
+
+  public get(compare: (selection: Selection) => boolean) {
+    for (const selection of this.selections) {
+      if (compare(selection)) return selection
     }
+    return
   }
 
-  /**
-   * Whether or not the selection is currently
-   * being fetched over the network
-   */
-  public isFetching: boolean = false
-  public toggleFetching(fetching = !this.isFetching) {
-    if (this.isFetching === fetching) return
+  public delete(selection: Selection) {
+    if (!this.selections.has(selection)) return
+    this.selections.delete(selection)
 
-    this.isFetching = fetching
+    // Unforward events
+    selection.onSelect.off(this.onSelect.emit)
+    selection.onUnselect.off(this.onUnselect.emit)
 
-    fetching ? this.onFetching.emit() : this.onFetched.emit()
+    const emitUnselect = (selection: Selection) => {
+      // Emit unselect for each selection
+      this.onUnselect.emit(selection)
+      selection.selections.forEach(emitUnselect)
+    }
+
+    emitUnselect(selection)
   }
 
-  /**
-   * Find a selection in selections
-   */
-  public getField(compare: (selection: TSelections) => boolean) {
-    return this.selections.find(compare)
-  }
-
-  @computed()
-  /**
-   * An array containing all the selections from this
-   * back up to the selection root
-   */
-  public get path(): Selection<any, any>[] {
-    const basePath = this.parent ? this.parent.path : []
-    const path = [...basePath, this]
-
-    path.toString = () => path.map(selection => selection.toString()).join('.')
-
-    return path
-  }
-
-  /**
-   * Dispose of selection, removing all references to it
-   */
-  public unselect() {
-    const [...selections] = this.selections
-    selections.forEach(s => s.unselect())
-
-    this.onUnselect.emit(this)
+  public toString() {
+    return String(this.node)
   }
 }

@@ -1,7 +1,6 @@
-import { invariant, lazyGetters } from '@gqless/utils'
+import { lazyGetters } from '@gqless/utils'
 
 import { ArrayNode, InputNode, ScalarNode } from '../'
-import { Variable } from '../../Variable'
 import { Node } from '../abstract'
 import { EnumNode } from '../EnumNode'
 import { ArgumentsField } from './ArgumentsField'

@@ -21,9 +21,9 @@ nameAccessor.path.toString()
 
 ## Limitations
 
-`getAccessor` normally works, by searching for a special `Symbol` on the object.
+`getAccessor` normally works by searching for a special `Symbol` on the object.
 
-However when passed `null` or a scalar, this isn't possible. In these cases, it **relies upon you to de-reference before the call**
+However when passed `null` or a scalar this isn't possible. In these cases it **relies upon you to de-reference before the call**
 
 ```ts
 // GOOD, because Scalar was de-referenced last-thing before call

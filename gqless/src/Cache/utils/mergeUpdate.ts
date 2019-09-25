@@ -5,8 +5,9 @@ import {
   InterfaceNode,
   ObjectNode,
   UnionNode,
+  Node,
 } from '../../Node'
-import { Selection } from '../../Selection'
+import { Selection, FieldSelection, Fragment } from '../../Selection'
 import { shallowUpdate } from './shallowUpdate'
 
 export const mergeUpdate = (accessor: Accessor<any, any>, data: any) => {
@@ -23,43 +24,49 @@ export const mergeUpdate = (accessor: Accessor<any, any>, data: any) => {
 
 const mergeFields = (
   accessor: Accessor<Selection<ObjectNode | InterfaceNode | UnionNode>>,
-  data: Record<string, unknown>
+  data: Record<string, any> | null
 ) => {
   if (data === null) return
 
-  Object.entries(data).forEach(([dataProp, value]) => {
-    // __typename is not a selection, but handled internally
-    if (dataProp === '__typename') return
+  Object.entries(data).forEach(([key, value]) => {
+    // TODO: Handle only for InterfaceNode
+    if (key === '__typename') return
 
-    let fieldAccessor = accessor.getChild(
-      ({ selection }) => selection.dataProp === dataProp
-    )
+    // Search for an existing accessor matching
+    // the given key
+    let fieldAccessor = accessor.getChild(a => a.toString() === key)
 
     if (!fieldAccessor) {
-      const subSelection = accessor.selection.getField(
-        s => s.dataProp === dataProp
-      )
+      // Need to find a selection, for a new accessor
+      let fieldSelection = accessor.selection.get(
+        s => s.toString() === key
+      ) as FieldSelection
 
-      if (!subSelection) {
-        const dataPropMatch = dataProp.match(/^(.+)__(\d)$/)
-        if (!dataPropMatch) {
-          console.error(
-            `Couldn't locate selection ${accessor.path}.${dataProp}`
+      if (!fieldSelection) {
+        let node: Node
+
+        if (value && '__typename' in value) {
+          // TODO: Fragment selection
+        }
+
+        // If there's a field with the given key,
+        // create a new selection.
+        if (
+          accessor.node instanceof ObjectNode &&
+          accessor.node.fields.hasOwnProperty(key)
+        ) {
+          const field = accessor.node.fields[key]
+          fieldSelection = new FieldSelection(field)
+          accessor.selection.add(fieldSelection)
+        } else {
+          console.warn(
+            `No selection found for "${key}" [at path ${accessor.path}.${key}]. Value will be ignored`
           )
           return
         }
-        const [_, fieldName, alias] = dataPropMatch
-
-        console.error(
-          `Couldn't locate selection ${
-            accessor.path
-          }.${fieldName} [alias=${alias}]`
-        )
-
-        return
       }
 
-      fieldAccessor = new FieldAccessor(accessor, subSelection)
+      fieldAccessor = new FieldAccessor(accessor, fieldSelection)
     }
 
     mergeUpdate(fieldAccessor, value)

@@ -1,27 +1,32 @@
 import * as React from '../jsx'
 
-export const Preview = ({
+export function Preview<T extends any>({
   elements,
   colon,
   objectDepth,
+  isFragment,
 }: {
-  elements: any[]
+  elements: T[]
   objectDepth: number
   colon?: boolean
-}) => (
-  <span style={{ fontStyle: objectDepth ? 'normal' : 'italic' }}>
-    {colon && objectDepth && `:`}
+  isFragment?: (element: T) => boolean
+}) {
+  return (
+    <span style={{ fontStyle: objectDepth ? 'normal' : 'italic' }}>
+      {colon && objectDepth && `:`}
 
-    {` {`}
-    {elements.map((element, i) => (
-      <span>
-        <span style={{ opacity: 0.7 }}>
-          {element.toString().replace(/\(.+$/, `(…)`)}
+      {` {`}
+      {elements.map((element, i) => (
+        <span>
+          <span style={{ opacity: 0.7 }}>
+            {isFragment && isFragment(element) ? <span>...</span> : null}
+            {element.toString().replace(/\(.+$/, `(…)`)}
+          </span>
+
+          {i !== elements.length - 1 && <span>, </span>}
         </span>
-
-        {i !== elements.length - 1 && <span>, </span>}
-      </span>
-    ))}
-    {`}`}
-  </span>
-)
+      ))}
+      {`}`}
+    </span>
+  )
+}

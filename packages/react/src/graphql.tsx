@@ -103,7 +103,7 @@ export const graphql = <Props extends any>(
       accessorDisposers.set(
         accessor,
         // Make component update when data changes
-        accessor.onDataUpdate(() => {
+        accessor.onDataChange(() => {
           forceUpdate()
         })
       )

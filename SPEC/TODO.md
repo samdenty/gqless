@@ -1,5 +1,6 @@
 # MVP
 
+- Accessor#status
 - Warn when \_\_typename is accessed for React, without an ofType call
 - Make `gqless` bin alias to `@gqless/cli`, so only need to install 1 set of deps
 - Make codegen default to typescript, add --js option
@@ -20,14 +21,12 @@
   // Component will be rendered O(isOfType^2) times
   ```
 
-- Rename `GraphQL` to gqless (conflicts with react plugin)
-
-* Extensions
+- Extensions
 
   - No default key
     - Default key logic, should instead be moved to codegen. More explicit and no magic happening
 
-- When we get an array
+* When we get an array
 
   - If it's already fetched
     - Keyed
@@ -35,9 +34,14 @@
     - Not keyed
       - Delete all entries that start with the array key
 
-- Make FieldAccessor#data static, instead of a getter
+* Make FieldAccessor#data static, instead of a getter
 
 # Improvements
+
+- usePoll should expose stack to Poller
+- Custom formatters
+
+  - Format ObjectNode / ScalarNode etc. to GraphQL schema `type User` etc.
 
 - Tests:
 

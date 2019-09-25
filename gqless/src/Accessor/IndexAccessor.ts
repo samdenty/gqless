@@ -16,13 +16,20 @@ export class IndexAccessor<
       ).ofNode
     )
 
-    this.associateValueFrom(this.parent)
-    this.updateExtensions()
+    // Sync from parent status
+    this.disposer(
+      this.parent.onStatusChange((_, status) => {
+        this.status = status
+      })
+    )
+
+    this.syncValue(value => value.get(this.toString()))
+    this.loadExtensions()
     this.stageIfRequired()
   }
 
-  protected getExtensions() {
-    super.getExtensions()
+  protected initializeExtensions() {
+    super.initializeExtensions()
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
       const parentExtension = this.parent.extensions[i]

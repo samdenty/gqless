@@ -1,18 +1,18 @@
 import { Client, QueryFetcher } from 'gqless'
-import { print } from 'graphql/language/printer'
 
 import { Query, schema } from './generated'
 
 const endpoint = `http://${location.hostname}:9002/graphql`
 
-export const fetchQuery: QueryFetcher = async query => {
+export const fetchQuery: QueryFetcher = async (query, variables) => {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      query: print(query),
+      query,
+      variables,
     }),
     mode: 'cors',
   })

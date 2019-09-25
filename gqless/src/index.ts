@@ -1,7 +1,6 @@
 export * from './Node'
 export * from './Cache'
 export * from './Selection'
-export * from './ASTBuilder'
 export * from './Client'
 export * from './Plugin'
 export * from './Interceptor'

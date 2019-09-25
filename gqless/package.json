@@ -3,6 +3,7 @@
   "name": "gqless",
   "version": "0.0.1-alpha.20",
   "main": "dist/index.js",
+  "source": "src/index.ts",
   "module": "dist/gqless.esm.js",
   "homepage": "https://github.com/samdenty/gqless",
   "typings": "dist/index.d.ts",
@@ -17,7 +18,7 @@
   "dependencies": {
     "@gqless/utils": "^0.0.1-alpha.20",
     "lodash": "^4.17.15",
-    "mix-classes": "^1.1.7"
+    "mix-classes": "^1.1.8"
   },
   "devDependencies": {
     "@babel/core": "^7.4.4",

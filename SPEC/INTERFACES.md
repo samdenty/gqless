@@ -37,7 +37,7 @@ Map{Query.me: 'Student'}
 ```
 
 At the end of the components render, it will mount the component as a child for each possible variation in the set.
-Variations context will be a map for accessor => type, which will call `Accessor#unresolvedType(typename)`
+Variations context will be a map for accessor => fragment, which will call `Accessor(of Interface)#resolveFragment(fragment)`
 
 ```jsx
 function Component() {
@@ -65,4 +65,62 @@ Once the variations have been resolved, it will return the Component that had th
 function Component() {
   return <Component key="Student:Person" />
 }
+```
+
+## Data
+
+When the `__typename` is unfetched, it could either:
+
+1. Strict - Only return interface data
+2. Dynamic - Return a deeply mixed object of all implementations
+
+- If an interface has a field, all implementations have to share same return type
+- Two implementations could have different return types, for same field
+
+```graphql
+interface I {
+  i: String
+}
+
+type A implements I {
+  i(a: String): String!
+
+  aOnly: String
+  implementationsOnly: String
+}
+
+type B implements I {
+  i: String
+  implementationsOnly: String
+}
+```
+
+### Mixed
+
+Try best to allow implementation fields on interface, throw errors when a field can't statically be resolved
+
+### Strict
+
+```ts
+// i
+i.i // => null
+
+const a = on(i, 'A')
+// ... on A { i }
+a.i({ a: 'a' }) // => null
+```
+
+### Dynamic
+
+```ts
+// Fetch on interface
+i.i // => Function
+// ...on A { i(a: 10) }
+i.i({ a: 10 }) // => null
+
+// ...on A { a }
+i.aOnly
+
+// ...on A { implementationsOnly } ...on B { implementationsOnly }
+i.implementationsOnly
 ```

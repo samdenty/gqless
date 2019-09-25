@@ -1,30 +1,28 @@
 import { Cache, Value } from '../Cache'
-import { NodeDataType } from '../Node'
+import { NodeDataType, ObjectNode } from '../Node'
 import { Scheduler } from '../Scheduler'
-import { RootSelection } from '../Selection'
+import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
 
 export class RootAccessor<
-  TSelection extends RootSelection = RootSelection,
+  TSelection extends Selection<ObjectNode> = Selection<ObjectNode>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelection, TChildren> {
   constructor(
-    rootSelection: TSelection,
+    selection: TSelection,
     public scheduler: Scheduler,
-    public cache: Cache = new Cache(rootSelection.node)
+    public cache: Cache = new Cache(selection.node)
   ) {
-    super(undefined, rootSelection)
+    super(undefined, selection)
     this.value = cache.rootValue
 
     cache.store.set(this.toString(), this.value)
 
-    this.updateExtensions()
+    this.loadExtensions()
   }
 
-  // @TODO: This should be replace with a Generic
-  public data: TSelection extends RootSelection<infer TNode>
-    ? NodeDataType<TNode>
-    : never = this.selection.createProxy(this) as any
+  // TODO: This should be replace with a Generic inside accessor
+  public data = this.selection.node.getData(this)
 
   public toString() {
     return this.selection.toString()

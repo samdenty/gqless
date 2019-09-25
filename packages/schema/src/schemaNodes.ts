@@ -17,7 +17,7 @@ import { SchemaFieldArgs, Type, SchemaType, Schema } from './Schema'
 
 export const schemaNodes = (schema: Schema) => {
   const nodes = {} as {
-    [key: string]: Node<any>
+    [key: string]: Node
     Query: ObjectNode<any>
     Mutation: ObjectNode<any>
   }
@@ -33,7 +33,7 @@ export const schemaNodes = (schema: Schema) => {
 
   lazyGetters(nodes)
 
-  const resolveType = (type: Type): Node<any> =>
+  const resolveType = (type: Type): Node =>
     type.kind === 'LIST'
       ? new ArrayNode(resolveType(type.ofType), type.nullable)
       : nodes[type.name]

@@ -1,5 +1,5 @@
 import { Plugins } from '../Plugin'
-import { Selection } from '../Selection'
+import { Accessor, NetworkStatus } from '../Accessor'
 import { Disposable } from '../utils'
 import { queriesFromStacks } from './queriesFromStacks'
 import { Query } from './Query'
@@ -9,59 +9,61 @@ const defaultQuery = new Query()
 
 export class Commit extends Disposable {
   public onFetched = createEvent()
-  public selections = new Map<Selection, Query[]>()
+  public accessors = new Map<Accessor, Query[]>()
 
   constructor(
     private plugins: Plugins,
     private stack: Query[],
-    private fetchSelections: (
-      selections: Selection<any>[],
+    private fetchAccessors: (
+      accessors: Accessor<any>[],
       queryName?: string
     ) => any
   ) {
     super()
   }
 
-  public stage(selection: Selection<any, any>) {
-    const unstage = () => this.unstage(selection)
+  public stage(accessor: Accessor<any, any>) {
+    const unstage = () => this.unstage(accessor)
 
-    // If the selection is in this current commit,
-    // or being fetched from a previous commit, don't re-fetch it
-    if (this.disposed || selection.isFetching) return unstage
+    // If the accessor is in this current commit,
+    // or being (re-)fetched from a previous commit, don't re-fetch it
+    if (this.disposed || accessor.status !== NetworkStatus.idle) return unstage
 
     // If we already have the parent, remove the
-    // parent to narrow down the selections. This is used when a selection is created
+    // parent to narrow down the accessors. This is used when a accessor is created
     // this could cause issues later, may need to add a recurse field to handle polling etc.
-    if (selection.parent && this.selections.has(selection.parent)) {
-      this.unstage(selection.parent)
+    if (accessor.parent && this.accessors.has(accessor.parent)) {
+      this.unstage(accessor.parent)
     }
 
-    selection.toggleFetching(true)
+    accessor.status = accessor.value
+      ? NetworkStatus.updating
+      : NetworkStatus.loading
 
-    this.selections.set(selection, [...this.stack])
+    this.accessors.set(accessor, [...this.stack])
 
     return unstage
   }
 
-  public unstage(selection: Selection<any, any>) {
+  public unstage(accessor: Accessor<any, any>) {
     if (this.disposed) return
 
-    // Only if the selection is in our commits, set it as not fetching
+    // Only if the accessor is in our commits, set it as not fetching
     // otherwise it could be from a previous commit
-    if (this.selections.has(selection)) {
-      selection.toggleFetching(false)
+    if (this.accessors.has(accessor)) {
+      accessor.status = NetworkStatus.idle
     }
 
-    this.selections.delete(selection)
+    this.accessors.delete(accessor)
   }
 
   public async fetch() {
-    if (!this.selections.size) return
-    const selections = Array.from(this.selections.keys())
-    const stacks = Array.from(this.selections.values())
+    if (!this.accessors.size) return
+    const accessors = Array.from(this.accessors.keys())
+    const stacks = Array.from(this.accessors.values())
     const stackQueries = queriesFromStacks(stacks)
 
-    const queries = new Map<Query | undefined, Selection[]>()
+    const queries = new Map<Query | undefined, Accessor[]>()
 
     // Iterate over stacks and convert into query map
     stackQueries.forEach((query, idx) => {
@@ -69,34 +71,30 @@ export class Commit extends Disposable {
         stackQueries[idx] = query = defaultQuery
       }
 
-      const selection = selections[idx]
+      const accessor = accessors[idx]
 
       if (queries.has(query)) {
-        const selections = queries.get(query)!
-        selections.push(selection)
+        const accessors = queries.get(query)!
+        accessors.push(accessor)
         return
       }
 
-      queries.set(query, [selection])
+      queries.set(query, [accessor])
     })
 
-    this.plugins.all.onCommit({ stacks, stackQueries, selections, queries })
+    this.plugins.all.onCommit({ stacks, stackQueries, accessors, queries })
 
     try {
       const promises = Array.from(queries)
-        .map(async ([query, selections]) => {
-          const promise = this.fetchSelections(selections, query && query.name)
-
-          const notFetchingSelections = () => {
-            selections.forEach(selection => {
-              selection.toggleFetching(false)
-            })
-          }
+        .map(async ([query, accessors]) => {
+          const promise = this.fetchAccessors(accessors, query && query.name)
 
           try {
             await promise
           } finally {
-            notFetchingSelections()
+            accessors.forEach(accessor => {
+              accessor.status = NetworkStatus.idle
+            })
           }
         })
         .filter(Boolean) as Promise<any>[]

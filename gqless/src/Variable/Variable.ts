@@ -65,6 +65,10 @@ export class Variable<TValue = any> {
     }
   }
 
+  public toString() {
+    return `${this.node}${this.nullable ? '' : '!'}`
+  }
+
   public toJSON() {
     return this.value
   }

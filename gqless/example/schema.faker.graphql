@@ -75,8 +75,28 @@ input InputObj {
   a: String!
 }
 
+
+
+
+interface M {
+  b(b:String): String
+}
+type O1 implements M{
+  b(b:String): String
+  o1:String
+}
+
+type O2 implements M {
+  b(b:String,a:String):String
+  o2:String
+}
+
+
+
 # Query
 type Query {
+  m:M
+  
   # Current signed in user
   me: User
   # Fetch a user by ID

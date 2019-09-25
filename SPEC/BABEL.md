@@ -1,3 +1,19 @@
+# Adding debug-names
+
+```js
+const limit = useVariable(1)
+// =>
+const limit = useVariable(1, 'limit')
+
+const nameFragment = useFragment(user)
+// =>
+const nameFragment = useFragment(user, 'NameFragment')
+
+const User = graphql(() => {})
+// =>
+const User = graphql(() => {}, { name: 'User' })
+```
+
 ```js
 import { query } from 'generated'
 

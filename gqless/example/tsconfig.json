@@ -16,10 +16,10 @@
     "types": ["node"],
     "paths": {
       "gqless": ["../src"],
-      "@gqless/logger": ["../../../packages/logger/src"],
-      "@gqless/schema": ["../../../packages/schema/src"],
-      "@gqless/utils": ["../../../packages/utils/src"],
-      "@gqless/react": ["../../../packages/react/src"]
+      "@gqless/logger": ["../../packages/logger/src"],
+      "@gqless/schema": ["../../packages/schema/src"],
+      "@gqless/utils": ["../../packages/utils/src"],
+      "@gqless/react": ["../../packages/react/src"]
     }
   }
 }

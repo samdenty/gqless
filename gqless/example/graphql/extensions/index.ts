@@ -49,7 +49,7 @@ export const Query /*: Extension<g.User>*/ = query => {
     },
     me: {
       name: (name: string) => {
-        console.log({ meName: name })
+        // console.log({ meName: name })
         return `me_${name}`
       },
       isMe: true,

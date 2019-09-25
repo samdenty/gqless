@@ -9,21 +9,21 @@ export class ClientFile extends File {
   public generate() {
     this.import(CORE, 'Client', 'QueryFetcher')
     this.import('./generated', 'schema', this.codegen.schema.queryType)
-    this.import('graphql/language/printer', 'print')
 
     return `
       ${super.generate()}
 
       const endpoint = ${JSON.stringify(this.codegen.options.url || '')}
 
-      const fetchQuery: QueryFetcher = async query => {
+      const fetchQuery: QueryFetcher = async (query, variables) => {
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            query: print(query),
+            query,
+            variables,
           }),
           mode: 'cors',
         })

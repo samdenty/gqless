@@ -1,6 +1,8 @@
-# gqless (work in progress) [![Codecov](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
+# gqless [![Codecov](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
 
 Auto-generates GraphQL queries based on the data your application consumes.
+
+## [Documentation](https://gqless.netlify.com)
 
 ## Features
 
@@ -17,8 +19,6 @@ Auto-generates GraphQL queries based on the data your application consumes.
 **Your application:**
 
 ```tsx
-import { query, User } from './generated'
-
 const User = graphql(({ user }: { user: User }) => (
   <div>
     <h2>{user.name}</h2>

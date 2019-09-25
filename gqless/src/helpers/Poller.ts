@@ -27,10 +27,10 @@ export class Poller {
    * only after it's been fetched
    */
   private async poll() {
-    const { selection, scheduler } = this.accessor
+    this.unstage = this.accessor.scheduler.commit.stage(this.accessor)
+    // TODO
+    // await this.accessor.onFetched
 
-    this.unstage = scheduler.commit.stage(selection)
-    await selection.onFetched
     this.unstage = undefined
 
     // If we're still polling after we've fetched

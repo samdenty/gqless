@@ -12,7 +12,7 @@ import {
 } from './abstract'
 import { Value } from '../Cache'
 
-export interface ArrayNode<TNode extends Node<any> = Node<any>>
+export interface ArrayNode<TNode extends Node = Node>
   extends NodeContainer<TNode, NodeDataType<TNode>[]> {}
 
 export class ArrayNode<TNode> extends Mix(

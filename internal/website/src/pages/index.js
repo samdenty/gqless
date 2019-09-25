@@ -48,7 +48,7 @@ const Header = styled(motion.div)`
 `
 
 const Hero = styled(motion.div)`
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;
 `
 
 const Examples = styled(motion.div)`

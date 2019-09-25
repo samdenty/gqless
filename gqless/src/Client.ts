@@ -1,47 +1,53 @@
-import { DocumentNode } from 'graphql'
-
-import { RootAccessor } from './Accessor'
-import { ASTBuilder } from './ASTBuilder'
+import { RootAccessor, IndexAccessor, Accessor } from './Accessor'
 import { Cache } from './Cache'
 import { ObjectNode } from './Node'
 import { Plugins } from './Plugin'
 import { Scheduler } from './Scheduler'
-import { RootSelection, Selection } from './Selection'
+import { Selection } from './Selection'
 import { Disposable } from './utils'
+import { buildQuery, Formatter } from './QueryBuilder'
 
 export type QueryResponse<Data = any> = { data: Data; errors: any }
 
 export type QueryFetcher = (
-  query: DocumentNode,
+  query: string,
   variables?: Record<string, any>
 ) => Promise<QueryResponse> | QueryResponse
 
-export type ProxyInterceptor = (
-  target: unknown,
-  prop: string | symbol
-) => unknown
+export type ClientOptions = {
+  prettifyQueries?: boolean
+}
 
 // @ts-ignore
 export class Client<TData = any> extends Disposable {
   public plugins = new Plugins()
-  public astBuilder = new ASTBuilder()
+  public formatter: Formatter
+
   public scheduler = new Scheduler(
     (selections, name) => this.fetchSelections(selections, name)!,
     this.plugins
   )
   public cache = new Cache(this.node)
 
-  public selection = new RootSelection(this.node)
+  public selection = new Selection(this.node)
   public accessor = new RootAccessor(this.selection, this.scheduler, this.cache)
 
-  public query: TData = this.accessor.data
+  public query = this.accessor.data as TData
 
-  constructor(protected node: ObjectNode, protected fetchQuery: QueryFetcher) {
+  constructor(
+    protected node: ObjectNode,
+    protected fetchQuery: QueryFetcher,
+    { prettifyQueries }: ClientOptions = {}
+  ) {
     super()
 
+    this.formatter = new Formatter({
+      prettify: prettifyQueries,
+      fragments: true,
+      variables: true,
+    })
     this.selection.onSelect(selection => {
       this.plugins.all.onSelect(selection)
-      // this.scheduler.stage(selection)
     })
 
     this.selection.onUnselect(selection => {
@@ -50,23 +56,31 @@ export class Client<TData = any> extends Disposable {
     })
   }
 
-  protected fetchSelections(selections: Selection<any>[], queryName?: string) {
-    const result = this.astBuilder.buildDocument(queryName, ...selections)
+  protected fetchSelections(accessors: Accessor[], queryName?: string) {
+    const result = buildQuery(
+      this.formatter,
+      queryName,
+      ...accessors.map(accessor =>
+        accessor.path
+          .filter(a => !(a instanceof IndexAccessor))
+          .map(a => a.selection)
+      )
+    )
+
     if (!result) return
 
     const responsePromise = (async () => {
-      const response = await this.fetchQuery(result.doc, result.variables)
-
+      const response = await this.fetchQuery(result.query, result.variables)
+      result.rootTree.resolveAliases(response.data)
       this.cache.merge(this.accessor, response.data)
-
       return response
     })()
 
     this.plugins.all.onFetch(
-      selections,
+      accessors,
       responsePromise,
       result.variables,
-      result.doc,
+      result.query,
       queryName
     )
 

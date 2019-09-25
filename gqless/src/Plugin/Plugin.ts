@@ -22,7 +22,7 @@ export interface Plugin {
     selections: Selection<any>[],
     response: Promise<QueryResponse>,
     variables: Record<string, any> | undefined,
-    queryAst: DocumentNode,
+    query: string,
     queryName: string | undefined
   ): void
 
