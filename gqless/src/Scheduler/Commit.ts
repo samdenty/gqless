@@ -22,7 +22,16 @@ export class Commit extends Disposable {
     super()
   }
 
-  public stage(accessor: Accessor<any, any>) {
+  public stageUntilValue(accessor: Accessor) {
+    if (accessor.value) return
+
+    const unstage = this.stage(accessor)
+    this.addDisposer(accessor.onValueChange.then(unstage))
+
+    return unstage
+  }
+
+  public stage(accessor: Accessor) {
     const unstage = () => this.unstage(accessor)
 
     // If the accessor is in this current commit,
@@ -45,7 +54,7 @@ export class Commit extends Disposable {
     return unstage
   }
 
-  public unstage(accessor: Accessor<any, any>) {
+  public unstage(accessor: Accessor) {
     if (this.disposed) return
 
     // Only if the accessor is in our commits, set it as not fetching

@@ -1,20 +1,17 @@
 import { Accessor, FieldAccessor, IndexAccessor } from '../../Accessor'
-import {
-  ArrayNode,
-  FieldsNode,
-  InterfaceNode,
-  ObjectNode,
-  UnionNode,
-  Node,
-} from '../../Node'
+import { ArrayNode, ObjectNode, Node } from '../../Node'
 import { Selection, FieldSelection, Fragment } from '../../Selection'
 import { shallowUpdate } from './shallowUpdate'
 
 export const mergeUpdate = (accessor: Accessor<any, any>, data: any) => {
-  shallowUpdate(accessor, data)
+  const fragmentAccessor = shallowUpdate(accessor, data)
 
-  if (accessor.node instanceof FieldsNode) {
-    return mergeFields(accessor, data)
+  if (fragmentAccessor) {
+    return mergeObject(fragmentAccessor, data)
+  }
+
+  if (accessor.node instanceof ObjectNode) {
+    return mergeObject(accessor, data)
   }
 
   if (accessor.node instanceof ArrayNode) {
@@ -22,29 +19,26 @@ export const mergeUpdate = (accessor: Accessor<any, any>, data: any) => {
   }
 }
 
-const mergeFields = (
-  accessor: Accessor<Selection<ObjectNode | InterfaceNode | UnionNode>>,
+const mergeObject = (
+  accessor: Accessor<Selection<ObjectNode> | Fragment>,
   data: Record<string, any> | null
 ) => {
   if (data === null) return
 
   Object.entries(data).forEach(([key, value]) => {
-    // TODO: Handle only for InterfaceNode
     if (key === '__typename') return
 
     // Search for an existing accessor matching
     // the given key
-    let fieldAccessor = accessor.getChild(a => a.toString() === key)
+    let fieldAccessor = accessor.get(a => a.toString() === key)
 
     if (!fieldAccessor) {
       // Need to find a selection, for a new accessor
-      let fieldSelection = accessor.selection.get(
+      let fieldSelection = accessor.selection.get<FieldSelection>(
         s => s.toString() === key
-      ) as FieldSelection
+      )
 
       if (!fieldSelection) {
-        let node: Node
-
         if (value && '__typename' in value) {
           // TODO: Fragment selection
         }
@@ -81,7 +75,7 @@ const mergeArray = (
 
   data.forEach((value, i) => {
     const indexAccessor =
-      accessor.getChild(a => a.index === i) || new IndexAccessor(accessor, i)
+      accessor.get(a => a.index === i) || new IndexAccessor(accessor, i)
 
     mergeUpdate(indexAccessor, value)
   })

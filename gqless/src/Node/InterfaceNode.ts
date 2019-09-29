@@ -6,6 +6,7 @@ import {
   IFieldsNodeOptions,
   Keyable,
   NodeDataType,
+  Abstract,
   UFieldsNodeRecord,
 } from './abstract'
 import { Extension } from './Extension'
@@ -16,37 +17,33 @@ export type IInterfaceNodeOptions = IFieldsNodeOptions & {
   extension?: Extension
 }
 
-export interface InterfaceNode<TImplementations extends ObjectNode<any>>
-  extends FieldsNode<NodeDataType<TImplementations>>,
-    Keyable<InterfaceNode<TImplementations>> {}
+export interface InterfaceNode<TImplementation extends ObjectNode = ObjectNode>
+  extends FieldsNode<NodeDataType<TImplementation>>,
+    Abstract<TImplementation>,
+    Keyable<InterfaceNode<TImplementation>> {}
 
-export class InterfaceNode<TImplementations = any> extends Mix(
+export class InterfaceNode<TImplementation> extends Mix(
   Generic(FieldsNode),
+  Generic(Abstract),
   Generic(Keyable)
 ) {
   constructor(
     fields: UFieldsNodeRecord,
-    public implementations: TImplementations[],
+    implementations: TImplementation[],
     options: IInterfaceNodeOptions
   ) {
-    super([fields as any, options], [options.extension])
+    super([fields, options], [implementations, options.extension])
 
     this.keyGetter = defaultKey(this as any)
   }
 
   public getData(accessor: Accessor): any {
     // @ts-ignore typescript limitation of mix-classes
-    super.getData(accessor)
+    const data = super.getData(accessor)
+    if (!data) return data
 
-    // If the value is nulled, return null
-    if (accessor.value && accessor.value!.data === null) {
-      return null as any
-    }
-
-    return new Proxy({} as any, {
+    return new Proxy(data, {
       get: (_, prop: any) => {
-        if (prop === ACCESSOR) return accessor
-
         // If the prop exists in this interface,
         // return directly from interface
         if (this.fields.hasOwnProperty(prop)) {
@@ -62,7 +59,6 @@ export class InterfaceNode<TImplementations = any> extends Mix(
           //   }
           // }
 
-          // console.log({ field, hasArgs })
           return field.getData(accessor as any)
         }
 
@@ -70,13 +66,10 @@ export class InterfaceNode<TImplementations = any> extends Mix(
 
         // else throw an error if it doesn't satisfy conditions
 
-        // fallback to extensions
-        for (const extension of accessor.extensions) {
-          if (prop in extension) return extension[prop]
-        }
+        return data[prop]
       },
 
-      set: (_, prop: string, data) => {
+      set: (_, prop: string, value) => {
         if (prop === '__typename') return true
 
         /**
@@ -87,7 +80,7 @@ export class InterfaceNode<TImplementations = any> extends Mix(
           const selection = field.getSelection(accessor).selection
 
           const fieldAccessor =
-            accessor.getChild(a => a.selection === selection) ||
+            accessor.get(a => a.selection === selection) ||
             new FieldAccessor(accessor, selection)
 
           fieldAccessor.setData(data)
@@ -95,15 +88,7 @@ export class InterfaceNode<TImplementations = any> extends Mix(
           return true
         }
 
-        /**
-         * else set it on the first extension with the property
-         */
-        for (const extension of accessor.extensions) {
-          if (prop in extension) {
-            extension[prop] = data
-            return true
-          }
-        }
+        data[prop] = value
 
         return true
       },

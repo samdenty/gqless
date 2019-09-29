@@ -10,8 +10,8 @@ import {
   Keyable,
   UFieldsNodeRecord,
   Matchable,
+  Outputable,
 } from './abstract'
-import { Extension } from './Extension'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
 
@@ -25,6 +25,7 @@ const TYPENAME_NODE = new ScalarNode()
 
 export class ObjectNode<TData = any> extends Mix(
   Generic(FieldsNode),
+  Outputable,
   Matchable,
   Generic(Keyable)
 ) {
@@ -32,7 +33,7 @@ export class ObjectNode<TData = any> extends Mix(
     // Add __typename node
     fields.__typename = new FieldNode(TYPENAME_NODE)
 
-    super([fields as any, options])
+    super([fields as any, options], [options.extension])
 
     this.keyGetter = defaultKey(this) as any
   }
@@ -100,7 +101,7 @@ export class ObjectNode<TData = any> extends Mix(
           const selection = field.getSelection(accessor).selection
 
           const fieldAccessor =
-            accessor.getChild(a => a.selection === selection) ||
+            accessor.get(a => a.selection === selection) ||
             new FieldAccessor(accessor, selection)
 
           fieldAccessor.setData(data)

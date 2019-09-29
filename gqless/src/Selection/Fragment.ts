@@ -1,9 +1,7 @@
 import { Selection } from './Selection'
-import { ObjectNode, UnionNode, InterfaceNode } from '../Node'
+import { ObjectNode } from '../Node'
 
-export type UFragment = ObjectNode | UnionNode | InterfaceNode
-
-export class Fragment<TNode extends UFragment = UFragment> extends Selection<
+export class Fragment<TNode extends ObjectNode = ObjectNode> extends Selection<
   TNode
 > {
   constructor(node: TNode, public name?: string) {

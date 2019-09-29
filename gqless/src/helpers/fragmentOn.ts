@@ -1,14 +1,14 @@
 import { Fragment } from '../Selection'
-import { getAccessor, FieldAccessor } from '../Accessor'
+import { getAccessor, FragmentAccessor } from '../Accessor'
 
 export const fragmentOn = (data: any, fragment: Fragment) => {
   const accessor = getAccessor(data)
 
-  let fragmentAccessor = accessor.getChild(
-    ({ selection }) => selection === fragment
-  )
+  let fragmentAccessor = accessor.get(({ selection }) => selection === fragment)
 
   if (!fragmentAccessor) {
-    // fragmentAccessor = new FieldAccessor
+    fragmentAccessor = new FragmentAccessor(accessor, fragment)
   }
+
+  return fragmentAccessor
 }

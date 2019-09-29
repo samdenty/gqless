@@ -1,5 +1,6 @@
 import { Fragment } from '../Selection'
 import { Accessor } from './Accessor'
+import { syncValue } from './utils'
 
 export class FragmentAccessor<
   TFragment extends Fragment = Fragment,
@@ -10,9 +11,9 @@ export class FragmentAccessor<
 
     // Sync value with parent
     // (only if the node is the same)
-    this.syncValue(value => (value.node === fragment.node ? value : undefined))
+    syncValue(this, value => (value.node === fragment.node ? value : undefined))
+
     this.loadExtensions()
-    this.stageIfRequired()
   }
 
   protected initializeExtensions() {
@@ -20,9 +21,9 @@ export class FragmentAccessor<
     this.extensions.unshift(...this.parent.extensions)
   }
 
-  // public get data() {
-  //   return this.selection.field.ofNode.getData(this)
-  // }
+  public get data(): any {
+    return this.selection.node.getData(this)
+  }
 
   public toString() {
     return this.selection.toString()

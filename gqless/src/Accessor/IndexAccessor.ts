@@ -1,6 +1,7 @@
 import { ArrayNode, IExtension, INDEX, ScalarNode } from '../Node'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
+import { syncValue } from './utils'
 
 export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
@@ -17,15 +18,16 @@ export class IndexAccessor<
     )
 
     // Sync from parent status
-    this.disposer(
+    this.addDisposer(
       this.parent.onStatusChange((_, status) => {
         this.status = status
       })
     )
 
-    this.syncValue(value => value.get(this.toString()))
+    syncValue(this, value => value.get(this.toString()))
+
     this.loadExtensions()
-    this.stageIfRequired()
+    this.scheduler.commit.stageUntilValue(this)
   }
 
   protected initializeExtensions() {

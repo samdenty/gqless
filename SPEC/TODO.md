@@ -6,27 +6,12 @@
 - Make codegen default to typescript, add --js option
 - Need to implement keys
 
-* Support for interfaces + unions
-
-  - In a react component, you will check for the `typename` property.
-
-  ```js
-  // Babel plugin compiles this
-  if (person.__typename === 'Man') {
-  }
-  // to
-  if (isOfType(person, 'Man')) {
-  }
-
-  // Component will be rendered O(isOfType^2) times
-  ```
-
-- Extensions
+* Extensions
 
   - No default key
     - Default key logic, should instead be moved to codegen. More explicit and no magic happening
 
-* When we get an array
+- When we get an array
 
   - If it's already fetched
     - Keyed
@@ -34,7 +19,7 @@
     - Not keyed
       - Delete all entries that start with the array key
 
-* Make FieldAccessor#data static, instead of a getter
+- Make FieldAccessor#data static, instead of a getter
 
 # Improvements
 
@@ -63,22 +48,18 @@
   - Instead they should only be unique per query
     - This will require some changes in the cache fulfillment logic
 
-- Support for updating cache
+- `getAccessor` helpers:
 
-- `autorun`
+  - `autorun`
+  - `skipCache()`
 
-- `getAccessor` primitive
-  - Usage:
-    - `skipCache()`
-    - `update()` - Updates an accessor's value, merging in values.
-    - `patternMatch()` - Updates an accessor's value, by finding & referencing another `Value`
-      - `patternMatch(query.me.name, 'uniqueStringAvailableElsewhereInSchema')`
-      - `patternMatch(query.me, { username: 'bob' })`
-      - `patternMatch(query.me, query.users[0])`
-
-* Create something similiar to @apollo/link
+- Create something similiar to @apollo/link
 
 # Roadmap
+
+## Optimizations
+
+- Tree could remove duplicated fields from inline fragments
 
 ## Config file
 
@@ -104,17 +85,3 @@ export const component = graphql(() => {})
   - ie. `query.user('bob')`, `mutation.createUser('John', 'Doe')` instead of `{ name: 'bob' }`, `{ firstName: 'John', lastName: 'Doe' }`
   - Based on the order of the GraphQL schema
     - Would be very brittle + hard to debug if schema changed
-
-- Consider instead of using the GraphQL AST, to instead generate the query manually (with built-in formatter / minifier).
-
-  - Reduce bundle size (should investigate gain)
-
-    - We don't need Fragments, Schema-related stuff etc., which is bundled with `graphql/print`
-
-  - Could be a performance improvement (should investigate)
-  - Simplify ASTBuilder logic
-  - Remove GraphQL dependency
-
-- Babel: Static graph of all the GraphQL data accessed in a JS file
-  - Automatically remove all unused fields from the schema, resulting in a smaller bundle size
-  - Automatically detect components that use graphql data and wrap in `graphql()`

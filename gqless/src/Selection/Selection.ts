@@ -26,9 +26,11 @@ export class Selection<TNode extends Node = Node> {
     selection.onUnselect(this.onUnselect.emit)
   }
 
-  public get(compare: (selection: Selection) => boolean) {
+  public get<TSelection extends Selection>(
+    compare: (selection: Selection) => boolean
+  ) {
     for (const selection of this.selections) {
-      if (compare(selection)) return selection
+      if (compare(selection)) return selection as TSelection
     }
     return
   }

@@ -81,7 +81,7 @@ export class ArrayNode<TNode> extends Mix(
             if (!(this.ofNode instanceof Outputable)) return undefined
 
             const accessor =
-              arrayAccessor.getChild(a => a.index === index) ||
+              arrayAccessor.get(a => a.index === index) ||
               new IndexAccessor(arrayAccessor, index)
 
             return this.ofNode.getData(accessor)

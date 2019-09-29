@@ -3,13 +3,13 @@ export class Disposable {
 
   protected disposed = false
 
-  protected disposer(...disposers: any[]) {
+  public addDisposer(...disposers: any[]) {
     disposers.forEach(
       dispose => typeof dispose === 'function' && this.disposers.add(dispose)
     )
   }
 
-  protected deleteDiposer(...disposers: any[]) {
+  public deleteDiposer(...disposers: any[]) {
     disposers.forEach(
       dispose => typeof dispose === 'function' && this.disposers.delete(dispose)
     )

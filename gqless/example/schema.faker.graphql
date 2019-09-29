@@ -110,7 +110,7 @@ type Query {
   getUser(id: ID): User @deprecated(reason: "use the user field instead")
   getUsers(id: ID): [User!]! @deprecated(reason: "use the users field instead")
 
-  testOrUser: TestOrUser
+  testOrUser: TestOrUser @examples(values:[{ __typename: User }])
 
   test: Test
 

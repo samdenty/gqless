@@ -24,7 +24,7 @@ export class Scheduler extends Disposable {
     super()
 
     this.start()
-    this.disposer(this.cancel)
+    this.addDisposer(this.cancel)
   }
 
   public beginQuery(query: Query) {

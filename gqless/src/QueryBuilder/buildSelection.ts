@@ -17,10 +17,12 @@ export const buildSelections = (
 
   if (innerNode instanceof ScalarNode) return ''
 
-  // Only include when no selections OR
-  // node is an ObjectNode (redundant)
   const includeTypename =
-    !tree.children.length || !(innerNode instanceof ObjectNode)
+    // When no selections or not on ObjectNode
+    (!tree.children.length || !(innerNode instanceof ObjectNode)) &&
+    // fragments should never need __typename
+    !(tree.selection instanceof Fragment)
+
   const selections = [
     includeTypename && '__typename',
     ...tree.children.map(tree =>
@@ -77,13 +79,15 @@ const buildFragmentTree = (
       return fragmentName
     }
 
-    return `${SPACE}on ${tree.selection.node}${SPACE}${buildSelections(
-      formatter,
-      tree
-    )}`
+    const selections = buildSelections(formatter, tree)
+    if (!selections) return ''
+
+    return `${SPACE}on ${tree.selection.node}${SPACE}${selections}`
   }
 
-  return `...${buildRef()}`
+  const ref = buildRef()
+
+  return ref ? `...${ref}` : ''
 }
 
 export const buildSelectionTree = (

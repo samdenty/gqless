@@ -9,12 +9,13 @@ export class Edge {
   constructor(public node: Node) {}
 
   public match(data: any) {
-    if (!(this.node instanceof Matchable)) {
-      throw invariant(false, `${this.node} does not support pattern matching`)
-    }
+    invariant(
+      this.node instanceof Matchable,
+      `${this.node} does not support pattern matching`
+    )
 
     for (const value of this.instances) {
-      const exactValue = this.node.match(value, data)
+      const exactValue = ((this.node as any) as Matchable).match(value, data)
       if (exactValue)
         return {
           value,

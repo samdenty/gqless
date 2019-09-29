@@ -21,9 +21,7 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
     return filteredEvent
   }
 
-  /**
-   * Called once, then disposed
-   */
+  // Called once, then disposed
   event.then = (callback: TCallback) => {
     const listener = ((...args: any[]) => {
       event.off(listener)
@@ -41,15 +39,6 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
   event.emit = (...args: Parameters<TCallback>) => {
     return Array.from(listeners).map(emit => emit(...args))
   }
-
-  // onEvent.first = (
-  //   isCorrectValue: (value: ReturnType<TCallback>) => boolean
-  // ) => (...args: Parameters<TCallback>) => {
-  //   for (const emit of Array.from(listeners)) {
-  //     const value = emit(...args)
-  //     if (isCorrectValue) return value
-  //   }
-  // }
 
   return event
 }

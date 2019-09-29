@@ -2,9 +2,10 @@ import { Node } from '../Node'
 import { ScalarNode, ArrayNode, UnionNode, EnumNode } from '../../'
 import { lazyGetters } from '@gqless/utils'
 import { FieldNode } from './FieldNode'
-import { Outputable } from '../Outputable'
 import { Mix, Generic } from 'mix-classes'
 import { Extension } from '../../Extension'
+import { ObjectNode } from '../../ObjectNode'
+import { InterfaceNode } from '../../InterfaceNode'
 
 export type IFieldsNodeOptions = {
   name: string
@@ -12,9 +13,10 @@ export type IFieldsNodeOptions = {
 }
 
 export type UFieldsNode =
-  | ArrayNode<any>
-  | FieldsNode<any>
-  | UnionNode<any>
+  | ObjectNode
+  | InterfaceNode
+  | UnionNode
+  | ArrayNode
   | ScalarNode
   | EnumNode
 
@@ -22,15 +24,12 @@ export type UFieldsNodeRecord = Record<string, FieldNode<UFieldsNode>>
 
 export interface FieldsNode<TData = any> extends Node<TData> {}
 
-export class FieldsNode<TData> extends Mix(Outputable, Generic(Node)) {
+export class FieldsNode<TData> extends Mix(Generic(Node)) {
   public name?: string
   public fields: UFieldsNodeRecord
 
-  constructor(
-    fields: UFieldsNodeRecord,
-    { name, extension }: IFieldsNodeOptions
-  ) {
-    super([extension])
+  constructor(fields: UFieldsNodeRecord, { name }: IFieldsNodeOptions) {
+    super()
 
     this.name = name
     this.fields = lazyGetters(fields, (fieldName, field) => {

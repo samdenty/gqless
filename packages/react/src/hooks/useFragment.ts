@@ -2,10 +2,9 @@ import {
   Fragment,
   getAccessor,
   NodeContainer,
-  InterfaceNode,
-  UnionNode,
-  UFragment,
-  Node,
+  ObjectNode,
+  fragmentOn,
+  Abstract,
 } from 'gqless'
 import { useMemo } from 'react'
 import { invariant } from '@gqless/utils'
@@ -31,16 +30,11 @@ export function useFragment<
         : accessor.node
 
     if (onType) {
-      const possibleNodes: Node[] | undefined =
-        node instanceof UnionNode
-          ? node.ofNodes
-          : node instanceof InterfaceNode
-          ? node.implementations
-          : undefined
-
-      if (possibleNodes) {
-        const node = possibleNodes.find(node => node.toString() === onType)
-        if (node) return node
+      if (node instanceof Abstract) {
+        const implementation = node.implementations.find(
+          node => node.toString() === onType
+        )
+        if (implementation) return implementation
       }
 
       invariant(
@@ -50,14 +44,18 @@ export function useFragment<
     }
 
     return node
-  }, [accessor.node, onType]) as UFragment
+  }, [accessor.node, onType]) as ObjectNode
 
-  const fragment = useMemo(() => new Fragment(node, fragmentName), [
-    node,
-    fragmentName,
+  const fragment = useMemo(() => new Fragment(node, fragmentName), [node])
+
+  useMemo(() => {
+    fragment.name = fragmentName
+  }, [fragment, fragmentName])
+
+  const fragmentAccessor = useMemo(() => fragmentOn(accessor, fragment), [
+    accessor,
+    fragment,
   ])
-  console.log(fragment)
-  // new Fragment()
 
-  return node
+  return fragmentAccessor.data
 }

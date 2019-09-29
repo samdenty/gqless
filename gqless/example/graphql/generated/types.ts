@@ -45,7 +45,7 @@ type t_Query = FieldsType<
      * @deprecated use the users field instead
      */
     getUsers: FieldsTypeArg<{ id?: string | null }, (t_User)[]>
-    testOrUser: t_TestOrUser | null
+    testOrUser: t_TestOrUser
     test: t_TestB | t_TestC | null
     testWithInput: FieldsTypeArg<
       { id?: string | null; ids: (string)[]; input?: InputObj | null },

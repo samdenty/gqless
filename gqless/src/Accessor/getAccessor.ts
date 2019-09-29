@@ -38,7 +38,7 @@ export const getAccessor = (input: any): Accessor => {
   )
 
   invariant(
-    !!lastAccessor,
+    lastAccessor,
     lastAccessorErrorMessage(`no accessors have been referenced yet!`)
   )
 

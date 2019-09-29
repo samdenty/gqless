@@ -1,6 +1,7 @@
-import { IExtension, ScalarNode } from '../Node'
+import { IExtension } from '../Node'
 import { FieldSelection } from '../Selection'
 import { Accessor } from './Accessor'
+import { syncValue } from './utils'
 
 export class FieldAccessor<
   TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
@@ -9,9 +10,10 @@ export class FieldAccessor<
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
 
-    this.syncValue(value => value.get(this.toString()))
+    syncValue(this, value => value.get(this.toString()))
+
     this.loadExtensions()
-    this.stageIfRequired()
+    this.scheduler.commit.stageUntilValue(this)
   }
 
   protected initializeExtensions() {

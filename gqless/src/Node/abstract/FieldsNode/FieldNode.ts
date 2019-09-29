@@ -27,13 +27,16 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
     fieldsAccessor: Accessor,
     args?: Record<string, any>
   ): { justCreated: boolean; selection: FieldSelection<TNode> } {
-    let selection = fieldsAccessor.selection.get(selection => {
-      if (!(selection instanceof FieldSelection)) return false
+    let selection = fieldsAccessor.selection.get<FieldSelection<TNode>>(
+      selection => {
+        if (!(selection instanceof FieldSelection)) return false
 
-      return (
-        selection.field.name === this.name && isArgsEqual(selection.args, args)
-      )
-    })! as FieldSelection<TNode>
+        return (
+          selection.field.name === this.name &&
+          isArgsEqual(selection.args, args)
+        )
+      }
+    )!
 
     if (selection) return { justCreated: false, selection }
 
@@ -48,7 +51,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
 
     const getData = (selection: FieldSelection<TNode>): any => {
       const accessor =
-        fieldsAccessor.getChild(a => a.selection === selection) ||
+        fieldsAccessor.get(a => a.selection === selection) ||
         new FieldAccessor(fieldsAccessor, selection)
 
       return this.ofNode.getData(accessor)

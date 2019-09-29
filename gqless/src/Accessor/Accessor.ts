@@ -12,6 +12,7 @@ import {
 import { Scheduler } from '../Scheduler'
 import { Selection, FieldSelection } from '../Selection'
 import { computed, Disposable } from '../utils'
+import { onDataChange } from './utils'
 
 export const ACCESSOR = Symbol('accessor')
 
@@ -38,12 +39,11 @@ export abstract class Accessor<
   public value?: Value
   public status: NetworkStatus = NetworkStatus.idle
 
-  // When the Value class associated with this accessor changes
-  public onValueAssociated = createSetter(this as Accessor, 'value')
-  // When the data changes (equality check)
-  public onDataChange = createEvent<(prevData: any) => void>()
-  public onInitializeExtensions = createEvent()
+  public onValueChange = createSetter(this as Accessor, 'value')
+  // Equality check only
+  public onDataChange = onDataChange(this)
   public onStatusChange = createSetter(this as Accessor, 'status')
+  public onInitializeExtensions = createEvent()
 
   constructor(
     public parent: Accessor | undefined,
@@ -55,13 +55,10 @@ export abstract class Accessor<
     if (parent) {
       parent.children.push(this)
 
-      this.disposer(
-        /**
-         * On un-select, dispose of self
-         *
-         * used when you do `query.users()`, and an argumentless
-         * selection is created before the function call
-         */
+      this.addDisposer(
+        // On un-select, dispose of self
+        // used when you do `query.users()`, and an argumentless
+        // selection is created before the function call
         parent.selection.onUnselect.filter(s => s === selection)(() =>
           this.dispose()
         ),
@@ -72,113 +69,15 @@ export abstract class Accessor<
         },
         () => this.scheduler.commit.unstage(this)
       )
-
-      /**
-       * When value of this accessor changes
-       * & types are different -> emit onDataUpdate
-       */
-      {
-        let dispose: Function | undefined
-        let prevData: any
-        const onValueAssociated = () => {
-          if (dispose) {
-            dispose()
-            dispose = undefined
-          }
-
-          // Hook for onDataUpdate event
-          const check = () => {
-            const newData = value ? value.data : undefined
-            if (prevData === newData) return
-
-            if (
-              prevData !== undefined ||
-              newData === null ||
-              this.node instanceof ScalarNode
-            ) {
-              this.onDataChange.emit(prevData)
-            }
-
-            prevData = newData
-          }
-
-          const value = this.value!
-          if (!value) return check()
-          dispose = value.onChange(check)
-          check()
-        }
-        this.disposer(this.onValueAssociated(onValueAssociated))
-
-        onValueAssociated()
-      }
     }
 
-    /**
-     * Update the extensions change when:
-     * - data changes (from null -> object)
-     * - parent extensions change
-     */
+    // Update the extensions change when:
+    // - data changes (from null -> object)
+    // - parent extensions change
     const updateExtensions = () => this.loadExtensions()
-    this.disposer(
+    this.addDisposer(
       this.onDataChange(updateExtensions),
       parent && parent.onInitializeExtensions(updateExtensions)
-    )
-
-    // TODO
-    // const innerNode = node instanceof NodeContainer ? node.innerNode : node
-    // if (innerNode instanceof Keyable) {
-    //   setTimeout(() => console.log(this.path.toString(), 'getting key'))
-
-    //   innerNode.getKey(this)
-    // }
-  }
-
-  /**
-   * Sync value with an accessor
-   * Defaults to parent
-   */
-  protected syncValue(
-    getValue: (accessorValue: Value) => Value | undefined,
-    accessor = this.parent
-  ) {
-    if (!accessor) return
-
-    let dispose: Function | undefined
-    const associateValue = () => {
-      if (dispose) {
-        this.deleteDiposer(dispose)
-        dispose()
-        dispose = undefined
-      }
-
-      if (accessor.value) {
-        this.value = getValue(accessor.value!)
-
-        dispose = accessor.value!.onChange(() => {
-          this.value = getValue(accessor.value!)
-        })
-        this.disposer(dispose)
-      } else {
-        this.value = undefined
-      }
-    }
-
-    this.disposer(accessor.onValueAssociated(associateValue))
-    associateValue()
-  }
-
-  /**
-   * Stage the accessor, if it doesn't have a value
-   */
-  protected stageIfRequired() {
-    if (this.value) return
-
-    const unstage = this.scheduler.commit.stage(this)
-
-    this.disposer(
-      this.onValueAssociated.then(() => {
-        unstage()
-      })
     )
   }
 
@@ -244,9 +143,10 @@ export abstract class Accessor<
       return
     }
 
-    if (!this.parent.value) {
-      throw invariant(false, `can't update accessor value without parent value`)
-    }
+    invariant(
+      this.parent.value,
+      `can't update accessor value without parent value`
+    )
 
     this.parent.value!.set(this.toString(), value)
   }
@@ -257,8 +157,8 @@ export abstract class Accessor<
     this.cache.merge(this, data)
   }
 
-  public getChild(compare: (child: TChildren) => boolean) {
-    return this.children.find(compare)
+  public get<TChild extends TChildren>(compare: (child: TChildren) => boolean) {
+    return this.children.find(compare) as TChild | undefined
   }
 
   @computed()

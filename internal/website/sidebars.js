@@ -1,6 +1,6 @@
 module.exports = {
   docs: {
-    Introduction: ['intro/what-and-why', 'intro/features'],
+    Introduction: ['intro/what-and-why', 'intro/features', 'intro/faq'],
     gqless: ['getting-started', 'extensions', 'matchers'],
     React: [
       'react/basic-usage',

@@ -5,8 +5,8 @@ import {
   LastTupleValue,
   TupleKeys,
 } from '@gqless/utils'
-import { INDEX, GET_KEY } from 'gqless'
 import { Variable } from './Variable'
+import { INDEX, GET_KEY } from './Node'
 
 type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K

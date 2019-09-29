@@ -1,4 +1,11 @@
-import { Accessor, Interceptor, Query, Scheduler, Selection } from 'gqless'
+import {
+  Accessor,
+  Interceptor,
+  Query,
+  Scheduler,
+  Selection,
+  NetworkStatus,
+} from 'gqless'
 import * as React from 'react'
 
 import { useForceUpdate } from './hooks/useForceUpdate'
@@ -109,14 +116,14 @@ export const graphql = <Props extends any>(
       )
     })
 
-    const fetchingSelections = new Set<Selection>()
+    const nonIdleAccessors = new Set<Accessor>()
 
     accessors.forEach(accessor => {
       // Locate accessors currently being fetched,
       // and add to Set
       if (interceptedAccessors.has(accessor)) {
-        if (accessor.selection.isFetching) {
-          fetchingSelections.add(accessor.selection)
+        if (accessor.status !== NetworkStatus.idle) {
+          nonIdleAccessors.add(accessor)
         }
 
         return
@@ -137,17 +144,17 @@ export const graphql = <Props extends any>(
     )
 
     // React suspense support
-    if (fetchingSelections.size) {
+    if (nonIdleAccessors.size) {
       // Promise that resolves when all selections are fetched
       let resolve: Function
       let resolved = false
       const promise = new Promise(r => (resolve = r))
 
-      fetchingSelections.forEach(selection => {
-        selection.onFetched.then(() => {
-          fetchingSelections.delete(selection)
+      nonIdleAccessors.forEach(accessor => {
+        accessor.onStatusChange.then(() => {
+          nonIdleAccessors.delete(accessor)
 
-          if (!fetchingSelections.size) {
+          if (!nonIdleAccessors.size) {
             resolved = true
             resolve()
           }

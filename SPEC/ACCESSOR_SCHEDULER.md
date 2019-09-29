@@ -17,6 +17,24 @@ event(accessor.status).then(() => {
 })
 `Accessor#status` and `Accessor#onStatusChange`
 
+## Should it be based on network or accessors
+
+### Network
+
+```ts
+refetch(query.me.name)
+// query -> updating
+// query.me -> updating
+// query.me.name -> updating
+```
+
+### Accessors
+
+```ts
+refetch(query.me.name)
+// query.me.name -> updating
+```
+
 ## Status
 
 ```ts

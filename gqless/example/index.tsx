@@ -116,6 +116,29 @@ async function bootstrap() {
     { name: 'UserComponent' }
   )
 
+  const TestCmp = graphql(
+    () => {
+      const userFragment = useFragment(
+        query.testOrUser!,
+        'User',
+        'UserFragment'
+      )
+
+      console.log(userFragment.name)
+
+      if (query.testOrUser.__typename === 'TestB') {
+        return <div>TestB {query.testOrUser.b}</div>
+      }
+
+      if (query.testOrUser.__typename === 'User') {
+        return <div>User {query.user.name}</div>
+      }
+
+      return <div>unknown</div>
+    },
+    { name: 'TestCmp' }
+  )
+
   const Component = graphql(
     () => {
       const [showDescription, setShowDescription] = React.useState(false)
@@ -126,10 +149,9 @@ async function bootstrap() {
       const [interval, setInterval] = React.useState(500)
       const [polling, togglePolling] = usePoll(query.me, interval, false)
 
-      const testFragment = useFragment(query.me!, 'User', 'testFragment')
-
       return (
         <div>
+          <TestCmp />
           <button onClick={() => togglePolling()}>
             Polling: {String(polling)}
           </button>
@@ -156,7 +178,7 @@ async function bootstrap() {
           </Defer>
       <div>*/}
           <b>Other users:</b>
-          {query.users({ limit: usersLimit }).map(user => (
+          {query.users({ limit: usersLimit }).map(user =>
             <UserComponent key={user.id} user={user} />
           ))}
         </div>
