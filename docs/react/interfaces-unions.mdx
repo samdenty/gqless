@@ -3,38 +3,58 @@ id: interfaces-unions
 title: Interfaces & unions
 ---
 
-Interfaces and unions work out of the box.
+Components are seamlessly rendered multiple times, letting you use conditional flow - as if the values were already fetched.
 
-## Optimisation
+## Usage
 
-Whenever you access an interface / union inside a React component, it will make the component render once for each possible type:
+Using abstract types is as simple as comparing with `ofType()`:
 
 ```jsx
-import { graphql } from '@gqless/react'
+import { ofType } from '@gqless/react'
 
-const Person = graphql(({ person }) => {
-  console.log(person.__typename) // => null, Student, Owner, Employee ...
-
-  if (person.__typename === 'Student') {
-    return <div>{person.class}</div>
+const Component = graphql(() => {
+  if (ofType(query.user, 'Employee')) {
+    return <div>{query.user.employeeId}</div>
   }
 
-  return <div>{person.name}</div>
+  if (ofType(query.user, 'Student')) {
+    return <div>{query.user.studentClass}</div>
+  }
+
+  return null
 })
 ```
 
-This is most likely unwanted, in which case you should use `ofType`:
+## Why shouldn't I use \_\_typename?
+
+> Unnecessary performance penalties, if there's a lot of possible types *or* the component is expensive to render.
+
+In order to determine the correct selections, components are rendered multiple times before they suspend.
+
+Calling `ofType` signals the exact types you want, preventing unnecessary renders:
 
 ```jsx
-import { graphql } from '@gqless/react'
+graphql(({ abstract }) => {
+  console.log(abstract.__typename) // => null, A
 
-const Person = graphql(({ person }) => {
-  console.log(person.__typename) // => null, Student
-
-  if (ofType(person, 'Student')) {
-    return <div>{person.class}</div>
+  if (ofType(abstract, 'A')) {
+    return <div>{abstract.a}</div>
   }
 
-  return <div>{person.name}</div>
+  return null
+})
+```
+
+Comparing `__typename` doesn't signal anything, so the component will render for all possible types:
+
+```jsx
+graphql(({ abstract }) => {
+  console.log(abstract.__typename) // => null, A, B, C ...
+
+  if (abstract.__typename === 'A') {
+    return <div>{abstract.a}</div>
+  }
+
+  return null
 })
 ```

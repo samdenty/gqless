@@ -7,15 +7,14 @@ title: Basic usage
 >
 > Make sure you've completed [Getting Started](/docs/getting-started) first, `./gqless` refers to the folder created there
 
-Using gqless with React is quite simple. All components that contain `gqless` data objects, should be wrapped in `graphql()` for:
+Using GraphQL data within React components is straightforward.
 
-- Automatic updates
-- React suspense
-- Query combining
+- Updates components when data changes
+- Suspends components whilst data is being fetched
 
 ## Installation
 
-First ensure you've installed the package from NPM:
+First install `@gqless/react` into your project's dependencies:
 
 ```bash
 yarn add @gqless/react
@@ -23,26 +22,40 @@ yarn add @gqless/react
 npm install @gqless/react
 ```
 
-## Example
+## Usage
+
+> NOTE: Class components are not supported, only functional components
+
+Wrap components that are going to use GraphQL data inside `graphql()`:
+
+```jsx
+import { graphql } from '@gqless/react'
+
+const Component = graphql(() => <div />)
+```
+
+Next, you need to ensure the component is within a Suspense fallback. [See here for more](https://medium.com/@rossbulat/react-lazy-suspense-and-concorrent-react-breakdown-with-examples-2758de98cb1c)
+
+```jsx
+import { Suspense } from 'react'
+
+// For example, wrap the App component
+const App = () => (
+  <Suspense fallback={<span>loading...</span>}>
+    <Component />
+  </Suspense>
+)
+```
+
+You can then use data inside the component:
 
 ```jsx
 import { query } from './gqless'
-import { graphql } from '@gqless/react'
 
-const App = graphql(() => {
-  return <div>{query.hello}</div>
-})
+const Component = graphql(() => <div>{query.hello}</div>)
 ```
 
-## React suspense
-
-gqless was designed around the concept of React Suspense. Instead of components handling loading states, they should render as if the data was always there.
-
-## Automatic updates
-
-Selections referenced on render, will trigger components to update whenever they change.
-
-### Example
+## Examples
 
 Updating the cache when a button is pressed:
 
@@ -59,7 +72,3 @@ const App = graphql(() => {
   )
 })
 ```
-
-## Query combining
-
-gqless combines component data requirements into a single query. See [custom queries (/react/custom-queries) for details on how to split them up

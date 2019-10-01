@@ -3,14 +3,15 @@ id: variables
 title: Variables
 ---
 
-It's good practise to use variables whenever arguments change based upon state.
+Though variables aren't required, you should use them whenever you have mutable argument values.
 
-## Example
+## Usage
 
+`useVariable` follows the same format as `React.useState`. Once created, you can pass the variable to an argument:
 ```jsx
-import { graphql, useVariable } from '@gqless/react'
+import { graphql, useVariable } from ''
 
-const App = graphql(() => {
+const Component = graphql(() => {
   const [id, setId] = useVariable('bob')
 
   return <div>{query.user({ id }).name}</div>
