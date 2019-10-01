@@ -8,7 +8,7 @@ From previously working on a large GraphQL codebase, the boilerplate involved wi
 
 ## What
 
-**gqless** is a fundamentally new approach to a GraphQL client. It makes using your API enjoyable, by **generating queries at runtime** based upon the data your app consumes.
+gqless is a fundamentally new approach to a GraphQL client. It makes using your API enjoyable, by _generating queries at runtime_ based upon the data your app consumes.
 
 #### Your app
 
@@ -29,13 +29,16 @@ const App = graphql(() => (
 ```graphql
 query App {
   me { name }
-  users(limit: 10) { name }
+  users(limit: 10) {
+    id
+    name
+  }
 }
 ```
 
 ## Why
 
-I wanted a GraphQL client that lets you *forget you're using GraphQL*.
+I wanted a GraphQL client that lets you _forget you're using GraphQL_.
 
 I also wanted to tackle some issues shared across all existing GraphQL clients:
 
@@ -76,7 +79,7 @@ Finally you'd do the task you set out to do - updating the components,
 ```jsx
 const UserProfile = ({ id }) => {
   const { data } = useQuery(USER_PROFILE, {
-    variables: { id, avatarSize: computeSize() },
+    variables: { id, avatarSize: 100 },
   })
 
   return <img src={data.user.avatarUrl} />
@@ -85,14 +88,13 @@ const UserProfile = ({ id }) => {
 
 ### Using gqless
 
-Open the components and make changes, never write another query again:
+Just update the UI, and the queries generated at runtime will reflect your changes.
 
 ```jsx
-import { query } from './graphql'
+import { graphql } from '@gqless/react'
+import { query } from './gqless'
 
-const UserProfile = ({ id }) => {
-  const user = query.user({ id })
-
-  return <img src={user.avatarUrl({ size: computeSize() })} />
-}
+const UserProfile = graphql(({ user }) => {
+  return <img src={user.avatarUrl({ size: 100 })} />
+})
 ```
