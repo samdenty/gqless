@@ -1,5 +1,5 @@
 import { Cache, Value } from '../Cache'
-import { NodeDataType, ObjectNode } from '../Node'
+import { NodeDataType, ObjectNode, resolveData } from '../Node'
 import { Scheduler } from '../Scheduler'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
@@ -22,7 +22,7 @@ export class RootAccessor<
   }
 
   // TODO: This should be replace with a Generic inside accessor
-  public data = this.selection.node.getData(this)
+  public data = resolveData(this.selection.node, this)
 
   public toString() {
     return this.selection.toString()

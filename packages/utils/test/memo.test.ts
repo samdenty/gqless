@@ -1,4 +1,4 @@
-import { memo as createMemo } from '../src'
+import { createMemo } from '../src'
 
 let memo: ReturnType<typeof createMemo>
 

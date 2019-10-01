@@ -75,12 +75,17 @@ const buildFragmentTree = (
   const fragmentName = tree.allFragments.get(tree.selection)
 
   const buildRef = () => {
-    if (formatter.options.fragments && fragmentName) {
+    if (formatter.options.fragments !== 'inline' && fragmentName) {
       return fragmentName
     }
 
-    const selections = buildSelections(formatter, tree)
+    let selections = buildSelections(formatter, tree)
     if (!selections) return ''
+
+    // Add comment with fragment name (for debugging)
+    if (__DEV__ && formatter.options.prettify && tree.selection.name) {
+      selections = selections.replace('{', `{ #[${tree.selection.name}]`)
+    }
 
     return `${SPACE}on ${tree.selection.node}${SPACE}${selections}`
   }

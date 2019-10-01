@@ -1,4 +1,4 @@
-import { createEvent, invariant, createSetter } from '@gqless/utils'
+import { createEvent, invariant, createSetter, createMemo } from '@gqless/utils'
 
 import { Cache, Value } from '../Cache'
 import {
@@ -8,11 +8,13 @@ import {
   Outputable,
   ScalarNode,
   REDIRECT,
+  ObjectNode,
 } from '../Node'
 import { Scheduler } from '../Scheduler'
-import { Selection, FieldSelection } from '../Selection'
+import { Selection, FieldSelection, Fragment } from '../Selection'
 import { computed, Disposable } from '../utils'
 import { onDataChange } from './utils'
+import { FragmentAccessor } from './FragmentAccessor'
 
 export const ACCESSOR = Symbol('accessor')
 
@@ -21,6 +23,8 @@ export enum NetworkStatus {
   loading,
   updating,
 }
+
+const memoized = createMemo()
 
 export abstract class Accessor<
   TSelection extends Selection = Selection,
@@ -44,6 +48,10 @@ export abstract class Accessor<
   public onDataChange = onDataChange(this)
   public onStatusChange = createSetter(this as Accessor, 'status')
   public onInitializeExtensions = createEvent()
+
+  // replaces refs of this accessor, with a Fragment
+  // see FragmentAccessor#startResolving
+  public fragmentToResolve?: FragmentAccessor
 
   constructor(
     public parent: Accessor | undefined,
@@ -161,12 +169,35 @@ export abstract class Accessor<
     return this.children.find(compare) as TChild | undefined
   }
 
+  public getDefaultFragment(node: ObjectNode) {
+    const fragment = memoized.fragment(() => new Fragment(node), [
+      node,
+      ...this.selectionPath,
+    ])
+
+    return fragment
+  }
+
+  @computed()
+  public get selectionPath(): Selection[] {
+    const basePath = this.parent ? this.parent.selectionPath : []
+    const path =
+      // Remove duplicated selections
+      basePath[basePath.length - 1] === this.selection
+        ? basePath
+        : [...basePath, this.selection]
+
+    path.toString = () => path.map(selection => selection.toString()).join('.')
+
+    return path
+  }
+
   @computed()
   public get path(): Accessor[] {
     const basePath = this.parent ? this.parent.path : []
     const path = [...basePath, this]
 
-    path.toString = () => path.map(selection => selection.toString()).join('.')
+    path.toString = () => path.map(accessor => accessor.toString()).join('.')
 
     return path
   }

@@ -15,11 +15,12 @@ export interface IFormatterOptions {
   variables?: boolean
 
   /**
-   * Extract duplicated fragments into a shared definition
-   * If set to false, all fragments will be inlined
-   * @default false
+   * Whether or not to extract fragments into a shared definition
+   * inline: all fragments will be inlined
+   * auto: all fragments will be inlined, unless duplicated
+   * @default inline
    */
-  fragments?: boolean
+  fragments?: 'auto' | 'inline'
 }
 
 export class Formatter {
@@ -29,7 +30,7 @@ export class Formatter {
   constructor({
     prettify = __DEV__,
     variables = false,
-    fragments = false,
+    fragments = 'inline',
   }: IFormatterOptions = {}) {
     this.options = {
       prettify,

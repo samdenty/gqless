@@ -22,6 +22,12 @@ return person.name
 
 ## Method
 
+If `ofType` called on Abstract and no value -> add to list of variations for accessor.
+
+after render, iterate all referenced accessors. If \_\_typename is found on an abstract node (and it hasn't got any recorded variations), then iterate for all variations
+
+## Old method
+
 \_\_typename for all interfaces first resolved to `null` on render of a component.
 
 \_\_typename on interface accessed @ component render & accessor not fetched -> add to Set as uncontrolled

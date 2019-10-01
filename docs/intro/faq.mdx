@@ -3,12 +3,18 @@ id: faq
 title: FAQ
 ---
 
+## How does it work?
 
-## Will this negatively affect bundle size?
+gqless creates an object using information from your schema. Accessing new properties adds them to the current "commit". GraphQL queries are then generated every few milliseconds.
 
-No. gqless is lightweight and doesn't require any external dependencies.
+The response from the query is merged into the cache. Now when you access the same properties again, the newly fetched values are returned.
 
+## How will it affect bundle size?
 
-## Is it performant?
+In the code-generated files, an object representation of the schema is outputted - negligible for most apps. This could be optimized in the future by stripping out unused parts.
 
-Yes, gqless's architecture was designed with performance in mind.
+The gqless packages are lightweight and don't require external dependencies.
+
+## How fast is it?
+
+Very fast, gqless's architecture was designed with performance in mind. Unlike other clients, queries are generated directly - instead of outputting intermediate AST.

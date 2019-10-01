@@ -8,6 +8,10 @@ button {
   font-family: var(--ifm-font-family-base);
 }
 
+video {
+  max-width: 100%;
+}
+
 @font-face {
   font-family: Colfax;
   font-weight: 300;

@@ -7,7 +7,7 @@ export const buildFragments = (
   { SPACE, NEWLINE, formatter }: Formatter,
   tree: SelectionTree
 ) => {
-  if (!formatter.options.fragments) return ''
+  if (formatter.options.fragments === 'inline') return ''
 
   const buildFragment = (
     name: string,

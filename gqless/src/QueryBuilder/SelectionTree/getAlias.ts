@@ -1,8 +1,8 @@
 import { SelectionTree } from './SelectionTree'
 import { FieldSelection } from '../../Selection'
-import { memo } from '@gqless/utils'
+import { createMemo } from '@gqless/utils'
 
-const memoized = memo()
+const memoized = createMemo()
 
 export const getAlias = (tree: SelectionTree<FieldSelection>) => {
   if (!tree.parent) return

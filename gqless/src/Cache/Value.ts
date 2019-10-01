@@ -1,4 +1,4 @@
-import { Node, ArrayNode, ObjectNode } from '../Node'
+import { Node, ArrayNode, ObjectNode, Outputable } from '../Node'
 import { createEvent } from '@gqless/utils'
 
 export type UValueData =
@@ -13,7 +13,7 @@ export class Value {
   public references = new Map<Value, Set<string | number>>()
 
   constructor(
-    public node: Node,
+    public node: Node & Outputable,
     public data: UValueData = node instanceof ArrayNode ? [] : {}
   ) {
     this.onSet((key, value) => {

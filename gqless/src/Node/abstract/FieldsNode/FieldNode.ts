@@ -8,7 +8,7 @@ import { EnumNode } from '../../EnumNode'
 import { ScalarNode } from '../../ScalarNode'
 import { Node } from '../Node'
 import { NodeContainer } from '../NodeContainer'
-import { Outputable } from '../Outputable'
+import { Outputable, resolveData } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { isArgsEqual } from './isArgsEqual'
 
@@ -54,7 +54,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
         fieldsAccessor.get(a => a.selection === selection) ||
         new FieldAccessor(fieldsAccessor, selection)
 
-      return this.ofNode.getData(accessor)
+      return resolveData(this.ofNode, accessor)
     }
 
     const createArgsFn = (handler?: (args: any) => void) => (args: any) => {

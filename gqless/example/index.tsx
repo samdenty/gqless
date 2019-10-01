@@ -10,6 +10,7 @@ import {
   useFragment,
   useVariable,
   Query as QueryCm,
+  ofType,
 } from '@gqless/react'
 import { fetchSchema } from '@gqless/schema'
 import ApolloClient from 'apollo-boost'
@@ -26,6 +27,7 @@ import {
   schema as schemaFaker,
   User,
 } from './graphql'
+import { getAccessor } from 'gqless'
 
 // import { useQuery, QueryProvider, graphql, Defer } from '@gqless/react'
 Object.assign(window, { ...utils, ...Imports, schemaFaker, stringify, parse })
@@ -121,18 +123,24 @@ async function bootstrap() {
       const userFragment = useFragment(
         query.testOrUser!,
         'User',
-        'UserFragment'
+        'userFragment'
       )
 
-      console.log(userFragment.name)
+      console.log(userFragment.__typename, query.testOrUser.__typename)
+      userFragment.name
+      userFragment.age
 
-      if (query.testOrUser.__typename === 'TestB') {
+      if (ofType(query.testOrUser, 'TestB')) {
+        console.warn('ofType TESTB')
         return <div>TestB {query.testOrUser.b}</div>
       }
 
-      if (query.testOrUser.__typename === 'User') {
-        return <div>User {query.user.name}</div>
+      if (ofType(query.testOrUser, 'User')) {
+        console.warn('ofType USER')
+        return <div>User {query.testOrUser.name}</div>
       }
+
+      console.warn('ofType UNKNOWN')
 
       return <div>unknown</div>
     },
@@ -141,6 +149,7 @@ async function bootstrap() {
 
   const Component = graphql(
     () => {
+      return null
       const [showDescription, setShowDescription] = React.useState(false)
 
       const userId = useVariable('asdasdasd')
@@ -178,7 +187,7 @@ async function bootstrap() {
           </Defer>
       <div>*/}
           <b>Other users:</b>
-          {query.users({ limit: usersLimit }).map(user =>
+          {query.users({ limit: usersLimit }).map(user => (
             <UserComponent key={user.id} user={user} />
           ))}
         </div>

@@ -17,7 +17,7 @@ const dependencyType = (data: any) =>
 /**
  * Memory-leak free memoization
  */
-export function memo() {
+export function createMemo() {
   const cache: Map<string, Dependency> = new Map()
 
   const memoKey = (key = 'default') => {

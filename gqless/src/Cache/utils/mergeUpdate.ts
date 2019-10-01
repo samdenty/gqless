@@ -39,10 +39,6 @@ const mergeObject = (
       )
 
       if (!fieldSelection) {
-        if (value && '__typename' in value) {
-          // TODO: Fragment selection
-        }
-
         // If there's a field with the given key,
         // create a new selection.
         if (

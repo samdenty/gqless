@@ -1,6 +1,7 @@
 import { Fragment } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
+import { resolveData } from '../Node'
 
 export class FragmentAccessor<
   TFragment extends Fragment = Fragment,
@@ -12,8 +13,22 @@ export class FragmentAccessor<
     // Sync value with parent
     // (only if the node is the same)
     syncValue(this, value => (value.node === fragment.node ? value : undefined))
-
     this.loadExtensions()
+  }
+
+  /**
+   * Makes the parent temporarily return
+   * this accessor's data
+   */
+  public startResolving() {
+    const originalAccessor = this.parent.fragmentToResolve
+    this.parent.fragmentToResolve = this
+    const resetAccessor = () => {
+      this.parent.fragmentToResolve = originalAccessor
+      removeDisposer()
+    }
+    const removeDisposer = this.addDisposer(resetAccessor)
+    return resetAccessor
   }
 
   protected initializeExtensions() {
@@ -22,7 +37,7 @@ export class FragmentAccessor<
   }
 
   public get data(): any {
-    return this.selection.node.getData(this)
+    return resolveData(this.selection.node, this)
   }
 
   public toString() {

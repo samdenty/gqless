@@ -1,6 +1,6 @@
 import { Accessor, getAccessor } from '../Accessor'
 
-// @TODO selection.onFetched should reset the timer
+// @TODO selection.onStatusChange should reset the timer
 // if it's been called from outside
 
 export class Poller {
@@ -28,8 +28,8 @@ export class Poller {
    */
   private async poll() {
     this.unstage = this.accessor.scheduler.commit.stage(this.accessor)
-    // TODO
-    // await this.accessor.onFetched
+    // Wait until it's been fetched, before polling again
+    await this.accessor.onStatusChange
 
     this.unstage = undefined
 

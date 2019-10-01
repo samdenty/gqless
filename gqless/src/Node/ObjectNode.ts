@@ -11,6 +11,7 @@ import {
   UFieldsNodeRecord,
   Matchable,
   Outputable,
+  resolveData,
 } from './abstract'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
@@ -73,6 +74,11 @@ export class ObjectNode<TData = any> extends Mix(
 
     return new Proxy({} as any, {
       get: (_, prop: any) => {
+        if (accessor.fragmentToResolve) {
+          const { data } = accessor.fragmentToResolve
+          return data ? data[prop] : undefined
+        }
+
         if (prop === ACCESSOR) return accessor
         // Statically resolve __typename
         if (prop === '__typename') return this.name
@@ -81,7 +87,7 @@ export class ObjectNode<TData = any> extends Mix(
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
 
-          return field.getData(accessor as any)
+          return resolveData(field, accessor)
         }
 
         // fallback to extensions
@@ -90,7 +96,13 @@ export class ObjectNode<TData = any> extends Mix(
         }
       },
 
-      set: (_, prop: string, data) => {
+      set: (_, prop: string, value) => {
+        if (accessor.fragmentToResolve) {
+          const { data } = accessor.fragmentToResolve
+          if (data) data[prop] = value
+          return true
+        }
+
         if (prop === '__typename') return true
 
         /**
@@ -104,7 +116,7 @@ export class ObjectNode<TData = any> extends Mix(
             accessor.get(a => a.selection === selection) ||
             new FieldAccessor(accessor, selection)
 
-          fieldAccessor.setData(data)
+          fieldAccessor.setData(value)
 
           return true
         }
@@ -114,7 +126,7 @@ export class ObjectNode<TData = any> extends Mix(
          */
         for (const extension of accessor.extensions) {
           if (prop in extension) {
-            extension[prop] = data
+            extension[prop] = value
             return true
           }
         }

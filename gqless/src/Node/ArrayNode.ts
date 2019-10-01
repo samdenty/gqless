@@ -9,6 +9,7 @@ import {
   NodeDataType,
   Outputable,
   Matchable,
+  resolveData,
 } from './abstract'
 import { Value } from '../Cache'
 
@@ -33,12 +34,12 @@ export class ArrayNode<TNode> extends Mix(
       if (data.length !== (value.data! as []).length) return
 
       const badMatch = data.find((match, i) => {
-        const iValue = value.get(i)
-        if (!iValue) return true
+        const indexValue = value.get(i)
+        if (!indexValue) return true
 
-        if (!(iValue.node instanceof Matchable)) return
+        if (!(indexValue.node instanceof Matchable)) return
 
-        return !iValue.node.match(iValue, data[i])
+        return !indexValue.node.match(indexValue, data[i])
       })
       if (badMatch) return
 
@@ -84,7 +85,7 @@ export class ArrayNode<TNode> extends Mix(
               arrayAccessor.get(a => a.index === index) ||
               new IndexAccessor(arrayAccessor, index)
 
-            return this.ofNode.getData(accessor)
+            return resolveData(this.ofNode, accessor)
           }
         }
 

@@ -9,7 +9,7 @@ export class Selection<TNode extends Node = Node> {
    */
   public onSelect = createEvent<(selection: Selection) => void>()
   /**
-   * Emitted when a child selection is disposed
+   * Emitted when a child selection is unselected
    */
   public onUnselect = createEvent<(selection: Selection) => void>()
 

@@ -1,7 +1,7 @@
 import { Accessor } from '../Accessor'
 import { Value } from './Value'
 import { mergeUpdate, deepReference } from './utils'
-import { Node, ObjectNode } from '../Node'
+import { Node, ObjectNode, Outputable } from '../Node'
 import { Edge } from './Edge'
 
 export class Cache {
@@ -10,7 +10,7 @@ export class Cache {
   public onUnreference: ReturnType<typeof deepReference>['onUnreference']
 
   public rootValue: Value
-  public edges = new Map<Node, Edge>()
+  public edges = new Map<Node & Outputable, Edge>()
   public store = new Map<string, Value>()
 
   constructor(node: ObjectNode) {

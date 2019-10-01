@@ -5,14 +5,19 @@ import {
   ObjectNode,
   fragmentOn,
   Abstract,
+  FragmentAccessor,
 } from 'gqless'
 import { useMemo } from 'react'
 import { invariant } from '@gqless/utils'
+import { useComponentMemo } from './useComponentMemo'
 
 type OfType<TData, TTypename> = TData extends { __typename: TTypename }
   ? TData
   : never
 
+/**
+ * Creates a new fragment (same across all instances of component)
+ */
 export function useFragment<
   TData extends { __typename: string },
   TTypename extends TData['__typename'] = never
@@ -21,7 +26,11 @@ export function useFragment<
   onType?: TTypename,
   fragmentName?: string
 ): OfType<TData, TTypename> extends never ? TData : OfType<TData, TTypename> {
-  const accessor = getAccessor(data)
+  let accessor = getAccessor(data)
+
+  if (accessor instanceof FragmentAccessor) {
+    accessor = accessor.parent
+  }
 
   const node = useMemo(() => {
     const node =
@@ -39,23 +48,25 @@ export function useFragment<
 
       invariant(
         node.toString() === onType,
-        `Fragment type "${onType}" doesn't match provided data of type "${node}"`
+        `'${onType}' is not a valid subtype of ${node}`
       )
     }
 
     return node
   }, [accessor.node, onType]) as ObjectNode
 
-  const fragment = useMemo(() => new Fragment(node, fragmentName), [node])
+  const fragment = useComponentMemo(() => new Fragment(node, fragmentName), [
+    node,
+  ])
 
   useMemo(() => {
     fragment.name = fragmentName
   }, [fragment, fragmentName])
 
-  const fragmentAccessor = useMemo(() => fragmentOn(accessor, fragment), [
+  const fragmentData = useMemo(() => fragmentOn(accessor, fragment), [
     accessor,
     fragment,
   ])
 
-  return fragmentAccessor.data
+  return fragmentData
 }

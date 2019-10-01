@@ -43,7 +43,7 @@ export class Client<TData = any> extends Disposable {
 
     this.formatter = new Formatter({
       prettify: prettifyQueries,
-      fragments: true,
+      fragments: 'auto',
       variables: true,
     })
     this.selection.onSelect(selection => {
@@ -60,11 +60,7 @@ export class Client<TData = any> extends Disposable {
     const result = buildQuery(
       this.formatter,
       queryName,
-      ...accessors.map(accessor =>
-        accessor.path
-          .filter(a => !(a instanceof IndexAccessor))
-          .map(a => a.selection)
-      )
+      ...accessors.map(accessor => accessor.selectionPath)
     )
 
     if (!result) return

@@ -7,6 +7,7 @@ export class Disposable {
     disposers.forEach(
       dispose => typeof dispose === 'function' && this.disposers.add(dispose)
     )
+    return () => this.deleteDiposer(...disposers)
   }
 
   public deleteDiposer(...disposers: any[]) {

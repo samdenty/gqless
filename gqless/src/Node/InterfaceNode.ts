@@ -8,6 +8,7 @@ import {
   NodeDataType,
   Abstract,
   UFieldsNodeRecord,
+  resolveData,
 } from './abstract'
 import { Extension } from './Extension'
 import { ObjectNode } from './ObjectNode'
@@ -44,6 +45,11 @@ export class InterfaceNode<TImplementation> extends Mix(
 
     return new Proxy(data, {
       get: (_, prop: any) => {
+        if (accessor.fragmentToResolve) {
+          const { data } = accessor.fragmentToResolve
+          return data ? data[prop] : undefined
+        }
+
         // If the prop exists in this interface,
         // return directly from interface
         if (this.fields.hasOwnProperty(prop)) {
@@ -59,7 +65,7 @@ export class InterfaceNode<TImplementation> extends Mix(
           //   }
           // }
 
-          return field.getData(accessor as any)
+          return resolveData(field, accessor)
         }
 
         // if prop only in one implementation
@@ -70,6 +76,12 @@ export class InterfaceNode<TImplementation> extends Mix(
       },
 
       set: (_, prop: string, value) => {
+        if (accessor.fragmentToResolve) {
+          const { data } = accessor.fragmentToResolve
+          if (data) data[prop] = value
+          return true
+        }
+
         if (prop === '__typename') return true
 
         /**
