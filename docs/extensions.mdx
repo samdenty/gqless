@@ -44,16 +44,27 @@ export const Query = {
 export const Date = date_string => new Date(date_string)
 ```
 
-## Cache keys
+## Keyed values
 
-Keys are used to link up different paths in the schema, to the same value. **`id` field is used by default.**
-
-> `Extension#GET_KEY` should return a unique JSON serializable value
+Keys are used to link different paths in the schema to the same value. The `id` field is used by default.
 
 ### Example
 
-Lets say we fetched `name` on `query.users` and then fetch `query.me`.
-With an ID, `query.me` will be returned from `query.users`.
+Lets say we previously fetched `name` on each of `query.allUsers`:
+
+```js
+query.allUsers: [{ id: 0, name: 'a' }, { id: 1, name: 'b' }]
+```
+
+After fetching `query.me`, it will be returned from the cache:
+
+```js
+query.me: { id: 0, name: 'a' }
+```
+
+### Usage
+
+Simply return a JSON serializable value unique per the given type:
 
 ```ts
 import { GET_KEY } from 'gqless'
@@ -63,17 +74,19 @@ export const User = {
 }
 ```
 
-## Cache redirects
+## Cached redirects
 
 Redirects let you first search for an existing value, before fetching from the network.
-
-> `Extension#REDIRECT` should return a `Value`, to have it linked up in the cache.
 
 ### Example
 
 Let's say we previously loaded a list of users, `query.users`. There's a pretty good chance that given an ID, that User is already in the Cache.
 
-The below will redirect calls from `query.user({ id })`, to a matching `User` (only if it exists):
+Below will redirect calls from `query.user({ id })`, to a matching `User` (only if it exists).
+
+### Usage
+
+Simply return a `Value` to have it linked up in the cache:
 
 ```ts
 import { REDIRECT } from 'gqless'
@@ -81,7 +94,7 @@ import { REDIRECT } from 'gqless'
 export const Query = {
   user: {
     [REDIRECT](args, { match }) {
-      // pattern match against all User values (User inferred from path)
+      // pattern match against all User values
       return match({ id: args.id })
     },
   },
