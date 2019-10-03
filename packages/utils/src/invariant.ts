@@ -2,7 +2,7 @@ const isProduction: boolean = process.env.NODE_ENV === 'production'
 
 const prefix = `[GQLess] `
 
-export const invariant = (condition: any, message: string) => {
+export function invariant(condition: any, message?: string): asserts condition {
   if (condition) return
 
   if (isProduction) {

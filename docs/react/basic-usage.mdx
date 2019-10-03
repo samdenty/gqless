@@ -24,9 +24,9 @@ npm install @gqless/react
 
 ## Usage
 
-> NOTE: Class components are not supported, only functional components
+> NOTE: Class components aren't supported
 
-Wrap components that are going to use GraphQL data inside `graphql()`:
+First, wrap components that are going to use GraphQL data inside `graphql()`:
 
 ```jsx
 import { graphql } from '@gqless/react'
@@ -34,7 +34,7 @@ import { graphql } from '@gqless/react'
 const Component = graphql(() => <div />)
 ```
 
-Next, you need to ensure the component is within a Suspense fallback. [See here for more](https://medium.com/@rossbulat/react-lazy-suspense-and-concorrent-react-breakdown-with-examples-2758de98cb1c)
+Next, ensure the component is within a Suspense fallback. [See here for more](https://medium.com/@rossbulat/react-lazy-suspense-and-concorrent-react-breakdown-with-examples-2758de98cb1c)
 
 ```jsx
 import { Suspense } from 'react'
@@ -47,7 +47,7 @@ const App = () => (
 )
 ```
 
-You can then use data inside the component:
+Now simply use data inside the component:
 
 ```jsx
 import { query } from './gqless'

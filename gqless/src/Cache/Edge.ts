@@ -15,7 +15,7 @@ export class Edge {
     )
 
     for (const value of this.instances) {
-      const exactValue = ((this.node as any) as Matchable).match(value, data)
+      const exactValue = this.node.match(value, data)
       if (exactValue)
         return {
           value,

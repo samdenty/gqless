@@ -41,7 +41,7 @@
     "pretty-quick": "^1.11.1",
     "tsdx": "^0.7.2",
     "tslib": "^1.10.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.7.0-beta"
   },
   "dependencies": {}
 }

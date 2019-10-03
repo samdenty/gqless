@@ -28,7 +28,7 @@ export const useComponentContext = () => {
     `useComponentContext can only be called within a graphql() wrapped component`
   )
 
-  return useComponentContext.value!
+  return useComponentContext.value
 }
 
 useComponentContext.value = undefined as ComponentContext | undefined

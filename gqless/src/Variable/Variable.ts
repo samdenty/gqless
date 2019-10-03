@@ -40,9 +40,9 @@ export class Variable<TValue = any> {
   }
 
   public updateNullable(nullable: boolean) {
-    if (this.nullable === true && !nullable) {
+    if (this.nullable === true) {
       invariant(
-        false,
+        nullable,
         `Can't convert a nullable variable of type ${this.node}, to non-nullable`
       )
     }

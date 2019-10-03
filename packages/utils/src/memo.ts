@@ -1,9 +1,6 @@
-interface StrongDependency extends Map<any, Dependency> {}
-interface WeakDependency extends WeakMap<any, Dependency> {}
-
 type Dependency = {
-  weak: WeakDependency
-  strong: StrongDependency
+  weak: WeakMap<any, Dependency>
+  strong: Map<any, Dependency>
   value?: any
 }
 const createDependency = (): Dependency => ({

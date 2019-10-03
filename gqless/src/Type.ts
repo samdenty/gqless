@@ -3,6 +3,7 @@ import {
   UnshiftTuple,
   MapTupleByKey,
   LastTupleValue,
+  LastTupleValueForKey,
   TupleKeys,
 } from '@gqless/utils'
 import { Variable } from './Variable'
@@ -17,12 +18,27 @@ type UnionToIntersection<U> = (U extends any
   ? I
   : never
 type IfAny<T, Y, N> = 0 extends (1 & T) ? Y : N
+type Overwrite<A, B> = A extends (infer U)[]
+  ? U[] &
+      {
+        [K in Exclude<keyof A, keyof U[]> | keyof B]: K extends keyof B
+          ? B[K]
+          : K extends Exclude<keyof A, keyof U[]>
+          ? A[K]
+          : never
+      }
+  : {
+      [K in keyof (A & B)]: K extends keyof B
+        ? B[K]
+        : K extends keyof A
+        ? A[K]
+        : never
+    }
 
 enum Kind {
   scalar,
   enum,
-  object,
-  array,
+  fields,
 }
 
 type Type<TKind extends Kind = any, TData = any, TExtension = any> = {
@@ -39,8 +55,7 @@ type TypeExtension<TType extends ValidType> = TType extends Type
   ? IfAny<TType['extension'], never, ExtensionData<TType['extension']>>
   : never
 
-interface ValidArrayType extends Array<ValidType> {}
-type ValidType = ValidArrayType | Type | null
+type ValidType = ValidType[] | Type | null
 
 export type ScalarType<TData = any, TExtension = any> = Type<
   Kind.scalar,
@@ -58,7 +73,7 @@ type FieldsRecord = Record<string, ValidType | FieldsTypeArg>
 export type FieldsType<
   TData extends FieldsRecord = any,
   TExtension = any
-> = Type<Kind.object, TData, TExtension>
+> = Type<Kind.fields, TData, TExtension>
 
 type ArgsRecord = Record<string, any>
 export type FieldsTypeArg<
@@ -94,33 +109,49 @@ type MapExtensionData<T extends Tuple, Key extends TupleKeys<T>> = {
 }
 
 // Add new properties from extension
-type CustomExtensionData<TExtensions extends Tuple> = Omit<
-  UnionToIntersection<TExtensions[keyof TExtensions]>,
-  typeof INDEX | typeof GET_KEY
->
+type CustomExtensionData<
+  TExtensions extends Tuple,
+  I = UnionToIntersection<TExtensions[keyof TExtensions]>
+> = keyof TExtensions extends never
+  ? {}
+  : Omit<
+      {
+        [K in keyof I]: I[K] extends never
+          ? LastTupleValueForKey<TExtensions, K>
+          : I[K]
+      },
+      typeof INDEX | typeof GET_KEY
+    >
 
-type FieldsData<TFields extends FieldsType, TExtensions extends Tuple> = {
-  [K in keyof TFields['data']]: TFields['data'][K] extends FieldsTypeArg<
-    infer TArgs,
-    infer TType
-  >
-    ? ArgsFn<WithVariables<TArgs>, TType, MapExtensionData<TExtensions, K>>
-    : TypeData<TFields['data'][K], MapExtensionData<TExtensions, K>>
-} &
-  Omit<CustomExtensionData<TExtensions>, keyof TFields['data']>
+type FieldsData<
+  TFields extends FieldsType,
+  TExtensions extends Tuple
+> = keyof TFields['data'] extends never
+  ? CustomExtensionData<TExtensions>
+  : {
+      [K in keyof (TFields['data'] &
+        CustomExtensionData<TExtensions>)]: K extends keyof TFields['data']
+        ? TFields['data'][K] extends FieldsTypeArg<infer TArgs, infer TType>
+          ? ArgsFn<
+              WithVariables<TArgs>,
+              TType,
+              MapExtensionData<TExtensions, K>
+            >
+          : TypeData<TFields['data'][K], MapExtensionData<TExtensions, K>>
+        : CustomExtensionData<TExtensions>[K]
+    }
 
 type ArrayData<
-  TArray extends ValidArrayType,
-  TExtensions extends Tuple<{ [INDEX]: any }>
-> = Omit<
+  TArray extends ValidType[],
+  TExtensions extends Tuple
+> = Overwrite<
   {
     [K in keyof TArray]: TArray[K] extends ValidType
       ? TypeData<TArray[K], MapExtensionData<TExtensions, typeof INDEX>>
       : TArray[K]
   },
-  keyof CustomExtensionData<TExtensions>
-> &
   CustomExtensionData<TExtensions>
+>
 
 // Get the last extension from the extensions tuple
 type ScalarData<
@@ -131,9 +162,10 @@ type ScalarData<
   : LastTupleValue<TExtensions>
 
 // Unshift the primary extension for a type to the extensions tuple
-type UnshiftExtension<TExtensions, TType extends ValidType> = TypeExtension<
-  TType
-> extends never
+type UnshiftExtension<
+  TExtensions,
+  TType extends ValidType
+> = keyof TypeExtension<TType> extends never
   ? TExtensions
   : UnshiftTuple<TExtensions, TypeExtension<TType>>
 

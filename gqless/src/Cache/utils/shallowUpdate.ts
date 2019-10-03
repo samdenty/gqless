@@ -14,7 +14,7 @@ const resolveFragmentAccessor = (accessor: Accessor, data: any) => {
     `Received __typename '${__typename}' for non-abstract type '${accessor.node}`
   )
 
-  const { implementations } = (accessor.node as any) as Abstract
+  const { implementations } = accessor.node as Abstract
   const node = implementations.find(i => i.toString() === __typename)
 
   invariant(
