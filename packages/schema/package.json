@@ -21,7 +21,7 @@
     "graphql-tag": "^2.*"
   },
   "devDependencies": {
-    "@types/graphql": "^14.0.7"
+    "@types/graphql": "^14.5.0"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }

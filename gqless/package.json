@@ -21,9 +21,9 @@
     "mix-classes": "^1.1.10"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
-    "@types/lodash": "^4.14.136",
-    "template-literal-table": "^2.0.2"
+    "@babel/core": "^7.6.2",
+    "@types/lodash": "^4.14.141",
+    "template-literal-table": "^2.0.4"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }

@@ -33,6 +33,7 @@ export class SchemaFile extends File {
     `
 
     return `
+      // @ts-nocheck
       ${super.generate()}
 
       ${body}

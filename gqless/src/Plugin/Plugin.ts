@@ -1,8 +1,7 @@
-import { DocumentNode } from 'graphql'
-
 import { QueryResponse } from '../Client'
 import { Query } from '../Scheduler'
 import { Selection } from '../Selection'
+import { Accessor } from '../Accessor'
 
 export interface Plugin {
   // Called each time a new selection is created
@@ -12,14 +11,14 @@ export interface Plugin {
   onUnselect?(selection: Selection<any>): void
 
   onCommit?(data: {
-    selections: Selection[]
+    accessors: Accessor[]
     stacks: Query[][]
     stackQueries: Query[]
-    queries: Map<Query | undefined, Selection[]>
+    queries: Map<Query | undefined, Accessor[]>
   }): void
 
   onFetch?(
-    selections: Selection<any>[],
+    accessors: Accessor[],
     response: Promise<QueryResponse>,
     variables: Record<string, any> | undefined,
     query: string,

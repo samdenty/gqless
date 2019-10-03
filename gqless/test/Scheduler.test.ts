@@ -1,9 +1,14 @@
-import { Query, RootSelection, Scheduler } from '../src'
+import {
+  Query,
+  Selection,
+  Scheduler,
+  RootAccessor,
+  NetworkStatus,
+} from '../src'
 import { schema } from '@internal/fixtures'
 
 jest.useFakeTimers()
 
-const root = new RootSelection(schema.Query)
 const testQuery = new Query('TestQuery')
 
 it('schedules selections with stacks', () => {
@@ -12,12 +17,14 @@ it('schedules selections with stacks', () => {
     expect(queryName).toMatchInlineSnapshot(`"TestQuery"`)
   })
 
+  const root = new RootAccessor(new Selection(schema.Query), scheduler)
+
   scheduler.beginQuery(testQuery)
   scheduler.commit.stage(root)
   scheduler.endQuery(testQuery)
   expect(scheduler.stack).toEqual([])
 
-  expect(root.isFetching).toBeTruthy()
+  expect(root.status !== NetworkStatus.idle).toBeTruthy()
 
   jest.runOnlyPendingTimers()
 })
@@ -25,6 +32,8 @@ it('schedules selections with stacks', () => {
 it('unstages selections', () => {
   const callback = jest.fn()
   const scheduler = new Scheduler(callback)
+
+  const root = new RootAccessor(new Selection(schema.Query), scheduler)
 
   const unstage = scheduler.commit.stage(root)
   unstage()
@@ -38,6 +47,8 @@ it('calls plugin methods', () => {
   const onCommit = jest.fn()
 
   const scheduler = new Scheduler(() => {})
+  const root = new RootAccessor(new Selection(schema.Query), scheduler)
+
   scheduler.plugins.add({ onCommit })
 
   scheduler.commit.stage(root)
@@ -48,7 +59,10 @@ it('calls plugin methods', () => {
 })
 
 it('emits onFetched when complete', async () => {
-  const { commit } = new Scheduler(() => {})
+  const scheduler = new Scheduler(() => {})
+  const root = new RootAccessor(new Selection(schema.Query), scheduler)
+
+  const { commit } = scheduler
   commit.stage(root)
   jest.runOnlyPendingTimers()
 

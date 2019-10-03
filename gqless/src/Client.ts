@@ -24,7 +24,7 @@ export class Client<TData = any> extends Disposable {
   public formatter: Formatter
 
   public scheduler = new Scheduler(
-    (selections, name) => this.fetchSelections(selections, name)!,
+    (accessors, name) => this.fetchAccessors(accessors, name)!,
     this.plugins
   )
   public cache = new Cache(this.node)
@@ -52,11 +52,10 @@ export class Client<TData = any> extends Disposable {
 
     this.selection.onUnselect(selection => {
       this.plugins.all.onUnselect(selection)
-      this.scheduler.commit.unstage(selection)
     })
   }
 
-  protected fetchSelections(accessors: Accessor[], queryName?: string) {
+  protected fetchAccessors(accessors: Accessor[], queryName?: string) {
     const result = buildQuery(
       this.formatter,
       queryName,

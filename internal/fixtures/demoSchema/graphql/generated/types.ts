@@ -218,21 +218,6 @@ type t___Directive = FieldsType<
     description: t_String | null
     locations: (t___DirectiveLocation)[]
     args: (t___InputValue)[]
-
-    /**
-     * @deprecated Use `locations`.
-     */
-    onOperation: t_Boolean
-
-    /**
-     * @deprecated Use `locations`.
-     */
-    onFragment: t_Boolean
-
-    /**
-     * @deprecated Use `locations`.
-     */
-    onField: t_Boolean
   },
   Extension<'__Directive'>
 >
@@ -249,6 +234,7 @@ type t___DirectiveLocation = EnumType<
   | 'FRAGMENT_DEFINITION'
   | 'FRAGMENT_SPREAD'
   | 'INLINE_FRAGMENT'
+  | 'VARIABLE_DEFINITION'
   | 'SCHEMA'
   | 'SCALAR'
   | 'OBJECT'
@@ -453,23 +439,122 @@ type t_examples__JSON<T extends any = any> = ScalarType<
   Extension<'examples__JSON'>
 >
 
+/**
+ * @name Query
+ * @type OBJECT
+ */
 export type Query = TypeData<t_Query>
+
+/**
+ * @name Object
+ * @type OBJECT
+ */
 export type Object = TypeData<t_Object>
+
+/**
+ * @name String
+ * @type SCALAR
+ */
 export type String = TypeData<t_String>
+
+/**
+ * @name Int
+ * @type SCALAR
+ */
 export type Int = TypeData<t_Int>
+
+/**
+ * @name Enum
+ * @type ENUM
+ */
 export type Enum = TypeData<t_Enum>
+
+/**
+ * @name __Schema
+ * @type OBJECT
+ */
 export type __Schema = TypeData<t___Schema>
+
+/**
+ * @name __Type
+ * @type OBJECT
+ */
 export type __Type = TypeData<t___Type>
+
+/**
+ * @name __TypeKind
+ * @type ENUM
+ */
 export type __TypeKind = TypeData<t___TypeKind>
+
+/**
+ * @name Boolean
+ * @type SCALAR
+ */
 export type Boolean = TypeData<t_Boolean>
+
+/**
+ * @name __Field
+ * @type OBJECT
+ */
 export type __Field = TypeData<t___Field>
+
+/**
+ * @name __InputValue
+ * @type OBJECT
+ */
 export type __InputValue = TypeData<t___InputValue>
+
+/**
+ * @name __EnumValue
+ * @type OBJECT
+ */
 export type __EnumValue = TypeData<t___EnumValue>
+
+/**
+ * @name __Directive
+ * @type OBJECT
+ */
 export type __Directive = TypeData<t___Directive>
+
+/**
+ * @name __DirectiveLocation
+ * @type ENUM
+ */
 export type __DirectiveLocation = TypeData<t___DirectiveLocation>
+
+/**
+ * @name fake__Locale
+ * @type ENUM
+ */
 export type fake__Locale = TypeData<t_fake__Locale>
+
+/**
+ * @name fake__Types
+ * @type ENUM
+ */
 export type fake__Types = TypeData<t_fake__Types>
+
+/**
+ * @name fake__imageCategory
+ * @type ENUM
+ */
 export type fake__imageCategory = TypeData<t_fake__imageCategory>
+
+/**
+ * @name fake__loremSize
+ * @type ENUM
+ */
 export type fake__loremSize = TypeData<t_fake__loremSize>
+
+/**
+ * @name Float
+ * @type SCALAR
+ */
 export type Float = TypeData<t_Float>
+
+/**
+ * @name examples__JSON
+ * @type SCALAR
+ */
 export type examples__JSON = TypeData<t_examples__JSON>

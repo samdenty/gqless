@@ -1,13 +1,8 @@
-import {
-  RootSelection,
-  Scheduler,
-  RootAccessor,
-  SelectionFetcher,
-} from 'gqless'
+import { Scheduler, RootAccessor, AccessorFetcher, Selection } from 'gqless'
 import { schema, Query } from '@internal/fixtures'
 
-export const create = (fetchSelections: SelectionFetcher = () => {}) => {
-  const selection = new RootSelection(schema.Query)
+export const create = (fetchSelections: AccessorFetcher = () => {}) => {
+  const selection = new Selection(schema.Query)
   const scheduler = new Scheduler(fetchSelections)
   const accessor = new RootAccessor(selection, scheduler)
   return { selection, scheduler, accessor, data: accessor.data as Query }

@@ -18,7 +18,7 @@ export class Logger implements Plugin {
     this.client.plugins.add(this)
   }
 
-  public onCommit = (({ stacks, stackQueries, queries, selections }) => {
+  public onCommit = (({ stacks, stackQueries, queries, accessors }) => {
     if (!this.verbose) return
 
     console.groupCollapsed(
@@ -32,8 +32,8 @@ export class Logger implements Plugin {
 
     const obj = {} as any
 
-    selections.forEach((selection, idx) => {
-      obj[selection.path.toString()] = {
+    accessors.forEach((accessor, idx) => {
+      obj[accessor.path.toString()] = {
         Stack: `[${stacks[idx].join(', ')}]`,
         'Chosen query': stackQueries[idx].toString(),
       }
@@ -45,7 +45,7 @@ export class Logger implements Plugin {
   }) as PluginMethod<'onCommit'>
 
   public onFetch = (async (
-    selections,
+    accessors,
     responsePromise,
     variables,
     query,
@@ -73,7 +73,7 @@ export class Logger implements Plugin {
         ],
 
         [`(${time}ms)`, 'color: gray'],
-        [` ${selections.length} selections`, 'color: gray'],
+        [` ${accessors.length} accessors`, 'color: gray'],
 
         error && [
           'FAILED',
@@ -106,8 +106,8 @@ export class Logger implements Plugin {
 
     // Selections
     console.groupCollapsed(...format(['Selections', headerStyles]))
-    for (const selection of selections) {
-      console.log(selection)
+    for (const accessor of accessors) {
+      console.log(accessor)
     }
     console.groupEnd()
 

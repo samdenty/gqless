@@ -1,6 +1,7 @@
+// @ts-nocheck
 import * as extensions from '../extensions'
 import { lazyGetters } from '@gqless/utils'
-const {
+import {
   ObjectNode,
   FieldNode,
   ArrayNode,
@@ -10,7 +11,7 @@ const {
   EnumNode,
   InputNode,
   InputNodeField,
-} = require('gqless')
+} from 'gqless'
 
 export const schema = {
   get Query() {
@@ -293,15 +294,6 @@ export const schema = {
             undefined,
             false
           )
-        },
-        get onOperation() {
-          return new FieldNode(schema.Boolean, undefined, false)
-        },
-        get onFragment() {
-          return new FieldNode(schema.Boolean, undefined, false)
-        },
-        get onField() {
-          return new FieldNode(schema.Boolean, undefined, false)
         },
       },
       {

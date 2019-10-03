@@ -1,15 +1,13 @@
 import { invariant } from '@gqless/utils'
 
 import { Plugins } from '../Plugin'
-import { Selection } from '../Selection'
 import { Disposable } from '../utils'
 import { Commit } from './Commit'
 import { Query } from './Query'
+import { Accessor } from '../Accessor'
 
-export type SelectionFetcher = (
-  selections: Selection<any>[],
-  queryName?: string
-) => any
+export type AccessorFetcher = (accessors: Accessor[], queryName?: string) => any
+
 export class Scheduler extends Disposable {
   private timer: any
 
@@ -17,7 +15,7 @@ export class Scheduler extends Disposable {
   public commit: Commit = undefined!
 
   constructor(
-    private fetchSelections: SelectionFetcher,
+    private fetchAccessors: AccessorFetcher,
     public plugins: Plugins = new Plugins(),
     public interval = 20
   ) {
@@ -51,7 +49,7 @@ export class Scheduler extends Disposable {
     if (!this.commit || this.commit.accessors.size) {
       if (this.commit) this.commit.dispose()
 
-      this.commit = new Commit(this.plugins, this.stack, this.fetchSelections)
+      this.commit = new Commit(this.plugins, this.stack, this.fetchAccessors)
     }
 
     this.timer = setTimeout(() => {

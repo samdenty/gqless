@@ -6,14 +6,14 @@
   "dependencies": {
     "@gqless/logger": "^0.0.1-alpha.20",
     "@gqless/react": "^0.0.1-alpha.20",
-    "@types/react": "16.8.23",
-    "@types/react-dom": "16.8.5",
-    "@types/styled-components": "^4.1.18",
+    "@types/react": "16.9.4",
+    "@types/react-dom": "16.9.1",
+    "@types/styled-components": "^4.1.19",
     "gqless": "^0.0.1-alpha.20",
     "parcel": "^1.12.3",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "styled-components": "^4.3.2"
+    "react": "^16.10.1",
+    "react-dom": "^16.10.1",
+    "styled-components": "^4.4.0"
   },
   "devDependencies": {
     "@gqless/cli": "^0.0.1-alpha.20"

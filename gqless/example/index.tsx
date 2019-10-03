@@ -13,9 +13,7 @@ import {
   ofType,
 } from '@gqless/react'
 import { fetchSchema } from '@gqless/schema'
-import ApolloClient from 'apollo-boost'
 import * as Imports from 'gqless'
-import { print } from 'graphql'
 import { Suspense } from 'react'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
@@ -23,6 +21,7 @@ import * as utils from '@gqless/utils'
 
 import {
   client as graphqlInstance,
+  fetchQuery,
   Query,
   schema as schemaFaker,
   User,
@@ -33,63 +32,12 @@ import { getAccessor } from 'gqless'
 Object.assign(window, { ...utils, ...Imports, schemaFaker, stringify, parse })
 
 const endpoint = `http://${location.hostname}:9002/graphql`
-const client = new ApolloClient({
-  uri: endpoint,
-})
 
 async function bootstrap() {
-  const fetchQuery = async (query, variables) => {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: print(query),
-        variables,
-      }),
-      mode: 'cors',
-    })
-
-    if (!response.ok) {
-      throw new Error(`Network error, received status code ${response.status}`)
-    }
-
-    const json = await response.json()
-
-    // if (json.data.user) {
-    //   if (Object.keys(json.data.user).length === 1) {
-    //     json.data.user = null
-    //   }
-    // }
-
-    return json
-
-    // const resp = await client.query({ query })
-
-    // return { data: resp.data, errors: resp.errors }
-  }
-
   const schema = await fetchSchema(fetchQuery, { includeInfo: true })
   console.log(schema)
   // const codegen = new Codegen(schema)
   // console.log(codegen.generate())
-
-  new Logger(graphqlInstance),
-    {
-      // async onFetch(_, response) {
-      //   await response
-      //   getUsers({ limit: 1 })[1].age
-      //   getUsers({ limit: 1 })[1].avatarUrl
-      //   const user = query.query.user()
-      //   if (user) {
-      //     user.following![0]!.name
-      //   }
-      //   query.query.users[1].following![0]!.age
-      //   query.query.users[1].avatarUrl
-      //   query.query.users[1].avatarUrl({ size: 100 }) /
-      // },
-    }
 
   const query = graphqlInstance.query as Query
 

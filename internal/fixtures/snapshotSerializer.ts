@@ -7,7 +7,7 @@ export const print = (
 ) => {
   const printFields = (val: Selection | Accessor): string => {
     const children: any[] =
-      val instanceof Selection ? val.selections : val.children
+      val instanceof Selection ? Array.from(val.selections) : val.children
 
     if (!children.length) return ''
 
@@ -16,7 +16,9 @@ export const print = (
     )}\n}`
   }
 
-  return `${val.path.toString()}${printFields(val)}`
+  return `${
+    val instanceof Accessor ? val.path.toString() : val.toString()
+  }${printFields(val)}`
 }
 
 export const test = (val: any) =>

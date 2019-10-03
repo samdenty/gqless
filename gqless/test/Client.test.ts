@@ -26,7 +26,7 @@ it('fetches values', async () => {
 
   expect(client.cache.toJSON()).toMatchSnapshot()
 
-  expect(client.scheduler.commit.selections.size).toEqual(0)
+  expect(client.scheduler.commit.accessors.size).toEqual(0)
 })
 
 it(`shares cache for arguments with/without variables`, async () => {
@@ -47,5 +47,5 @@ it(`shares cache for arguments with/without variables`, async () => {
 
   expect(client.cache.toJSON()).toMatchSnapshot()
 
-  expect(client.scheduler.commit.selections.size).toEqual(0)
+  expect(client.scheduler.commit.accessors.size).toEqual(0)
 })

@@ -1,26 +1,41 @@
 // @ts-ignore
 import { seed } from 'faker'
-import { Source, parse, concatAST, buildASTSchema, execute } from 'graphql'
+import { parse, buildASTSchema, execute } from 'graphql'
 import * as fs from 'fs'
 import * as path from 'path'
 // @ts-ignore
-import { fakeSchema } from 'graphql-faker/dist/fake_schema'
-import { DocumentNode } from 'graphql'
+import { mergeWithFakeDefinitions } from 'graphql-faker/dist/fake_definition'
+import {
+  fakeTypeResolver,
+  fakeFieldResolver,
+  // @ts-ignore
+} from 'graphql-faker/dist/fake_schema'
+import { QueryFetcher } from 'gqless'
 
 const SEED = 123
 
-const readIDL = (filepath: string) =>
-  new Source(fs.readFileSync(filepath, 'utf-8'), filepath)
-
-const fakeDefinitionAST = parse(
-  readIDL(require.resolve('graphql-faker/dist/fake_definition.graphql'))
+const idl = fs.readFileSync(
+  path.join(__dirname, './demoSchema.graphql'),
+  'utf-8'
 )
+const schema = buildASTSchema(mergeWithFakeDefinitions(parse(idl)))
 
-const idl = readIDL(path.join(__dirname, './demoSchema.graphql'))
-const schema = buildASTSchema(concatAST([parse(idl), fakeDefinitionAST]))
-fakeSchema(schema)
-
-export const fetchQuery = (query: DocumentNode, variables: any): any => {
+export const fetchQuery: QueryFetcher = async (
+  query: string,
+  variables?: any
+): Promise<any> => {
   seed(SEED)
-  return execute(schema, query, undefined, undefined, variables)
+  const response = await execute(
+    schema,
+    parse(query),
+    undefined,
+    undefined,
+    variables,
+    undefined,
+    fakeFieldResolver,
+    fakeTypeResolver
+  )
+
+  // Fix null prototype
+  return JSON.parse(JSON.stringify(response))
 }

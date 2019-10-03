@@ -91,15 +91,11 @@ export class TypesFile extends File {
     const body = Object.values(this.codegen.schema.types)
       .map(type => {
         const definition = this.generateSchemaType(type)
-        if (!definition) return ''
+        if (!definition) return
 
-        const comments: string[] = [`@name ${type.name}`, `@type ${type.kind}`]
-
-        if (type.kind === 'OBJECT' && type.interfaces.length) {
-          comments.push(`@implements ${type.interfaces.join(', ')}`)
-        }
-        return this.generateComments(comments) + definition
+        return this.generateComments(this.schemaTypeComments(type)) + definition
       })
+      .filter(Boolean)
       .join('\n\n')
 
     return `
@@ -119,7 +115,9 @@ export class TypesFile extends File {
         .filter(type => type.kind !== 'INPUT_OBJECT')
         .map(
           type =>
-            `export type ${type.name} = ${
+            `${this.generateComments(
+              this.schemaTypeComments(type)
+            )}export type ${type.name} = ${
               this.names.TypeData
             }<${this.typeReference(type.name)}>`
         )
@@ -127,15 +125,24 @@ export class TypesFile extends File {
     `
   }
 
+  private schemaTypeComments(type: SchemaType) {
+    const comments: string[] = [`@name ${type.name}`, `@type ${type.kind}`]
+
+    if (type.kind === 'OBJECT' && type.interfaces.length) {
+      comments.push(`@implements ${type.interfaces.join(', ')}`)
+    }
+
+    return comments
+  }
+
   private generateComments(comments: string[]) {
-    if (comments.length) {
+    if (comments.length)
       return (
         `\n` +
         `/**\n` +
         ` * ${comments.join('\n* ').replace(/\*\//gm, '*\u200B/')}\n` +
         ` */\n`
       )
-    }
 
     return ''
   }

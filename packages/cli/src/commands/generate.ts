@@ -1,11 +1,6 @@
 import { Command, flags } from '@oclif/command'
-import { Codegen, fetchSchema } from '@gqless/schema'
 import { get } from 'got'
-import { print } from 'graphql'
 import { QueryFetcher } from 'gqless'
-import * as fs from 'fs'
-import * as prettier from 'prettier'
-import * as mkdirp from 'mkdirp'
 import * as path from 'path'
 import { generateSchema } from '../generateSchema'
 
@@ -44,13 +39,14 @@ export default class Generate extends Command {
   async run() {
     const { args, flags } = this.parse(Generate)
 
-    const fetchQuery: QueryFetcher = async query => {
+    const fetchQuery: QueryFetcher = async (query, variables) => {
       const response = await get(flags.url, {
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          query: print(query),
+          query,
+          variables,
         }),
       })
       return JSON.parse(response.body)

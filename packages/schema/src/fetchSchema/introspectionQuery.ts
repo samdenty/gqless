@@ -1,4 +1,4 @@
-import gql from 'graphql-tag'
+const gql = String.raw
 
 export const introspectionQuery = (includeInfo = false) => gql`
   query IntrospectionQuery {

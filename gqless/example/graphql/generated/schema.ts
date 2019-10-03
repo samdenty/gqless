@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as extensions from '../extensions'
 import { lazyGetters } from '@gqless/utils'
 import {
@@ -6,10 +7,10 @@ import {
   ArrayNode,
   Arguments,
   ArgumentsField,
+  InterfaceNode,
   ScalarNode,
   EnumNode,
   UnionNode,
-  InterfaceNode,
   InputNode,
   InputNodeField,
 } from 'gqless'
@@ -18,6 +19,9 @@ export const schema = {
   get Query() {
     return new ObjectNode(
       {
+        get m() {
+          return new FieldNode(schema.M, undefined, true)
+        },
         get me() {
           return new FieldNode(schema.User, undefined, true)
         },
@@ -76,7 +80,7 @@ export const schema = {
           )
         },
         get testOrUser() {
-          return new FieldNode(schema.TestOrUser, undefined, true)
+          return new FieldNode(schema.TestOrUser, undefined, false)
         },
         get test() {
           return new FieldNode(schema.Test, undefined, true)
@@ -104,6 +108,31 @@ export const schema = {
       },
       { name: 'Query', extension: ((extensions as any) || {}).Query }
     )
+  },
+  get M() {
+    return new InterfaceNode(
+      {
+        get b() {
+          return new FieldNode(
+            schema.String,
+            new Arguments({
+              get b() {
+                return new ArgumentsField(schema.String, true)
+              },
+            }),
+            true
+          )
+        },
+      },
+      [schema.O1, schema.O2],
+      { name: 'M', extension: ((extensions as any) || {}).M }
+    )
+  },
+  get String() {
+    return new ScalarNode({
+      name: 'String',
+      extension: ((extensions as any) || {}).String,
+    })
   },
   get User() {
     return new ObjectNode(
@@ -180,12 +209,6 @@ export const schema = {
   },
   get MyEnum() {
     return new EnumNode({ name: 'MyEnum' })
-  },
-  get String() {
-    return new ScalarNode({
-      name: 'String',
-      extension: ((extensions as any) || {}).String,
-    })
   },
   get Int() {
     return new ScalarNode({
@@ -471,15 +494,6 @@ export const schema = {
             false
           )
         },
-        get onOperation() {
-          return new FieldNode(schema.Boolean, undefined, false)
-        },
-        get onFragment() {
-          return new FieldNode(schema.Boolean, undefined, false)
-        },
-        get onField() {
-          return new FieldNode(schema.Boolean, undefined, false)
-        },
       },
       {
         name: '__Directive',
@@ -504,6 +518,51 @@ export const schema = {
         },
       },
       { name: 'TestC', extension: ((extensions as any) || {}).TestC }
+    )
+  },
+  get O1() {
+    return new ObjectNode(
+      {
+        get b() {
+          return new FieldNode(
+            schema.String,
+            new Arguments({
+              get b() {
+                return new ArgumentsField(schema.String, true)
+              },
+            }),
+            true
+          )
+        },
+        get o1() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+      },
+      { name: 'O1', extension: ((extensions as any) || {}).O1 }
+    )
+  },
+  get O2() {
+    return new ObjectNode(
+      {
+        get b() {
+          return new FieldNode(
+            schema.String,
+            new Arguments({
+              get b() {
+                return new ArgumentsField(schema.String, true)
+              },
+              get a() {
+                return new ArgumentsField(schema.String, true)
+              },
+            }),
+            true
+          )
+        },
+        get o2() {
+          return new FieldNode(schema.String, undefined, true)
+        },
+      },
+      { name: 'O2', extension: ((extensions as any) || {}).O2 }
     )
   },
   get fake__Locale() {

@@ -5,7 +5,7 @@ import { getAccessor, FragmentAccessor } from '../Accessor'
  * Attaches a fragment to an accessor, and returns the data
  *
  * @example
- * fragmentOn(query.me, new Fragment(schema.User)
+ * fragmentOn(query.me, new Fragment(schema.User))
  */
 export const fragmentOn = (data: any, fragment: Fragment) => {
   const accessor = getAccessor(data)

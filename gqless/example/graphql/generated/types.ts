@@ -18,20 +18,9 @@ type Extension<TName extends string> = TName extends keyof typeof extensions
 type t_Query = FieldsType<
   {
     __typename: t_String<'Query'>
-
-    /**
-     * Current signed in user
-     */
+    m: t_O1 | t_O2 | null
     me: t_User | null
-
-    /**
-     * Fetch a user by ID
-     */
     user: FieldsTypeArg<{ id?: string | null }, t_User | null>
-
-    /**
-     * All users stored in the database
-     */
     users: FieldsTypeArg<{ limit?: number | null }, (t_User)[]>
     stringArray: ((t_String)[] | null)[]
     a: t_A | null
@@ -56,6 +45,18 @@ type t_Query = FieldsType<
 >
 
 /**
+ * @name M
+ * @type INTERFACE
+ */
+type t_M = t_O1 | t_O2
+
+/**
+ * @name String
+ * @type SCALAR
+ */
+type t_String<T extends string = string> = ScalarType<T, Extension<'String'>>
+
+/**
  * @name User
  * @type OBJECT
  */
@@ -67,24 +68,13 @@ type t_User = FieldsType<
     name: t_String | null
     age: t_Int | null
     description: t_String | null
-    /**
-     * CDN URL of users avatar
-     */
-    avatarUrl: FieldsTypeArg<
-      {
-        /**
-         * Resolution for the image
-         */
-        size?: number | null
-      },
-      t_String | null
-    >
+    avatarUrl: FieldsTypeArg<{ size?: number | null }, t_String | null>
     profileUrl: t_String | null
     following: (t_User | null)[] | null
     followers: (t_User | null)[] | null
-    // b: t_String | null
-    // c: t_String | null
-    // d: t_String | null
+    b: t_String | null
+    c: t_String | null
+    d: t_String | null
   },
   Extension<'User'>
 >
@@ -100,12 +90,6 @@ type t_ID<T extends string = string> = ScalarType<T, Extension<'ID'>>
  * @type ENUM
  */
 type t_MyEnum = EnumType<'ACTIVE' | 'DISABLED'>
-
-/**
- * @name String
- * @type SCALAR
- */
-type t_String<T extends string = string> = ScalarType<T, Extension<'String'>>
 
 /**
  * @name Int
@@ -330,21 +314,6 @@ type t___Directive = FieldsType<
     description: t_String | null
     locations: (t___DirectiveLocation)[]
     args: (t___InputValue)[]
-
-    /**
-     * @deprecated Use `locations`.
-     */
-    onOperation: t_Boolean
-
-    /**
-     * @deprecated Use `locations`.
-     */
-    onFragment: t_Boolean
-
-    /**
-     * @deprecated Use `locations`.
-     */
-    onField: t_Boolean
   },
   Extension<'__Directive'>
 >
@@ -361,6 +330,7 @@ type t___DirectiveLocation = EnumType<
   | 'FRAGMENT_DEFINITION'
   | 'FRAGMENT_SPREAD'
   | 'INLINE_FRAGMENT'
+  | 'VARIABLE_DEFINITION'
   | 'SCHEMA'
   | 'SCALAR'
   | 'OBJECT'
@@ -392,6 +362,34 @@ type t_TestC = FieldsType<
     c: t_String | null
   },
   Extension<'TestC'>
+>
+
+/**
+ * @name O1
+ * @type OBJECT
+ * @implements M
+ */
+type t_O1 = FieldsType<
+  {
+    __typename: t_String<'O1'>
+    b: FieldsTypeArg<{ b?: string | null }, t_String | null>
+    o1: t_String | null
+  },
+  Extension<'O1'>
+>
+
+/**
+ * @name O2
+ * @type OBJECT
+ * @implements M
+ */
+type t_O2 = FieldsType<
+  {
+    __typename: t_String<'O2'>
+    b: FieldsTypeArg<{ b?: string | null; a?: string | null }, t_String | null>
+    o2: t_String | null
+  },
+  Extension<'O2'>
 >
 
 /**
@@ -585,32 +583,198 @@ type t_examples__JSON<T extends any = any> = ScalarType<
   Extension<'examples__JSON'>
 >
 
+/**
+ * @name Query
+ * @type OBJECT
+ */
 export type Query = TypeData<t_Query>
-export type User = TypeData<t_User>
-export type ID = TypeData<t_ID>
-export type MyEnum = TypeData<t_MyEnum>
+
+/**
+ * @name M
+ * @type INTERFACE
+ */
+export type M = TypeData<t_M>
+
+/**
+ * @name String
+ * @type SCALAR
+ */
 export type String = TypeData<t_String>
+
+/**
+ * @name User
+ * @type OBJECT
+ */
+export type User = TypeData<t_User>
+
+/**
+ * @name ID
+ * @type SCALAR
+ */
+export type ID = TypeData<t_ID>
+
+/**
+ * @name MyEnum
+ * @type ENUM
+ */
+export type MyEnum = TypeData<t_MyEnum>
+
+/**
+ * @name Int
+ * @type SCALAR
+ */
 export type Int = TypeData<t_Int>
+
+/**
+ * @name A
+ * @type OBJECT
+ */
 export type A = TypeData<t_A>
+
+/**
+ * @name B
+ * @type OBJECT
+ */
 export type B = TypeData<t_B>
+
+/**
+ * @name TestOrUser
+ * @type UNION
+ */
 export type TestOrUser = TypeData<t_TestOrUser>
+
+/**
+ * @name TestB
+ * @type OBJECT
+ * @implements Test
+ */
 export type TestB = TypeData<t_TestB>
+
+/**
+ * @name Test
+ * @type INTERFACE
+ */
 export type Test = TypeData<t_Test>
+
+/**
+ * @name Mutation
+ * @type OBJECT
+ */
 export type Mutation = TypeData<t_Mutation>
+
+/**
+ * @name __Schema
+ * @type OBJECT
+ */
 export type __Schema = TypeData<t___Schema>
+
+/**
+ * @name __Type
+ * @type OBJECT
+ */
 export type __Type = TypeData<t___Type>
+
+/**
+ * @name __TypeKind
+ * @type ENUM
+ */
 export type __TypeKind = TypeData<t___TypeKind>
+
+/**
+ * @name Boolean
+ * @type SCALAR
+ */
 export type Boolean = TypeData<t_Boolean>
+
+/**
+ * @name __Field
+ * @type OBJECT
+ */
 export type __Field = TypeData<t___Field>
+
+/**
+ * @name __InputValue
+ * @type OBJECT
+ */
 export type __InputValue = TypeData<t___InputValue>
+
+/**
+ * @name __EnumValue
+ * @type OBJECT
+ */
 export type __EnumValue = TypeData<t___EnumValue>
+
+/**
+ * @name __Directive
+ * @type OBJECT
+ */
 export type __Directive = TypeData<t___Directive>
+
+/**
+ * @name __DirectiveLocation
+ * @type ENUM
+ */
 export type __DirectiveLocation = TypeData<t___DirectiveLocation>
+
+/**
+ * @name Episode
+ * @type ENUM
+ */
 export type Episode = TypeData<t_Episode>
+
+/**
+ * @name TestC
+ * @type OBJECT
+ * @implements Test
+ */
 export type TestC = TypeData<t_TestC>
+
+/**
+ * @name O1
+ * @type OBJECT
+ * @implements M
+ */
+export type O1 = TypeData<t_O1>
+
+/**
+ * @name O2
+ * @type OBJECT
+ * @implements M
+ */
+export type O2 = TypeData<t_O2>
+
+/**
+ * @name fake__Locale
+ * @type ENUM
+ */
 export type fake__Locale = TypeData<t_fake__Locale>
+
+/**
+ * @name fake__Types
+ * @type ENUM
+ */
 export type fake__Types = TypeData<t_fake__Types>
+
+/**
+ * @name fake__imageCategory
+ * @type ENUM
+ */
 export type fake__imageCategory = TypeData<t_fake__imageCategory>
+
+/**
+ * @name fake__loremSize
+ * @type ENUM
+ */
 export type fake__loremSize = TypeData<t_fake__loremSize>
+
+/**
+ * @name Float
+ * @type SCALAR
+ */
 export type Float = TypeData<t_Float>
+
+/**
+ * @name examples__JSON
+ * @type SCALAR
+ */
 export type examples__JSON = TypeData<t_examples__JSON>

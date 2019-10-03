@@ -14,6 +14,9 @@ module.exports = root => {
   return {
     ...tsdx.createJestConfig(undefined, root),
 
+    globals: {
+      __DEV__: true,
+    },
     displayName: name,
     name: name,
     snapshotSerializers: ['@internal/fixtures/snapshotSerializer.ts'],

@@ -3,7 +3,7 @@ import { Codegen } from '../Codegen'
 
 export class ClientFile extends File {
   constructor(private codegen: Codegen) {
-    super('graphql', false)
+    super('client', false)
   }
 
   public generate() {

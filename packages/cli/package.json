@@ -10,12 +10,11 @@
   "homepage": "https://github.com/samdenty/gqless",
   "dependencies": {
     "@gqless/schema": "^0.0.1-alpha.20",
-    "@oclif/command": "^1",
+    "@oclif/command": "^1.5.19",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
     "got": "^9.6.0",
     "gqless": "^0.0.1-alpha.20",
-    "graphql": "^14.4.2",
     "mkdirp": "^0.5.1",
     "prettier": "^1",
     "tslib": "^1"
@@ -39,13 +38,14 @@
   ],
   "main": "dist/index.js",
   "oclif": {
-    "commands": "./dist/commands",
+    "commands": "./src/commands",
     "bin": "gqless",
     "plugins": [
       "@oclif/plugin-help"
     ]
   },
   "scripts": {
+    "dev": "./bin/run-dev",
     "build": "rm -rf dist; tsc -p tsconfig.build.json && oclif-dev readme"
   },
   "types": "dist/index.d.ts",
