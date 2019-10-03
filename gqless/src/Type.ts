@@ -19,7 +19,7 @@ type UnionToIntersection<U> = (U extends any
   : never
 type IfAny<T, Y, N> = 0 extends (1 & T) ? Y : N
 type Overwrite<A, B> = A extends (infer U)[]
-  ? U[] &
+  ? U[] & // Special handling for arrays, to reduce type complexity
       {
         [K in Exclude<keyof A, keyof U[]> | keyof B]: K extends keyof B
           ? B[K]
@@ -110,18 +110,19 @@ type MapExtensionData<T extends Tuple, Key extends TupleKeys<T>> = {
 
 // Add new properties from extension
 type CustomExtensionData<
-  TExtensions extends Tuple,
-  I = UnionToIntersection<TExtensions[keyof TExtensions]>
+  TExtensions extends Tuple
 > = keyof TExtensions extends never
   ? {}
-  : Omit<
+  : UnionToIntersection<TExtensions[keyof TExtensions]> extends infer U
+  ? Omit<
       {
-        [K in keyof I]: I[K] extends never
+        [K in keyof U]: U[K] extends never
           ? LastTupleValueForKey<TExtensions, K>
-          : I[K]
+          : U[K]
       },
       typeof INDEX | typeof GET_KEY
     >
+  : never
 
 type FieldsData<
   TFields extends FieldsType,
