@@ -31,9 +31,8 @@ export const accessorFormatter = {
             (config.objectDepth || accessor.node instanceof ScalarNode) && (
               <span>
                 {`: `}
-                {/*
-              //@ts-ignore*/}
                 <object
+                  // @ts-ignore
                   object={accessor.value ? accessor.value.toJSON() : null}
                 />
               </span>

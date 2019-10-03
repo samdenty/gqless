@@ -4,7 +4,7 @@ let onSet: ReturnType<typeof createSetter>
 let data: { key: number }
 beforeEach(() => {
   data = { key: 0 }
-  onSet = createSetter(data, 'key')
+  onSet = createSetter(data, 'key') as any
 })
 
 it('emits events on set', () => {

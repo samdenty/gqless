@@ -10,14 +10,14 @@ import {
   UnionNode,
   InterfaceNode,
   Node,
-  UUnionNode,
   UInputNode,
+  Outputable,
 } from 'gqless'
 import { SchemaFieldArgs, Type, SchemaType, Schema } from './Schema'
 
 export const schemaNodes = (schema: Schema) => {
   const nodes = {} as {
-    [key: string]: Node
+    [key: string]: Node & Outputable
     Query: ObjectNode<any>
     Mutation: ObjectNode<any>
   }
@@ -33,11 +33,10 @@ export const schemaNodes = (schema: Schema) => {
 
   lazyGetters(nodes)
 
-  const resolveType = (type: Type): Node =>
+  const resolveType = (type: Type): Node & Outputable =>
     type.kind === 'LIST'
       ? new ArrayNode(resolveType(type.ofType), type.nullable)
       : nodes[type.name]
-
   const resolveArgs = (args?: SchemaFieldArgs) => {
     if (!args) return undefined
 
@@ -98,7 +97,7 @@ export const schemaNodes = (schema: Schema) => {
 
     if (type.kind === 'UNION') {
       return new UnionNode(
-        type.possibleTypes.map(type => nodes[type] as UUnionNode)
+        type.possibleTypes.map(type => nodes[type] as ObjectNode)
       )
     }
 
