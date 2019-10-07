@@ -32,7 +32,7 @@ const memoized = createMemo()
 
 export abstract class Accessor<
   TSelection extends Selection = Selection,
-  TChildren extends Accessor<any, any> = Accessor<any, any>
+  TChildren extends Accessor<Selection, any> = Accessor<Selection, any>
 > extends Disposable {
   // Ordered by most important -> least
   // @ts-ignore

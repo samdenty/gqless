@@ -48,7 +48,7 @@ export class ArrayNode<TNode> extends Mix(
     }
 
     // Array index match
-    const innerNode = (value.node as ArrayNode).innerNode
+    const innerNode: Node = (value.node as ArrayNode).innerNode
     if (!(innerNode instanceof Matchable)) return
 
     for (const indexValue of value.data as []) {
@@ -83,7 +83,7 @@ export class ArrayNode<TNode> extends Mix(
             if (!(this.ofNode instanceof Outputable)) return undefined
 
             const accessor =
-              arrayAccessor.get(a => a.index === index) ||
+              arrayAccessor.get(a => (a as IndexAccessor).index === index) ||
               new IndexAccessor(arrayAccessor, index)
 
             return resolveData(this.ofNode, accessor)

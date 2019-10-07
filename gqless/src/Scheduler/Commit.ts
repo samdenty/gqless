@@ -31,7 +31,7 @@ export class Commit extends Disposable {
     return unstage
   }
 
-  public stage(accessor: Accessor) {
+  public stage(accessor: Accessor<any>) {
     const unstage = () => this.unstage(accessor)
 
     // If the accessor is in this current commit,

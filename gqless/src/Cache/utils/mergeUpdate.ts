@@ -71,7 +71,8 @@ const mergeArray = (
 
   data.forEach((value, i) => {
     const indexAccessor =
-      accessor.get(a => a.index === i) || new IndexAccessor(accessor, i)
+      accessor.get(a => (a as IndexAccessor).index === i) ||
+      new IndexAccessor(accessor, i)
 
     mergeUpdate(indexAccessor, value)
   })
