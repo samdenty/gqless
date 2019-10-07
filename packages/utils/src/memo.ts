@@ -22,7 +22,25 @@ export function createMemo() {
 
     const keyDependency = cache.get(key)!
 
-    return <T>(get: () => T, dependencies: any[] = []): T => {
+    /**
+     * Returns the value for the given dependencies,
+     * otherwise undefined
+     */
+    function memo<T = any>(dependencies: any[]): T | undefined
+    /**
+     * Returns the value for the given dependencies,
+     * otherwise function is called and added to cache
+     */
+    function memo<T>(get: () => T, dependencies?: any[]): T
+
+    function memo<T>(
+      getOrDependencies: any[] | (() => T),
+      dependencies: any[] = []
+    ): T | void {
+      const get =
+        typeof getOrDependencies === 'function' ? getOrDependencies : undefined
+      if (!get) dependencies = getOrDependencies as any[]
+
       let dependency = keyDependency
       let index = 0
       const changedDependency = dependencies.find((data, i) => {
@@ -36,6 +54,8 @@ export function createMemo() {
 
       if (!changedDependency && 'value' in dependency) return dependency.value
 
+      if (!get) return
+
       for (let i = index; i < dependencies.length; i++) {
         const data = dependencies[i]
         const newDependency = createDependency()
@@ -47,6 +67,8 @@ export function createMemo() {
       dependency.value = value
       return value
     }
+
+    return memo
   }
 
   return new Proxy(memoKey(), {

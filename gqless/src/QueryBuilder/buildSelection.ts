@@ -6,7 +6,7 @@ import { ScalarNode, NodeContainer, ObjectNode } from '../Node'
 import { Variables } from './buildVariable'
 
 export const buildSelections = (
-  { LINE_SEPARATOR, indent, NEWLINE, formatter }: Formatter,
+  { LINE_SEPARATOR, formatter }: Formatter,
   tree: SelectionTree,
   variables?: Variables
 ) => {
@@ -32,11 +32,11 @@ export const buildSelections = (
 
   if (!selections.length) return ''
 
-  return `{${NEWLINE}${indent(selections.join(LINE_SEPARATOR))}${NEWLINE}}`
+  return selections.join(LINE_SEPARATOR)
 }
 
 const buildFieldSelectionTree = (
-  { SPACE, formatter }: Formatter,
+  { SPACE, hug, indent, formatter }: Formatter,
   tree: SelectionTree<FieldSelection>,
   variables?: Variables
 ): string => {
@@ -60,7 +60,7 @@ const buildFieldSelectionTree = (
     const selections = buildSelections(formatter, tree, variables)
     if (!selections) return ''
 
-    return `${SPACE}${selections}`
+    return `${SPACE}${hug(indent(selections))}`
   }
 
   return `${buildAlias()}${
@@ -69,30 +69,36 @@ const buildFieldSelectionTree = (
 }
 
 const buildFragmentTree = (
-  { SPACE, formatter }: Formatter,
+  { SPACE, hug, indent, formatter }: Formatter,
   tree: SelectionTree<Fragment>
 ) => {
   const fragmentName = tree.allFragments.get(tree.selection)
 
-  const buildRef = () => {
-    if (formatter.options.fragments !== 'inline' && fragmentName) {
-      return fragmentName
-    }
-
-    let selections = buildSelections(formatter, tree)
-    if (!selections) return ''
-
-    // Add comment with fragment name (for debugging)
-    if (__DEV__ && formatter.options.prettify && tree.selection.name) {
-      selections = selections.replace('{', `{ #[${tree.selection.name}]`)
-    }
-
-    return `${SPACE}on ${tree.selection.node}${SPACE}${selections}`
+  if (formatter.options.fragments !== 'inline' && fragmentName) {
+    return `...${fragmentName}`
   }
 
-  const ref = buildRef()
+  const parentNode =
+    tree.parent!.selection.node instanceof NodeContainer
+      ? tree.parent!.selection.node.innerNode
+      : tree.parent!.selection.node
 
-  return ref ? `...${ref}` : ''
+  // If it's on the same node, and inline then omit type
+  if (tree.selection.node === parentNode) {
+    return buildSelections(formatter, tree)
+  }
+
+  let selections = buildSelections(formatter, tree)
+  if (!selections) return ''
+
+  // Add comment with fragment name (for debugging)
+  if (__DEV__ && formatter.options.prettify && tree.selection.name) {
+    selections = selections.replace('{', `{ #[${tree.selection.name}]`)
+  }
+
+  return `...${SPACE}on ${tree.selection.node}${SPACE}${hug(
+    indent(selections)
+  )}`
 }
 
 export const buildSelectionTree = (

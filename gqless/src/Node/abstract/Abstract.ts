@@ -70,4 +70,8 @@ export class Abstract<
       }
     )
   }
+
+  public toString() {
+    return this.implementations.join('|')
+  }
 }

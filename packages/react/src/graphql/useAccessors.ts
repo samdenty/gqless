@@ -63,10 +63,10 @@ export const useAccessors = (stack: StackContext) => {
         let resolve: Function
         const promise = new Promise<void>(r => (resolve = r))
 
-        accessors.forEach(accessor => {
+        nonIdleAccessors.forEach(accessor => {
           accessor.onStatusChange.then(() => {
-            accessors.delete(accessor)
-            if (!accessors.size) resolve()
+            nonIdleAccessors.delete(accessor)
+            if (!nonIdleAccessors.size) resolve()
           })
         })
 

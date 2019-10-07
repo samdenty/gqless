@@ -1,4 +1,4 @@
-import { Generic, Mix } from 'mix-classes'
+import { Generic, Mix, getMixin } from 'mix-classes'
 
 import {
   defaultKey,
@@ -105,5 +105,9 @@ export class InterfaceNode<TImplementation> extends Mix(
         return true
       },
     })
+  }
+
+  public toString() {
+    return getMixin(this, FieldsNode)!.toString()
   }
 }

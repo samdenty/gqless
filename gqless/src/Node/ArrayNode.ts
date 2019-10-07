@@ -13,9 +13,12 @@ import {
 } from './abstract'
 import { Value } from '../Cache'
 import { ArrayExtension } from './Extension'
+import { createMemo } from '@gqless/utils'
 
 export interface ArrayNode<TNode extends Node = Node>
   extends NodeContainer<TNode, NodeDataType<TNode>[]> {}
+
+const memo = createMemo()
 
 export class ArrayNode<TNode> extends Mix(
   Generic(NodeContainer),
@@ -23,7 +26,13 @@ export class ArrayNode<TNode> extends Mix(
   Outputable
 ) {
   constructor(ofNode: TNode, nullable?: boolean) {
+    // memoize instances of ArrayNode
+    const existingNode = memo<ArrayNode<TNode>>([ofNode, nullable])
+    if (existingNode) return existingNode
+
     super([ofNode, nullable])
+
+    memo(() => this, [ofNode, nullable])
   }
 
   public match(value: Value, data: any) {
@@ -71,7 +80,7 @@ export class ArrayNode<TNode> extends Mix(
         const arr = arrayAccessor.value && (arrayAccessor.value.data as any[])
 
         if (prop === 'length') {
-          return arr ? arr!.length : 1
+          return arr?.length ?? 1
         }
 
         if (typeof prop === 'string') {
@@ -82,7 +91,7 @@ export class ArrayNode<TNode> extends Mix(
             if (arr && index >= arr!.length) return undefined
             if (!(this.ofNode instanceof Outputable)) return undefined
 
-            const accessor =
+            const accessor: IndexAccessor =
               arrayAccessor.get(a => (a as IndexAccessor).index === index) ||
               new IndexAccessor(arrayAccessor, index)
 

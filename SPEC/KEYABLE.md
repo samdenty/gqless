@@ -1,7 +1,8 @@
 # TODO
 
 - Make Object.set default to `match` instead of setData
-- Make ArrayNode memoized
+- Always-fetch key fragments in queries
+- Remove Keyable class
 
 # Keys
 

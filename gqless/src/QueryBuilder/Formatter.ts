@@ -45,6 +45,10 @@ export class Formatter {
     return string.replace(/^/gm, this.SPACE.repeat(2))
   }
 
+  public hug = (string: string) => {
+    return `{${this.NEWLINE}${string}${this.NEWLINE}}`
+  }
+
   @computed()
   public get SPACE() {
     return this.options.prettify ? ' ' : ''

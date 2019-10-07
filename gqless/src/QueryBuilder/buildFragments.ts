@@ -4,7 +4,7 @@ import { Fragment } from '../Selection'
 import { buildSelections } from './buildSelection'
 
 export const buildFragments = (
-  { SPACE, NEWLINE, formatter }: Formatter,
+  { SPACE, NEWLINE, hug, indent, formatter }: Formatter,
   tree: SelectionTree
 ) => {
   if (formatter.options.fragments === 'inline') return ''
@@ -13,9 +13,9 @@ export const buildFragments = (
     name: string,
     fragmentTree: SelectionTree<Fragment>
   ) => {
-    return `fragment ${name} on ${
-      fragmentTree.selection.node
-    }${SPACE}${buildSelections(formatter, fragmentTree)}`
+    return `fragment ${name} on ${fragmentTree.selection.node}${SPACE}${hug(
+      indent(buildSelections(formatter, fragmentTree))
+    )}`
   }
 
   return Array.from(tree.duplicatedFragments)
