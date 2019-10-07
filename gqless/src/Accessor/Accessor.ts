@@ -111,8 +111,8 @@ export abstract class Accessor<
     if (this.value || !this.extensions.length) return
 
     // Cache redirects
-    const edge = this.cache.edges.get(this.node)
-    if (!edge) return
+    const entry = this.cache.entries.get(this.node)
+    if (!entry) return
 
     // optimization - avoid re-creating for each extension
     const redirectArgs = [
@@ -122,7 +122,7 @@ export abstract class Accessor<
         : undefined,
       {
         match(data: any) {
-          const match = edge.match(data)
+          const match = entry.match(data)
           if (!match) return
 
           return match.value

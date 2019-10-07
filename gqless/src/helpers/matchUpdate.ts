@@ -14,10 +14,10 @@ import { getAccessor } from '../Accessor'
  */
 export const matchUpdate = (data: any, pattern: any) => {
   const accessor = getAccessor(data)
-  const edge = accessor.cache.edges.get(accessor.node)
-  if (!edge) return false
+  const entry = accessor.cache.entries.get(accessor.node)
+  if (!entry) return false
 
-  const match = edge.match(pattern)
+  const match = entry.match(pattern)
   if (!match) return false
 
   accessor.updateValue(match.value)

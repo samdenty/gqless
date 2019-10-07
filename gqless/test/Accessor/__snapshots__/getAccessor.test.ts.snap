@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`throws for ScalarNode when microtask occurs before call 1`] = `
-"[GQLess] Indeterminate accessor! microtask occurred since last accessor was intercepted
+"[gqless] Indeterminate accessor! microtask occurred since last accessor was intercepted
 
 Ensure calls to getAccessor() *always* dereference data inside the call
 
@@ -11,7 +11,7 @@ BAD  : \`getAccessor(name)\`
 `;
 
 exports[`throws for ScalarNode when values don't match 1`] = `
-"[GQLess] Indeterminate accessor! 'null' not equal to 'Query.object' (last referenced accessor)
+"[gqless] Indeterminate accessor! 'null' not equal to 'Query.object' (last referenced accessor)
 
 Ensure calls to getAccessor() *always* dereference data inside the call
 
@@ -21,7 +21,7 @@ BAD  : \`getAccessor(name)\`
 `;
 
 exports[`throws when no accessors have been used 1`] = `
-"[GQLess] Indeterminate accessor! no accessors have been referenced yet!
+"[gqless] Indeterminate accessor! no accessors have been referenced yet!
 
 Ensure calls to getAccessor() *always* dereference data inside the call
 

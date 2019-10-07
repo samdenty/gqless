@@ -2,7 +2,7 @@ import { Accessor } from '../Accessor'
 import { Value } from './Value'
 import { mergeUpdate, deepReference } from './utils'
 import { Node, ObjectNode, Outputable } from '../Node'
-import { Edge } from './Edge'
+import { NodeEntry } from './NodeEntry'
 
 export class Cache {
   // Emitted when a Value is referenced from within the graph
@@ -10,7 +10,7 @@ export class Cache {
   public onUnreference: ReturnType<typeof deepReference>['onUnreference']
 
   public rootValue: Value
-  public edges = new Map<Node & Outputable, Edge>()
+  public entries = new Map<Node & Outputable, NodeEntry>()
   public store = new Map<string, Value>()
 
   constructor(node: ObjectNode) {
@@ -22,9 +22,9 @@ export class Cache {
     this.onUnreference = events.onUnreference
 
     const addToEdges = (value: Value) => {
-      if (!this.edges.has(value.node))
-        this.edges.set(value.node, new Edge(value.node))
-      const graphNode = this.edges.get(value.node)!
+      if (!this.entries.has(value.node))
+        this.entries.set(value.node, new NodeEntry(value.node))
+      const graphNode = this.entries.get(value.node)!
 
       if (graphNode.instances.has(value)) return
 
@@ -34,23 +34,24 @@ export class Cache {
     addToEdges(this.rootValue)
     this.onReference(addToEdges)
     this.onUnreference(value => {
-      if (!this.edges.has(value.node)) return
-      const graphNode = this.edges.get(value.node)!
+      if (!this.entries.has(value.node)) return
+      const graphNode = this.entries.get(value.node)!
 
       graphNode.instances.delete(value)
     })
   }
 
   public toJSON(deep = true) {
-    const edges: any = {}
+    const nodes: any = {}
 
-    this.edges.forEach(edge => {
-      edges[edge.node.toString()] = deep === true ? edge.toJSON() : edge
+    this.entries.forEach(nodeEntry => {
+      nodes[nodeEntry.node.toString()] =
+        deep === true ? nodeEntry.toJSON() : nodeEntry
     })
 
     return {
       root: deep === true ? this.rootValue.toJSON() : this.rootValue,
-      edges,
+      nodes,
     }
   }
 

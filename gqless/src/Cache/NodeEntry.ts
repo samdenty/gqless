@@ -2,7 +2,7 @@ import { Value } from './Value'
 import { Node, Matchable } from '../Node'
 import { invariant } from '@gqless/utils'
 
-export class Edge {
+export class NodeEntry {
   public instances = new Set<Value>()
   public keys = new Map<string, Value>()
 

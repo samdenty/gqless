@@ -15,7 +15,7 @@ exports[`fetches values 3`] = `"Miller"`;
 
 exports[`fetches values 4`] = `
 Object {
-  "edges": Object {
+  "nodes": Object {
     "Object": Array [
       Object {
         "__typename": "Object",
@@ -124,7 +124,7 @@ exports[`shares cache for arguments with/without variables 2`] = `"Mervin"`;
 
 exports[`shares cache for arguments with/without variables 3`] = `
 Object {
-  "edges": Object {
+  "nodes": Object {
     "Object": Array [
       Object {
         "__typename": "Object",
