@@ -19,7 +19,10 @@ export const User /*: Extension<g.User>*/ = {
     isFollowing: true,
   },
 
-  [GET_KEY]: data => data.id,
+  [GET_KEY](data) {
+    console.log('User GET_KEY called', getAccessor(data))
+    return data.id
+  },
 }
 
 export const Query /*: Extension<g.User>*/ = query => {

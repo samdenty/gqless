@@ -12,6 +12,7 @@ import {
   resolveData,
 } from './abstract'
 import { Value } from '../Cache'
+import { ArrayExtension } from './Extension'
 
 export interface ArrayNode<TNode extends Node = Node>
   extends NodeContainer<TNode, NodeDataType<TNode>[]> {}
@@ -91,7 +92,7 @@ export class ArrayNode<TNode> extends Mix(
 
         // fallback to extensions
         for (const extension of arrayAccessor.extensions) {
-          if (prop in extension) return extension[prop]
+          if (prop in extension) return (extension as ArrayExtension)[prop]
         }
 
         if (typeof target[prop] === 'function') {

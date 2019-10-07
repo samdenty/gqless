@@ -33,7 +33,7 @@ export class FragmentAccessor<
 
   protected initializeExtensions() {
     // Copy extensions from parent
-    this.extensions.unshift(...this.parent.extensions)
+    this.extensions.unshift(...(this.parent.extensions as any[]))
   }
 
   public get data(): any {

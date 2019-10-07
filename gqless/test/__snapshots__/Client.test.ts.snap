@@ -16,58 +16,8 @@ exports[`fetches values 3`] = `"Miller"`;
 exports[`fetches values 4`] = `
 Object {
   "nodes": Object {
-    "Object": Array [
-      Object {
-        "__typename": "Object",
-        "string": "Miller",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Millie",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Jennings",
-      },
-    ],
-    "Query": Array [
-      Object {
-        "__typename": "Query",
-        "arrayOfObjects": Array [
-          Object {
-            "__typename": "Object",
-            "string": "Miller",
-          },
-          Object {
-            "__typename": "Object",
-            "string": "Millie",
-          },
-          Object {
-            "__typename": "Object",
-            "string": "Jennings",
-          },
-        ],
-        "arrayOfString": Array [
-          "Edison",
-          "Hilbert",
-          "Danielle",
-          "Maryse",
-        ],
-        "string": "Maurine",
-      },
-    ],
-    "String": Array [
-      "Maurine",
-      "Edison",
-      "Hilbert",
-      "Danielle",
-      "Maryse",
-      "Miller",
-      "Millie",
-      "Jennings",
-    ],
-    "[Object!]": Array [
-      Array [
+    "Object": Object {
+      "instances": Array [
         Object {
           "__typename": "Object",
           "string": "Miller",
@@ -81,15 +31,80 @@ Object {
           "string": "Jennings",
         },
       ],
-    ],
-    "[String!]": Array [
-      Array [
+      "keys": Object {},
+    },
+    "Query": Object {
+      "instances": Array [
+        Object {
+          "__typename": "Query",
+          "arrayOfObjects": Array [
+            Object {
+              "__typename": "Object",
+              "string": "Miller",
+            },
+            Object {
+              "__typename": "Object",
+              "string": "Millie",
+            },
+            Object {
+              "__typename": "Object",
+              "string": "Jennings",
+            },
+          ],
+          "arrayOfString": Array [
+            "Edison",
+            "Hilbert",
+            "Danielle",
+            "Maryse",
+          ],
+          "string": "Maurine",
+        },
+      ],
+      "keys": Object {},
+    },
+    "String": Object {
+      "instances": Array [
+        "Maurine",
         "Edison",
         "Hilbert",
         "Danielle",
         "Maryse",
+        "Miller",
+        "Millie",
+        "Jennings",
       ],
-    ],
+      "keys": Object {},
+    },
+    "[Object!]": Object {
+      "instances": Array [
+        Array [
+          Object {
+            "__typename": "Object",
+            "string": "Miller",
+          },
+          Object {
+            "__typename": "Object",
+            "string": "Millie",
+          },
+          Object {
+            "__typename": "Object",
+            "string": "Jennings",
+          },
+        ],
+      ],
+      "keys": Object {},
+    },
+    "[String!]": Object {
+      "instances": Array [
+        Array [
+          "Edison",
+          "Hilbert",
+          "Danielle",
+          "Maryse",
+        ],
+      ],
+      "keys": Object {},
+    },
   },
   "root": Object {
     "__typename": "Query",
@@ -125,55 +140,8 @@ exports[`shares cache for arguments with/without variables 2`] = `"Mervin"`;
 exports[`shares cache for arguments with/without variables 3`] = `
 Object {
   "nodes": Object {
-    "Object": Array [
-      Object {
-        "__typename": "Object",
-        "string": "Mervin",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Edison",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Hilbert",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Danielle",
-      },
-    ],
-    "Query": Array [
-      Object {
-        "__typename": "Query",
-        "arrayOfObjects(string:\\"test\\")": Array [
-          Object {
-            "__typename": "Object",
-            "string": "Mervin",
-          },
-          Object {
-            "__typename": "Object",
-            "string": "Edison",
-          },
-          Object {
-            "__typename": "Object",
-            "string": "Hilbert",
-          },
-          Object {
-            "__typename": "Object",
-            "string": "Danielle",
-          },
-        ],
-      },
-    ],
-    "String": Array [
-      "Mervin",
-      "Edison",
-      "Hilbert",
-      "Danielle",
-    ],
-    "[Object!]": Array [
-      Array [
+    "Object": Object {
+      "instances": Array [
         Object {
           "__typename": "Object",
           "string": "Mervin",
@@ -191,7 +159,66 @@ Object {
           "string": "Danielle",
         },
       ],
-    ],
+      "keys": Object {},
+    },
+    "Query": Object {
+      "instances": Array [
+        Object {
+          "__typename": "Query",
+          "arrayOfObjects(string:\\"test\\")": Array [
+            Object {
+              "__typename": "Object",
+              "string": "Mervin",
+            },
+            Object {
+              "__typename": "Object",
+              "string": "Edison",
+            },
+            Object {
+              "__typename": "Object",
+              "string": "Hilbert",
+            },
+            Object {
+              "__typename": "Object",
+              "string": "Danielle",
+            },
+          ],
+        },
+      ],
+      "keys": Object {},
+    },
+    "String": Object {
+      "instances": Array [
+        "Mervin",
+        "Edison",
+        "Hilbert",
+        "Danielle",
+      ],
+      "keys": Object {},
+    },
+    "[Object!]": Object {
+      "instances": Array [
+        Array [
+          Object {
+            "__typename": "Object",
+            "string": "Mervin",
+          },
+          Object {
+            "__typename": "Object",
+            "string": "Edison",
+          },
+          Object {
+            "__typename": "Object",
+            "string": "Hilbert",
+          },
+          Object {
+            "__typename": "Object",
+            "string": "Danielle",
+          },
+        ],
+      ],
+      "keys": Object {},
+    },
   },
   "root": Object {
     "__typename": "Query",

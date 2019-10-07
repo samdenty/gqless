@@ -3,6 +3,21 @@
 - Make Object.set default to `match` instead of setData
 - Make ArrayNode memoized
 
+# Keys
+
+`GET_KEY` specified on extensions.
+
+- Overloading of keys should be supported
+
+1. When an Accessor is created, if any extension has `GET_KEY`:
+2. A new fragment called `KeyFragment` will be created.
+3. A new FragmentAccessor will be created and .startResolving() will be called.
+4. `GET_KEY` will be called with the FragmentAccessor's data
+5. once complete, stopResolving will be called
+
+6. whenever client#fetchAccessors is called, it will always include the keyFragments with the generated query
+
+````
 # Why do keys do?
 
 To express two different paths, leading to the same cache entry.
@@ -21,7 +36,7 @@ query.me // Would have no way of getting match from previous iteration, so we'd 
 
 query.me.name // fetched
 query.user({ id: 'bob' }) // Redirect would now find correct match
-```
+````
 
 # Cache
 

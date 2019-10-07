@@ -16,8 +16,6 @@ export class RootAccessor<
     super(undefined, selection)
     this.value = cache.rootValue
 
-    cache.store.set(this.toString(), this.value)
-
     this.loadExtensions()
   }
 

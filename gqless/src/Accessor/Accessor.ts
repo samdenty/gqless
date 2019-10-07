@@ -2,19 +2,23 @@ import { createEvent, invariant, createSetter, createMemo } from '@gqless/utils'
 
 import { Cache, Value } from '../Cache'
 import {
-  Extension,
-  IExtension,
   Node,
   Outputable,
   ScalarNode,
   REDIRECT,
   ObjectNode,
+  GET_KEY,
+  ProxyExtension,
+  ObjectExtension,
+  ArrayExtension,
+  ArrayNode,
+  ScalarExtension,
 } from '../Node'
 import { Scheduler } from '../Scheduler'
 import { Selection, FieldSelection, Fragment } from '../Selection'
 import { computed, Disposable } from '../utils'
 import { onDataChange } from './utils'
-import { FragmentAccessor } from './FragmentAccessor'
+import { FragmentAccessor } from '.'
 
 export const ACCESSOR = Symbol('accessor')
 
@@ -31,7 +35,14 @@ export abstract class Accessor<
   TChildren extends Accessor<any, any> = Accessor<any, any>
 > extends Disposable {
   // Ordered by most important -> least
-  public extensions: Extension[] = []
+  // @ts-ignore
+  public extensions: (TSelection extends Selection<infer TNode>
+    ? TNode extends ArrayNode
+      ? ArrayExtension
+      : TNode extends ScalarNode
+      ? ScalarExtension
+      : ObjectExtension
+    : any)[] = []
 
   public scheduler: Scheduler = this.parent
     ? (this.parent as any).scheduler
@@ -92,7 +103,7 @@ export abstract class Accessor<
   protected initializeExtensions() {
     if (!this.node.extension) return
 
-    const defaultExtension: IExtension<any> =
+    const defaultExtension: any =
       !(this.node instanceof ScalarNode) &&
       typeof this.node.extension === 'function'
         ? this.node.extension(this.data)
@@ -114,32 +125,50 @@ export abstract class Accessor<
     const entry = this.cache.entries.get(this.node)
     if (!entry) return
 
+    // call Extension#GET_KEY, to record all selections onto
+    // the KeyedFragment
+    if (!(this instanceof FragmentAccessor)) {
+      let fragmentAccessor: FragmentAccessor | undefined = undefined
+
+      for (const extension of this.extensions) {
+        const getKey = extension?.[GET_KEY]
+        if (!getKey) continue
+
+        if (!fragmentAccessor) {
+          fragmentAccessor =
+            this.get<FragmentAccessor>(a => a.selection === this.keyFragment) ||
+            new FragmentAccessor(this, this.keyFragment)
+        }
+
+        const stopResolving = fragmentAccessor.startResolving()
+        try {
+          getKey(fragmentAccessor.data)
+        } finally {
+          stopResolving()
+        }
+      }
+    }
+
     // optimization - avoid re-creating for each extension
-    const redirectArgs = [
+    const redirectArgs: Parameters<NonNullable<ProxyExtension[typeof REDIRECT]>> = [
       this.selection instanceof FieldSelection
-        ? // @TODO: toJSON everything
+        ? // @TODO: toJSON everything (could be variables)
           this.selection.args
         : undefined,
       {
-        match(data: any) {
-          const match = entry.match(data)
-          if (!match) return
-
-          return match.value
+        match(data) {
+          return entry.match(data)?.value
         },
       },
-    ] as const
+    ]
 
     // Redirect all values
     for (const extension of this.extensions) {
-      const redirect = extension && extension[REDIRECT]
-      if (!redirect) continue
-
-      const value = redirect(...redirectArgs)
+      const value = extension?.[REDIRECT]?.(...redirectArgs)
       if (!(value instanceof Value)) continue
 
       this.updateValue(value)
-      return
+      break
     }
   }
 
@@ -165,17 +194,35 @@ export abstract class Accessor<
     this.cache.merge(this, data)
   }
 
-  public get<TChild extends TChildren>(compare: (child: TChildren) => boolean) {
+  public get<TChild extends TChildren | FragmentAccessor>(compare: (child: TChildren | FragmentAccessor) => boolean) {
     return this.children.find(compare) as TChild | undefined
   }
 
+  public get keyFragment() {
+    invariant(
+      this.node instanceof ObjectNode,
+      `Key fragment only works on ObjectNode`
+    )
+
+    return memoized.keyFragment(
+      () => {
+        const fragment = new Fragment(this.node as ObjectNode, `Keyed${this.node}`)
+        this.selectionPath[this.selectionPath.length - 1].add(fragment)
+        return fragment
+      },
+      this.selectionPath
+    )
+  }
+
   public getDefaultFragment(node: ObjectNode) {
-    const fragment = memoized.fragment(() => new Fragment(node), [
+    return memoized.fragment(() => {
+      const fragment = new Fragment(node)
+      this.selectionPath[this.selectionPath.length - 1].add(fragment)
+      return fragment
+    }, [
       node,
       ...this.selectionPath,
     ])
-
-    return fragment
   }
 
   @computed()

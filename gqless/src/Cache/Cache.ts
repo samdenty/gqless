@@ -11,7 +11,6 @@ export class Cache {
 
   public rootValue: Value
   public entries = new Map<Node & Outputable, NodeEntry>()
-  public store = new Map<string, Value>()
 
   constructor(node: ObjectNode) {
     this.rootValue = new Value(node)

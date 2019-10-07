@@ -1,4 +1,4 @@
-import { ArrayNode, IExtension, INDEX, ScalarNode, resolveData } from '../Node'
+import { ArrayNode, INDEX, resolveData } from '../Node'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
@@ -37,7 +37,7 @@ export class IndexAccessor<
       const parentExtension = this.parent.extensions[i]
 
       const extensionOfNode = parentExtension[INDEX]
-      const extension: IExtension<any> =
+      const extension: any =
         typeof extensionOfNode === 'function'
           ? extensionOfNode(this.data)
           : extensionOfNode

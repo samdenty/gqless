@@ -15,6 +15,7 @@ import {
 } from './abstract'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
+import { ObjectExtension } from './Extension'
 
 export type IObjectNodeOptions = IFieldsNodeOptions
 
@@ -91,7 +92,7 @@ export class ObjectNode<TData = any> extends Mix(
         }
 
         // fallback to extensions
-        for (const extension of accessor.extensions) {
+        for (const extension of accessor.extensions as ObjectExtension[]) {
           if (prop in extension) return extension[prop]
         }
       },
@@ -124,7 +125,7 @@ export class ObjectNode<TData = any> extends Mix(
         /**
          * else set it on the first extension with the property
          */
-        for (const extension of accessor.extensions) {
+        for (const extension of accessor.extensions as ObjectExtension[]) {
           if (prop in extension) {
             extension[prop] = value
             return true

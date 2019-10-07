@@ -1,10 +1,12 @@
 import { Value } from './Value'
 import { Node, Matchable } from '../Node'
 import { invariant } from '@gqless/utils'
+import { deepJSONEqual } from '../utils'
+import stringify from 'json-stable-stringify'
 
 export class NodeEntry {
   public instances = new Set<Value>()
-  public keys = new Map<string, Value>()
+  public keys = new Map<any, Value>()
 
   constructor(public node: Node) {}
 
@@ -26,9 +28,30 @@ export class NodeEntry {
     return
   }
 
+  public getByKey(key: any) {
+    // First try and find key directly
+    if (this.keys.has(key)) return this.keys.get(key)
+
+    // else find structurally equal value
+    for (const [possibleKey, value] of this.keys) {
+      if (deepJSONEqual(key, possibleKey)) return value
+    }
+
+    return undefined
+  }
+
   public toJSON(deep = true) {
-    return Array.from(this.instances).map(instance =>
-      deep === true ? instance.toJSON() : instance
-    )
+    const keys: Record<string, any> = {}
+
+    this.keys.forEach((value, key) => {
+      keys[stringify(key)] = deep === true ? value.toJSON() : value
+    })
+
+    return {
+      keys,
+      instances: Array.from(this.instances).map(value =>
+        deep === true ? value.toJSON() : value
+      ),
+    }
   }
 }
