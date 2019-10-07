@@ -25,21 +25,24 @@ export class Scheduler extends Disposable {
     this.addDisposer(this.cancel)
   }
 
-  public beginQuery(query: Query) {
-    this.stack.push(query)
+  public pushStack(...queries: Query[]) {
+    this.stack.push(...queries)
   }
 
-  public endQuery(query: Query) {
-    const idx = this.stack.lastIndexOf(query)
+  public popStack(...queries: Query[]) {
+    for (let i = queries.length - 1; i >= 0; i--) {
+      const query = queries[i]
+      const idx = this.stack.length - 1
 
-    invariant(
-      idx === this.stack.length - 1,
-      `Scheduler#endQuery called with '${query}', but not last in stack [${this.stack.join(
-        ', '
-      )}]`
-    )
+      invariant(
+        this.stack[idx] === query,
+        `Scheduler#popStack called with '${query}', but not last in stack [${this.stack.join(
+          ', '
+        )}]`
+      )
 
-    this.stack.splice(idx, 1)
+      this.stack.splice(idx, 1)
+    }
   }
 
   private start() {

@@ -6,7 +6,12 @@
   "source": "src/index.ts",
   "module": "dist/react.esm.js",
   "typings": "dist/index.d.ts",
-  "homepage": "https://github.com/samdenty/gqless",
+  "homepage": "https://gqless.netlify.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samdenty/gqless.git",
+    "directory": "packages/react"
+  },
   "files": [
     "dist"
   ],
@@ -16,12 +21,11 @@
     "test": "jest --env=jsdom"
   },
   "peerDependencies": {
-    "react": ">=16"
-  },
-  "dependencies": {
-    "gqless": "^0.0.1-alpha.20"
+    "react": ">=16",
+    "gqless": "*"
   },
   "devDependencies": {
+    "gqless": "^0.0.1-alpha.20",
     "@types/react": "^16.8.17",
     "@types/react-dom": "^16.8.4",
     "react": "^16.10.1",

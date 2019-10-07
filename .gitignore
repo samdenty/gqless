@@ -12,3 +12,5 @@ coverage
 .docusaurus
 build
 .env
+.envrc
+.changelog

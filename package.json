@@ -15,9 +15,14 @@
     "build": "yarn run build:all --since",
     "build:all": "lerna run build --no-private",
     "docs": "yarn workspace @internal/website start",
-    "docs:build": "yarn workspace @internal/website build"
+    "docs:build": "yarn workspace @internal/website build",
+    "changelog": "[[ -v GITHUB_AUTH ]] && lerna-changelog > CHANGELOG.md"
   },
-  "homepage": "https://github.com/samdenty/gqless",
+  "homepage": "https://gqless.netlify.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samdenty/gqless.git"
+  },
   "private": true,
   "jest": {
     "projects": [
@@ -28,8 +33,11 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "yarn changelog && pretty-quick --staged"
     }
+  },
+  "changelog": {
+    "cacheDir": ".changelog"
   },
   "devDependencies": {
     "@babel/plugin-proposal-decorators": "^7.6.0",
@@ -38,10 +46,11 @@
     "graphql-faker": "^2.0.0-rc.12",
     "husky": "^3.0.8",
     "lerna": "^3.16.4",
+    "lerna-changelog": "^0.8.2",
     "pretty-quick": "^1.11.1",
+    "tsconfig-paths": "^3.9.0",
     "tsdx": "^0.9.3",
     "tslib": "^1.10.0",
-    "tsconfig-paths": "^3.9.0",
     "typescript": "^3.7.0-beta"
   },
   "dependencies": {}

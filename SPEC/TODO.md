@@ -1,6 +1,5 @@
 # MVP
 
-- Accessor#status
 - Warn when \_\_typename is accessed for React, without an ofType call
 - Make `gqless` bin alias to `@gqless/cli`, so only need to install 1 set of deps
 - Make codegen default to typescript, add --js option
@@ -23,7 +22,6 @@
 
 # Improvements
 
-- usePoll should expose stack to Poller
 - Custom formatters
 
   - Format ObjectNode / ScalarNode etc. to GraphQL schema `type User` etc.

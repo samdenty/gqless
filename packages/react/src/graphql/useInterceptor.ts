@@ -9,7 +9,7 @@ export const useInterceptor = (stack: StackContext) => {
   // When a new accessor is found, retrieve the
   // scheduler associated with it
   //
-  // Then call Scheduler#beginQuery, with the
+  // Then call Scheduler#pushStack, with the
   // component's stack
   const schedulers = new Set<Scheduler>()
   const interceptedAccessors = new Set<Accessor>()
@@ -20,9 +20,7 @@ export const useInterceptor = (stack: StackContext) => {
     if (schedulers.has(accessor.scheduler)) return
     schedulers.add(accessor.scheduler)
 
-    stack.frames.forEach(query => {
-      accessor.scheduler.beginQuery(query)
-    })
+    accessor.scheduler.pushStack(...stack.frames)
   })
 
   return {
@@ -34,13 +32,10 @@ export const useInterceptor = (stack: StackContext) => {
     stopIntercepting() {
       interceptor.stop()
 
-      // Cleanup the previous Scheduler#beginQuery
+      // Cleanup the previous Scheduler#pushStack
       // calls made earlier
       schedulers.forEach(scheduler => {
-        for (let i = stack.frames.length - 1; i >= 0; --i) {
-          const query = stack.frames[i]
-          scheduler.endQuery(query)
-        }
+        scheduler.popStack(...stack.frames)
       })
     },
   }

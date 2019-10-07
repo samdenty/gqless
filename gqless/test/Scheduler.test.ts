@@ -19,9 +19,9 @@ it('schedules selections with stacks', () => {
 
   const root = new RootAccessor(new Selection(schema.Query), scheduler)
 
-  scheduler.beginQuery(testQuery)
+  scheduler.pushStack(testQuery)
   scheduler.commit.stage(root)
-  scheduler.endQuery(testQuery)
+  scheduler.popStack(testQuery)
   expect(scheduler.stack).toEqual([])
 
   expect(root.status !== NetworkStatus.idle).toBeTruthy()

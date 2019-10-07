@@ -6,7 +6,12 @@
   "source": "src/index.ts",
   "module": "dist/logger.esm.js",
   "typings": "dist/index.d.ts",
-  "homepage": "https://github.com/samdenty/gqless",
+  "homepage": "https://gqless.netlify.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samdenty/gqless.git",
+    "directory": "packages/logger"
+  },
   "files": [
     "dist"
   ],
@@ -17,9 +22,13 @@
   },
   "dependencies": {
     "flatted": "^2.0.1",
-    "gqless": "^0.0.1-alpha.20",
     "to-style": "^1.3.3"
   },
-  "devDependencies": {},
+  "peerDependencies": {
+    "gqless": "*"
+  },
+  "devDependencies": {
+    "gqless": "^0.0.1-alpha.20"
+  },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }

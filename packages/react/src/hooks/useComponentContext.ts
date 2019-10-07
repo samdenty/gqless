@@ -25,7 +25,7 @@ export interface ComponentContext {
 export const useComponentContext = () => {
   invariant(
     useComponentContext.value,
-    `useComponentContext can only be called within a graphql() wrapped component`
+    `not called within a wrapped graphql() component's render phase`
   )
 
   return useComponentContext.value
