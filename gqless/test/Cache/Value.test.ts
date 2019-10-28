@@ -19,12 +19,12 @@ describe('emits onChange', () => {
     expect(onChange).toBeCalledWith({})
   })
 
-  test('on set', () => {
+  test('not on set', () => {
     expect(onChange).not.toBeCalled()
 
     value.set('a', value)
 
-    expect(onChange).toBeCalledWith({ a: value })
+    expect(onChange).not.toBeCalled()
   })
 })
 

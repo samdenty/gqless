@@ -1,10 +1,8 @@
 import { Generic, Mix, getMixin } from 'mix-classes'
 
 import {
-  defaultKey,
   FieldsNode,
   IFieldsNodeOptions,
-  Keyable,
   NodeDataType,
   Abstract,
   UFieldsNodeRecord,
@@ -20,13 +18,11 @@ export type IInterfaceNodeOptions = IFieldsNodeOptions & {
 
 export interface InterfaceNode<TImplementation extends ObjectNode = ObjectNode>
   extends FieldsNode<NodeDataType<TImplementation>>,
-    Abstract<TImplementation>,
-    Keyable<InterfaceNode<TImplementation>> {}
+    Abstract<TImplementation> {}
 
 export class InterfaceNode<TImplementation> extends Mix(
   Generic(FieldsNode),
-  Generic(Abstract),
-  Generic(Keyable)
+  Generic(Abstract)
 ) {
   constructor(
     fields: UFieldsNodeRecord,
@@ -34,8 +30,6 @@ export class InterfaceNode<TImplementation> extends Mix(
     options: IInterfaceNodeOptions
   ) {
     super([fields, options], [implementations, options.extension])
-
-    this.keyGetter = defaultKey(this as any)
   }
 
   public getData(accessor: Accessor): any {

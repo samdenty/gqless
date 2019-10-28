@@ -3,11 +3,9 @@ import { Generic, Mix } from 'mix-classes'
 import { Accessor, FieldAccessor } from '../Accessor'
 import { ACCESSOR } from '../Accessor/Accessor'
 import {
-  defaultKey,
   FieldNode,
   FieldsNode,
   IFieldsNodeOptions,
-  Keyable,
   UFieldsNodeRecord,
   Matchable,
   Outputable,
@@ -15,29 +13,23 @@ import {
 } from './abstract'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
-import { ObjectExtension } from './Extension'
 
 export type IObjectNodeOptions = IFieldsNodeOptions
 
-export interface ObjectNode<TData>
-  extends FieldsNode<TData>,
-    Keyable<ObjectNode<TData>> {}
+export interface ObjectNode<TData> extends FieldsNode<TData> {}
 
 const TYPENAME_NODE = new ScalarNode()
 
 export class ObjectNode<TData = any> extends Mix(
   Generic(FieldsNode),
   Outputable,
-  Matchable,
-  Generic(Keyable)
+  Matchable
 ) {
   constructor(fields: UFieldsNodeRecord, options: IObjectNodeOptions) {
     // Add __typename node
     fields.__typename = new FieldNode(TYPENAME_NODE)
 
     super([fields as any, options], [options.extension])
-
-    this.keyGetter = defaultKey(this) as any
   }
 
   public match(value: Value, data: any) {

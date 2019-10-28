@@ -1,3 +1,5 @@
+import { warning } from './warning'
+
 export const lazyGetters = <T extends Record<any, any>>(
   obj: T,
   onEvaluated?: (key: keyof T, value: T[keyof T]) => void
@@ -12,7 +14,7 @@ export const lazyGetters = <T extends Record<any, any>>(
     }
 
     if (!descriptor.configurable) {
-      console.warn('Could not memoize non-configurable getter', key, 'on', obj)
+      warning(false, `Could not memoize non-configurable getter ${key}`)
       continue
     }
 

@@ -1,9 +1,3 @@
-# TODO
-
-- Make Object.set default to `match` instead of setData
-- Remove Keyable class
-- Utilize GET_KEY in cache updater
-
 # Keys
 
 `GET_KEY` specified on extensions.

@@ -15,7 +15,31 @@ exports[`fetches values 3`] = `"Miller"`;
 
 exports[`fetches values 4`] = `
 Object {
-  "nodes": Object {
+  "data": Object {
+    "__typename": "Query",
+    "arrayOfObjects": Array [
+      Object {
+        "__typename": "Object",
+        "string": "Miller",
+      },
+      Object {
+        "__typename": "Object",
+        "string": "Millie",
+      },
+      Object {
+        "__typename": "Object",
+        "string": "Jennings",
+      },
+    ],
+    "arrayOfString": Array [
+      "Edison",
+      "Hilbert",
+      "Danielle",
+      "Maryse",
+    ],
+    "string": "Maurine",
+  },
+  "types": Object {
     "Object": Object {
       "instances": Array [
         Object {
@@ -106,30 +130,6 @@ Object {
       "keys": Object {},
     },
   },
-  "root": Object {
-    "__typename": "Query",
-    "arrayOfObjects": Array [
-      Object {
-        "__typename": "Object",
-        "string": "Miller",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Millie",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Jennings",
-      },
-    ],
-    "arrayOfString": Array [
-      "Edison",
-      "Hilbert",
-      "Danielle",
-      "Maryse",
-    ],
-    "string": "Maurine",
-  },
 }
 `;
 
@@ -139,7 +139,28 @@ exports[`shares cache for arguments with/without variables 2`] = `"Mervin"`;
 
 exports[`shares cache for arguments with/without variables 3`] = `
 Object {
-  "nodes": Object {
+  "data": Object {
+    "__typename": "Query",
+    "arrayOfObjects(string:\\"test\\")": Array [
+      Object {
+        "__typename": "Object",
+        "string": "Mervin",
+      },
+      Object {
+        "__typename": "Object",
+        "string": "Edison",
+      },
+      Object {
+        "__typename": "Object",
+        "string": "Hilbert",
+      },
+      Object {
+        "__typename": "Object",
+        "string": "Danielle",
+      },
+    ],
+  },
+  "types": Object {
     "Object": Object {
       "instances": Array [
         Object {
@@ -219,27 +240,6 @@ Object {
       ],
       "keys": Object {},
     },
-  },
-  "root": Object {
-    "__typename": "Query",
-    "arrayOfObjects(string:\\"test\\")": Array [
-      Object {
-        "__typename": "Object",
-        "string": "Mervin",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Edison",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Hilbert",
-      },
-      Object {
-        "__typename": "Object",
-        "string": "Danielle",
-      },
-    ],
   },
 }
 `;
