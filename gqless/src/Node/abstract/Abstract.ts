@@ -42,9 +42,11 @@ export class Abstract<
             return null
           }
 
+          if (prop === 'toString') return () => this.toString()
+
           // fallback to extensions
           for (const extension of accessor.extensions) {
-            if (prop in extension) return extension[prop]
+            if (prop in extension.data) return extension.data[prop]
           }
         },
 
@@ -60,7 +62,7 @@ export class Abstract<
            */
           for (const extension of accessor.extensions) {
             if (prop in extension) {
-              extension[prop] = value
+              extension.data[prop] = value
               return true
             }
           }

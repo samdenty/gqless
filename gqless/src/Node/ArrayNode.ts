@@ -83,6 +83,10 @@ export class ArrayNode<TNode> extends Mix(
           return arr?.length ?? 1
         }
 
+        if (prop === 'toString') {
+          return () => this.toString()
+        }
+
         if (typeof prop === 'string') {
           const index = +prop
 
@@ -101,7 +105,7 @@ export class ArrayNode<TNode> extends Mix(
 
         // fallback to extensions
         for (const extension of arrayAccessor.extensions) {
-          if (prop in extension) return (extension as ArrayExtension)[prop]
+          if (prop in extension.data) return (extension.data as ArrayExtension)[prop]
         }
 
         if (typeof target[prop] === 'function') {

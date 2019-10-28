@@ -15,7 +15,7 @@ describe('emits onChange', () => {
 
   test('on update', () => {
     expect(onChange).not.toBeCalled()
-    value.update(null)
+    value.data = null
     expect(onChange).toBeCalledWith({})
   })
 

@@ -25,7 +25,7 @@ export interface IFormatterOptions {
 
 export class Formatter {
   public formatter = this
-  public options: IFormatterOptions
+  public options: Required<IFormatterOptions>
 
   constructor({
     prettify = __DEV__,

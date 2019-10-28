@@ -1,14 +1,9 @@
 # MVP
 
-- Warn when \_\_typename is accessed for React, without an ofType call
 - Make `gqless` bin alias to `@gqless/cli`, so only need to install 1 set of deps
 - Make codegen default to typescript, add --js option
-- Need to implement keys
-
-* Extensions
-
-  - No default key
-    - Default key logic, should instead be moved to codegen. More explicit and no magic happening
+- Make variable updates re-fetch & update component
+- Default key logic should instead be moved to codegen. More explicit and no magic happening
 
 - When we get an array
 
@@ -21,6 +16,18 @@
 - Make FieldAccessor#data static, instead of a getter
 
 # Improvements
+
+- Warn when \_\_typename is accessed for React, without an ofType call
+- Make toTree output deterministicly
+- Prevent duplication in buildSelections
+
+- Prevent Poller from creating extra queries, either:
+
+  - Poller "tick"
+    - Guarantees stuff is fetched every x ms, but the syncing between polls is computed internally
+  - Custom scheduler commit fetching priorities
+    - "important" (every 20ms) for new data
+    - "non-important"
 
 - Custom formatters
 

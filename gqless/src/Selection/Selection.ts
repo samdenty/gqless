@@ -1,7 +1,11 @@
-import { createEvent } from '@gqless/utils'
+import { createEvent, invariant } from '@gqless/utils'
 import { Node } from '../Node'
 
 export class Selection<TNode extends Node = Node> {
+  // Selections that should be fetched with all queries
+  public keySelections = new Set<Selection>()
+
+  a = new Error().stack
   public selections = new Set<Selection>()
 
   /**
@@ -15,7 +19,10 @@ export class Selection<TNode extends Node = Node> {
 
   constructor(public node: TNode) {}
 
-  public add(selection: Selection) {
+  public add(selection: Selection, isKeySelection = false) {
+    invariant(selection !== this, `Circular selections are not permitted!`)
+
+    if (isKeySelection) this.keySelections.add(selection)
     if (this.selections.has(selection)) return
 
     this.selections.add(selection)
@@ -38,6 +45,7 @@ export class Selection<TNode extends Node = Node> {
   public delete(selection: Selection) {
     if (!this.selections.has(selection)) return
     this.selections.delete(selection)
+    this.keySelections.delete(selection)
 
     // Unforward events
     selection.onSelect.off(this.onSelect.emit)

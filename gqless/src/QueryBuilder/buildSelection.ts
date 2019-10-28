@@ -91,14 +91,17 @@ const buildFragmentTree = (
   let selections = buildSelections(formatter, tree)
   if (!selections) return ''
 
+  let huggedSelections = hug(indent(selections))
+
   // Add comment with fragment name (for debugging)
   if (__DEV__ && formatter.options.prettify && tree.selection.name) {
-    selections = selections.replace('{', `{ #[${tree.selection.name}]`)
+    huggedSelections = huggedSelections.replace(
+      '{',
+      `{ #[${tree.selection.name}]`
+    )
   }
 
-  return `...${SPACE}on ${tree.selection.node}${SPACE}${hug(
-    indent(selections)
-  )}`
+  return `...${SPACE}on ${tree.selection.node}${SPACE}${huggedSelections}`
 }
 
 export const buildSelectionTree = (

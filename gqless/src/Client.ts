@@ -66,6 +66,7 @@ export class Client<TData = any> extends Disposable {
 
     const responsePromise = (async () => {
       const response = await this.fetchQuery(result.query, result.variables)
+      console.warn('fetched')
       result.rootTree.resolveAliases(response.data)
       this.cache.merge(this.accessor, response.data)
       return response

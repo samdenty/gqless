@@ -91,9 +91,11 @@ export class ObjectNode<TData = any> extends Mix(
           return resolveData(field, accessor)
         }
 
+        if (prop === 'toString') return () => this.toString()
+
         // fallback to extensions
         for (const extension of accessor.extensions) {
-          if (prop in extension) return extension[prop]
+          if (prop in extension.data) return extension.data[prop]
         }
       },
 
@@ -126,8 +128,8 @@ export class ObjectNode<TData = any> extends Mix(
          * else set it on the first extension with the property
          */
         for (const extension of accessor.extensions) {
-          if (prop in extension) {
-            extension[prop] = value
+          if (prop in extension.data) {
+            extension.data[prop] = value
             return true
           }
         }

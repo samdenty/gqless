@@ -1,60 +1,76 @@
 import { Accessor } from '../Accessor'
 import { Value } from './Value'
-import { mergeUpdate, deepReference } from './utils'
+import { deepReference, createPath } from './utils'
+import { merge } from './merge'
 import { Node, ObjectNode, Outputable } from '../Node'
 import { NodeEntry } from './NodeEntry'
+import { Disposable } from '../utils'
+import { createSetter } from '@gqless/utils'
+import { Transaction } from './Transaction'
 
-export class Cache {
-  // Emitted when a Value is referenced from within the graph
-  public onReference: ReturnType<typeof deepReference>['onReference']
-  public onUnreference: ReturnType<typeof deepReference>['onUnreference']
-
-  public rootValue: Value
+export class Cache extends Disposable {
+  public references!: ReturnType<typeof deepReference>
   public entries = new Map<Node & Outputable, NodeEntry>()
+  public rootValue!: Value
+
+  public onRootValueChange = createSetter(this as Cache, 'rootValue')
 
   constructor(node: ObjectNode) {
-    this.rootValue = new Value(node)
+    super()
 
-    const events = deepReference(this.rootValue)
+    this.onRootValueChange(() => {
+      if (this.references) this.references.dispose()
 
-    this.onReference = events.onReference
-    this.onUnreference = events.onUnreference
+      this.references = deepReference(this.rootValue)
 
-    const addToEdges = (value: Value) => {
-      if (!this.entries.has(value.node))
-        this.entries.set(value.node, new NodeEntry(value.node))
-      const graphNode = this.entries.get(value.node)!
+      const addToEntries = (value: Value) => {
+        if (!this.entries.has(value.node))
+          this.entries.set(value.node, new NodeEntry(value.node))
+        const graphNode = this.entries.get(value.node)!
 
-      if (graphNode.instances.has(value)) return
+        if (graphNode.instances.has(value)) return
 
-      graphNode.instances.add(value)
-    }
+        graphNode.instances.add(value)
+      }
 
-    addToEdges(this.rootValue)
-    this.onReference(addToEdges)
-    this.onUnreference(value => {
-      if (!this.entries.has(value.node)) return
-      const graphNode = this.entries.get(value.node)!
+      addToEntries(this.rootValue)
+      this.references.onReference(addToEntries)
+      this.references.onUnreference(value => {
+        if (!this.entries.has(value.node)) return
+        const graphNode = this.entries.get(value.node)!
 
-      graphNode.instances.delete(value)
+        graphNode.instances.delete(value)
+      })
     })
+
+    this.rootValue = new Value(node)
+  }
+
+  public merge(accessor: Accessor, data: any) {
+    const transaction = new Transaction()
+
+    transaction.begin()
+    const value = createPath(accessor, data)
+    merge(value, data, accessor)
+    transaction.end()
   }
 
   public toJSON(deep = true) {
-    const nodes: any = {}
+    const types: any = {}
 
     this.entries.forEach(nodeEntry => {
-      nodes[nodeEntry.node.toString()] =
+      types[nodeEntry.node.toString()] =
         deep === true ? nodeEntry.toJSON() : nodeEntry
     })
 
     return {
-      root: deep === true ? this.rootValue.toJSON() : this.rootValue,
-      nodes,
+      data: deep === true ? this.rootValue.toJSON() : this.rootValue,
+      types,
     }
   }
 
-  public merge(accessor: Accessor, data: any) {
-    mergeUpdate(accessor, data)
+  public dispose() {
+    super.dispose()
+    this.references.dispose()
   }
 }

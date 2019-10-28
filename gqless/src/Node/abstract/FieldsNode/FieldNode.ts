@@ -133,4 +133,8 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
 
     return argumentlessData
   }
+
+  public toString() {
+    return this.name
+  }
 }

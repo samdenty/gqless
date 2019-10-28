@@ -16,7 +16,7 @@ export class FieldAccessor<
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
 
-    syncValue(this, value => value.get(this.toString()))
+    syncValue(this, this.toString())
 
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)
@@ -27,16 +27,11 @@ export class FieldAccessor<
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
       const parentExtension = this.parent.extensions[i]
-      const extensionField: Extension<{}> =
-        parentExtension[this.selection.field.name]
+      const extensionRef = parentExtension.childField(this)
 
-      const extension: any =
-        typeof extensionField === 'function'
-          ? extensionField(this.data)
-          : extensionField
-      if (!extension) continue
+      if (!extensionRef) continue
 
-      this.extensions.unshift(extension)
+      this.extensions.unshift(extensionRef)
     }
   }
 

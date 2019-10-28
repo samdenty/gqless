@@ -1,5 +1,6 @@
 import { Variable } from 'gqless'
 import { useMemo, useEffect } from 'react'
+import { useComponentMemo } from './useComponentMemo'
 
 export function useVariable<TValue>(
   value: TValue,
@@ -16,7 +17,11 @@ export function useVariable(value: any, _1?: any, _2?: any) {
   const nullable = typeof _1 === 'boolean' ? _1 : undefined
   const name = _2 !== undefined ? _2 : typeof _1 === 'string' ? _1 : undefined
 
-  const variable = useMemo(() => new Variable(value, { name, nullable }), [])
+  // TODO: useMemo
+  const variable = useComponentMemo(
+    () => new Variable(value, { name, nullable }),
+    []
+  )
 
   useEffect(() => {
     if (nullable === undefined) return

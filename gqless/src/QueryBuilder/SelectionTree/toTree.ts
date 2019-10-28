@@ -1,31 +1,54 @@
-import { Selection } from '../../Selection'
+import { Selection, Fragment } from '../../Selection'
 import { SelectionTree } from './SelectionTree'
 
 export const toTree = (selections: (Selection | Selection[])[]) => {
   const rootTree = new SelectionTree({ toString: () => 'RootTree' } as any)
 
-  const addSelections = (tree: SelectionTree<any>, ...path: Selection[]) => {
-    for (const selection of path) {
+  const addSelectionToTree = (
+    tree: SelectionTree<any>,
+    ...pathToSelection: Selection[]
+  ) => {
+    for (let i = 0; i < pathToSelection.length; i++) {
+      const selection = pathToSelection[i]
+
+      // Filter out empty fragments
+      if (selection instanceof Fragment) {
+        // try and find a non-empty fragment somewhere after the path
+        // TODO fixme: this doesn't work for nested fragments that are empty
+        // eg.
+        //  frag A { ... B } -> A should be ignored
+        //  frag B { }
+        const validSelection = pathToSelection
+          .slice(i)
+          .find(s => !(s instanceof Fragment) || s.selections.size)
+
+        if (!validSelection) return
+      }
+
       let index = tree.children.findIndex(t => t.selection === selection)
       if (index > -1) {
         tree = tree.children[index]
-        continue
+      } else {
+        const newTree = new SelectionTree(selection, tree)
+        tree.children.push(newTree)
+        tree = newTree
       }
 
-      const newTree = new SelectionTree(selection, tree)
-      tree.children.push(newTree)
-      tree = newTree
+      // Add all the keySelections to the tree
+      selection.keySelections.forEach(keySelection => {
+        addSelectionToTree(tree, keySelection)
+      })
     }
 
-    const lastSelection = path[path.length - 1]
+    const selection = pathToSelection[pathToSelection.length - 1]
 
-    lastSelection.selections.forEach(selection =>
-      addSelections(tree, selection)
+    selection.selections.forEach(selection =>
+      addSelectionToTree(tree, selection)
     )
   }
 
   selections.forEach(selections =>
-    addSelections(
+    addSelectionToTree(
       rootTree,
       ...(Array.isArray(selections) ? selections : [selections])
     )

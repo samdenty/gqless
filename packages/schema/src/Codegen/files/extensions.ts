@@ -1,7 +1,8 @@
 import { File } from '../File'
+import { Codegen } from '../Codegen'
 
 export class ExtensionsFile extends File {
-  constructor() {
+  constructor(private codegen: Codegen) {
     super('extensions/index', false)
   }
 
@@ -9,6 +10,10 @@ export class ExtensionsFile extends File {
     return `
       ${super.generate()}
 
+      ${Object.values(this.codegen.schema.types).forEach(type => {
+        // type.
+        // TODO
+      })}
       export const Query = {}
 
       /**

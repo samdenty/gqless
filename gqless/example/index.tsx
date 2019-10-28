@@ -11,22 +11,24 @@ import {
   useVariable,
   Query as QueryCm,
   ofType,
+  useTracked,
 } from '@gqless/react'
 import { fetchSchema } from '@gqless/schema'
 import * as Imports from 'gqless'
-import { Suspense } from 'react'
+import { Suspense, useTransition } from 'react'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import * as utils from '@gqless/utils'
 
 import {
+  query,
   client as graphqlInstance,
   fetchQuery,
   Query,
   schema as schemaFaker,
   User,
 } from './graphql'
-import { getAccessor } from 'gqless'
+import { getAccessor, refetch } from 'gqless'
 
 // import { useQuery, QueryProvider, graphql, Defer } from '@gqless/react'
 Object.assign(window, { ...utils, ...Imports, schemaFaker, stringify, parse })
@@ -38,8 +40,6 @@ async function bootstrap() {
   console.log(schema)
   // const codegen = new Codegen(schema)
   // console.log(codegen.generate())
-
-  const query = graphqlInstance.query as Query
 
   Object.assign(window, { query, graphql: graphqlInstance })
 
@@ -74,21 +74,21 @@ async function bootstrap() {
         'userFragment'
       )
 
-      console.log(userFragment.__typename, query.testOrUser.__typename)
+      // console.log(userFragment.__typename, query.testOrUser.__typename)
       userFragment.name
       userFragment.age
 
       if (ofType(query.testOrUser, 'TestB')) {
-        console.warn('ofType TESTB')
+        // console.log('ofType TESTB')
         return <div>TestB {query.testOrUser.b}</div>
       }
 
       if (ofType(query.testOrUser, 'User')) {
-        console.warn('ofType USER')
+        // console.log('ofType USER')
         return <div>User {query.testOrUser.name}</div>
       }
 
-      console.warn('ofType UNKNOWN')
+      // console.log('ofType UNKNOWN')
 
       return <div>unknown</div>
     },
@@ -97,7 +97,8 @@ async function bootstrap() {
 
   const Component = graphql(
     () => {
-      // return null
+      // return <div>{query.me!.name}</div>
+
       const [showDescription, setShowDescription] = React.useState(false)
 
       const userId = useVariable('asdasdasd')
@@ -135,93 +136,56 @@ async function bootstrap() {
           </Defer>
       <div>*/}
           <b>Other users:</b>
-          {query.users({ limit: usersLimit }).map(user => (
-            <UserComponent key={user.id} user={user} />
-          ))}
+          {query.users({ limit: usersLimit }).map(user => {
+            return <UserComponent key={user.id} user={user} />
+          })}
         </div>
       )
-
-      // return (
-      //   <>
-
-      //     <div>
-      //       <Suspense fallback="Users loading">
-      //         {query.data.users.map(user => (
-      //           <UserComponent key={user.id} user={user} />
-      //         ))}
-      //       </Suspense>
-      //     </div>
-      //     <button onClick={() => setClicks(clicks + 1)}>{clicks}</button>
-      //     <table>
-      //       <tbody>
-      //         <tr>
-      //           <td>combined</td>
-      //           <td>{`${query.data.user.name} (${query.data.user.age})`}</td>
-      //         </tr>
-      //         <tr>
-      //           <td>name</td>
-      //           <td>{query.data.user.name}</td>
-      //         </tr>
-      //         <tr>
-      //           <td>age</td>
-      //           <td>{query.data.user.age}</td>
-      //         </tr>
-      //         <tr>
-      //           <td>getUser -> name</td>
-      //           <td>{query.data.getUser({ id: '10' }).name}</td>
-      //         </tr>
-      //         <tr>
-      //           <td>getUser -> age</td>
-      //           <td>{query.data.getUser({ id: '10' }).age}</td>
-      //         </tr>
-      //       </tbody>
-      //     </table>
-      //   </>
-      // )
-
-      // return <div>Name: {query.data.user.name}</div>
-      // query.data.a.b(null, { alias: 'test' }).c
-
-      // const users = query.data.users({ where: { following: ['example'] } })
-
-      // // users could be an array, or it could be null.
-      // // We could either pretend it's already resolved and give it a length of one,
-      // // which would allow us to get subfield types or fetch the users array
-
-      // // const age = users[0].age
-      // // console.log(1, 'age ->', typeof age, age, `${age}`, +age)
-
-      // users.forEach(user => {
-      //   console.log('users forEach ->', user) // This should be a proxy
-      // })
-
-      // users.map
-      // users.forEach
-      // users.reduce
-
-      // return (
-      //   <div>
-      //     {users.map(user => (
-      //       <div key={Math.random()}>
-      //         {user.name}
-      //         {user.age}
-      //       </div>
-      //     ))}
-      //   </div>
-      // )
     },
     { name: 'Component' }
   )
 
   const App = () => {
+    const [startTransition, isPending] = useTransition({
+      timeoutMs: 3000,
+    })
+
     return (
-      <Suspense fallback={<div>FALLBACK</div>}>
-        <Component />
-      </Suspense>
+      <>
+        {isPending ? 'loading' : null}
+
+        <button
+          onClick={() => {
+            query.me!.age
+          }}
+        >
+          trigger KeyedRefetch
+        </button>
+        <button
+          onClick={() => {
+            // startTransition(() => {
+
+            console.group('start transition')
+            refetch(query.me)
+            console.groupEnd()
+            // })
+          }}
+        >
+          trigger Refetch
+        </button>
+
+        <Suspense fallback="loading Component">
+          <Component />
+        </Suspense>
+      </>
     )
   }
 
-  ReactDOM.render(<App />, document.getElementById('root'))
+  ReactDOM.createRoot(document.getElementById('root')).render(
+    <Suspense fallback="loading app">
+      <App />
+    </Suspense>
+  )
 }
 
 bootstrap()

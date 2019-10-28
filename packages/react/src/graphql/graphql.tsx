@@ -46,31 +46,36 @@ export const graphql = <Props extends any>(
       }
     }, [seperateRequest || parentStack])
 
+    useComponentContext.value = {
+      variantFragments: undefined!,
+      lastStateIndex: -1,
+      state,
+      stack,
+      accessors: undefined!,
+      query,
+      schedulers: undefined!,
+    }
+
     const {
       accessors,
+      schedulers,
       startIntercepting,
       stopIntercepting,
       updateAccessors,
     } = useAccessors(stack)
+    Object.assign(useComponentContext, { accessors, schedulers })
+
     const {
       variantFragments,
       startResolving,
       stopResolving,
       getRenderVariants,
     } = useFragments()
+    Object.assign(useComponentContext, { variantFragments })
 
     try {
       startResolving()
       startIntercepting()
-
-      useComponentContext.value = {
-        variantFragments,
-        lastStateIndex: -1,
-        state,
-        stack,
-        accessors,
-        query,
-      }
 
       var returnValue = component(props)
     } catch (e) {

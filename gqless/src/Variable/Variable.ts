@@ -53,12 +53,12 @@ export class Variable<TValue = any> {
   }
 
   public validateNode(node: UArguments, nullable?: boolean) {
-    if (!this.node) {
-      this.node = node
-    } else {
-      // TODO
-      console.warn('validate', node, 'against', this.node)
-    }
+    if (!this.node) this.node = node
+
+    invariant(
+      this.node === node,
+      `Cannot change variable from type '${this.node}' to '${node}`
+    )
 
     if (nullable !== undefined) {
       this.updateNullable(nullable)

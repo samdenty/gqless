@@ -104,8 +104,8 @@ export class Logger implements Plugin {
       console.log(...format(['Result', headerStyles]), response)
     }
 
-    // Selections
-    console.groupCollapsed(...format(['Selections', headerStyles]))
+    // Accessors
+    console.groupCollapsed(...format(['Accessors', headerStyles]))
     for (const accessor of accessors) {
       console.log(accessor)
     }

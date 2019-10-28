@@ -12,7 +12,7 @@ import {
 } from './abstract'
 import { Extension } from './Extension'
 import { ObjectNode } from './ObjectNode'
-import { Accessor, ACCESSOR, FieldAccessor } from '../Accessor'
+import { Accessor, FieldAccessor } from '../Accessor'
 
 export type IInterfaceNodeOptions = IFieldsNodeOptions & {
   extension?: Extension

@@ -1,7 +1,6 @@
 import { Value } from './Value'
-import { Node, Matchable } from '../Node'
+import { Node, Matchable, keyIsEqual } from '../Node'
 import { invariant } from '@gqless/utils'
-import { deepJSONEqual } from '../utils'
 import stringify from 'json-stable-stringify'
 
 export class NodeEntry {
@@ -34,7 +33,7 @@ export class NodeEntry {
 
     // else find structurally equal value
     for (const [possibleKey, value] of this.keys) {
-      if (deepJSONEqual(key, possibleKey)) return value
+      if (keyIsEqual(key, possibleKey)) return value
     }
 
     return undefined

@@ -21,15 +21,12 @@
     "test": "jest --env=jsdom"
   },
   "peerDependencies": {
-    "react": ">=16",
-    "gqless": "*"
+    "gqless": "*",
+    "react": "*"
   },
   "devDependencies": {
-    "gqless": "^0.0.1-alpha.20",
-    "@types/react": "^16.8.17",
-    "@types/react-dom": "^16.8.4",
-    "react": "^16.10.1",
-    "react-dom": "^16.10.1"
+    "@babel/core": "^7.6.4",
+    "gqless": "^0.0.1-alpha.20"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }

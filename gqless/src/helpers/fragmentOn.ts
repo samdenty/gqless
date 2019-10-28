@@ -16,6 +16,7 @@ export const fragmentOn = (data: any, fragment: Fragment) => {
   ).get(({ selection }) => selection === fragment)
 
   if (!fragmentAccessor) {
+    accessor.selection.add(fragment)
     fragmentAccessor = new FragmentAccessor(accessor, fragment)
   }
 

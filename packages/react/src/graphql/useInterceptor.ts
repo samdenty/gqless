@@ -25,6 +25,7 @@ export const useInterceptor = (stack: StackContext) => {
 
   return {
     interceptor,
+    schedulers,
     interceptedAccessors,
     startIntercepting() {
       interceptor.start()

@@ -1,5 +1,5 @@
 import { Cache, Value } from '../Cache'
-import { NodeDataType, ObjectNode, resolveData } from '../Node'
+import { ObjectNode, resolveData } from '../Node'
 import { Scheduler } from '../Scheduler'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
@@ -16,11 +16,19 @@ export class RootAccessor<
     super(undefined, selection)
     this.value = cache.rootValue
 
+    this.addDisposer(
+      cache.onRootValueChange(() => (this.value = cache.rootValue))
+    )
+
     this.loadExtensions()
   }
 
   // TODO: This should be replace with a Generic inside accessor
   public data = resolveData(this.selection.node, this)
+
+  public updateValue(value: Value) {
+    this.cache.rootValue = value
+  }
 
   public toString() {
     return this.selection.toString()
