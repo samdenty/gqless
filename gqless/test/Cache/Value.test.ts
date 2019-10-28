@@ -28,6 +28,34 @@ describe('emits onChange', () => {
   })
 })
 
+describe('emits onSet', () => {
+  let onSet: any
+  beforeEach(() => {
+    onSet = jest.fn()
+    value.onSet(onSet)
+  })
+
+  test('on set', () => {
+    expect(onSet).not.toBeCalled()
+
+    value.set('a', value)
+    expect(onSet).toBeCalledWith('a', value)
+    value.set('a', value)
+    expect(onSet).toBeCalledTimes(1)
+  })
+
+  test('on update', () => {
+    expect(onSet).not.toBeCalled()
+
+    value.data = { a: value }
+    expect(onSet).toBeCalledWith('a', value)
+    value.data = { a: value, b: value }
+
+    expect(onSet).toBeCalledWith('b', value)
+    expect(onSet).toBeCalledTimes(2)
+  })
+})
+
 test('handles references', () => {
   const onReference = jest.fn()
   const onUnreference = jest.fn()
