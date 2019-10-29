@@ -2,7 +2,7 @@
   "license": "MIT",
   "name": "@gqless/cli",
   "description": "Codegen for gqless",
-  "version": "0.0.1-alpha.22",
+  "version": "0.0.1-alpha.23",
   "author": "Sam Denty",
   "bin": {
     "gqless": "./bin/run"
@@ -14,7 +14,7 @@
     "directory": "packages/cli"
   },
   "dependencies": {
-    "@gqless/schema": "^0.0.1-alpha.22",
+    "@gqless/schema": "^0.0.1-alpha.23",
     "@oclif/command": "^1.5.19",
     "@oclif/config": "^1",
     "@oclif/plugin-help": "^2",
@@ -32,7 +32,7 @@
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^12.11.7",
     "@types/prettier": "^1.18.3",
-    "gqless": "^0.0.1-alpha.22",
+    "gqless": "^0.0.1-alpha.23",
     "ts-node": "^8"
   },
   "engines": {

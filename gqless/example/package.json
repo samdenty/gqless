@@ -2,7 +2,7 @@
   "license": "MIT",
   "name": "gqless-example",
   "private": true,
-  "version": "0.0.1-alpha.22",
+  "version": "0.0.1-alpha.23",
   "main": "index.js",
   "scripts": {
     "start": "graphql-faker & parcel index.html",
@@ -10,8 +10,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "@gqless/react": "^0.0.1-alpha.22",
-    "@gqless/schema": "^0.0.1-alpha.22",
+    "@gqless/react": "^0.0.1-alpha.23",
+    "@gqless/schema": "^0.0.1-alpha.23",
     "flatted": "^2.0.1",
     "ts-morph": "^4.3.2"
   },

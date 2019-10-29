@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "name": "@gqless/logger",
-  "version": "0.0.1-alpha.22",
+  "version": "0.0.1-alpha.23",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/logger.esm.js",
@@ -21,15 +21,15 @@
     "test": "jest"
   },
   "dependencies": {
-    "tslib": "^1.10.0",
     "flatted": "^2.0.1",
-    "to-style": "^1.3.3"
+    "to-style": "^1.3.3",
+    "tslib": "^1.10.0"
   },
   "peerDependencies": {
     "gqless": "*"
   },
   "devDependencies": {
-    "gqless": "^0.0.1-alpha.22"
+    "gqless": "^0.0.1-alpha.23"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }

@@ -1,22 +1,22 @@
 {
   "license": "MIT",
   "name": "react-hackernews2",
-  "version": "0.0.1-alpha.22",
+  "version": "0.0.1-alpha.23",
   "private": true,
   "dependencies": {
-    "@gqless/logger": "^0.0.1-alpha.22",
-    "@gqless/react": "^0.0.1-alpha.22",
+    "@gqless/logger": "^0.0.1-alpha.23",
+    "@gqless/react": "^0.0.1-alpha.23",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.3",
     "@types/styled-components": "^4.1.20",
-    "gqless": "^0.0.1-alpha.22",
+    "gqless": "^0.0.1-alpha.23",
     "parcel-bundler": "^1.12.4",
     "react": "^0.0.0-experimental-f6b8d31a7",
     "react-dom": "^0.0.0-experimental-f6b8d31a7",
     "styled-components": "^4.4.0"
   },
   "devDependencies": {
-    "@gqless/cli": "^0.0.1-alpha.22"
+    "@gqless/cli": "^0.0.1-alpha.23"
   },
   "scripts": {
     "generate": "../../packages/cli/bin/run-dev generate -u https://www.graphqlhub.com/graphql src/graphql -t",

@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "name": "gqless",
-  "version": "0.0.1-alpha.22",
+  "version": "0.0.1-alpha.23",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/gqless.esm.js",
@@ -21,11 +21,11 @@
     "test": "jest"
   },
   "dependencies": {
-    "tslib": "^1.10.0",
-    "@gqless/utils": "^0.0.1-alpha.22",
+    "@gqless/utils": "^0.0.1-alpha.23",
     "json-stable-stringify": "^1.0.1",
     "lodash-es": "^4.17.15",
-    "mix-classes": "^1.1.10"
+    "mix-classes": "^1.1.10",
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
