@@ -21,6 +21,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "tslib": "^1.10.0",
     "@gqless/utils": "^0.0.1-alpha.22",
     "json-stable-stringify": "^1.0.1",
     "lodash-es": "^4.17.15",

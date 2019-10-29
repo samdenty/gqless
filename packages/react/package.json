@@ -24,6 +24,9 @@
     "gqless": "*",
     "react": "*"
   },
+  "dependencies": {
+    "tslib": "^1.10.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "gqless": "^0.0.1-alpha.22"

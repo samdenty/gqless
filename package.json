@@ -58,7 +58,6 @@
     "react-dom": "^0.0.0-experimental-f6b8d31a7",
     "tsconfig-paths": "^3.9.0",
     "tsdx": "0.9.3",
-    "tslib": "^1.10.0",
     "typescript": "^3.7.1-rc"
   },
   "dependencies": {}
