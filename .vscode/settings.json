@@ -5,7 +5,7 @@
     "**/node_modules": true,
     "**/dist": true,
     "**/.cache": true,
-    "**/yarn.lock": true,
+    // "**/yarn.lock": true,
     "**/yarn-error.log": true
   },
   "typescript.tsdk": "node_modules/typescript/lib"

@@ -1,18 +1,18 @@
 import { Client, QueryFetcher } from 'gqless'
 import { Logger } from '@gqless/logger'
 import { schema, GraphQLHubAPI } from './generated'
-import { print } from 'graphql/language/printer'
 
 const endpoint = 'https://www.graphqlhub.com/graphql'
 
-const fetchQuery: QueryFetcher = async query => {
+const fetchQuery: QueryFetcher = async (query, variables) => {
   const response = await fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      query: print(query),
+      query,
+      variables,
     }),
     mode: 'cors',
   })
@@ -26,10 +26,11 @@ const fetchQuery: QueryFetcher = async query => {
   return json
 }
 
-export const graphql = new Client<GraphQLHubAPI>(
+export const client = new Client<GraphQLHubAPI>(
   schema.GraphQLHubAPI,
   fetchQuery
 )
-graphql.plugins.add(new Logger(graphql))
 
-export const query = graphql.query
+new Logger(client)
+
+export const query = client.query

@@ -1,4 +1,4 @@
-import camelCase from 'lodash/camelCase'
+import { camelCase } from 'lodash'
 import { Variable } from '../Variable'
 import { UArguments } from '../Node'
 import { uniquify } from '../utils'

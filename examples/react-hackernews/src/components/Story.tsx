@@ -25,7 +25,7 @@ export const Story = graphql(({ story }: { story: HackerNewsItem }) => {
   return (
     <StyledStory>
       <Title>
-        <Link href={story.url}>{story.title}</Link>
+        <Link href={story.url!}>{story.title}</Link>
       </Title>
       <Content>
         <Points>{story.score} points</Points>

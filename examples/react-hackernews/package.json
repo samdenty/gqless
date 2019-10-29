@@ -11,13 +11,15 @@
     "@types/styled-components": "^4.1.20",
     "gqless": "^0.0.1-alpha.21",
     "parcel": "^1.12.4",
-    "styled-components": "^4.4.0"
+    "styled-components": "^4.4.0",
+    "react": "^0.0.0-experimental-f6b8d31a7",
+    "react-dom": "^0.0.0-experimental-f6b8d31a7"
   },
   "devDependencies": {
     "@gqless/cli": "^0.0.1-alpha.21"
   },
   "scripts": {
-    "generate": "gqless generate -u https://www.graphqlhub.com/graphql src/graphql -t",
+    "generate": "../../packages/cli/bin/run-dev generate -u https://www.graphqlhub.com/graphql src/graphql -t",
     "start": "parcel src/index.html"
   }
 }

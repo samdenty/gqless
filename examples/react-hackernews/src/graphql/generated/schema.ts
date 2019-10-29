@@ -1,3 +1,4 @@
+// @ts-nocheck
 import * as extensions from '../extensions'
 import { lazyGetters } from '@gqless/utils'
 import {
@@ -7,6 +8,7 @@ import {
   ScalarNode,
   Arguments,
   ArgumentsField,
+  EnumNode,
   InterfaceNode,
   UnionNode,
   InputNode,
@@ -60,22 +62,28 @@ export const schema = {
         get item() {
           return new FieldNode(
             schema.HackerNewsItem,
-            new Arguments({
-              get id() {
-                return new ArgumentsField(schema.Int, false)
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.Int, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
         get user() {
           return new FieldNode(
             schema.HackerNewsUser,
-            new Arguments({
-              get id() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.String, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
@@ -256,7 +264,7 @@ export const schema = {
     })
   },
   get ItemType() {
-    return undefined
+    return new EnumNode({ name: 'ItemType' })
   },
   get HackerNewsUser() {
     return new ObjectNode(
@@ -303,25 +311,31 @@ export const schema = {
         get node() {
           return new FieldNode(
             schema.Node,
-            new Arguments({
-              get id() {
-                return new ArgumentsField(schema.ID, false)
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.ID, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
         get nodeFromHnId() {
           return new FieldNode(
             schema.Node,
-            new Arguments({
-              get id() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.String, false)
+                },
+                get isUserId() {
+                  return new ArgumentsField(schema.Boolean, false)
+                },
               },
-              get isUserId() {
-                return new ArgumentsField(schema.Boolean, false)
-              },
-            }),
+              true
+            ),
             false
           )
         },
@@ -771,22 +785,28 @@ export const schema = {
         get subreddit() {
           return new FieldNode(
             schema.RedditSubreddit,
-            new Arguments({
-              get name() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get name() {
+                  return new ArgumentsField(schema.String, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
         get user() {
           return new FieldNode(
             schema.RedditUser,
-            new Arguments({
-              get username() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get username() {
+                  return new ArgumentsField(schema.String, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
@@ -1035,7 +1055,7 @@ export const schema = {
     )
   },
   get TimeInterval() {
-    return undefined
+    return new EnumNode({ name: 'TimeInterval' })
   },
   get KeyValueAPI() {
     return new ObjectNode(
@@ -1043,11 +1063,14 @@ export const schema = {
         get getValue() {
           return new FieldNode(
             schema.KeyValueItem,
-            new Arguments({
-              get id() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.String, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
@@ -1080,25 +1103,31 @@ export const schema = {
         get user() {
           return new FieldNode(
             schema.GithubUser,
-            new Arguments({
-              get username() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get username() {
+                  return new ArgumentsField(schema.String, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
         get repo() {
           return new FieldNode(
             schema.GithubRepo,
-            new Arguments({
-              get name() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get name() {
+                  return new ArgumentsField(schema.String, false)
+                },
+                get ownerUsername() {
+                  return new ArgumentsField(schema.String, false)
+                },
               },
-              get ownerUsername() {
-                return new ArgumentsField(schema.String, false)
-              },
-            }),
+              true
+            ),
             true
           )
         },
@@ -1395,25 +1424,31 @@ export const schema = {
         get user() {
           return new FieldNode(
             schema.TwitterUser,
-            new Arguments({
-              get identifier() {
-                return new ArgumentsField(schema.UserIdentifier, false)
+            new Arguments(
+              {
+                get identifier() {
+                  return new ArgumentsField(schema.UserIdentifier, false)
+                },
+                get identity() {
+                  return new ArgumentsField(schema.UserIdentity, false)
+                },
               },
-              get identity() {
-                return new ArgumentsField(schema.UserIdentity, false)
-              },
-            }),
+              true
+            ),
             true
           )
         },
         get tweet() {
           return new FieldNode(
             schema.Tweet,
-            new Arguments({
-              get id() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.String, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
@@ -1439,7 +1474,7 @@ export const schema = {
     )
   },
   get UserIdentifier() {
-    return undefined
+    return new EnumNode({ name: 'UserIdentifier' })
   },
   get UserIdentity() {
     return new ScalarNode({
@@ -1557,7 +1592,7 @@ export const schema = {
     )
   },
   get SearchReponse() {
-    return undefined
+    return new EnumNode({ name: 'SearchReponse' })
   },
   get GiphyAPI() {
     return new ObjectNode(
@@ -1565,11 +1600,14 @@ export const schema = {
         get gif() {
           return new FieldNode(
             schema.GiphyGIFData,
-            new Arguments({
-              get id() {
-                return new ArgumentsField(schema.String, false)
+            new Arguments(
+              {
+                get id() {
+                  return new ArgumentsField(schema.String, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
@@ -2143,7 +2181,7 @@ export const schema = {
     )
   },
   get GiphyRatingType() {
-    return undefined
+    return new EnumNode({ name: 'GiphyRatingType' })
   },
   get GraphQLHubMutationAPI() {
     return new ObjectNode(
@@ -2151,11 +2189,14 @@ export const schema = {
         get keyValue_setValue() {
           return new FieldNode(
             schema.SetValueForKeyPayload,
-            new Arguments({
-              get input() {
-                return new ArgumentsField(schema.SetValueForKeyInput, false)
+            new Arguments(
+              {
+                get input() {
+                  return new ArgumentsField(schema.SetValueForKeyInput, false)
+                },
               },
-            }),
+              true
+            ),
             true
           )
         },
@@ -2291,7 +2332,7 @@ export const schema = {
     )
   },
   get __TypeKind() {
-    return undefined
+    return new EnumNode({ name: '__TypeKind' })
   },
   get __Field() {
     return new ObjectNode(

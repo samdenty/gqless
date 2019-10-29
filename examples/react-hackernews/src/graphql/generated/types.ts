@@ -1983,111 +1983,516 @@ type t___Directive = FieldsType<
   Extension<'__Directive'>
 >
 
+/**
+ * @name GraphQLHubAPI
+ * @type OBJECT
+ */
 export type GraphQLHubAPI = TypeData<t_GraphQLHubAPI>
+
+/**
+ * @name String
+ * @type SCALAR
+ */
 export type String = TypeData<t_String>
+
+/**
+ * @name HackerNewsAPI
+ * @type OBJECT
+ */
 export type HackerNewsAPI = TypeData<t_HackerNewsAPI>
+
+/**
+ * @name Int
+ * @type SCALAR
+ */
 export type Int = TypeData<t_Int>
+
+/**
+ * @name HackerNewsItem
+ * @type OBJECT
+ */
 export type HackerNewsItem = TypeData<t_HackerNewsItem>
+
+/**
+ * @name Boolean
+ * @type SCALAR
+ */
 export type Boolean = TypeData<t_Boolean>
+
+/**
+ * @name ItemType
+ * @type ENUM
+ */
 export type ItemType = TypeData<t_ItemType>
+
+/**
+ * @name HackerNewsUser
+ * @type OBJECT
+ */
 export type HackerNewsUser = TypeData<t_HackerNewsUser>
+
+/**
+ * @name HackerNewsAPIV2
+ * @type OBJECT
+ */
 export type HackerNewsAPIV2 = TypeData<t_HackerNewsAPIV2>
+
+/**
+ * @name ID
+ * @type SCALAR
+ */
 export type ID = TypeData<t_ID>
+
+/**
+ * @name Node
+ * @type INTERFACE
+ */
 export type Node = TypeData<t_Node>
+
+/**
+ * @name HackerNewsV2Story
+ * @type OBJECT
+ * @implements Node
+ */
 export type HackerNewsV2Story = TypeData<t_HackerNewsV2Story>
+
+/**
+ * @name HackerNewsV2User
+ * @type OBJECT
+ * @implements Node
+ */
 export type HackerNewsV2User = TypeData<t_HackerNewsV2User>
+
+/**
+ * @name NodeConnection
+ * @type OBJECT
+ */
 export type NodeConnection = TypeData<t_NodeConnection>
+
+/**
+ * @name PageInfo
+ * @type OBJECT
+ */
 export type PageInfo = TypeData<t_PageInfo>
+
+/**
+ * @name NodeEdge
+ * @type OBJECT
+ */
 export type NodeEdge = TypeData<t_NodeEdge>
+
+/**
+ * @name HackerNewsV2CommentConnection
+ * @type OBJECT
+ */
 export type HackerNewsV2CommentConnection = TypeData<
   t_HackerNewsV2CommentConnection
 >
+
+/**
+ * @name HackerNewsV2CommentEdge
+ * @type OBJECT
+ */
 export type HackerNewsV2CommentEdge = TypeData<t_HackerNewsV2CommentEdge>
+
+/**
+ * @name HackerNewsV2Comment
+ * @type OBJECT
+ * @implements Node
+ */
 export type HackerNewsV2Comment = TypeData<t_HackerNewsV2Comment>
+
+/**
+ * @name HackerNewsV2Job
+ * @type OBJECT
+ * @implements Node
+ */
 export type HackerNewsV2Job = TypeData<t_HackerNewsV2Job>
+
+/**
+ * @name HackerNewsV2Poll
+ * @type OBJECT
+ * @implements Node
+ */
 export type HackerNewsV2Poll = TypeData<t_HackerNewsV2Poll>
+
+/**
+ * @name HackerNewsV2PollPart
+ * @type OBJECT
+ * @implements Node
+ */
 export type HackerNewsV2PollPart = TypeData<t_HackerNewsV2PollPart>
+
+/**
+ * @name RedditAPI
+ * @type OBJECT
+ */
 export type RedditAPI = TypeData<t_RedditAPI>
+
+/**
+ * @name RedditSubreddit
+ * @type OBJECT
+ */
 export type RedditSubreddit = TypeData<t_RedditSubreddit>
+
+/**
+ * @name Float
+ * @type SCALAR
+ */
 export type Float = TypeData<t_Float>
+
+/**
+ * @name RedditLink
+ * @type OBJECT
+ */
 export type RedditLink = TypeData<t_RedditLink>
+
+/**
+ * @name RedditUser
+ * @type OBJECT
+ */
 export type RedditUser = TypeData<t_RedditUser>
+
+/**
+ * @name RedditComment
+ * @type OBJECT
+ */
 export type RedditComment = TypeData<t_RedditComment>
+
+/**
+ * @name TimeInterval
+ * @type ENUM
+ */
 export type TimeInterval = TypeData<t_TimeInterval>
+
+/**
+ * @name KeyValueAPI
+ * @type OBJECT
+ */
 export type KeyValueAPI = TypeData<t_KeyValueAPI>
+
+/**
+ * @name KeyValueItem
+ * @type OBJECT
+ */
 export type KeyValueItem = TypeData<t_KeyValueItem>
+
+/**
+ * @name GithubAPI
+ * @type OBJECT
+ */
 export type GithubAPI = TypeData<t_GithubAPI>
+
+/**
+ * @name GithubUser
+ * @type OBJECT
+ */
 export type GithubUser = TypeData<t_GithubUser>
+
+/**
+ * @name GithubRepo
+ * @type OBJECT
+ */
 export type GithubRepo = TypeData<t_GithubRepo>
+
+/**
+ * @name GithubCommit
+ * @type OBJECT
+ */
 export type GithubCommit = TypeData<t_GithubCommit>
+
+/**
+ * @name UserOrCommitAuthor
+ * @type UNION
+ */
 export type UserOrCommitAuthor = TypeData<t_UserOrCommitAuthor>
+
+/**
+ * @name GithubCommitAuthor
+ * @type OBJECT
+ */
 export type GithubCommitAuthor = TypeData<t_GithubCommitAuthor>
+
+/**
+ * @name GithubStatus
+ * @type OBJECT
+ */
 export type GithubStatus = TypeData<t_GithubStatus>
+
+/**
+ * @name GithubTree
+ * @type OBJECT
+ */
 export type GithubTree = TypeData<t_GithubTree>
+
+/**
+ * @name GithubTreeEntry
+ * @type OBJECT
+ */
 export type GithubTreeEntry = TypeData<t_GithubTreeEntry>
+
+/**
+ * @name GithubIssue
+ * @type OBJECT
+ */
 export type GithubIssue = TypeData<t_GithubIssue>
+
+/**
+ * @name GithubIssueLabelType
+ * @type OBJECT
+ */
 export type GithubIssueLabelType = TypeData<t_GithubIssueLabelType>
+
+/**
+ * @name GithubIssueCommentType
+ * @type OBJECT
+ */
 export type GithubIssueCommentType = TypeData<t_GithubIssueCommentType>
+
+/**
+ * @name GithubBranch
+ * @type OBJECT
+ */
 export type GithubBranch = TypeData<t_GithubBranch>
+
+/**
+ * @name TwitterAPI
+ * @type OBJECT
+ */
 export type TwitterAPI = TypeData<t_TwitterAPI>
+
+/**
+ * @name UserIdentifier
+ * @type ENUM
+ */
 export type UserIdentifier = TypeData<t_UserIdentifier>
+
+/**
+ * @name UserIdentity
+ * @type SCALAR
+ */
 export type UserIdentity = TypeData<t_UserIdentity>
+
+/**
+ * @name TwitterUser
+ * @type OBJECT
+ */
 export type TwitterUser = TypeData<t_TwitterUser>
+
+/**
+ * @name Tweet
+ * @type OBJECT
+ */
 export type Tweet = TypeData<t_Tweet>
+
+/**
+ * @name Retweet
+ * @type OBJECT
+ */
 export type Retweet = TypeData<t_Retweet>
+
+/**
+ * @name SearchReponse
+ * @type ENUM
+ */
 export type SearchReponse = TypeData<t_SearchReponse>
+
+/**
+ * @name GiphyAPI
+ * @type OBJECT
+ */
 export type GiphyAPI = TypeData<t_GiphyAPI>
+
+/**
+ * @name GiphyGIFData
+ * @type OBJECT
+ */
 export type GiphyGIFData = TypeData<t_GiphyGIFData>
+
+/**
+ * @name GiphyGIFImages
+ * @type OBJECT
+ */
 export type GiphyGIFImages = TypeData<t_GiphyGIFImages>
+
+/**
+ * @name GiphyGIFImageDataFixedHeight
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedHeight = TypeData<
   t_GiphyGIFImageDataFixedHeight
 >
+
+/**
+ * @name GiphyGIFImageDataFixedHeightStill
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedHeightStill = TypeData<
   t_GiphyGIFImageDataFixedHeightStill
 >
+
+/**
+ * @name GiphyGIFImageDataFixedHeightDownsample
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedHeightDownsample = TypeData<
   t_GiphyGIFImageDataFixedHeightDownsample
 >
+
+/**
+ * @name GiphyGIFImageDataFixedWidth
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedWidth = TypeData<
   t_GiphyGIFImageDataFixedWidth
 >
+
+/**
+ * @name GiphyGIFImageDataFixedWidthStill
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedWidthStill = TypeData<
   t_GiphyGIFImageDataFixedWidthStill
 >
+
+/**
+ * @name GiphyGIFImageDataFixedWidthDownsample
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedWidthDownsample = TypeData<
   t_GiphyGIFImageDataFixedWidthDownsample
 >
+
+/**
+ * @name GiphyGIFImageDataFixedHeightSmall
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedHeightSmall = TypeData<
   t_GiphyGIFImageDataFixedHeightSmall
 >
+
+/**
+ * @name GiphyGIFImageDataFixedHeightSmallStill
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedHeightSmallStill = TypeData<
   t_GiphyGIFImageDataFixedHeightSmallStill
 >
+
+/**
+ * @name GiphyGIFImageDataFixedWidthSmall
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedWidthSmall = TypeData<
   t_GiphyGIFImageDataFixedWidthSmall
 >
+
+/**
+ * @name GiphyGIFImageDataFixedWidthSmallStill
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataFixedWidthSmallStill = TypeData<
   t_GiphyGIFImageDataFixedWidthSmallStill
 >
+
+/**
+ * @name GiphyGIFImageDataDownsized
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataDownsized = TypeData<t_GiphyGIFImageDataDownsized>
+
+/**
+ * @name GiphyGIFImageDataDownsizedStill
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataDownsizedStill = TypeData<
   t_GiphyGIFImageDataDownsizedStill
 >
+
+/**
+ * @name GiphyGIFImageDataDownsizedLarge
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataDownsizedLarge = TypeData<
   t_GiphyGIFImageDataDownsizedLarge
 >
+
+/**
+ * @name GiphyGIFImageDataOriginal
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataOriginal = TypeData<t_GiphyGIFImageDataOriginal>
+
+/**
+ * @name GiphyGIFImageDataOriginalStill
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataOriginalStill = TypeData<
   t_GiphyGIFImageDataOriginalStill
 >
+
+/**
+ * @name GiphyGIFImageDataLooping
+ * @type OBJECT
+ */
 export type GiphyGIFImageDataLooping = TypeData<t_GiphyGIFImageDataLooping>
+
+/**
+ * @name GiphyRatingType
+ * @type ENUM
+ */
 export type GiphyRatingType = TypeData<t_GiphyRatingType>
+
+/**
+ * @name GraphQLHubMutationAPI
+ * @type OBJECT
+ */
 export type GraphQLHubMutationAPI = TypeData<t_GraphQLHubMutationAPI>
+
+/**
+ * @name SetValueForKeyPayload
+ * @type OBJECT
+ */
 export type SetValueForKeyPayload = TypeData<t_SetValueForKeyPayload>
+
+/**
+ * @name __Schema
+ * @type OBJECT
+ */
 export type __Schema = TypeData<t___Schema>
+
+/**
+ * @name __Type
+ * @type OBJECT
+ */
 export type __Type = TypeData<t___Type>
+
+/**
+ * @name __TypeKind
+ * @type ENUM
+ */
 export type __TypeKind = TypeData<t___TypeKind>
+
+/**
+ * @name __Field
+ * @type OBJECT
+ */
 export type __Field = TypeData<t___Field>
+
+/**
+ * @name __InputValue
+ * @type OBJECT
+ */
 export type __InputValue = TypeData<t___InputValue>
+
+/**
+ * @name __EnumValue
+ * @type OBJECT
+ */
 export type __EnumValue = TypeData<t___EnumValue>
+
+/**
+ * @name __Directive
+ * @type OBJECT
+ */
 export type __Directive = TypeData<t___Directive>
