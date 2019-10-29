@@ -52,7 +52,7 @@
     "husky": "^3.0.9",
     "lerna": "^3.18.3",
     "lerna-changelog": "^0.8.2",
-    "parcel": "^1.12.4",
+    "parcel-bundler": "^1.12.4",
     "pretty-quick": "^2.0.0",
     "react": "^0.0.0-experimental-f6b8d31a7",
     "react-dom": "^0.0.0-experimental-f6b8d31a7",

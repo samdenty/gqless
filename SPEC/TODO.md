@@ -1,5 +1,9 @@
 # MVP
 
+- Handle errors returned from server
+
+  - Errors can make non-nullable fields return null
+
 - Make `gqless` bin alias to `@gqless/cli`, so only need to install 1 set of deps
 - Make codegen default to typescript, add --js option
 - Make variable updates re-fetch & update component
