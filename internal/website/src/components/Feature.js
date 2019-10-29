@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import withBaseUrl from '@docusaurus/withBaseUrl'
+import useBaseUrl from '@docusaurus/useBaseUrl'
 import * as React from 'react'
 import { motion } from 'framer-motion'
 import { Overflow } from './Overflow'
@@ -33,6 +33,8 @@ const Description = styled(motion.p)`
 `
 
 export const Feature = ({ title, imageUrl, children }) => {
+  const baseUrl = useBaseUrl() || ''
+
   return (
     <StyledFeature
       variants={{
@@ -60,7 +62,7 @@ export const Feature = ({ title, imageUrl, children }) => {
       }}
     >
       <Overflow>
-        <Image src={withBaseUrl(imageUrl)} alt={title} />
+        <Image src={baseUrl + imageUrl} alt={title} />
         <Title
           variants={{
             hidden: { translateX: '-100%' },

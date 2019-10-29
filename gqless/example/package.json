@@ -15,9 +15,5 @@
     "flatted": "^2.0.1",
     "ts-morph": "^4.3.2"
   },
-  "devDependencies": {
-    "@babel/core": "^7.6.2",
-    "parcel": "^1.12.3"
-  },
   "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb"
 }

@@ -15,10 +15,5 @@
     "react": "../node_modules/react",
     "react-dom": "../node_modules/react-dom"
   },
-  "devDependencies": {
-    "@types/react": "^16.8.15",
-    "@types/react-dom": "^16.8.4",
-    "parcel": "^1.12.3"
-  },
   "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb"
 }

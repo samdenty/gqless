@@ -2,7 +2,7 @@ import 'regenerator-runtime/runtime'
 import Layout from '@theme/Layout'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import Link from '@docusaurus/Link'
-import withBaseUrl from '@docusaurus/withBaseUrl'
+import useBaseUrl from '@docusaurus/useBaseUrl'
 import * as React from 'react'
 import { Feature, Arrow, Example, Overflow } from '../components'
 import styled from '@emotion/styled'
@@ -80,6 +80,7 @@ const delay = t => new Promise(resolve => setTimeout(resolve, t))
 
 export default () => {
   const context = useDocusaurusContext()
+  const baseUrl = useBaseUrl() || ''
   const { siteConfig = {} } = context
 
   const info = useAnimation()
@@ -148,7 +149,7 @@ export default () => {
           >
             <Link
               className={'button button--secondary button--lg'}
-              to={withBaseUrl('docs/getting-started')}
+              to={baseUrl + 'docs/getting-started'}
             >
               Get Started
             </Link>
@@ -178,7 +179,7 @@ export default () => {
             }}
           >
             <FeatureLink
-              to={withBaseUrl('docs/intro/features#invisible-data-fetching')}
+              to={baseUrl + 'docs/intro/features#invisible-data-fetching'}
             >
               <Feature
                 title="Invisible data fetching"
@@ -187,18 +188,18 @@ export default () => {
                 Queries are generated at runtime, by using JS getters.
               </Feature>
             </FeatureLink>
-            <FeatureLink to={withBaseUrl('docs/intro/features#typescript')}>
+            <FeatureLink to={baseUrl + 'docs/intro/features#typescript'}>
               <Feature title="Strongly typed" imageUrl="img/typescript.png">
                 Built from the ground up to work with Typescript — no more
                 code generation
               </Feature>
             </FeatureLink>
-            <FeatureLink to={withBaseUrl('docs/react/basic-usage')}>
+            <FeatureLink to={baseUrl + 'docs/react/basic-usage'}>
               <Feature title="React.js" imageUrl="img/react.svg">
                 React Suspense, hooks, automatic component updates and more.
               </Feature>
             </FeatureLink>
-            <FeatureLink to={withBaseUrl('docs/intro/features')}>
+            <FeatureLink to={baseUrl + 'docs/intro/features'}>
               <Feature
                 title="Production ready"
                 imageUrl="img/production_ready.png"
