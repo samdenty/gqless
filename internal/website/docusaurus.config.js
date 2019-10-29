@@ -1,6 +1,3 @@
-const React = require('react')
-
-console.warn(React.version)
 module.exports = {
   title: 'gqless',
   tagline: `A GraphQL client without queries ✨`,
