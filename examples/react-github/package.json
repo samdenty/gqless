@@ -1,20 +1,20 @@
 {
   "license": "MIT",
   "name": "react-github",
-  "version": "0.0.1-alpha.20",
+  "version": "0.0.1-alpha.21",
   "private": true,
   "dependencies": {
-    "@gqless/logger": "^0.0.1-alpha.20",
-    "@gqless/react": "^0.0.1-alpha.20",
+    "@gqless/logger": "^0.0.1-alpha.21",
+    "@gqless/react": "^0.0.1-alpha.21",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.3",
     "@types/styled-components": "^4.1.20",
-    "gqless": "^0.0.1-alpha.20",
+    "gqless": "^0.0.1-alpha.21",
     "parcel": "^1.12.4",
     "styled-components": "^4.4.0"
   },
   "devDependencies": {
-    "@gqless/cli": "^0.0.1-alpha.20"
+    "@gqless/cli": "^0.0.1-alpha.21"
   },
   "scripts": {
     "generate": "../../packages/cli/bin/run-dev generate -u https://api.github.com/graphql?access_token=$GITHUB_AUTH src/graphql -t",
