@@ -20,6 +20,6 @@
   },
   "scripts": {
     "generate": "../../packages/cli/bin/run-dev generate -u https://www.graphqlhub.com/graphql src/graphql -t",
-    "start": "parcel src/index.html"
+    "start": "parcel index.html --open"
   }
 }
