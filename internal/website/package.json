@@ -13,8 +13,6 @@
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.22",
     "framer-motion": "^1.6.15",
-    "react": "^16.10.1",
-    "react-dom": "^16.10.1",
     "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {}

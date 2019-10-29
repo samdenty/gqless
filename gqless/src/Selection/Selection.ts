@@ -4,8 +4,6 @@ import { Node } from '../Node'
 export class Selection<TNode extends Node = Node> {
   // Selections that should be fetched with all queries
   public keySelections = new Set<Selection>()
-
-  a = new Error().stack
   public selections = new Set<Selection>()
 
   /**
