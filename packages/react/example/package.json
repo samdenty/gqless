@@ -2,7 +2,7 @@
   "license": "MIT",
   "name": "example",
   "private": true,
-  "version": "0.0.1-alpha.21",
+  "version": "0.0.1-alpha.22",
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",

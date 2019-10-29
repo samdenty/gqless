@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "name": "@internal/fixtures",
-  "version": "0.0.1-alpha.21",
+  "version": "0.0.1-alpha.22",
   "private": true,
   "main": "index.ts",
   "scripts": {

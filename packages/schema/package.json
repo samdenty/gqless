@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "name": "@gqless/schema",
-  "version": "0.0.1-alpha.21",
+  "version": "0.0.1-alpha.22",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/schema.esm.js",
@@ -21,13 +21,13 @@
     "test": "jest"
   },
   "dependencies": {
-    "@gqless/utils": "^0.0.1-alpha.21"
+    "@gqless/utils": "^0.0.1-alpha.22"
   },
   "peerDependencies": {
     "gqless": "*"
   },
   "devDependencies": {
-    "gqless": "^0.0.1-alpha.21"
+    "gqless": "^0.0.1-alpha.22"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }
