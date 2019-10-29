@@ -1,4 +1,4 @@
-import { ArrayNode, IExtension, INDEX, ScalarNode, resolveData } from '../Node'
+import { ArrayNode, INDEX, resolveData } from '../Node'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
@@ -24,7 +24,7 @@ export class IndexAccessor<
       })
     )
 
-    syncValue(this, value => value.get(this.toString()))
+    syncValue(this, this.toString())
 
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)
@@ -34,16 +34,10 @@ export class IndexAccessor<
     super.initializeExtensions()
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      const parentExtension = this.parent.extensions[i]
+      const extensionRef = this.parent.extensions[i].childIndex(this)
+      if (!extensionRef) continue
 
-      const extensionOfNode = parentExtension[INDEX]
-      const extension: IExtension<any> =
-        typeof extensionOfNode === 'function'
-          ? extensionOfNode(this.data)
-          : extensionOfNode
-      if (!extension) continue
-
-      this.extensions.unshift(extension)
+      this.extensions.unshift(extensionRef)
     }
   }
 

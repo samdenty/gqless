@@ -40,18 +40,26 @@
     "cacheDir": ".changelog"
   },
   "devDependencies": {
+    "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-decorators": "^7.6.0",
-    "@types/jest": "^24.0.18",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@types/jest": "^24.0.20",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.3",
     "codecov": "^3.5.0",
-    "graphql-faker": "^2.0.0-rc.12",
-    "husky": "^3.0.8",
-    "lerna": "^3.16.4",
+    "graphql-faker": "^2.0.0-rc.13",
+    "husky": "^3.0.9",
+    "lerna": "^3.18.3",
     "lerna-changelog": "^0.8.2",
-    "pretty-quick": "^1.11.1",
+    "parcel": "^1.12.4",
+    "pretty-quick": "^2.0.0",
+    "react": "^0.0.0-experimental-f6b8d31a7",
+    "react-dom": "^0.0.0-experimental-f6b8d31a7",
     "tsconfig-paths": "^3.9.0",
-    "tsdx": "^0.9.3",
+    "tsdx": "0.9.3",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.0-beta"
+    "typescript": "^3.7.1-rc"
   },
   "dependencies": {}
 }

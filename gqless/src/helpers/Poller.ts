@@ -28,9 +28,10 @@ export class Poller {
    * only after it's been fetched
    */
   private async poll() {
-    if (this.stack) this.accessor.scheduler.pushStack(...this.stack)
-    this.unstage = this.accessor.scheduler.commit.stage(this.accessor)
-    if (this.stack) this.accessor.scheduler.popStack(...this.stack)
+    this.unstage = this.accessor.scheduler.commit.stage(
+      this.accessor,
+      ...(this.stack || [])
+    )
 
     // Wait until it's been fetched, before polling again
     await this.accessor.onStatusChange

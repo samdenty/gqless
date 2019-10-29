@@ -25,7 +25,7 @@ export interface IFormatterOptions {
 
 export class Formatter {
   public formatter = this
-  public options: IFormatterOptions
+  public options: Required<IFormatterOptions>
 
   constructor({
     prettify = __DEV__,
@@ -43,6 +43,10 @@ export class Formatter {
     if (!this.SPACE) return string
 
     return string.replace(/^/gm, this.SPACE.repeat(2))
+  }
+
+  public hug = (string: string) => {
+    return `{${this.NEWLINE}${string}${this.NEWLINE}}`
   }
 
   @computed()

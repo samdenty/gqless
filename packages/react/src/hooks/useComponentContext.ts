@@ -1,4 +1,4 @@
-import { Query, Accessor, Fragment, ObjectNode } from 'gqless'
+import { Query, Accessor, Fragment, ObjectNode, Scheduler } from 'gqless'
 import { StackContext } from '../Query'
 import { invariant } from '@gqless/utils'
 
@@ -9,6 +9,7 @@ export interface ComponentContext {
   query: Query
   stack: StackContext
   accessors: Set<Accessor>
+  schedulers: Set<Scheduler>
 
   // Fragments to be used for render variants
   variantFragments: VariantFragments

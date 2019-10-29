@@ -9,13 +9,15 @@ export type UValueData =
   | Value[]
   | null
 
-export class Value {
+export class Value<TNode extends Node & Outputable = Node & Outputable> {
+  private _data!: UValueData
   public references = new Map<Value, Set<string | number>>()
 
   constructor(
-    public node: Node & Outputable,
-    public data: UValueData = node instanceof ArrayNode ? [] : {}
+    public node: TNode,
+    data: UValueData = node instanceof ArrayNode ? [] : {}
   ) {
+    this.data = data
     this.onSet((key, value) => {
       if (!this.references.has(value)) this.references.set(value, new Set())
 
@@ -38,7 +40,7 @@ export class Value {
 
   // When a new Value is associated with a key
   public onSet = createEvent<(key: string | number, value: Value) => void>()
-  // When data is updated / onSet
+  // When data is updated (reference equality)
   public onChange = createEvent<(prevData?: UValueData) => void>()
 
   // When a Value becomes referenced
@@ -46,11 +48,25 @@ export class Value {
   // When a Value becomes de-refenerced
   public onUnreference = createEvent<(value: Value) => void>()
 
-  public update(data: UValueData) {
-    const prevData = this.data
+  public get data() {
+    return this._data
+  }
+
+  public set data(data: UValueData) {
+    const prevData = this._data
     if (data === prevData) return
 
-    this.data = data
+    this._data = data
+
+    if (data && typeof data === 'object') {
+      Object.entries(data).forEach(([key, value]) => {
+        key = String(key)
+        if ((prevData as any)?.[key] === value) return
+
+        this.onSet.emit(key, value)
+      })
+    }
+
     this.onChange.emit(prevData)
   }
 
@@ -65,11 +81,12 @@ export class Value {
   }
 
   public set(key: string | number, value: Value) {
-    const prevValue = this.get(key)
+    key = String(key)
+    const prevValue = (this.data as any)?.[key]
     if (prevValue === value) return
+
     ;(this.data as any)[key] = value
     this.onSet.emit(key, value)
-    this.onChange.emit(this.data)
   }
 
   public toJSON(deep = true): any {

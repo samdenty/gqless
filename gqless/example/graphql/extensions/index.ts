@@ -1,4 +1,11 @@
-import { GET_KEY, getAccessor, INDEX, REDIRECT } from 'gqless'
+import {
+  GET_KEY,
+  getAccessor,
+  INDEX,
+  REDIRECT,
+  IndexAccessor,
+  Fragment,
+} from 'gqless'
 
 // export const String = (value: string) => {
 //   console.log(value)
@@ -19,7 +26,13 @@ export const User /*: Extension<g.User>*/ = {
     isFollowing: true,
   },
 
-  [GET_KEY]: data => data.id,
+  [GET_KEY](data) {
+    // console.log(
+    //   `User GET_KEY called ${getAccessor(data).path}`,
+    //   getAccessor(data).value
+    // )
+    return data.id
+  },
 }
 
 export const Query /*: Extension<g.User>*/ = query => {
@@ -33,16 +46,31 @@ export const Query /*: Extension<g.User>*/ = query => {
         const a = JSON.parse(JSON.stringify(args))
         const m = match({ id: a.id })
 
-        console.log('query.user redirected', a, m)
+        // console.log('query.user redirected', a, m)
 
         return m
       },
     },
     users: {
       get(id: string) {},
-      [INDEX]: {
-        isAQueryUser: true,
-      },
+      // @TODO: Keyed arrays
+      // [GET_KEY](data) {
+      //   const a = getAccessor(data)
+      //   // console.warn(
+      //   //   a.selectionPath.filter(s => !(s instanceof Fragment)).toString()
+      //   // )
+      //   return a.selectionPath.filter(s => !(s instanceof Fragment)).toString()
+      // },
+      // [INDEX](data) {
+      //   const a = getAccessor(data) as IndexAccessor
+      //   return {
+      //     [GET_KEY]() {
+
+      //       return { index: a.index, id: data.id, name: data.name }
+      //     },
+      //     isAQueryUser: true,
+      //   }
+      // },
     },
     getUser: {
       queryGetUsers: true as const,

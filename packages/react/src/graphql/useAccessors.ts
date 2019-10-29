@@ -3,16 +3,19 @@ import { useMemo, useEffect } from 'react'
 import { useForceUpdate } from '../hooks/useForceUpdate'
 import { StackContext } from '../Query'
 import { useInterceptor } from './useInterceptor'
+import { useComponentContext } from '../hooks/useComponentContext'
 
 export const useAccessors = (stack: StackContext) => {
   const accessors = useMemo(() => new Set<Accessor>(), [])
 
-  const accessorDisposers = useMemo(() => new Map<Accessor, Function>(), [])
+  const accessorDisposers = useMemo(() => new Map<Accessor, Function[]>(), [])
   const forceUpdate = useForceUpdate()
 
   useEffect(() => {
     return () => {
-      accessorDisposers.forEach(dispose => dispose())
+      accessorDisposers.forEach(disposers => {
+        disposers.forEach(dispose => dispose())
+      })
     }
   }, [])
 
@@ -30,9 +33,21 @@ export const useAccessors = (stack: StackContext) => {
         accessorDisposers.set(
           accessor,
           // Make component update when data changes
-          accessor.onDataChange(() => {
-            forceUpdate()
-          })
+          [
+            accessor.onDataChange(() => {
+              forceUpdate()
+            }),
+            accessor.onStatusChange(
+              (prevValue: NetworkStatus, newValue: NetworkStatus) => {
+                const prevIdle = prevValue === NetworkStatus.idle
+                const active = newValue !== NetworkStatus.idle
+
+                if (prevIdle && active) {
+                  forceUpdate()
+                }
+              }
+            ),
+          ]
         )
       })
 
@@ -51,10 +66,10 @@ export const useAccessors = (stack: StackContext) => {
 
         // Remove previously used accessors, that
         // aren't required anymore
-        const dispose = accessorDisposers.get(accessor)
-        if (dispose) {
+        const disposers = accessorDisposers.get(accessor)
+        if (disposers) {
           accessorDisposers.delete(accessor)
-          dispose()
+          disposers.forEach(dispose => dispose())
         }
         accessors.delete(accessor)
       })
@@ -63,10 +78,10 @@ export const useAccessors = (stack: StackContext) => {
         let resolve: Function
         const promise = new Promise<void>(r => (resolve = r))
 
-        accessors.forEach(accessor => {
+        nonIdleAccessors.forEach(accessor => {
           accessor.onStatusChange.then(() => {
-            accessors.delete(accessor)
-            if (!accessors.size) resolve()
+            nonIdleAccessors.delete(accessor)
+            if (!nonIdleAccessors.size) resolve()
           })
         })
 

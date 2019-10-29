@@ -1,8 +1,10 @@
-import { Variable } from '../../../Variable'
-
-export const isArgsEqual = (a: any, b: any) => {
-  // If either is a variable they need to be equal
-  if (a instanceof Variable || b instanceof Variable) return a === b
+export const deepJSONEqual = (
+  a: any,
+  b: any,
+  customCompare?: (a: any, b: any) => boolean | undefined
+) => {
+  const isEqual = customCompare?.(a,b)
+  if (isEqual !== undefined) return isEqual
 
   // Called in JSON.stringify (currently not used internally)
   if (a && typeof a.toJSON === 'function') a = a.toJSON()
@@ -19,7 +21,7 @@ export const isArgsEqual = (a: any, b: any) => {
       length = a.length
 
       if (length !== b.length) return false
-      for (i = length; i-- !== 0; ) if (!isArgsEqual(a[i], b[i])) return false
+      for (i = length; i-- !== 0; ) if (!deepJSONEqual(a[i], b[i], customCompare)) return false
       return true
     }
 
@@ -33,7 +35,7 @@ export const isArgsEqual = (a: any, b: any) => {
 
     for (i = length; i-- !== 0; ) {
       key = keys[i]
-      if (!isArgsEqual(a[key], b[key])) return false
+      if (!deepJSONEqual(a[key], b[key], customCompare)) return false
     }
 
     return true

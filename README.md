@@ -1,4 +1,4 @@
-# gqless [![Codecov](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
+# gqless [![](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
 
 Auto-generates GraphQL queries based on the data your application consumes.
 

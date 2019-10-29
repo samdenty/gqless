@@ -1,4 +1,10 @@
-import { IExtension, resolveData } from '../Node'
+import {
+  UExtension,
+  resolveData,
+  ProxyExtension,
+  ObjectExtension,
+  Extension,
+} from '../Node'
 import { FieldSelection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
@@ -10,7 +16,7 @@ export class FieldAccessor<
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
 
-    syncValue(this, value => value.get(this.toString()))
+    syncValue(this, this.toString())
 
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)
@@ -21,15 +27,11 @@ export class FieldAccessor<
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
       const parentExtension = this.parent.extensions[i]
+      const extensionRef = parentExtension.childField(this)
 
-      const extensionField = parentExtension[this.selection.field.name]
-      const extension: IExtension<any> =
-        typeof extensionField === 'function'
-          ? extensionField(this.data)
-          : extensionField
-      if (!extension) continue
+      if (!extensionRef) continue
 
-      this.extensions.unshift(extension)
+      this.extensions.unshift(extensionRef)
     }
   }
 

@@ -2,7 +2,7 @@
   "license": "MIT",
   "name": "example",
   "private": true,
-  "version": "0.0.1-alpha.20",
+  "version": "0.0.1-alpha.21",
   "main": "index.js",
   "scripts": {
     "start": "parcel index.html",
@@ -14,11 +14,6 @@
   "alias": {
     "react": "../node_modules/react",
     "react-dom": "../node_modules/react-dom"
-  },
-  "devDependencies": {
-    "@types/react": "^16.8.15",
-    "@types/react-dom": "^16.8.4",
-    "parcel": "^1.12.3"
   },
   "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb"
 }

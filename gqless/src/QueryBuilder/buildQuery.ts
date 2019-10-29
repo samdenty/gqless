@@ -7,7 +7,7 @@ import { ObjectNode } from '../Node'
 import { buildFragments } from './buildFragments'
 
 export const buildQuery = (
-  { SPACE, SEPARATOR, NEWLINE, formatter }: Formatter,
+  { SPACE, SEPARATOR, NEWLINE, hug, indent, formatter }: Formatter,
   queryName?: string,
   ...selectionPaths: Selection[][]
 ) => {
@@ -26,9 +26,9 @@ export const buildQuery = (
   }
 
   const query = [
-    `query${
-      queryName ? ' ' + queryName : ''
-    }${buildVariables()}${SPACE}${selections}`,
+    `query${queryName ? ' ' + queryName : ''}${buildVariables()}${SPACE}${hug(
+      indent(selections)
+    )}`,
     buildFragments(formatter, rootTree),
   ]
     .filter(Boolean)

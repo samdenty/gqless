@@ -2,20 +2,17 @@
   "license": "MIT",
   "name": "@internal/website",
   "private": true,
-  "version": "0.0.1-alpha.20",
+  "version": "0.0.1-alpha.21",
   "scripts": {
     "start": "docusaurus start --host 0.0.0.0",
     "build": "docusaurus build"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.24",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.24",
-    "@emotion/core": "^10.0.20",
-    "@emotion/styled": "^10.0.15",
-    "framer-motion": "^1.6.8",
-    "react": "^16.10.1",
-    "react-dom": "^16.10.1",
+    "@docusaurus/core": "^2.0.0-alpha.31",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.31",
+    "@emotion/core": "^10.0.22",
+    "@emotion/styled": "^10.0.22",
+    "framer-motion": "^1.6.15",
     "regenerator-runtime": "^0.13.3"
-  },
-  "devDependencies": {}
+  }
 }

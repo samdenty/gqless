@@ -1,6 +1,6 @@
 import { ObjectNode } from '../ObjectNode'
 import { Outputable } from './Outputable'
-import { Extension } from '../Extension'
+import { Extension, ObjectExtension } from '../Extension'
 import { Accessor, ACCESSOR, FragmentAccessor } from '../../Accessor'
 
 export class Abstract<
@@ -38,13 +38,15 @@ export class Abstract<
           if (prop === ACCESSOR) return accessor
 
           if (prop === '__typename') {
-            console.warn('access __typename on abstract')
+            // TODO: Support __typename for react without ofType
             return null
           }
 
+          if (prop === 'toString') return () => this.toString()
+
           // fallback to extensions
           for (const extension of accessor.extensions) {
-            if (prop in extension) return extension[prop]
+            if (prop in extension.data) return extension.data[prop]
           }
         },
 
@@ -60,7 +62,7 @@ export class Abstract<
            */
           for (const extension of accessor.extensions) {
             if (prop in extension) {
-              extension[prop] = value
+              extension.data[prop] = value
               return true
             }
           }
@@ -69,5 +71,9 @@ export class Abstract<
         },
       }
     )
+  }
+
+  public toString() {
+    return this.implementations.join('|')
   }
 }

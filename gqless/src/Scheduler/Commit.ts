@@ -31,7 +31,7 @@ export class Commit extends Disposable {
     return unstage
   }
 
-  public stage(accessor: Accessor) {
+  public stage(accessor: Accessor, ...queries: Query[]) {
     const unstage = () => this.unstage(accessor)
 
     // If the accessor is in this current commit,
@@ -49,7 +49,7 @@ export class Commit extends Disposable {
       ? NetworkStatus.updating
       : NetworkStatus.loading
 
-    this.accessors.set(accessor, [...this.stack])
+    this.accessors.set(accessor, [...this.stack, ...queries])
 
     return unstage
   }

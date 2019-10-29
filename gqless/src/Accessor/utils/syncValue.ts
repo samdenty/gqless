@@ -4,10 +4,18 @@ import { Value } from '../../Cache'
 export const syncValue = (
   accessor: Accessor,
 
-  getValue: (accessorValue: Value) => Value | undefined,
+  getFromValue: ((accessorValue: Value) => Value | undefined) | string,
   withAccessor = accessor.parent
 ) => {
   if (!withAccessor) return
+
+  const isFn = typeof getFromValue === 'function'
+
+  const getValue = (value: Value): Value | undefined => {
+    if (isFn) return (getFromValue as Function)(value)
+
+    return value.get(getFromValue as string)
+  }
 
   let dispose: Function | undefined
   const associateValue = () => {
@@ -18,15 +26,21 @@ export const syncValue = (
     }
 
     if (withAccessor.value) {
-      accessor.value = getValue(withAccessor.value!)
+      accessor.value = getValue(withAccessor.value)
 
-      dispose = withAccessor.value!.onChange(() => {
+      const onChange = isFn
+        ? withAccessor.value.onChange
+        : withAccessor.value.onSet.filter(k => k === getFromValue)
+
+      dispose = onChange(() => {
         accessor.value = getValue(withAccessor.value!)
       })
       accessor.addDisposer(dispose)
-    } else {
-      accessor.value = undefined
+
+      return
     }
+
+    accessor.value = undefined
   }
 
   accessor.addDisposer(withAccessor.onValueChange(associateValue))

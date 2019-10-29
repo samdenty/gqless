@@ -1,13 +1,13 @@
 {
   "license": "MIT",
   "name": "@internal/fixtures",
-  "version": "0.0.1-alpha.20",
+  "version": "0.0.1-alpha.21",
   "private": true,
   "main": "index.ts",
   "scripts": {
     "generate": "cd demoSchema; ts-node -T -r tsconfig-paths/register --skip-project generate"
   },
   "dependencies": {
-    "graphql": "14.5.6"
+    "graphql": "14.5.8"
   }
 }

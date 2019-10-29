@@ -1,7 +1,8 @@
 import { invariant } from '@gqless/utils'
 import { Generic, Mix } from 'mix-classes'
 
-import { Arguments } from '../..'
+import { deepJSONEqual } from '../../../utils'
+import { Arguments } from '../../Arguments'
 import { Accessor, FieldAccessor } from '../../../Accessor'
 import { FieldSelection, Selection } from '../../../Selection'
 import { EnumNode } from '../../EnumNode'
@@ -10,7 +11,7 @@ import { Node } from '../Node'
 import { NodeContainer } from '../NodeContainer'
 import { Outputable, resolveData } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
-import { isArgsEqual } from './isArgsEqual'
+import { Variable } from '../../../Variable'
 
 export interface FieldNode<TNode extends Node & Outputable = any>
   extends NodeContainer<TNode> {}
@@ -33,7 +34,12 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
 
         return (
           selection.field.name === this.name &&
-          isArgsEqual(selection.args, args)
+          deepJSONEqual(selection.args, args, (a, b) => {
+            // If either is a variable they need to be equal
+            if (a instanceof Variable || b instanceof Variable) return a === b
+
+            return undefined
+          })
         )
       }
     )!
@@ -126,5 +132,9 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
       )
 
     return argumentlessData
+  }
+
+  public toString() {
+    return this.name
   }
 }

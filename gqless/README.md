@@ -1,6 +1,8 @@
-# gqless (work in progress) [![Code Climate coverage](https://img.shields.io/codeclimate/coverage/samdenty/gqless)](https://codeclimate.com/github/samdenty/gqless)
+# gqless [![](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
 
 Auto-generates GraphQL queries based on the data your application consumes.
+
+## [Documentation](https://gqless.netlify.com)
 
 ## Features
 
@@ -17,8 +19,6 @@ Auto-generates GraphQL queries based on the data your application consumes.
 **Your application:**
 
 ```tsx
-import { query, User } from './generated'
-
 const User = graphql(({ user }: { user: User }) => (
   <div>
     <h2>{user.name}</h2>
@@ -148,11 +148,11 @@ export const User = user => ({
 
 It works by creating an [ES6 Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) that follows the shape of your schema.
 
-When properties are accessed, it creates a [`Selection`](https://github.com/samdenty/gqless/tree/master/src/gqless/src/Selection) representing the path accessed, arguments and more.
+When properties are accessed, it creates a [`Selection`](https://github.com/samdenty/gqless/tree/master/gqless/src/Selection) representing the path accessed, arguments and more.
 
 If the React component being rendered contains unfetched data, it'll be suspended (using React suspense).
 
-Every 50ms the [`Scheduler`](https://github.com/samdenty/gqless/tree/master/src/gqless/src/Scheduler) takes in all the selections, and converts them into GraphQL queries. Once fetched, the result is written into the cache.
+Every 50ms the [`Scheduler`](https://github.com/samdenty/gqless/tree/master/gqless/src/Scheduler) takes in all the selections, and converts them into GraphQL queries. Once fetched, the result is written into the cache.
 
 Finally the React components unsuspend, with the newly populated data available.
 

@@ -3,11 +3,9 @@ import { Generic, Mix } from 'mix-classes'
 import { Accessor, FieldAccessor } from '../Accessor'
 import { ACCESSOR } from '../Accessor/Accessor'
 import {
-  defaultKey,
   FieldNode,
   FieldsNode,
   IFieldsNodeOptions,
-  Keyable,
   UFieldsNodeRecord,
   Matchable,
   Outputable,
@@ -18,25 +16,20 @@ import { Value } from '../Cache'
 
 export type IObjectNodeOptions = IFieldsNodeOptions
 
-export interface ObjectNode<TData>
-  extends FieldsNode<TData>,
-    Keyable<ObjectNode<TData>> {}
+export interface ObjectNode<TData> extends FieldsNode<TData> {}
 
 const TYPENAME_NODE = new ScalarNode()
 
 export class ObjectNode<TData = any> extends Mix(
   Generic(FieldsNode),
   Outputable,
-  Matchable,
-  Generic(Keyable)
+  Matchable
 ) {
   constructor(fields: UFieldsNodeRecord, options: IObjectNodeOptions) {
     // Add __typename node
     fields.__typename = new FieldNode(TYPENAME_NODE)
 
     super([fields as any, options], [options.extension])
-
-    this.keyGetter = defaultKey(this) as any
   }
 
   public match(value: Value, data: any) {
@@ -90,9 +83,11 @@ export class ObjectNode<TData = any> extends Mix(
           return resolveData(field, accessor)
         }
 
+        if (prop === 'toString') return () => this.toString()
+
         // fallback to extensions
         for (const extension of accessor.extensions) {
-          if (prop in extension) return extension[prop]
+          if (prop in extension.data) return extension.data[prop]
         }
       },
 
@@ -125,8 +120,8 @@ export class ObjectNode<TData = any> extends Mix(
          * else set it on the first extension with the property
          */
         for (const extension of accessor.extensions) {
-          if (prop in extension) {
-            extension[prop] = value
+          if (prop in extension.data) {
+            extension.data[prop] = value
             return true
           }
         }

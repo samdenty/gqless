@@ -1,3 +1,22 @@
+- Add default query name to `graphql()` wrapper
+- Add variable definition name to `useVariable` hook
+
+### Macro
+
+Macro could be typed inside the codegen, preventing '../../..' etc.
+
+```ts
+import { graphql, query, User, useVariable } from 'gqless/macro'
+
+export const component = graphql(() => {})
+```
+
+- Could support passing arguments to function by order, instead of an object
+
+  - ie. `query.user('bob')`, `mutation.createUser('John', 'Doe')` instead of `{ name: 'bob' }`, `{ firstName: 'John', lastName: 'Doe' }`
+  - Based on the order of the GraphQL schema
+    - Would be very brittle + hard to debug if schema changed
+
 # Adding debug-names
 
 ```js

@@ -17,7 +17,7 @@ export class Scheduler extends Disposable {
   constructor(
     private fetchAccessors: AccessorFetcher,
     public plugins: Plugins = new Plugins(),
-    public interval = 20
+    public interval = 1000
   ) {
     super()
 

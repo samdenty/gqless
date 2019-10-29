@@ -1,4 +1,4 @@
-import { Accessor, RootAccessor, ScalarNode } from 'gqless'
+import { Accessor, RootAccessor, ScalarNode, FragmentAccessor } from 'gqless'
 
 import { Path, Preview, Tree, TreeItem } from './components'
 import * as React from './jsx'
@@ -19,13 +19,15 @@ export const accessorFormatter = {
             path={path}
             objectDepth={config.objectDepth}
             isRoot={accessor => accessor instanceof RootAccessor}
+            isFragment={accessor => accessor instanceof FragmentAccessor}
           />
 
           {children.length ? (
             <Preview
               elements={children}
               objectDepth={config.objectDepth}
-              colon
+              colon={!(accessor instanceof FragmentAccessor)}
+              isFragment={accessor => accessor instanceof FragmentAccessor}
             />
           ) : (
             (config.objectDepth || accessor.node instanceof ScalarNode) && (
@@ -46,9 +48,15 @@ export const accessorFormatter = {
   },
 
   body(accessor: Accessor) {
+    const children = [...accessor.children]
+    children.sort(
+      (a, b) =>
+        +(b instanceof FragmentAccessor) - +(a instanceof FragmentAccessor)
+    )
+
     return (
       <Tree>
-        {accessor.children.map(accessor => (
+        {children.map(accessor => (
           <TreeItem
             object={accessor}
             root={!!accessor.children.length}
@@ -58,7 +66,6 @@ export const accessorFormatter = {
       </Tree>
     )
   },
-
   hasBody(accessor: Accessor) {
     return !!accessor.children.length
   },

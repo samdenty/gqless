@@ -18,7 +18,7 @@ export class Codegen {
     }
 
     this.files = [
-      new graphql.ExtensionsFile(),
+      new graphql.ExtensionsFile(this),
       new graphql.IndexFile(),
 
       new graphql.generated.SchemaFile(this),

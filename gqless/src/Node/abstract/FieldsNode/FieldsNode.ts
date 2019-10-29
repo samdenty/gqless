@@ -25,7 +25,7 @@ export type UFieldsNodeRecord = Record<string, FieldNode<UFieldsNode>>
 export interface FieldsNode<TData = any> extends Node<TData> {}
 
 export class FieldsNode<TData> extends Mix(Generic(Node)) {
-  public name?: string
+  public name: string
   public fields: UFieldsNodeRecord
 
   constructor(fields: UFieldsNodeRecord, { name }: IFieldsNodeOptions) {
