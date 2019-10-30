@@ -4,7 +4,10 @@ import { Extension } from '../Extension'
 export type AccessorInterceptor = (accessor: Accessor) => void
 export const accessorInterceptors = new Set<AccessorInterceptor>()
 
-export const resolveData = (outputable: Outputable, accessor: Accessor) => {
+export const getOutputableData = (
+  outputable: Outputable,
+  accessor: Accessor
+) => {
   try {
     return outputable.getData(accessor)
   } catch (accessor) {

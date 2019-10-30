@@ -3,6 +3,7 @@ import * as Types from '../graphql'
 import { graphql } from '@gqless/react'
 import { Repo } from './Repo'
 import styled from 'styled-components'
+import { query } from '../graphql'
 
 const StyledUser = styled.div`
   display: flex;

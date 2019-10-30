@@ -6,11 +6,11 @@ import {
   NodeDataType,
   Abstract,
   UFieldsNodeRecord,
-  resolveData,
+  getOutputableData,
 } from './abstract'
 import { Extension } from './Extension'
 import { ObjectNode } from './ObjectNode'
-import { Accessor, FieldAccessor } from '../Accessor'
+import { Accessor, FieldAccessor, getAccessorData } from '../Accessor'
 
 export type IInterfaceNodeOptions = IFieldsNodeOptions & {
   extension?: Extension
@@ -59,7 +59,7 @@ export class InterfaceNode<TImplementation> extends Mix(
           //   }
           // }
 
-          return resolveData(field, accessor)
+          return getOutputableData(field, accessor)
         }
 
         // if prop only in one implementation
@@ -83,11 +83,10 @@ export class InterfaceNode<TImplementation> extends Mix(
          */
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
-          const selection = field.getSelection(accessor).selection
+          const selection = field.getSelection(accessor)
 
           const fieldAccessor =
-            accessor.get(a => a.selection === selection) ||
-            new FieldAccessor(accessor, selection)
+            accessor.get(selection) || new FieldAccessor(accessor, selection)
 
           fieldAccessor.setData(data)
 

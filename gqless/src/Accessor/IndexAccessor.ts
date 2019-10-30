@@ -1,4 +1,4 @@
-import { ArrayNode, INDEX, resolveData } from '../Node'
+import { ArrayNode } from '../Node'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
@@ -41,8 +41,8 @@ export class IndexAccessor<
     }
   }
 
-  public get data(): any {
-    return resolveData(this.selection.node.ofNode, this)
+  public getData(): any {
+    return this.selection.node.ofNode.getData(this)
   }
 
   public toString() {

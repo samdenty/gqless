@@ -79,7 +79,7 @@ export class ExtensionRef<TData = any> {
     const fragmentAccessor = memoized.fragmentAccessor(
       () =>
         this.accessor.get<FragmentAccessor>(
-          a => a.selection === this.keyFragment
+          this.keyFragment!
         ) || new FragmentAccessor(this.accessor, this.keyFragment!),
       [this.accessor, this.keyFragment]
     )
@@ -105,9 +105,13 @@ export class ExtensionRef<TData = any> {
           accessor.selection.args
         : undefined,
       {
+        instances: entry.instances,
         match(data) {
           return entry.match(data)?.value
         },
+        getByKey(key) {
+          return entry.getByKey(key)
+        }
       }
     )
   }

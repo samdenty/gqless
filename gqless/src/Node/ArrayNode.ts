@@ -2,14 +2,13 @@ import { Generic, Mix } from 'mix-classes'
 
 import { Accessor, IndexAccessor } from '../Accessor'
 import { Selection } from '../Selection'
-import { ACCESSOR } from './../Accessor/Accessor'
+import { ACCESSOR, getAccessorData } from './../Accessor'
 import {
   Node,
   NodeContainer,
   NodeDataType,
   Outputable,
   Matchable,
-  resolveData,
 } from './abstract'
 import { Value } from '../Cache'
 import { ArrayExtension } from './Extension'
@@ -96,10 +95,10 @@ export class ArrayNode<TNode> extends Mix(
             if (!(this.ofNode instanceof Outputable)) return undefined
 
             const accessor: IndexAccessor =
-              arrayAccessor.get(a => (a as IndexAccessor).index === index) ||
+              arrayAccessor.get(index) ||
               new IndexAccessor(arrayAccessor, index)
 
-            return resolveData(this.ofNode, accessor)
+            return getAccessorData(accessor)
           }
         }
 

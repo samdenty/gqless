@@ -1,14 +1,12 @@
 import { createEvent, invariant, createSetter, createMemo } from '@gqless/utils'
 
 import { Cache, Value, NodeEntry } from '../Cache'
-import { Node, Outputable, ScalarNode, ObjectNode, GET_KEY, keyIsValid, ProxyExtension } from '../Node'
+import { Node, Outputable, ScalarNode, ObjectNode, keyIsValid } from '../Node'
 import { Scheduler, Query } from '../Scheduler'
 import { Selection, Fragment } from '../Selection'
-import { computed, Disposable, PathArray } from '../utils'
+import { computed, Disposable, PathArray, arrayEqual } from '../utils'
 import { onDataChange } from './utils'
 import { FragmentAccessor, ExtensionRef } from '.'
-
-export const ACCESSOR = Symbol('accessor')
 
 export enum NetworkStatus {
   idle,
@@ -16,12 +14,13 @@ export enum NetworkStatus {
   updating,
 }
 
-const memoized = createMemo()
-
+export const ACCESSOR = Symbol('accessor')
 // A query was made with minimal fields on it
 // to save bandwidth - predicted the IDs would match up
 // But returned ID were different, so refetch everything
 const KEYED_REFETCH = new Query('KeyedRefetch')
+
+const memoized = createMemo()
 
 export abstract class Accessor<
   TSelection extends Selection = Selection,
@@ -36,7 +35,6 @@ export abstract class Accessor<
   public cache: Cache = this.parent ? (this.parent as any).cache : undefined!
 
   public children: TChildren[] = []
-  public data: any
   public value?: Value
   public status: NetworkStatus = NetworkStatus.idle
 
@@ -53,9 +51,9 @@ export abstract class Accessor<
   public fragmentToResolve?: FragmentAccessor
 
   constructor(
-    public parent: Accessor | undefined,
-    public selection: TSelection,
-    public node = selection.node as Node & Outputable
+    public readonly parent: Accessor | undefined,
+    public readonly selection: TSelection,
+    public readonly node = selection.node as Node & Outputable
   ) {
     super()
 
@@ -68,35 +66,41 @@ export abstract class Accessor<
         // selection is created before the function call
         parent.selection.onUnselect.filter(s => s === selection)(() =>
           this.dispose()
-        ),
-        () => {
-          const idx = parent.children.indexOf(this)
-          if (idx === -1) return
-          parent.children.splice(idx, 1)
-        },
-        () => {
-          this.scheduler.commit.unstage(this)
-
-          this.scheduler.commit.accessors.forEach((_, accessor) => {
-            // if the accessor begins with this.path
-            for (let i = 0; i < this.path.length; i++) {
-              if (this.path[i] !== accessor.path[i]) return
-            }
-
-            this.scheduler.commit.unstage(accessor)
-          })
-        }
+        )
       )
     }
 
     // Update the extensions change when:
     // - data changes (from null -> object)
     // - parent extensions change
-    const updateExtensions = () => this.loadExtensions()
     this.addDisposer(
-      this.onDataChange(updateExtensions),
-      parent && parent.onInitializeExtensions(updateExtensions)
+      this.onDataChange(() => {
+        this.data = undefined
+        this.loadExtensions()
+      }),
+      parent?.onInitializeExtensions(() => {
+        this.loadExtensions()
+      })
     )
+  }
+
+  private _data: any = undefined
+  public get data() {
+    if (this._data === undefined) {
+      try {
+        this.data = this.getData()
+      } catch (accessor) {
+        if (accessor instanceof Accessor) return accessor.data
+
+        throw accessor
+      }
+    }
+
+    return this._data
+  }
+
+  public set data(data: any) {
+    this._data = data
   }
 
   protected initializeExtensions() {
@@ -113,12 +117,18 @@ export abstract class Accessor<
   }
 
   protected loadExtensions() {
+    const prevExtensions = this.extensions
     this.extensions = []
     this.initializeExtensions()
 
+    if (arrayEqual(prevExtensions, this.extensions)) return
+
+    this.onInitializeExtensions.emit()
+
+    if (!this.extensions.length) return
+
     // If already a fragment, key fragments should only be added on different types
     const isTopLevel = !(this instanceof FragmentAccessor) || this.node !== this.parent.node
-
 
     if (isTopLevel) {
       // Add keyFragments
@@ -130,8 +140,6 @@ export abstract class Accessor<
       })
     }
 
-    this.onInitializeExtensions.emit()
-
     // call Extension#GET_KEY for the first time, to record all selections onto
     // the KeyedFragment
     if (
@@ -142,16 +150,16 @@ export abstract class Accessor<
       this.getKey()
     }
 
-    if (this.value || !this.extensions.length) return
+    if (!this.value) {
+      // Cache redirects
+      if (this.cache.entries.has(this.node)) {
+        for (const extension of this.extensions) {
+          const value = extension.redirect(this)
 
-    // Cache redirects
-    if (this.cache.entries.has(this.node)) {
-      for (const extension of this.extensions) {
-        const value = extension.redirect(this)
-
-        if (!(value instanceof Value)) continue
-        this.updateValue(value)
-        break
+          if (!(value instanceof Value)) continue
+          this.updateValue(value)
+          break
+        }
       }
     }
   }
@@ -177,6 +185,10 @@ export abstract class Accessor<
     }
   }
 
+  public getData(): any {
+    return undefined
+  }
+
   public setData(data: any) {
     // @TODO
     console.log('set', this.path.toString(), data)
@@ -184,9 +196,18 @@ export abstract class Accessor<
   }
 
   public get<TChild extends TChildren | FragmentAccessor>(
-    compare: (child: TChildren | FragmentAccessor) => boolean
-  ) {
-    return this.children.find(compare) as TChild | undefined
+    find: ((child: TChildren | FragmentAccessor) => boolean) | Selection | string | number
+  ): TChild | undefined {
+    if (typeof find === 'function') {
+      return this.children.find(find) as any
+    }
+
+    if (find instanceof Selection) {
+      const accessor = this.children.find(c => c.selection === find) as any
+      return accessor
+    }
+
+    return this.children.find(c => c.toString() === String(find)) as any
   }
 
   @computed()
@@ -273,4 +294,34 @@ export abstract class Accessor<
 
     return path
   }
+
+  public dispose() {
+    super.dispose()
+
+    if (this.parent) {
+      const idx = this.parent.children.indexOf(this)
+      if (idx !== -1) {
+        this.parent.children.splice(idx, 1)
+      }
+
+      this.scheduler.commit.unstage(this)
+
+      this.scheduler.commit.accessors.forEach((_, accessor) => {
+        // if the accessor begins with this.path
+        for (let i = 0; i < this.path.length; i++) {
+          if (this.path[i] !== accessor.path[i]) return
+        }
+
+        this.scheduler.commit.unstage(accessor)
+      })
+    }
+  }
+}
+
+export const getAccessorData = (accessor: Accessor): any => {
+  if (accessor.fragmentToResolve) {
+    return getAccessorData(accessor.fragmentToResolve)
+  }
+
+  return accessor.data
 }

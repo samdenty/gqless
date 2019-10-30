@@ -20,6 +20,7 @@
   },
   "scripts": {
     "generate": "../../packages/cli/bin/run-dev generate -u https://api.github.com/graphql?access_token=$GITHUB_AUTH src/graphql -t",
-    "start": "parcel index.html --open"
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
   }
 }

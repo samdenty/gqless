@@ -1,5 +1,5 @@
 import { Generic, Mix } from 'mix-classes'
-
+import { createMemo } from '@gqless/utils'
 import { Accessor, FieldAccessor } from '../Accessor'
 import { ACCESSOR } from '../Accessor/Accessor'
 import {
@@ -9,10 +9,11 @@ import {
   UFieldsNodeRecord,
   Matchable,
   Outputable,
-  resolveData,
+  getOutputableData,
 } from './abstract'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
+import { FieldSelection } from '../Selection'
 
 export type IObjectNodeOptions = IFieldsNodeOptions
 
@@ -26,9 +27,7 @@ export class ObjectNode<TData = any> extends Mix(
   Matchable
 ) {
   constructor(fields: UFieldsNodeRecord, options: IObjectNodeOptions) {
-    // Add __typename node
     fields.__typename = new FieldNode(TYPENAME_NODE)
-
     super([fields as any, options], [options.extension])
   }
 
@@ -80,7 +79,7 @@ export class ObjectNode<TData = any> extends Mix(
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
 
-          return resolveData(field, accessor)
+          return getOutputableData(field, accessor)
         }
 
         if (prop === 'toString') return () => this.toString()
@@ -105,11 +104,10 @@ export class ObjectNode<TData = any> extends Mix(
          */
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
-          const selection = field.getSelection(accessor).selection
+          const selection = field.getSelection(accessor)
 
           const fieldAccessor =
-            accessor.get(a => a.selection === selection) ||
-            new FieldAccessor(accessor, selection)
+            accessor.get(selection) || new FieldAccessor(accessor, selection)
 
           fieldAccessor.setData(value)
 

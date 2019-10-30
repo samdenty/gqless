@@ -26,7 +26,9 @@ const fetchQuery: QueryFetcher = async (query, variables) => {
 
 export const client = new Client<Query>(schema.Query, fetchQuery)
 
-new Logger(client)
+if (__DEV__) {
+  new Logger(client)
+}
 
 export const query = client.query
 

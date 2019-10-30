@@ -1,7 +1,6 @@
 import { Fragment } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
-import { resolveData } from '../Node'
 
 export class FragmentAccessor<
   TFragment extends Fragment = Fragment,
@@ -36,8 +35,8 @@ export class FragmentAccessor<
     this.extensions.unshift(...(this.parent.extensions as any[]))
   }
 
-  public get data(): any {
-    return resolveData(this.selection.node, this)
+  public getData(): any {
+    return this.selection.node.getData(this)
   }
 
   public toString() {

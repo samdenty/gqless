@@ -8,14 +8,18 @@ export const GET_KEY = Symbol('Extension#getKey')
 export const keyIsValid = (key: unknown) => key != null
 export const keyIsEqual = (a: unknown, b: unknown) => deepJSONEqual(a, b)
 
+export type RedirectHelpers = {
+  instances: Set<Value>
+  match(data: any): Value | undefined
+  getByKey<TKey = unknown>(key: TKey): Value | undefined
+}
+
 export interface ProxyExtension<TData extends object = object> {
   [key: string]: any
 
   [REDIRECT]?(
     args: Record<string, any> | undefined,
-    helpers: {
-      match: (data: any) => Value | undefined
-    }
+    helpers: RedirectHelpers
   ): Value | undefined
 
   [GET_KEY]?(data: TData): any

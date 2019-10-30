@@ -9,7 +9,7 @@ import { EnumNode } from '../../EnumNode'
 import { ScalarNode } from '../../ScalarNode'
 import { Node } from '../Node'
 import { NodeContainer } from '../NodeContainer'
-import { Outputable, resolveData } from '../Outputable'
+import { Outputable } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { Variable } from '../../../Variable'
 
@@ -27,7 +27,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
   public getSelection(
     fieldsAccessor: Accessor,
     args?: Record<string, any>
-  ): { justCreated: boolean; selection: FieldSelection<TNode> } {
+  ): FieldSelection<TNode> {
     let selection = fieldsAccessor.selection.get<FieldSelection<TNode>>(
       selection => {
         if (!(selection instanceof FieldSelection)) return false
@@ -42,14 +42,14 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
           })
         )
       }
-    )!
+    )
 
-    if (selection) return { justCreated: false, selection }
+    if (selection) return selection
 
     selection = new FieldSelection(this, args)
     fieldsAccessor.selection.add(selection)
 
-    return { justCreated: true, selection }
+    return selection
   }
 
   public getData(fieldsAccessor: Accessor<Selection<FieldsNode>>) {
@@ -57,18 +57,15 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
 
     const getData = (selection: FieldSelection<TNode>): any => {
       const accessor =
-        fieldsAccessor.get(a => a.selection === selection) ||
+        fieldsAccessor.get(selection) ||
         new FieldAccessor(fieldsAccessor, selection)
 
-      return resolveData(this.ofNode, accessor)
+      return accessor.data
     }
 
-    const createArgsFn = (handler?: (args: any) => void) => (args: any) => {
-      const parsedArgs = args && Object.keys(args).length ? args : undefined
-
-      handler && handler(parsedArgs)
-
-      return getData(this.getSelection(fieldsAccessor, parsedArgs).selection)
+    const argsFn = (args: any) => {
+      const parsedArgs = args && (Object.keys(args).length ? args : undefined)
+      return getData(this.getSelection(fieldsAccessor, parsedArgs))
     }
 
     // If the arguments are required, skip creating an argumentless selection
@@ -77,61 +74,60 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
       (this.args.required ||
         this.ofNode instanceof ScalarNode ||
         this.ofNode instanceof EnumNode)
-    ) {
-      return createArgsFn()
+    )
+      return argsFn
+
+    let selection: FieldSelection<TNode> | undefined
+    let data: any
+    const argumentlessData = () => {
+      if (selection) return data
+      selection = this.getSelection(fieldsAccessor)
+      data = getData(selection)
+      return data
     }
 
-    // Create an argumentless selection, that will be destroyed if
-    // the callback function is called
-    const argumentless = this.getSelection(fieldsAccessor)
-    const argumentlessData = getData(argumentless.selection)
+    if (this.args) {
+      return new Proxy(argsFn, {
+        get: (_, prop) => {
+          const data = argumentlessData()
 
-    if (this.args)
-      return new Proxy(
-        createArgsFn(args => {
-          // If we just created the argumentless selection
-          // + it didn't already exist then destroy it, as it's not required
-          if (args && argumentless.justCreated) {
-            fieldsAccessor.selection.delete(argumentless.selection)
+          invariant(
+            data,
+            `Cannot read property '${String(
+              prop
+            )}' on null [${selection}]\n\n` +
+              `You should check for null using \`${selection}() && ${selection}().${String(
+                prop
+              )}\``
+          )
+
+          const result = data[prop]
+
+          if (typeof result === 'function') {
+            return result.bind(data)
           }
-        }),
-        {
-          get: (_, prop) => {
-            invariant(
-              argumentlessData,
-              `Cannot read property '${String(prop)}' on null [${
-                argumentless.selection
-              }]\n\n` +
-                `You should check for null using \`${
-                  argumentless.selection
-                }() && ${argumentless.selection}().${String(prop)}\``
-            )
 
-            const result = argumentlessData[prop]
+          return result
+        },
+        set: (_, prop, value) => {
+          const data = argumentlessData()
 
-            if (typeof result === 'function') {
-              return result.bind(argumentlessData)
-            }
+          invariant(
+            data,
+            `Cannot set property '${String(prop)}' on null [${selection}]\n\n` +
+              `You should check for null using \`${selection}() && ${selection}().${String(
+                prop
+              )}\``
+          )
 
-            return result
-          },
-          set: (_, prop, value) => {
-            invariant(
-              argumentlessData,
-              `Cannot set property '${String(prop)}' on null [${
-                argumentless.selection
-              }]\n\n` +
-                `You should check for null using \`${
-                  argumentless.selection
-                }() && ${argumentless.selection}().${String(prop)}\``
-            )
+          data[prop] = value
 
-            return (argumentlessData[prop] = value)
-          },
-        }
-      )
+          return true
+        },
+      })
+    }
 
-    return argumentlessData
+    return argumentlessData()
   }
 
   public toString() {

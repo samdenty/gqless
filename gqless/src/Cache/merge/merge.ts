@@ -14,65 +14,60 @@ const FIELD_NAME = /^([^(]+)\(?/
  * @param accessor (optional) pass to enable cache keys
  */
 export const merge = (value: Value, data: any, accessor?: Accessor) => {
-  if (value.node instanceof ScalarNode) {
-    mergeScalar(value as any, data, accessor as any)
-    return
+  try {
+    if (value.node instanceof ScalarNode) {
+      mergeScalar(value as any, data, accessor as any)
+      return
+    }
+
+    const wasNull = value.data === null
+    const isNull = data === null
+
+    // don't do anything if both are null
+    if (wasNull && isNull) return
+
+    // simply update for null
+    if (isNull) {
+      value.data = null
+      return
+    }
+
+    if (value.node instanceof ObjectNode) {
+      if (wasNull) value.data = {}
+      iterateObject(value as any, data, accessor as any)
+      return
+    }
+
+    if (value.node instanceof ArrayNode) {
+      // Update the array length (removing values if needed)
+      value.data = wasNull ? [] : (value.data as any[]).slice(0, data.length)
+      iterateArray(value as any, data, accessor as any)
+      return
+    }
+  } finally {
+    console.groupEnd()
   }
 
-  const wasNull = value.data === null
-  const isNull = data === null
-
-  // don't do anything if both are null
-  if (wasNull && isNull) return
-
-  // simply update for null
-  if (isNull) {
-    value.data = null
-    return
-  }
-
-  if (value.node instanceof ObjectNode) {
-    if (wasNull) value.data = {}
-    iterateObject(value as any, data, accessor as any)
-    return
-  }
-
-  if (value.node instanceof ArrayNode) {
-    // Update the array length (removing values if needed)
-    value.data = wasNull ? [] : (value.data as any[]).slice(0, data.length)
-    iterateArray(value as any, data, accessor as any)
-    return
-  }
 }
 
-const mergeScalar = (value: Value<ScalarNode>, data: any, accessor?: Accessor<Selection<ScalarNode>>) => {
-  if (accessor) {
-    const keyedValue = keyedMerge(accessor, data)
-    if (keyedValue) return
-  }
-
-  value.data = data
-}
-
-const keyedMerge = (accessor: Accessor, data: any) => {
+const keyedMerge = (data: any, accessor: Accessor) => {
   if (!accessor.isKeyable) return
 
   // Create a *temporary* value with the fields needed to perform a key-operation
   const keyedValue = new Value(accessor.node)
-
   const prevValue = accessor.value
-  accessor.value = keyedValue // start resolving
+  accessor.value = keyedValue
+  accessor.onValueChange.pause()
 
-  // TODO: Only merge require fields, as this is expensive
+  // TODO: Only merge require fields, as this could be expensive
   merge(keyedValue, data, accessor)
 
   const result = accessor.getKey(keyedValue)
-
-  accessor.value = prevValue // stop resolving
-
+  accessor.value = prevValue
+  accessor.onValueChange.unpause()
   if (!result) return
 
-  // Update the parent with the keyed value
+  // Update value (possibly triggering re-fetch)
   accessor.updateValue(result.value)
 
   // If the value was already in the cache, merge the new data
@@ -83,50 +78,54 @@ const keyedMerge = (accessor: Accessor, data: any) => {
   return result.value
 }
 
+const mergeScalar = (value: Value<ScalarNode>, data: any, accessor?: Accessor<Selection<ScalarNode>>) => {
+  if (accessor) {
+    const keyedValue = keyedMerge(data, accessor)
+    if (keyedValue) return
+  }
+
+  value.data = data
+}
 
 const iterateArray = (value: Value<ArrayNode<Node & Outputable>>, data: unknown[], accessor?: Accessor<Selection<ArrayNode>>) => {
   data.forEach((data, key) => {
     let keyValue = value.get(key)
+    let indexAccessor: IndexAccessor | undefined
+
+    if (accessor) {
+      indexAccessor = accessor.get(key) || new IndexAccessor(accessor, key)
+      const keyedValue = keyedMerge(data, indexAccessor)
+      if (keyedValue) return
+    }
 
     if (!keyValue) {
       keyValue = createValue(value.node.ofNode, data)
       value.set(key, keyValue)
     }
 
-    if (accessor) {
-      const indexAccessor = accessor.get(a => (a as IndexAccessor).index === key) || new IndexAccessor(accessor, key)
-
-      const keyedValue = keyedMerge(indexAccessor, data)
-      if (keyedValue) return
-
-      merge(keyValue, data, indexAccessor)
-      return
-    }
-
-    merge(keyValue, data)
+    merge(keyValue, data, indexAccessor)
   })
 }
 
 const iterateObject = (value: Value<ObjectNode>, data: Record<string, any>, accessor?: Accessor<Selection<ObjectNode>>) => {
-  Object.entries(data).forEach(([key, data]) => {
-    if (key === '__typename') return
+  for (const key of Object.keys(data)) {
+    if (key === '__typename') continue
 
-    const fieldName = key.match(FIELD_NAME)?.[1]
-    if (!fieldName || !value.node.fields.hasOwnProperty(fieldName)) return
+    let fieldName = key
+    if (!value.node.fields.hasOwnProperty(key))  {
+      fieldName = fieldName.match(FIELD_NAME)?.[1]!
+      if (!fieldName || !value.node.fields.hasOwnProperty(fieldName)) continue
+    }
+
     const field = value.node.fields[fieldName]
 
     let valueForKey = value.get(key)
-    if (!valueForKey) {
-      valueForKey = createValue(field.ofNode, data)
-      value.set(key, valueForKey)
-    }
+    let fieldAccessor: FieldAccessor | undefined
 
     if (accessor) {
-      let fieldAccessor = accessor.get<FieldAccessor>(a => a.toString() === key)
+      fieldAccessor = accessor.get<FieldAccessor>(key)
       if (!fieldAccessor) {
-        let fieldSelection = accessor.selection.get<FieldSelection>(
-          s => s.toString() === key
-        )
+        let fieldSelection = accessor.selection.get<FieldSelection>(key)
         if (!fieldSelection) {
           fieldSelection = new FieldSelection(field)
           accessor.selection.add(fieldSelection)
@@ -134,13 +133,15 @@ const iterateObject = (value: Value<ObjectNode>, data: Record<string, any>, acce
         fieldAccessor = new FieldAccessor(accessor, fieldSelection)
       }
 
-      const keyedValue = keyedMerge(fieldAccessor, data)
-      if (keyedValue) return
-
-      merge(valueForKey, data, fieldAccessor)
-      return
+      const keyedValue = keyedMerge(data[key], fieldAccessor)
+      if (keyedValue) continue
     }
 
-    merge(valueForKey, data)
-  })
+    if (!valueForKey) {
+      valueForKey = createValue(field.ofNode, data[key])
+      value.set(key, valueForKey)
+    }
+
+    merge(valueForKey, data[key], fieldAccessor)
+  }
 }

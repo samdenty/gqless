@@ -4,7 +4,7 @@ import { Accessor } from '../Accessor'
 import { Selection } from '../Selection'
 import { Node } from './abstract/Node'
 import { Outputable } from './abstract/Outputable'
-import { Extension, ScalarExtension } from './Extension'
+import { Extension } from './Extension'
 import { Matchable } from './abstract/Matchable'
 import { Value } from '../Cache'
 

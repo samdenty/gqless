@@ -1,6 +1,7 @@
 import { Accessor } from '../Accessor'
 import { ScalarNode } from '../../Node'
 import { createEvent } from '@gqless/utils'
+import { Value } from '../../Cache'
 
 // When value of accessor changes
 // & types are different -> emit
@@ -8,19 +9,16 @@ export const onDataChange = (accessor: Accessor) => {
   const onDataChange = createEvent<(prevData: any) => void>()
 
   let dispose: Function | undefined
-  let prevData: any
 
-  const onValueAssociated = () => {
-    const value = accessor.value
-    if (dispose) {
-      dispose()
-      dispose = undefined
-    }
+  const onValueAssociated = (prevValue: Value | undefined, value: Value | undefined) => {
+    dispose?.()
+    dispose = undefined
 
     // Hook for onDataUpdate event
     const check = () => {
-      const newData = value ? value.data : undefined
-      if (prevData === newData) return
+      const newData = value?.data
+      const prevData = prevValue?.data
+      if (newData === prevData) return
 
       if (
         prevData !== undefined ||
@@ -29,8 +27,6 @@ export const onDataChange = (accessor: Accessor) => {
       ) {
         onDataChange.emit(prevData)
       }
-
-      prevData = newData
     }
 
     if (!value) {
@@ -43,7 +39,7 @@ export const onDataChange = (accessor: Accessor) => {
   }
 
   accessor.addDisposer(accessor.onValueChange(onValueAssociated))
-  onValueAssociated()
+  onValueAssociated(undefined, accessor.value)
 
   return onDataChange
 }

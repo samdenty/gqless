@@ -242,15 +242,9 @@ export class TypesFile extends File {
       case 'ENUM':
       case 'INPUT_OBJECT':
       case 'UNION':
+      case 'INTERFACE':
       case 'SCALAR':
         return `${resolveType(type.name)}${nullType}`
-
-      case 'INTERFACE':
-        return `${(this.codegen.getSchemaType(
-          type.name
-        ) as SchemaInterfaceType).possibleTypes
-          .map(type => resolveType(type))
-          .join(' | ')}${nullType}`
 
       case 'LIST':
         return `(${this.generateType(type.ofType, resolveType)})[]${nullType}`

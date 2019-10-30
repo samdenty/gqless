@@ -1,10 +1,3 @@
-import {
-  UExtension,
-  resolveData,
-  ProxyExtension,
-  ObjectExtension,
-  Extension,
-} from '../Node'
 import { FieldSelection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
@@ -35,8 +28,8 @@ export class FieldAccessor<
     }
   }
 
-  public get data(): any {
-    return resolveData(this.selection.field.ofNode, this)
+  public getData(): any {
+    return this.selection.field.ofNode.getData(this)
   }
 
   public toString() {

@@ -11,6 +11,8 @@ export type UValueData =
 
 let id = 0
 
+const VALUE = Symbol('value')
+
 export class Value<TNode extends Node & Outputable = Node & Outputable> {
   public id = ++id
 
@@ -106,8 +108,10 @@ export class Value<TNode extends Node & Outputable = Node & Outputable> {
       if (!this.data) return null
 
       const obj: any = {
-        __typename: this.node.name,
+        __typename: this.node.name
       }
+
+      // obj[VALUE] = this
 
       Object.entries(this.data).forEach(([key, value]) => {
         obj[key] = value.toJSON()

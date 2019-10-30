@@ -32,10 +32,15 @@ export class Selection<TNode extends Node = Node> {
   }
 
   public get<TSelection extends Selection>(
-    compare: (selection: Selection) => boolean
-  ) {
+    find: ((selection: Selection) => boolean) | string | number
+  ): TSelection | undefined {
     for (const selection of this.selections) {
-      if (compare(selection)) return selection as TSelection
+      if (
+        typeof find === 'function'
+          ? find(selection)
+          : String(selection) === String(find)
+      )
+        return selection as any
     }
     return
   }

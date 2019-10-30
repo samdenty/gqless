@@ -17,8 +17,6 @@
     - Not keyed
       - Delete all entries that start with the array key
 
-- Make FieldAccessor#data static, instead of a getter
-
 # Improvements
 
 - Warn when \_\_typename is accessed for React, without an ofType call

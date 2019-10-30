@@ -20,8 +20,7 @@ export class Abstract<
       const fragment = accessor.getDefaultFragment(accessor.value
         .node as ObjectNode)
       const fragmentAccessor =
-        accessor.get(a => a.selection === fragment) ||
-        new FragmentAccessor(accessor, fragment)
+        accessor.get(fragment) || new FragmentAccessor(accessor, fragment)
 
       return fragmentAccessor.data
     }
