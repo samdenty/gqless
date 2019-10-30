@@ -30,4 +30,4 @@ new Logger(client)
 
 export const query = client.query
 
-Object.assign(window, { client, query, ...gqless })
+Object.assign(window, { client, query, schema, ...gqless })

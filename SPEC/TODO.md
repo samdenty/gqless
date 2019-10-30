@@ -39,7 +39,6 @@
   - Format ObjectNode / ScalarNode etc. to GraphQL schema `type User` etc.
 
 - FieldNode with arguments, ensure can be called twice
-- Codegen, auto add ts-ignore to all errors in schema.ts
 - ScalarNode consider returning undefined instead of null
 
   - Make more sense

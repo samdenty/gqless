@@ -54,15 +54,22 @@ const mergeScalar = (value: Value<ScalarNode>, data: any, accessor?: Accessor<Se
   value.data = data
 }
 
-export const keyedMerge = (accessor: Accessor, data: any) => {
+const keyedMerge = (accessor: Accessor, data: any) => {
   if (!accessor.isKeyable) return
 
   // Create a *temporary* value with the fields needed to perform a key-operation
   const keyedValue = new Value(accessor.node)
+
+  const prevValue = accessor.value
+  accessor.value = keyedValue // start resolving
+
+  // TODO: Only merge require fields, as this is expensive
   merge(keyedValue, data, accessor)
 
-  // Get a key using temporarily updated value
   const result = accessor.getKey(keyedValue)
+
+  accessor.value = prevValue // stop resolving
+
   if (!result) return
 
   // Update the parent with the keyed value

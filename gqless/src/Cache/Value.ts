@@ -9,7 +9,11 @@ export type UValueData =
   | Value[]
   | null
 
+let id = 0
+
 export class Value<TNode extends Node & Outputable = Node & Outputable> {
+  public id = ++id
+
   private _data!: UValueData
   public references = new Map<Value, Set<string | number>>()
 

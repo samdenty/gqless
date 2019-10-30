@@ -162,7 +162,7 @@ export abstract class Accessor<
 
     invariant(
       this.parent?.value,
-      `can't update accessor value without parent value`
+      `can't update ${this.path} value without parent value`
     )
 
     const valueless = new Set(this.children.filter(a => !(a.value)))
