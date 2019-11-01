@@ -1,2 +1,2 @@
 export { run } from '@oclif/command'
-export * from './generateSchema'
+export * from './utils/generateSchema'

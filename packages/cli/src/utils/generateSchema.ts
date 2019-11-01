@@ -1,3 +1,4 @@
+import { Config } from './config';
 import { Codegen, fetchSchema } from '@gqless/schema'
 
 import { QueryFetcher } from 'gqless'
@@ -8,12 +9,8 @@ import * as path from 'path'
 
 export const generateSchema = async (
   fetchQuery: QueryFetcher,
-  options: {
+  options: Config & {
     outputDir: string
-    url?: string
-    typescript?: boolean
-    noComments?: boolean
-    noPrettier?: boolean
   }
 ) => {
   const schema = await fetchSchema(fetchQuery, {
@@ -22,6 +19,7 @@ export const generateSchema = async (
   const codegen = new Codegen(schema, {
     typescript: options.typescript,
     url: options.url,
+    headers: options.headers
   })
   const files = codegen.generate()
 
