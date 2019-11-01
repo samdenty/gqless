@@ -1,15 +1,15 @@
 import { invariant } from '@gqless/utils'
 import { Generic, Mix } from 'mix-classes'
 
-import { deepJSONEqual } from '../../../utils'
+import { deepJSONEqual, computed } from '../../../utils'
 import { Arguments } from '../../Arguments'
 import { Accessor, FieldAccessor } from '../../../Accessor'
-import { FieldSelection, Selection } from '../../../Selection'
+import { FieldSelection } from '../../../Selection'
 import { EnumNode } from '../../EnumNode'
 import { ScalarNode } from '../../ScalarNode'
 import { Node } from '../Node'
 import { NodeContainer } from '../NodeContainer'
-import { Outputable } from '../Outputable'
+import { Outputable, IDataContext } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { Variable } from '../../../Variable'
 
@@ -24,37 +24,43 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
     super([node, nullable], [])
   }
 
+  @computed()
+  public get uncallable() {
+    return !(
+      this.args &&
+      (this.args.required ||
+        this.ofNode instanceof ScalarNode ||
+        this.ofNode instanceof EnumNode)
+    )
+  }
+
   public getSelection(
-    fieldsAccessor: Accessor,
+    ctx: IDataContext,
     args?: Record<string, any>
   ): FieldSelection<TNode> {
-    let selection = fieldsAccessor.selection.get<FieldSelection<TNode>>(
-      selection => {
-        if (!(selection instanceof FieldSelection)) return false
+    let selection = ctx.selection?.get<FieldSelection<TNode>>(selection => {
+      if (!(selection instanceof FieldSelection)) return false
 
-        return (
-          selection.field.name === this.name &&
-          deepJSONEqual(selection.args, args, (a, b) => {
-            // If either is a variable they need to be equal
-            if (a instanceof Variable || b instanceof Variable) return a === b
+      return (
+        selection.field.name === this.name &&
+        deepJSONEqual(selection.args, args, (a, b) => {
+          // If either is a variable they need to be equal
+          if (a instanceof Variable || b instanceof Variable) return a === b
 
-            return undefined
-          })
-        )
-      }
-    )
+          return undefined
+        })
+      )
+    })
 
     if (selection) return selection
 
     selection = new FieldSelection(this, args)
-    fieldsAccessor.selection.add(selection)
+    ctx.selection.add(selection)
 
     return selection
   }
 
-  public getData(fieldsAccessor: Accessor<Selection<FieldsNode>>) {
-    super.getData(fieldsAccessor)
-
+  public getData(ctx: IDataContext<FieldsNode>) {
     const getData = (selection: FieldSelection<TNode>): any => {
       const accessor =
         fieldsAccessor.get(selection) ||
@@ -68,14 +74,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
       return getData(this.getSelection(fieldsAccessor, parsedArgs))
     }
 
-    // If the arguments are required, skip creating an argumentless selection
-    if (
-      this.args &&
-      (this.args.required ||
-        this.ofNode instanceof ScalarNode ||
-        this.ofNode instanceof EnumNode)
-    )
-      return argsFn
+    if (!this.uncallable) return argsFn
 
     let selection: FieldSelection<TNode> | undefined
     let data: any

@@ -1,13 +1,15 @@
-import { Accessor } from '../../Accessor'
+import { Accessor, ExtensionRef } from '../../Accessor'
 import { Extension } from '../Extension'
-import { accessorInterceptors } from '../../Interceptor'
+import { Value } from '../../Cache'
+import { Selection } from '../../Selection'
+import { Node } from '../../Node'
 
 export const getOutputableData = (
   outputable: Outputable,
-  accessor: Accessor
+  ctx: IDataContext
 ) => {
   try {
-    return outputable.getData(accessor)
+    return outputable.getData(ctx)
   } catch (accessor) {
     if (accessor instanceof Accessor) return accessor.data
 
@@ -15,16 +17,16 @@ export const getOutputableData = (
   }
 }
 
+export interface IDataContext<TNode extends Node = Node> {
+  extensions?: ExtensionRef[]
+  accessor?: Accessor<Selection<TNode>>
+  selection?: Selection<TNode>
+  value?: Value
+}
+
 export class Outputable {
   constructor(public extension?: Extension) {}
 
-  public getData(accessor: Accessor) {
-    if (accessor.fragmentToResolve) {
-      throw accessor.fragmentToResolve
-    }
-
-    if (accessorInterceptors.size) {
-      accessorInterceptors.forEach(intercept => intercept(accessor))
-    }
-  }
+  // @ts-ignore
+  public getData(ctx: IDataContext) {}
 }
