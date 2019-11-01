@@ -23,7 +23,6 @@
   "dependencies": {
     "@gqless/utils": "^0.0.1-alpha.23",
     "json-stable-stringify": "^1.0.1",
-    "lodash-es": "^4.17.15",
     "mix-classes": "^1.1.10",
     "tslib": "^1.10.0"
   },
@@ -31,7 +30,6 @@
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@types/json-stable-stringify": "^1.0.32",
-    "@types/lodash": "^4.14.144",
     "template-literal-table": "^2.0.4"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
