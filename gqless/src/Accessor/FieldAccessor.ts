@@ -6,11 +6,13 @@ export class FieldAccessor<
   TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TFieldSelection, TChildren> {
+  protected _resolved = this.parent.resolved
+
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
 
+    this.parent.onResolvedChange(resolved => (this.resolved = resolved))
     syncValue(this, this.toString())
-
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)
   }

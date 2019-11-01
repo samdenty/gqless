@@ -6,8 +6,19 @@ export class FragmentAccessor<
   TFragment extends Fragment = Fragment,
   TChildren extends Accessor = Accessor
 > extends Accessor<TFragment, TChildren> {
+  protected _resolved =
+    this.parent!.resolved &&
+    (!this.parent!.value || this.parent!.value.node === this.selection.node)
+
   constructor(public parent: Accessor, fragment: TFragment) {
     super(parent, fragment)
+
+    if (fragment.node !== parent.node) {
+      this.parent.onValueChange(value => {
+        this.resolved =
+          this.parent.resolved && (!value || value.node === fragment.node)
+      })
+    }
 
     // Sync value with parent
     // (only if the node is the same)
@@ -32,7 +43,12 @@ export class FragmentAccessor<
 
   protected initializeExtensions() {
     // Copy extensions from parent
-    this.extensions.unshift(...(this.parent.extensions as any[]))
+    for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
+      const extensionRef = this.parent.extensions[i]
+      if (extensionRef.node !== this.selection.node) continue
+
+      this.extensions.unshift(extensionRef)
+    }
   }
 
   public getData(): any {

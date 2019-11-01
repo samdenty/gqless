@@ -2,6 +2,7 @@ import * as gqless from 'gqless'
 import { Logger } from '@gqless/logger'
 import { Client, QueryFetcher } from 'gqless'
 import { schema, Query } from './generated'
+import { parse, stringify } from 'flatted'
 
 const endpoint = `https://api.github.com/graphql?access_token=${process.env.GITHUB_AUTH}`
 
@@ -32,4 +33,4 @@ if (__DEV__) {
 
 export const query = client.query
 
-Object.assign(window, { client, query, schema, ...gqless })
+Object.assign(window, { client, query, schema, ...gqless, parse, stringify })

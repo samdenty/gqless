@@ -1,6 +1,8 @@
 import { createEvent } from '@gqless/utils'
+import { Accessor } from './Accessor'
 
-import { AccessorInterceptor, accessorInterceptors } from './Node/abstract/Outputable'
+export type AccessorInterceptor = (accessor: Accessor) => void
+export const accessorInterceptors = new Set<AccessorInterceptor>()
 
 export class Interceptor {
   public listening = false

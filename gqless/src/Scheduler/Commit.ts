@@ -23,10 +23,17 @@ export class Commit extends Disposable {
   }
 
   public stageUntilValue(accessor: Accessor) {
+    if (!accessor.resolved) return
     if (accessor.value) return
 
     const unstage = this.stage(accessor)
-    this.addDisposer(accessor.onValueChange.then(unstage))
+
+    this.addDisposer(
+      accessor.onValueChange.then(unstage),
+      accessor.onResolvedChange.then(resolved => {
+        if (!resolved) unstage()
+      })
+    )
 
     return unstage
   }

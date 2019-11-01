@@ -1,6 +1,6 @@
 import { Generic, Mix } from 'mix-classes'
 
-import { Accessor } from '../Accessor'
+import { Accessor, ExtensionRef } from '../Accessor'
 import { Selection } from '../Selection'
 import { Node } from './abstract/Node'
 import { Outputable } from './abstract/Outputable'
@@ -38,6 +38,16 @@ export class ScalarNode<T> extends Mix(Outputable, Matchable, Generic(Node)) {
 
   public toString() {
     return this.name || this.constructor.name
+  }
+
+  public getData2(value: Value | undefined, extensions: ExtensionRef[]) {
+    if (extensions.length) {
+      return extensions[0].data
+    }
+
+    if (!value) return null
+
+    return value.data
   }
 
   public getData(accessor: Accessor<Selection<ScalarNode>>): any {

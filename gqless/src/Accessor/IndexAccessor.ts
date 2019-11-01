@@ -7,6 +7,8 @@ export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelectionArray, TChildren> {
+  protected _resolved = this.parent.resolved
+
   constructor(public parent: Accessor<TSelectionArray>, public index: number) {
     super(
       parent,
@@ -19,13 +21,13 @@ export class IndexAccessor<
 
     // Sync from parent status
     this.addDisposer(
-      this.parent.onStatusChange((_, status) => {
+      this.parent.onStatusChange(status => {
         this.status = status
       })
     )
 
+    this.parent.onResolvedChange(resolved => (this.resolved = resolved))
     syncValue(this, this.toString())
-
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)
   }

@@ -1,8 +1,6 @@
 import { Accessor } from '../../Accessor'
 import { Extension } from '../Extension'
-
-export type AccessorInterceptor = (accessor: Accessor) => void
-export const accessorInterceptors = new Set<AccessorInterceptor>()
+import { accessorInterceptors } from '../../Interceptor'
 
 export const getOutputableData = (
   outputable: Outputable,

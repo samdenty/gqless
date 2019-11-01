@@ -12,7 +12,7 @@ import {
 } from '../Node'
 import { Accessor } from './Accessor'
 import { FieldAccessor } from './FieldAccessor'
-import { createMemo, invariant } from '@gqless/utils'
+import { createMemo } from '@gqless/utils'
 import { Fragment, UFragment } from '../Selection'
 import { FragmentAccessor } from './FragmentAccessor'
 
@@ -22,7 +22,8 @@ export class ExtensionRef<TData = any> {
   constructor(
     public parent: ExtensionRef | undefined = undefined,
     public accessor: Accessor,
-    public readonly data: UExtension<TData>
+    public readonly data: UExtension<TData>,
+    public node = accessor.node
   ) {}
 
   // The key for the extension, based on path
@@ -31,7 +32,7 @@ export class ExtensionRef<TData = any> {
   private get extensionKey() {
     return this.path
       .map(ref => {
-        if (!ref.parent) return ref.accessor.node
+        if (!ref.parent) return ref.node
 
         if (ref.accessor instanceof FieldAccessor) {
           return ref.accessor.selection.field
@@ -42,8 +43,7 @@ export class ExtensionRef<TData = any> {
 
   @computed()
   public get keyFragment() {
-    // GET_KEY should be defined across all extension instances
-    if (!(this.data as ProxyExtension)?.[GET_KEY]) return
+    if (!this.isKeyable) return
 
     let node = this.extensionKey[this.extensionKey.length - 1]
     if (node instanceof NodeContainer) {
@@ -65,6 +65,7 @@ export class ExtensionRef<TData = any> {
 
   @computed()
   public get isKeyable() {
+    // GET_KEY should be defined across all extension instances
     return !!(this.data as ProxyExtension)?.[GET_KEY]
   }
 

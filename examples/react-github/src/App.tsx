@@ -16,8 +16,6 @@ export const App = graphql(
     const usernameVar = useVariable(username)
     const user = query.user({ login: usernameVar })
 
-    console.log(user)
-
     return (
       <StyledApp>
         <div>

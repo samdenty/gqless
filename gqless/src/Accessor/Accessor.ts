@@ -1,12 +1,13 @@
-import { createEvent, invariant, createSetter, createMemo } from '@gqless/utils'
+import { createEvent, invariant, createMemo } from '@gqless/utils'
 
-import { Cache, Value, NodeEntry } from '../Cache'
-import { Node, Outputable, ScalarNode, ObjectNode, keyIsValid } from '../Node'
+import { Cache, Value, NodeEntry, afterTransaction } from '../Cache'
+import { Node, Outputable, ScalarNode, ObjectNode, keyIsValid, Abstract } from '../Node'
 import { Scheduler, Query } from '../Scheduler'
 import { Selection, Fragment } from '../Selection'
 import { computed, Disposable, PathArray, arrayEqual } from '../utils'
 import { onDataChange } from './utils'
 import { FragmentAccessor, ExtensionRef } from '.'
+import { accessorInterceptors } from '../Interceptor'
 
 export enum NetworkStatus {
   idle,
@@ -28,27 +29,27 @@ export abstract class Accessor<
 > extends Disposable {
   // Ordered by most important -> least
   public extensions: ExtensionRef[] = []
+  public children: TChildren[] = []
 
   public scheduler: Scheduler = this.parent
     ? (this.parent as any).scheduler
     : undefined!
   public cache: Cache = this.parent ? (this.parent as any).cache : undefined!
-
-  public children: TChildren[] = []
-  public value?: Value
-  public status: NetworkStatus = NetworkStatus.idle
-
-  // @ts-ignore
-  public onValueChange = createSetter(this as Accessor, 'value')
-  // Equality check only
-  // @ts-ignore
-  public onDataChange = onDataChange(this)
-  public onStatusChange = createSetter(this as Accessor, 'status')
-  public onInitializeExtensions = createEvent()
-
   // replaces refs of this accessor, with a Fragment
   // see FragmentAccessor#startResolving
+
   public fragmentToResolve?: FragmentAccessor
+  protected _data: any
+  protected _status: NetworkStatus = NetworkStatus.idle
+  protected _value: Value | undefined
+  protected _resolved = true
+
+  public onValueChange = createEvent<(value: Value | undefined, prevValue: Value | undefined) => void>()
+  // Equality check only
+  public onDataChange = onDataChange(this)
+  public onResolvedChange = createEvent<(resolved: boolean) => void>()
+  public onStatusChange = createEvent<(status: NetworkStatus, prevStatus: NetworkStatus) => void>()
+  public onInitializeExtensions = createEvent()
 
   constructor(
     public readonly parent: Accessor | undefined,
@@ -84,7 +85,17 @@ export abstract class Accessor<
     )
   }
 
-  private _data: any = undefined
+  public get resolved() {
+    return this._resolved
+  }
+
+  public set resolved(resolved: boolean) {
+    const prevResolved = this._resolved
+    if (prevResolved === resolved) return
+    this._resolved = resolved
+    this.onResolvedChange.emit(resolved)
+  }
+
   public get data() {
     if (this._data === undefined) {
       try {
@@ -98,22 +109,50 @@ export abstract class Accessor<
 
     return this._data
   }
-
   public set data(data: any) {
     this._data = data
   }
 
+  public set status(status: NetworkStatus) {
+    const prevStatus = this._status
+    this._status = status
+    if (prevStatus === status) return
+    this.onStatusChange.emit(status, prevStatus)
+  }
+  public get status() {
+    return this._status
+  }
+
+  public set value(value: Value | undefined) {
+    const prevValue = this._value
+    this._value = value
+    if (prevValue === value) return
+    this.onValueChange.emit(value, prevValue)
+  }
+  public get value() {
+    return this._value
+  }
+
   protected initializeExtensions() {
-    let extension = this.node.extension
+    const addExtensions = (node: Node & Outputable) => {
+      let extension = node.extension
+      if (typeof extension === 'function') {
+        extension = extension(this.data)
+      }
+      if (extension === undefined) return
+      if (node instanceof ScalarNode) return
 
-    if (typeof extension === 'function') {
-      extension = extension(this.data)
+      const extensionRef = new ExtensionRef(undefined, this, extension, node)
+      this.extensions.unshift(extensionRef)
     }
-    if (extension === undefined) return
-    if (this.node instanceof ScalarNode) return
 
-    const extensionRef = new ExtensionRef(undefined, this, extension)
-    this.extensions.unshift(extensionRef)
+    if (this.node instanceof Abstract) {
+      for (const node of this.node.implementations) {
+        addExtensions(node)
+      }
+    }
+
+    addExtensions(this.node)
   }
 
   protected loadExtensions() {
@@ -176,13 +215,15 @@ export abstract class Accessor<
     const valueless = new Set(this.children.filter(a => !(a.value)))
     this.parent.value.set(this.toString(), value)
 
-    const accessorWithoutValue = this.children.find(a => !a.value && !valueless.has(a))
+    afterTransaction(() => {
+      const accessorWithoutValue = this.children.find(a => !a.value && !valueless.has(a))
 
-    // If a child accessor is missing a value, then
-    // re-fetch it entirely
-    if (accessorWithoutValue) {
-      this.scheduler.commit.stage(this, KEYED_REFETCH)
-    }
+      // If a child accessor is missing a value, then
+      // re-fetch it entirely
+      if (accessorWithoutValue) {
+        this.scheduler.commit.stage(this, KEYED_REFETCH)
+      }
+    })
   }
 
   public getData(): any {
@@ -210,21 +251,16 @@ export abstract class Accessor<
     return this.children.find(c => c.toString() === String(find)) as any
   }
 
-  @computed()
-  public get isKeyable() {
-    return !!this.extensions.find(e => e.isKeyable)
-  }
-
   public getKey(value: Value | undefined = this.value) {
     if (!(this.isKeyable)) return
 
     const prevValue = this.value
-
-    // temporarily update value
-    if (value) this.value = value
+    this.value = value
 
     try {
-      let entry = this.cache.entries.get(this.node)
+      const node = value?.node || this.node
+
+      let entry = this.cache.entries.get(node)
 
       // Iterate through extensions and call GET_KEY
       // if the key exists in the cache, then return it
@@ -254,8 +290,8 @@ export abstract class Accessor<
       if (!keyIsValid(preferedKey) || !value) return
 
       if (!entry) {
-        entry = new NodeEntry(this.node)
-        this.cache.entries.set(this.node, entry)
+        entry = new NodeEntry(node)
+        this.cache.entries.set(node, entry)
       }
 
       // add a new key to cache
@@ -263,7 +299,7 @@ export abstract class Accessor<
 
       return { key: preferedKey, value }
     } finally {
-      if (value) this.value = prevValue
+      this.value = prevValue
     }
   }
 
@@ -273,6 +309,24 @@ export abstract class Accessor<
       this.selectionPath[this.selectionPath.length - 1].add(fragment)
       return fragment
     }, [node, ...this.selectionPath])
+  }
+
+  @computed()
+  public get isKeyable() {
+    return !!this.extensions.find(e => e.isKeyable)
+  }
+
+  public get keyFragments() {
+    return memoized.keyFragments(() => {
+      const fragments = new Set<Fragment>()
+      for (const extension of this.extensions) {
+        if (extension.keyFragment) {
+          fragments.add(extension.keyFragment)
+        }
+      }
+
+      return fragments
+    }, [this.extensions])
   }
 
   @computed()

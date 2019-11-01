@@ -1,6 +1,6 @@
 import { Generic, Mix } from 'mix-classes'
 import { createMemo } from '@gqless/utils'
-import { Accessor, FieldAccessor } from '../Accessor'
+import { Accessor, FieldAccessor, ExtensionRef } from '../Accessor'
 import { ACCESSOR } from '../Accessor/Accessor'
 import {
   FieldNode,
@@ -53,6 +53,74 @@ export class ObjectNode<TData = any> extends Mix(
     }
 
     return matches ? value : undefined
+  }
+
+  public getData2(value: Value | undefined, extensions: ExtensionRef[] = []) {
+    if (value?.data === null) return null
+
+    return new Proxy({} as any, {
+      get: (_, prop: any) => {
+        // if (accessor.fragmentToResolve) {
+        //   const { data } = accessor.fragmentToResolve
+        //   return data ? data[prop] : undefined
+        // }
+
+        // if (prop === ACCESSOR) return accessor
+        // Statically resolve __typename
+        if (prop === '__typename') return this.name
+
+        // check fields first
+        if (this.fields.hasOwnProperty(prop)) {
+          const field = this.fields[prop]
+
+          return getOutputableData(field, accessor)
+        }
+
+        if (prop === 'toString') return () => this.toString()
+
+        // fallback to extensions
+        for (const extension of extensions) {
+          if (prop in extension.data) return extension.data[prop]
+        }
+      },
+
+      set: (_, prop: string, value) => {
+        // if (accessor.fragmentToResolve) {
+        //   const { data } = accessor.fragmentToResolve
+        //   if (data) data[prop] = value
+        //   return true
+        // }
+
+        if (prop === '__typename') return true
+
+        /**
+         * If setting a field, create a new accessor and set data
+         */
+        if (this.fields.hasOwnProperty(prop)) {
+          const field = this.fields[prop]
+          const selection = field.getSelection(accessor)
+
+          const fieldAccessor =
+            accessor.get(selection) || new FieldAccessor(accessor, selection)
+
+          fieldAccessor.setData(value)
+
+          return true
+        }
+
+        /**
+         * else set it on the first extension with the property
+         */
+        for (const extension of extensions) {
+          if (prop in extension.data) {
+            extension.data[prop] = value
+            return true
+          }
+        }
+
+        return true
+      },
+    })
   }
 
   public getData(accessor: Accessor): TData {

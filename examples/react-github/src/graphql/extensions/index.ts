@@ -20,6 +20,12 @@ export const Repository = {
   }),
 }
 
+export const Organization = {
+  [GET_KEY]: (org: any) => {
+    return org.login
+  },
+}
+
 export const User = {
   [GET_KEY]: (user: any) => {
     return user.login
