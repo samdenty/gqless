@@ -1,7 +1,6 @@
-import { camelCase } from 'lodash'
 import { Variable } from '../Variable'
 import { UArguments } from '../Node'
-import { uniquify } from '../utils'
+import { uniquify, camelCase } from '../utils'
 
 export type Variables = Map<string, Variable>
 
