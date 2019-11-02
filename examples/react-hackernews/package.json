@@ -19,7 +19,7 @@
     "@gqless/cli": "^0.0.1-alpha.23"
   },
   "scripts": {
-    "generate": "../../packages/cli/bin/run-dev generate -u https://www.graphqlhub.com/graphql src/graphql -t",
+    "generate": "../../packages/cli/bin/run-dev generate",
     "start": "parcel index.html --open"
   }
 }

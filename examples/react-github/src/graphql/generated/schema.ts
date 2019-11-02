@@ -1449,6 +1449,9 @@ export const schema = {
             true
           )
         },
+        get sponsorsListing() {
+          return new FieldNode(schema.SponsorsListing, undefined, true)
+        },
         get sponsorshipsAsMaintainer() {
           return new FieldNode(
             schema.SponsorshipConnection,
@@ -5121,6 +5124,9 @@ export const schema = {
   get Sponsorable() {
     return new InterfaceNode(
       {
+        get sponsorsListing() {
+          return new FieldNode(schema.SponsorsListing, undefined, true)
+        },
         get sponsorshipsAsMaintainer() {
           return new FieldNode(
             schema.SponsorshipConnection,
@@ -5758,6 +5764,9 @@ export const schema = {
             undefined,
             true
           )
+        },
+        get sponsorsListing() {
+          return new FieldNode(schema.SponsorsListing, undefined, true)
         },
         get sponsorshipsAsMaintainer() {
           return new FieldNode(

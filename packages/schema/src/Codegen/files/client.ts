@@ -19,7 +19,11 @@ export class ClientFile extends File {
         const response = await fetch(endpoint, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json',${
+              this.codegen.options.headers ? Object.entries(this.codegen.options.headers).map(
+                ([key, value]) => `'${key}': '${value}'`
+              ).join('\n') : ''
+            }
           },
           body: JSON.stringify({
             query,
