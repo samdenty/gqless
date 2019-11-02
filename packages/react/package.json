@@ -1,7 +1,7 @@
 {
   "license": "MIT",
   "name": "@gqless/react",
-  "version": "0.0.1-alpha.23",
+  "version": "0.0.1-alpha.24",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/react.esm.js",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
-    "gqless": "^0.0.1-alpha.23"
+    "gqless": "^0.0.1-alpha.24"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }
