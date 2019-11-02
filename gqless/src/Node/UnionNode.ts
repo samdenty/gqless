@@ -10,15 +10,4 @@ export class UnionNode<TNode> extends Mix(Abstract, Generic(Node)) {
   constructor(ofNodes: TNode[]) {
     super([ofNodes])
   }
-
-  public createProxy() {
-    return new Proxy(
-      {},
-      {
-        get: (_, prop) => {
-          console.log(prop)
-        },
-      }
-    )
-  }
 }

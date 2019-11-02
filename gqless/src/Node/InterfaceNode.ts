@@ -7,13 +7,14 @@ import {
   Abstract,
   UFieldsNodeRecord,
   getOutputableData,
+  IDataContext,
 } from './abstract'
-import { Extension } from './Extension'
+import { NodeExtension } from './Extension'
 import { ObjectNode } from './ObjectNode'
 import { Accessor, FieldAccessor, getAccessorData } from '../Accessor'
 
 export type IInterfaceNodeOptions = IFieldsNodeOptions & {
-  extension?: Extension
+  extension?: NodeExtension
 }
 
 export interface InterfaceNode<TImplementation extends ObjectNode = ObjectNode>
@@ -32,17 +33,17 @@ export class InterfaceNode<TImplementation> extends Mix(
     super([fields, options], [implementations, options.extension])
   }
 
-  public getData(accessor: Accessor): any {
+  public getData(ctx: IDataContext): any {
     // @ts-ignore typescript limitation of mix-classes
-    const data = super.getData(accessor)
+    const data = super.getData(ctx)
     if (!data) return data
 
     return new Proxy(data, {
       get: (_, prop: any) => {
-        if (accessor.fragmentToResolve) {
-          const { data } = accessor.fragmentToResolve
-          return data ? data[prop] : undefined
-        }
+        // if (accessor.fragmentToResolve) {
+        //   const { data } = accessor.fragmentToResolve
+        //   return data ? data[prop] : undefined
+        // }
 
         // If the prop exists in this interface,
         // return directly from interface
@@ -59,7 +60,7 @@ export class InterfaceNode<TImplementation> extends Mix(
           //   }
           // }
 
-          return getOutputableData(field, accessor)
+          return getOutputableData(field, ctx)
         }
 
         // if prop only in one implementation
@@ -70,11 +71,11 @@ export class InterfaceNode<TImplementation> extends Mix(
       },
 
       set: (_, prop: string, value) => {
-        if (accessor.fragmentToResolve) {
-          const { data } = accessor.fragmentToResolve
-          if (data) data[prop] = value
-          return true
-        }
+        // if (accessor.fragmentToResolve) {
+        //   const { data } = accessor.fragmentToResolve
+        //   if (data) data[prop] = value
+        //   return true
+        // }
 
         if (prop === '__typename') return true
 
@@ -82,11 +83,14 @@ export class InterfaceNode<TImplementation> extends Mix(
          * If setting a field, create a new accessor and set data
          */
         if (this.fields.hasOwnProperty(prop)) {
+          if (!ctx.accessor) return true
+
           const field = this.fields[prop]
-          const selection = field.getSelection(accessor)
+          const selection = field.getSelection(ctx)
 
           const fieldAccessor =
-            accessor.get(selection) || new FieldAccessor(accessor, selection)
+            ctx.accessor.get(selection) ||
+            new FieldAccessor(ctx.accessor, selection)
 
           fieldAccessor.setData(data)
 

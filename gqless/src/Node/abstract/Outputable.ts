@@ -1,5 +1,5 @@
 import { Accessor, ExtensionRef } from '../../Accessor'
-import { Extension } from '../Extension'
+import { NodeExtension, Extension } from '../Extension'
 import { Value } from '../../Cache'
 import { Selection } from '../../Selection'
 import { Node } from '../../Node'
@@ -25,7 +25,16 @@ export interface IDataContext<TNode extends Node = Node> {
 }
 
 export class Outputable {
-  constructor(public extension?: Extension) {}
+  public extension?: Extension
+
+  constructor(nodeExtension?: NodeExtension) {
+    if (nodeExtension) {
+      if (typeof nodeExtension === 'function') {
+      } else {
+        this.extension = new Extension(this)
+      }
+    }
+  }
 
   // @ts-ignore
   public getData(ctx: IDataContext) {}

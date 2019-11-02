@@ -71,7 +71,7 @@ export class ObjectNode<TData = any> extends Mix(
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
 
-          return getOutputableData(field, { accessor, value, extensions })
+          return getOutputableData(field, ctx)
         }
 
         if (prop === 'toString') return () => this.toString()
@@ -96,11 +96,13 @@ export class ObjectNode<TData = any> extends Mix(
          * If setting a field, create a new accessor and set data
          */
         if (this.fields.hasOwnProperty(prop)) {
+          if (!ctx.accessor) return true
+
           const field = this.fields[prop]
-          const selection = field.getSelection(accessor)
+          const selection = field.getSelection(ctx)
 
           const fieldAccessor =
-            accessor.get(selection) || new FieldAccessor(accessor, selection)
+            ctx.accessor.get(selection) || new FieldAccessor(ctx.accessor, selection)
 
           fieldAccessor.setData(value)
 
@@ -111,7 +113,7 @@ export class ObjectNode<TData = any> extends Mix(
          * else set it on the first extension with the property
          */
         if (ctx.extensions)
-          for (const extension of extensions) {
+          for (const extension of ctx.extensions) {
             if (prop in extension.data) {
               extension.data[prop] = value
               return true

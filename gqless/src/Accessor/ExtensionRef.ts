@@ -1,9 +1,9 @@
 import { computed, PathArray } from '../utils'
 import {
-  UExtension,
+  UNodeExtension,
   INDEX,
-  ArrayExtension,
-  ObjectExtension,
+  ArrayNodeExtension,
+  ObjectNodeExtension,
   REDIRECT,
   ProxyExtension,
   GET_KEY,
@@ -22,7 +22,7 @@ export class ExtensionRef<TData = any> {
   constructor(
     public parent: ExtensionRef | undefined = undefined,
     public accessor: Accessor,
-    public readonly data: UExtension<TData>,
+    public readonly data: UNodeExtension<TData>,
     public node = accessor.node
   ) {}
 
@@ -118,7 +118,7 @@ export class ExtensionRef<TData = any> {
   }
 
   public childIndex(accessor: Accessor) {
-    let indexExtension = (this.data as ArrayExtension)?.[INDEX]
+    let indexExtension = (this.data as ArrayNodeExtension)?.[INDEX]
 
     if (typeof indexExtension === 'function') {
       indexExtension = indexExtension(accessor.data)
@@ -129,7 +129,7 @@ export class ExtensionRef<TData = any> {
   }
 
   public childField(accessor: FieldAccessor) {
-    let fieldExtension = (this.data as ObjectExtension)?.[accessor.selection.field.name]
+    let fieldExtension = (this.data as ObjectNodeExtension)?.[accessor.selection.field.name]
 
     if (typeof fieldExtension === 'function') {
       fieldExtension = fieldExtension(accessor.data)

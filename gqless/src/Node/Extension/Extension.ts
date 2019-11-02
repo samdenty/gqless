@@ -1,47 +1,58 @@
-import { deepJSONEqual } from '../../utils'
-import { Value } from '../../Cache'
+import { Node } from '../abstract'
+import { UNodeExtension, ProxyExtension, GET_KEY } from './NodeExtension'
+import { computed, PathArray } from '../../utils'
 
-export const REDIRECT = Symbol('Extension#redirect')
-export const INDEX = Symbol('Extension#index')
+export class Extension {
+  constructor(
+    public parent: Extension | undefined,
+    public node: Node,
+    public data?: UNodeExtension
+  ) {
+    if (!parent) {
+      // Initialize keyFragment
+    }
+  }
 
-export const GET_KEY = Symbol('Extension#getKey')
-export const keyIsValid = (key: unknown) => key != null
-export const keyIsEqual = (a: unknown, b: unknown) => deepJSONEqual(a, b)
+  public get isKeyable() {
+    // GET_KEY should be defined across all extension instances
+    return !!(this.data as ProxyExtension)?.[GET_KEY]
+  }
 
-export type RedirectHelpers = {
-  instances: Set<Value>
-  match(data: any): Value | undefined
-  getByKey<TKey = unknown>(key: TKey): Value | undefined
+  // private get extensionKey() {
+  //   return this.path
+  //     .map(ref => {
+  //       if (!ref.parent) return ref.node
+
+  //       if (ref.accessor instanceof FieldAccessor) {
+  //         return ref.accessor.selection.field
+  //       }
+  //     })
+  //     .filter(Boolean)
+  // }
+
+  // public get keyFragment() {
+  //   if (!this.isKeyable) return
+
+  //   let node = this.extensionKey[this.extensionKey.length - 1]
+  //   if (node instanceof NodeContainer) {
+  //     node = node.innerNode
+  //   }
+
+  //   // Fragments only work with InterfaceNode / ObjectNode
+  //   if (!(node instanceof FieldsNode)) return
+
+  //   return memoized.keyFragment(
+  //     () =>
+  //       new Fragment(node as UFragment, `Keyed${this.extensionKey.join('_')}`),
+  //     this.extensionKey
+  //   )
+  // }
+
+  @computed()
+  public get path(): Extension[] {
+    const basePath = this.parent ? this.parent.path : []
+    const path = new PathArray(...basePath, this)
+
+    return path
+  }
 }
-
-export interface ProxyExtension<TData extends object = object> {
-  [key: string]: any
-
-  [REDIRECT]?(
-    args: Record<string, any> | undefined,
-    helpers: RedirectHelpers
-  ): Value | undefined
-
-  [GET_KEY]?(data: TData): any
-}
-
-export interface ArrayExtension<TArray extends unknown[] = unknown[]>
-  extends ProxyExtension<TArray> {
-  [INDEX]?: Extension<TArray[number]>
-  [GET_KEY]?(data: TArray[number]): any
-}
-
-export type ObjectExtension<TObject extends {} = {}> = ProxyExtension<TObject> &
-  { [K in keyof TObject]?: Extension<TObject[K]> }
-
-export type ScalarExtension<TData extends unknown = unknown> = TData
-
-export type UExtension<TData = unknown> = TData extends object
-  ? TData extends any[]
-    ? ArrayExtension<TData>
-    : ObjectExtension<TData>
-  : ScalarExtension<TData>
-
-export type Extension<TData = any> =
-  | UExtension<TData>
-  | ((data: TData) => UExtension<TData>)

@@ -3,13 +3,13 @@ import { ScalarNode, ArrayNode, UnionNode, EnumNode } from '../../'
 import { lazyGetters } from '@gqless/utils'
 import { FieldNode } from './FieldNode'
 import { Mix, Generic } from 'mix-classes'
-import { Extension } from '../../Extension'
+import { NodeExtension } from '../../Extension'
 import { ObjectNode } from '../../ObjectNode'
 import { InterfaceNode } from '../../InterfaceNode'
 
 export type IFieldsNodeOptions = {
   name: string
-  extension?: Extension
+  extension?: NodeExtension
 }
 
 export type UFieldsNode =

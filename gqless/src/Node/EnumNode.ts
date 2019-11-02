@@ -1,7 +1,5 @@
-import { Outputable } from './abstract/Outputable'
+import { Outputable, IDataContext } from './abstract/Outputable'
 import { Node } from './abstract/Node'
-import { Selection } from '../Selection'
-import { Accessor } from '../Accessor'
 import { Mix, Generic } from 'mix-classes'
 
 export type IEnumNodeOptions = {
@@ -23,10 +21,9 @@ export class EnumNode<T> extends Mix(Outputable, Generic(Node)) {
     return this.name || this.constructor.name
   }
 
-  public getData(accessor: Accessor<Selection<EnumNode>>): any {
-    super.getData(accessor)
-    if (!accessor.value) return null
+  public getData(ctx: IDataContext<EnumNode>): any {
+    if (!ctx.value) return null
 
-    return accessor.value.data
+    return ctx.value.data
   }
 }

@@ -2,6 +2,7 @@
   "license": "MIT",
   "name": "gqless",
   "version": "0.0.1-alpha.23",
+  "sideEffects": false,
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/gqless.esm.js",

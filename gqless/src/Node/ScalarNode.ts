@@ -3,14 +3,14 @@ import { Generic, Mix } from 'mix-classes'
 import { Accessor, ExtensionRef } from '../Accessor'
 import { Selection } from '../Selection'
 import { Node } from './abstract/Node'
-import { Outputable } from './abstract/Outputable'
-import { Extension } from './Extension'
+import { Outputable, IDataContext } from './abstract/Outputable'
+import { NodeExtension } from './Extension'
 import { Matchable } from './abstract/Matchable'
 import { Value } from '../Cache'
 
 export type IScalarNodeOptions = {
   name?: string
-  extension?: Extension
+  extension?: NodeExtension
 }
 
 export interface ScalarNode<T extends any = any> extends Node<T> {}
@@ -40,24 +40,13 @@ export class ScalarNode<T> extends Mix(Outputable, Matchable, Generic(Node)) {
     return this.name || this.constructor.name
   }
 
-  public getData2(value: Value | undefined, extensions: ExtensionRef[]) {
-    if (extensions.length) {
-      return extensions[0].data
+  public getData(ctx: IDataContext) {
+    if (ctx.extensions?.length) {
+      return ctx.extensions[0].data
     }
 
-    if (!value) return null
+    if (!ctx.value) return null
 
-    return value.data
-  }
-
-  public getData(accessor: Accessor<Selection<ScalarNode>>): any {
-    super.getData(accessor)
-
-    if (accessor.extensions.length) {
-      return accessor.extensions[0].data
-    }
-
-    if (!accessor.value) return null
-    return accessor.value.data
+    return ctx.value.data
   }
 }

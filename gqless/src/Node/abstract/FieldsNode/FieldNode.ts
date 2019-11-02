@@ -3,13 +3,13 @@ import { Generic, Mix } from 'mix-classes'
 
 import { deepJSONEqual, computed } from '../../../utils'
 import { Arguments } from '../../Arguments'
-import { Accessor, FieldAccessor } from '../../../Accessor'
+import { Accessor, FieldAccessor, getAccessorData } from '../../../Accessor'
 import { FieldSelection } from '../../../Selection'
 import { EnumNode } from '../../EnumNode'
 import { ScalarNode } from '../../ScalarNode'
 import { Node } from '../Node'
 import { NodeContainer } from '../NodeContainer'
-import { Outputable, IDataContext } from '../Outputable'
+import { Outputable, IDataContext, getOutputableData } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { Variable } from '../../../Variable'
 
@@ -55,23 +55,31 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
     if (selection) return selection
 
     selection = new FieldSelection(this, args)
-    ctx.selection.add(selection)
+    ctx.selection?.add(selection)
 
     return selection
   }
 
   public getData(ctx: IDataContext<FieldsNode>) {
     const getData = (selection: FieldSelection<TNode>): any => {
-      const accessor =
-        fieldsAccessor.get(selection) ||
-        new FieldAccessor(fieldsAccessor, selection)
+      if (ctx.accessor) {
+        const accessor =
+          ctx.accessor.get(selection) ||
+          new FieldAccessor(ctx.accessor, selection)
 
-      return accessor.data
+        return getAccessorData(accessor)
+      }
+
+      return getOutputableData(this.ofNode, {
+        selection,
+        value: ctx.value?.get(selection.toString()),
+        extensions: [] // TODO
+      })
     }
 
     const argsFn = (args: any) => {
       const parsedArgs = args && (Object.keys(args).length ? args : undefined)
-      return getData(this.getSelection(fieldsAccessor, parsedArgs))
+      return getData(this.getSelection(ctx, parsedArgs))
     }
 
     if (!this.uncallable) return argsFn
@@ -80,7 +88,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
     let data: any
     const argumentlessData = () => {
       if (selection) return data
-      selection = this.getSelection(fieldsAccessor)
+      selection = this.getSelection(ctx)
       data = getData(selection)
       return data
     }
