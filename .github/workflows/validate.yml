@@ -22,7 +22,7 @@ jobs:
           yarn bootstrap
 
       - name: Build all packages
-        run: yarn build:all
+        run: yarn build
 
   test:
     runs-on: ubuntu-latest

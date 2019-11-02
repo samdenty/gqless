@@ -12,8 +12,8 @@
     "bootstrap": "lerna bootstrap",
     "release": "yarn build && lerna publish",
     "test": "jest",
-    "build": "yarn run build:all --since",
-    "build:all": "lerna run build --no-private",
+    "build": "lerna run build --no-private",
+    "build:changed": "yarn run build --since",
     "docs": "yarn workspace @internal/website start",
     "docs:build": "yarn workspace @internal/website build",
     "changelog": "[[ -v GITHUB_AUTH ]] && lerna-changelog > CHANGELOG.md"

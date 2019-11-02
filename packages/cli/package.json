@@ -17,25 +17,25 @@
     "@endemolshinegroup/cosmiconfig-typescript-loader": "^1.0.1",
     "@gqless/schema": "^0.0.1-alpha.23",
     "@oclif/command": "^1.5.19",
-    "@oclif/config": "^1",
-    "@oclif/plugin-help": "^2",
+    "@oclif/config": "^1.13.3",
+    "@oclif/plugin-help": "^2.2.1",
     "cosmiconfig": "^5.2.1",
     "got": "^9.6.0",
     "mkdirp": "^0.5.1",
-    "prettier": "^1",
-    "tslib": "^1"
+    "prettier": "^1.18.2",
+    "tslib": "^1.10.0"
   },
   "peerDependencies": {
     "gqless": "*"
   },
   "devDependencies": {
-    "@oclif/dev-cli": "^1",
-    "@types/got": "^9.4.4",
+    "@oclif/dev-cli": "^1.22.2",
+    "@types/got": "^9.6.8",
     "@types/mkdirp": "^0.5.2",
-    "@types/node": "^12.11.7",
+    "@types/node": "^12.12.5",
     "@types/prettier": "^1.18.3",
     "gqless": "^0.0.1-alpha.23",
-    "ts-node": "^8"
+    "ts-node": "^8.4.1"
   },
   "engines": {
     "node": ">=8.0.0"
