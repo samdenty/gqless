@@ -3,33 +3,24 @@ import { get, post } from 'got'
 import { QueryFetcher } from 'gqless'
 import * as path from 'path'
 import { generateSchema } from '../utils/generateSchema'
-import { getConfig, Config } from '../utils/config';
-
-export interface Flags {
-  config?: string;
-  header?: string[];
-  url?: string;
-  usePost: boolean;
-  noComments: boolean;
-  noPrettier: boolean;
-  typescript: boolean;
-}
+import { getConfig, Config } from '../utils/config'
+import { invariant } from '@gqless/utils'
 
 const headersArrayToObject = (
   arr?: string[]
 ): Record<string, string> | undefined => {
-  if (!arr) return;
+  if (!arr) return
   return arr
     .map(val => JSON.parse(val))
-    .reduce((pre, next) => ({ ...pre, ...next }), {});
-};
+    .reduce((pre, next) => ({ ...pre, ...next }), {})
+}
 
 export default class Generate extends Command {
   static description = 'Generate a client from a GraphQL endpoint'
 
   static examples = [
     `$ gqless generate ./src/gqless -u https://example.com/graphql`,
-    `$ gqless generate -c ./src/gqless.config.ts`,
+    `$ gqless generate -c gqless.config.ts`,
   ]
 
   static flags = {
@@ -37,25 +28,24 @@ export default class Generate extends Command {
 
     config: flags.string({
       char: 'c',
-      description: 'Path to your gqless config file'
+      description: 'Path to your gqless config file',
     }),
 
     header: flags.string({
       multiple: true,
       parse: header => {
-        const separatorIndex = header.indexOf(':');
-        const key = header.substring(0, separatorIndex).trim();
-        const value = header.substring(separatorIndex + 1).trim();
-        return JSON.stringify({ [key]: value });
+        const separatorIndex = header.indexOf(':')
+        const key = header.substring(0, separatorIndex).trim()
+        const value = header.substring(separatorIndex + 1).trim()
+        return JSON.stringify({ [key]: value })
       },
-      description: 'Additional header to send to server for introspectionQuery. May be used multiple times to add multiple headers.'
+      description:
+        'Additional header to send to server for introspectionQuery. May be used multiple times to add multiple headers.',
     }),
 
-    noComments: flags.boolean({
-      description: `don't output comments (only useful for IDE intellisense)`,
-    }),
-    noPrettier: flags.boolean({
-      description: `don't run prettier on the resulting code`,
+    comments: flags.boolean({
+      description: `output comments to type definitions (useful for IDE intellisense)`,
+      default: true,
     }),
 
     url: flags.string({
@@ -66,75 +56,72 @@ export default class Generate extends Command {
     typescript: flags.boolean({
       char: 't',
       description: 'output typescript (instead of javascript)',
+      default: true,
     }),
 
     usePost: flags.boolean({
-      description: 'use a POST request to retrieve the schema'
-    })
-
+      description: 'use a POST request to retrieve the schema',
+    }),
   }
 
   static args = [{ name: 'output_dir' }]
 
   async run() {
-    const { args, flags } = this.parse(Generate as any)
-
-    const config = await this.createConfig(args, flags);
-
-    if (!config.url) {
-      this.error('The url to the graphql endpoints is missing. You can use the -u flag or provide it in the config file.');
-    }
-
-    if (!config.outputDir) {
-      this.error('The output directory is missing. You can pass it to the command or include it in the config file.');
-    }
+    const config = await this.createConfig()
 
     const fetchQuery: QueryFetcher = async (query, variables) => {
-      const response = await (config.usePost ? post : get)(config.url as string, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...(config.headers || {})
-        },
-        body: JSON.stringify({
-          query,
-          variables,
-        }),
-      })
+      const response = await (config.usePost ? post : get)(
+        config.url as string,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...config.headers,
+          },
+          body: JSON.stringify({
+            query,
+            variables,
+          }),
+        }
+      )
       return JSON.parse(response.body)
     }
 
-    await generateSchema(fetchQuery, config as Config & {outputDir: string});
+    await generateSchema(fetchQuery, config as Config & { outputDir: string })
   }
 
-  async createConfig(args: {output_dir?: string}, flags: Flags): Promise<Config> {
-    let config: Config | null = null;
+  async createConfig(): Promise<Config> {
+    const { args, flags } = this.parse(Generate)
+
+    const { header, ...rest } = flags
+    let config: Config
     try {
-      config = await getConfig({
-        configFileName: flags.config
-      });
+      config = (await getConfig(flags.config)) || ({} as any)
     } catch (error) {
-      this.error(error.message);
+      this.error(error.message)
     }
 
-    const {header, ...rest} = flags;
-
-    config = {
-      ...(config || {}),
-      ...rest
-    };
+    Object.assign(config, rest)
 
     if (header) {
-      config.headers = headersArrayToObject(header);
+      config.headers = headersArrayToObject(header as any)
     }
 
     if (args.output_dir) {
-      config.outputDir = args.output_dir;
+      config.outputDir = args.output_dir
     }
 
-    if (config.outputDir) {
-      config.outputDir = path.join(process.cwd(), config.outputDir);
-    }
+    invariant(
+      config.outputDir,
+      'The output directory is missing. You can pass it to the command or include it in the config file.'
+    )
 
-    return config;
+    config.outputDir = path.join(process.cwd(), config.outputDir)
+
+    invariant(
+      config.url,
+      'The url to the graphql endpoints is missing. You can use the -u flag or provide it in the config file.'
+    )
+
+    return config
   }
 }

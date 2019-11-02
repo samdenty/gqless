@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "graphql-faker & parcel index.html",
-    "generate": "../../packages/cli/bin/run-dev generate -t -u http://127.0.0.1:9002/graphql ./graphql",
+    "generate": "../../packages/cli/bin/run-dev generate",
     "build": "parcel build index.html"
   },
   "dependencies": {

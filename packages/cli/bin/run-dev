@@ -1,4 +1,20 @@
 #!/usr/bin/env node
 
+const path = require('path')
+process.env.TS_NODE_PROJECT = path.resolve(
+  path.dirname(module.filename),
+  '../tsconfig.json'
+)
+
 require('tsconfig-paths/register')
-require('./run')
+
+require('@oclif/config')
+  .load(module.filename)
+  .then(config => {
+    config.pjson.oclif.commands = './src/commands'
+
+    require('@oclif/command')
+      .run(undefined, config)
+      .then(require('@oclif/command/flush'))
+      .catch(require('@oclif/errors/handle'))
+  })

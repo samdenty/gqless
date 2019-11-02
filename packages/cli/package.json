@@ -30,7 +30,6 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
-    "@types/cosmiconfig": "^5.0.3",
     "@types/got": "^9.4.4",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^12.11.7",
@@ -56,7 +55,6 @@
     ]
   },
   "scripts": {
-    "dev": "./bin/run-dev",
     "build": "rm -rf dist; tsc -p tsconfig.build.json && oclif-dev readme"
   },
   "types": "dist/index.d.ts",

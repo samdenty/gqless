@@ -1,4 +1,4 @@
-import { Config } from './config';
+import { Config } from './config'
 import { Codegen, fetchSchema } from '@gqless/schema'
 
 import { QueryFetcher } from 'gqless'
@@ -14,17 +14,16 @@ export const generateSchema = async (
   }
 ) => {
   const schema = await fetchSchema(fetchQuery, {
-    includeInfo: !options.noComments,
+    includeInfo: options.comments,
   })
   const codegen = new Codegen(schema, {
     typescript: options.typescript,
     url: options.url,
-    headers: options.headers
+    headers: options.headers,
   })
   const files = codegen.generate()
 
-  const prettierConfig =
-    !options.noPrettier && (await prettier.resolveConfig(options.outputDir))
+  const prettierConfig = await prettier.resolveConfig(options.outputDir)
 
   for (const file of files) {
     const filePath = path.join(options.outputDir, file.path)
@@ -32,12 +31,10 @@ export const generateSchema = async (
 
     if (!file.overwrite && fs.existsSync(filePath)) continue
 
-    const source = options.noPrettier
-      ? file.contents
-      : prettier.format(file.contents, {
-          ...prettierConfig,
-          parser: 'typescript',
-        })
+    const source = prettier.format(file.contents, {
+      ...prettierConfig,
+      parser: 'typescript',
+    })
 
     fs.writeFileSync(filePath, source)
   }

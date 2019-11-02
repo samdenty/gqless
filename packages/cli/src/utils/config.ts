@@ -1,51 +1,59 @@
-import cosmiconfig, { LoaderEntry } from "cosmiconfig";
-import TypeScriptLoader from "@endemolshinegroup/cosmiconfig-typescript-loader";
-import { resolve, parse } from "path";
+// @ts-ignore
+import * as cosmiconfig from 'cosmiconfig'
+import TypeScriptLoader from '@endemolshinegroup/cosmiconfig-typescript-loader'
+import { resolve, parse } from 'path'
+import { invariant } from '@gqless/utils'
 
 export interface Config {
-  config?: string;
-  headers?: Record<string, string>;
-  url?: string;
-  outputDir?: string;
-  usePost: boolean;
-  noComments: boolean;
-  noPrettier: boolean;
-  typescript: boolean;
+  config?: string
+  headers?: Record<string, string>
+  url?: string
+  outputDir?: string
+  usePost?: boolean
+  comments?: boolean
+  typescript?: boolean
 }
 
-const MODULE_NAME = "gqless";
+const MODULE_NAME = 'gqless'
 const defaultFileNames = [
-  "package.json",
+  'package.json',
+  `.${MODULE_NAME}rc`,
+  `.${MODULE_NAME}rc.json`,
+  `.${MODULE_NAME}rc.yaml`,
+  `.${MODULE_NAME}rc.yml`,
   `${MODULE_NAME}.config.js`,
-  `${MODULE_NAME}.config.ts`
-];
+  `${MODULE_NAME}.config.ts`,
+]
 
 const loaders = {
-  ".json": (cosmiconfig as any).loadJson as LoaderEntry,
-  ".js": (cosmiconfig as any).loadJs as LoaderEntry,
-  ".ts": {
-    async: TypeScriptLoader
-  }
-};
+  '.json': cosmiconfig.loadJson,
+  '.yaml': cosmiconfig.loadYaml,
+  '.yml': cosmiconfig.loadYaml,
+  '.js': cosmiconfig.loadJs,
+  '.ts': {
+    async: TypeScriptLoader,
+  },
+  noExt: cosmiconfig.loadYaml
+}
 
-export const getConfig = async ({configFileName}: {configFileName?: string} = {}): Promise<Config | null> => {
-  const configPath = configFileName && parse(resolve(configFileName)).dir;
+export const getConfig = async (path?: string) => {
+  const configPath = path && parse(resolve(path)).dir
   const explorer = cosmiconfig(MODULE_NAME, {
-    searchPlaces: configFileName ? [configFileName] : defaultFileNames,
-    loaders
-  });
+    searchPlaces: path ? [path] : defaultFileNames,
+    loaders,
+  })
 
-  let loadedConfig;
+  let loadedConfig
   try {
-    loadedConfig = await explorer.search(configPath);
+    loadedConfig = await explorer.search(configPath)
   } catch (error) {
-    throw new Error(`A config file failed to load: ${error}`);
+    throw new Error(`A config file failed to load: ${error}`)
   }
 
-  if (configPath && !loadedConfig) {
-    throw new Error(`A config file failed to load at ${configPath}. This is likely because this file is empty or malformed.`);
-  }
+  invariant(
+    !(configPath && !loadedConfig),
+    `A config file failed to load at ${configPath}. This is likely because this file is empty or malformed.`
+  )
 
-
-  return loadedConfig && (loadedConfig.config as Config);
+  return loadedConfig?.config as Config | null
 }
