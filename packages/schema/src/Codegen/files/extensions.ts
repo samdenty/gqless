@@ -7,13 +7,11 @@ export class ExtensionsFile extends File {
   }
 
   public generate() {
+    // TODO: default keys
+
     return `
       ${super.generate()}
 
-      ${Object.values(this.codegen.schema.types).forEach(type => {
-        // type.
-        // TODO
-      })}
       export const Query = {}
 
       /**

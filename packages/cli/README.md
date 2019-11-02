@@ -20,7 +20,7 @@ $ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@gqless/cli/0.0.1-alpha.23 darwin-x64 node-v10.16.0
+@gqless/cli/0.0.1-alpha.24 linux-x64 node-v12.4.0
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND
@@ -47,22 +47,19 @@ OPTIONS
   -h, --help           show CLI help
   -t, --typescript     output typescript (instead of javascript)
   -u, --url=url        url to the GraphQL endpoint
+  --comments           output comments to type definitions (useful for IDE intellisense)
 
   --header=header      Additional header to send to server for introspectionQuery. May be used multiple times to add
                        multiple headers.
-
-  --noComments         don't output comments (only useful for IDE intellisense)
-
-  --noPrettier         don't run prettier on the resulting code
 
   --usePost            use a POST request to retrieve the schema
 
 EXAMPLES
   $ gqless generate ./src/gqless -u https://example.com/graphql
-  $ gqless generate -c ./src/gqless.config.ts
+  $ gqless generate -c gqless.config.ts
 ```
 
-_See code: [dist/commands/generate.js](https://github.com/samdenty/gqless/blob/v0.0.1-alpha.23/dist/commands/generate.js)_
+_See code: [dist/commands/generate.js](https://github.com/samdenty/gqless/blob/v0.0.1-alpha.24/dist/commands/generate.js)_
 
 ## `gqless help [COMMAND]`
 

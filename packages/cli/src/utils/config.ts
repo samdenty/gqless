@@ -1,5 +1,4 @@
-// @ts-ignore
-import * as cosmiconfig from 'cosmiconfig'
+const cosmiconfig = require('cosmiconfig')
 import TypeScriptLoader from '@endemolshinegroup/cosmiconfig-typescript-loader'
 import { resolve, parse } from 'path'
 import { invariant } from '@gqless/utils'
