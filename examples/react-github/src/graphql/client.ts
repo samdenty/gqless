@@ -4,7 +4,7 @@ import { Client, QueryFetcher } from 'gqless'
 import { schema, Query } from './generated'
 import { parse, stringify } from 'flatted'
 
-const endpoint = `https://api.github.com/graphql?access_token=${process.env.GITHUB_AUTH}`
+const endpoint = `https://api.github.com/graphql?access_token=${process.env.GITHUB_TOKEN}`
 
 const fetchQuery: QueryFetcher = async (query, variables) => {
   const response = await fetch(endpoint, {

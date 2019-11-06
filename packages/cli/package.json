@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1",
-    "@types/got": "^9.4.4",
+    "@types/got": "^9.6.9",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^12.11.7",
     "@types/prettier": "^1.18.3",
