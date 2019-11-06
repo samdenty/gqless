@@ -15,8 +15,7 @@
     "build": "yarn run build:all --since",
     "build:all": "lerna run build --no-private",
     "docs": "yarn workspace @internal/website start",
-    "docs:build": "yarn workspace @internal/website build",
-    "changelog": "[[ -v GITHUB_TOKEN ]] && lerna-changelog > CHANGELOG.md"
+    "docs:build": "yarn workspace @internal/website build"
   },
   "homepage": "https://gqless.netlify.com",
   "repository": {
@@ -47,17 +46,15 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "yarn changelog && pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged"
     }
-  },
-  "changelog": {
-    "cacheDir": ".changelog"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/plugin-proposal-decorators": "^7.7.0",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@changesets/cli": "^2.3.3",
     "@types/jest": "^24.0.22",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
@@ -66,7 +63,6 @@
     "graphql-faker": "^2.0.0-rc.13",
     "husky": "^3.0.9",
     "lerna": "^3.18.3",
-    "lerna-changelog": "^0.8.2",
     "parcel-bundler": "^1.12.4",
     "pretty-quick": "^2.0.1",
     "react": "^0.0.0-experimental-f6b8d31a7",
