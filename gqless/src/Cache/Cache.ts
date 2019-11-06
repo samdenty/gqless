@@ -2,7 +2,7 @@ import { Accessor } from '../Accessor'
 import { Value } from './Value'
 import { deepReference, createPath } from './utils'
 import { merge } from './merge'
-import { Node, ObjectNode, Outputable } from '../Node'
+import { Node, ObjectNode, DataTrait } from '../Node'
 import { NodeEntry } from './NodeEntry'
 import { Disposable } from '../utils'
 import { createEvent } from '@gqless/utils'
@@ -10,7 +10,7 @@ import { Transaction } from './Transaction'
 
 export class Cache extends Disposable {
   public references!: ReturnType<typeof deepReference>
-  public entries = new Map<Node & Outputable, NodeEntry>()
+  public entries = new Map<Node & DataTrait, NodeEntry>()
 
   public onRootValueChange = createEvent<(rootValue: Value) => void>()
 
@@ -61,7 +61,7 @@ export class Cache extends Disposable {
 
     transaction.begin()
     const value = createPath(accessor, data)
-    merge(value, data, accessor)
+    merge(this, value, data, accessor.extensions)
     transaction.end()
   }
 

@@ -1,4 +1,4 @@
-import { getAccessor, Abstract, fragmentOn } from 'gqless'
+import { getAccessor, Abstract, getAbstractImplementation } from 'gqless'
 import { useComponentContext } from '../hooks/useComponentContext'
 import { invariant } from '@gqless/utils'
 
@@ -10,15 +10,8 @@ export function ofType<
     const { variantFragments } = useComponentContext()
     const accessor = getAccessor(data)
 
-    if (accessor.node instanceof Abstract) {
-      const node = accessor.node.implementations.find(
-        node => node.toString() === typename
-      )
-      invariant(
-        node,
-        `'${typename}' is not a valid subtype of ${accessor.node}`
-      )
-
+    const node = getAbstractImplementation(accessor.node, typename)
+    if (node) {
       const fragment = accessor.getDefaultFragment(node)
       if (!variantFragments.has(accessor))
         variantFragments.set(accessor, new Set())

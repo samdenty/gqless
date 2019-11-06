@@ -1,8 +1,9 @@
-import { Accessor, ExtensionRef } from '../../Accessor'
-import { NodeExtension, Extension } from '../Extension'
+import { Accessor } from '../../Accessor'
 import { Value } from '../../Cache'
 import { Selection } from '../../Selection'
 import { Node } from '../../Node'
+import { DataTrait } from '../traits'
+import { Extension } from '../Extension'
 
 export const getOutputableData = (
   outputable: Outputable,
@@ -17,25 +18,35 @@ export const getOutputableData = (
   }
 }
 
-export interface IDataContext<TNode extends Node = Node> {
-  extensions?: ExtensionRef[]
+export type IDataContext<TNode extends Node & DataTrait = Node & DataTrait> = {
   accessor?: Accessor<Selection<TNode>>
   selection?: Selection<TNode>
+  extensions?: Extension[]
   value?: Value
 }
 
+export const getExtensions = (ctx: IDataContext) => {
+  if (ctx.extensions) return ctx.extensions
+  if (ctx.accessor) return ctx.accessor.extensions
+
+  return []
+}
+
+export const getSelection = (ctx: IDataContext) => {
+  if (ctx.selection) return ctx.selection
+  if (ctx.accessor) return ctx.accessor.selection
+
+  return
+}
+
+export const getValue = (ctx: IDataContext) => {
+  if (ctx.value) return ctx.value
+  if (ctx.accessor) return ctx.accessor.value
+
+  return
+}
+
 export class Outputable {
-  public extension?: Extension
-
-  constructor(nodeExtension?: NodeExtension) {
-    if (nodeExtension) {
-      if (typeof nodeExtension === 'function') {
-      } else {
-        this.extension = new Extension(this)
-      }
-    }
-  }
-
   // @ts-ignore
   public getData(ctx: IDataContext) {}
 }

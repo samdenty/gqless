@@ -26,7 +26,9 @@ export class RootAccessor<
   // TODO: This should be replace with a Generic inside accessor
 
   public getData(): any {
-    return this.selection.node.getData(this)
+    return this.selection.node.getData({
+      accessor: this,
+    })
   }
 
   public updateValue(value: Value) {

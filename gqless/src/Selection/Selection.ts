@@ -1,7 +1,7 @@
 import { createEvent, invariant } from '@gqless/utils'
-import { Node } from '../Node'
+import { Node, DataTrait } from '../Node'
 
-export class Selection<TNode extends Node = Node> {
+export class Selection<TNode extends Node & DataTrait = Node & DataTrait> {
   // Selections that should be fetched with all queries
   public keySelections = new Set<Selection>()
   public selections = new Set<Selection>()

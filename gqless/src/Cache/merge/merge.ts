@@ -1,8 +1,11 @@
 import { Value } from '../Value'
-import { ObjectNode, ScalarNode, ArrayNode, Outputable, Node } from '../../Node'
+import { ObjectNode, ScalarNode, ArrayNode, DataTrait, Node, Extension, FieldNode, UFieldsNode, getAbstractImplementation } from '../../Node'
 import { createValue } from './createValue'
-import { Accessor, FieldAccessor, IndexAccessor } from '../../Accessor'
-import { FieldSelection, Selection, Fragment } from '../../Selection'
+import { Selection, Fragment } from '../../Selection'
+import { extensionsForKey } from './extensionsForKey'
+import { selectionsForKey } from './selectionsForKey'
+import { Cache } from '../Cache'
+import { getKeyFromCache } from './getKeyFromCache'
 
 const FIELD_NAME = /^([^(]+)\(?/
 
@@ -11,82 +14,68 @@ const FIELD_NAME = /^([^(]+)\(?/
  * Merge-updates a value
  * @param value value to update
  * @param data data to merge
- * @param accessor (optional) pass to enable cache keys
+ * @param extensions (optional) pass to enable cache keys
  * @param selectionsFilter (optional) pass to filter merging
  *
  * @returns mergeFiltered - merges the data omitted by selectionsFilter
  */
-export const merge = (value: Value, data: any, accessor?: Accessor, ...selectionsFilter: Selection[]): Function | undefined => {
-  try {
-    if (value.node instanceof ScalarNode) {
-      mergeScalar(value as any, data, accessor as any)
-      return
-    }
-
-    const wasNull = value.data === null
-    const isNull = data === null
-
-    // don't do anything if both are null
-    if (wasNull && isNull) return
-
-    // simply update for null
-    if (isNull) {
-      value.data = null
-      return
-    }
-
-    if (value.node instanceof ObjectNode) {
-      if (wasNull) value.data = {}
-      return iterateObject(value as any, data, accessor as any, ...selectionsFilter)
-    }
-
-    if (value.node instanceof ArrayNode) {
-      // Update the array length (removing values if needed)
-      value.data = wasNull ? [] : (value.data as any[]).slice(0, data.length)
-      iterateArray(value as any, data, accessor as any)
-      return
-    }
+export const merge = (cache: Cache, value: Value, data: any, extensions: Extension[] = [], ...selectionsFilter: Selection[]): Function | undefined => {
+  if (value.node instanceof ScalarNode) {
+    mergeScalar(value as any, data)
     return
-  } finally {
-    console.groupEnd()
   }
 
+  const wasNull = value.data === null
+  const isNull = data === null
+
+  // don't do anything if both are null
+  if (wasNull && isNull) return
+
+  // simply update for null
+  if (isNull) {
+    value.data = null
+    return
+  }
+
+  if (value.node instanceof ObjectNode) {
+    if (wasNull) value.data = {}
+    return iterateObject(cache, value as any, data, extensions, ...selectionsFilter)
+  }
+
+  if (value.node instanceof ArrayNode) {
+    // Update the array length (removing values if needed)
+    value.data = wasNull ? [] : (value.data as any[]).slice(0, data.length)
+    iterateArray(cache, value as any, data, extensions)
+    return
+  }
+  return
 }
 
-const keyedMerge = (data: any, accessor: Accessor, ...selectionsFilter: Selection[]) => {
-  if (!accessor.isKeyable) return
-
-  const { keyFragments } = accessor
+const keyedMerge = (cache: Cache, node: Node & DataTrait, data: any, extensions: Extension[], ...selectionsFilter: Selection[]) => {
+  const keyFragments = new Set<Fragment>()
+  for (const extension of extensions) {
+    if (extension.fragment) {
+      keyFragments.add(extension.fragment)
+    }
+  }
+  if (!keyFragments.size) return
 
   // Create a *temporary* value with the fields needed to perform a key-operation
-  const keyedValue = createValue(accessor.node, data)
-
-  // Temporarily update the accessor's value
-  const prevValue = accessor.value
-  accessor.value = keyedValue
-  accessor.onValueChange.pause()
+  const keyedValue = createValue(node, data)
 
   // Merge only the fields required for a key-op into the new value
-  const completeMerge = merge(keyedValue, data, accessor, ...keyFragments)
+  const completeMerge = merge(cache, keyedValue, data, extensions, ...keyFragments)
 
   // Find a key, and get value from cache
-  const result = accessor.getKey(keyedValue)
-
-  // Reset accessor value back
-  accessor.value = prevValue
-  accessor.onValueChange.unpause()
+  const result = getKeyFromCache(cache, keyedValue, extensions)
 
   // No result, discard keyedValue
   if (!result) return
 
-  // Key was found, update value
-  // this could trigger a KeyedRefetch
-  accessor.updateValue(result.value)
-
   // If the value was already in the cache,
   // discard keyedValue and merge oncemore
   if (result.value !== keyedValue) {
-    merge(result.value, data, accessor, ...selectionsFilter)
+    merge(cache, result.value, data, extensions, ...selectionsFilter)
   } else {
     // Value wasn't in cache, so merge the rest of data
     // on the keyedValue
@@ -96,98 +85,79 @@ const keyedMerge = (data: any, accessor: Accessor, ...selectionsFilter: Selectio
   return result.value
 }
 
-const mergeScalar = (value: Value<ScalarNode>, data: any, accessor?: Accessor<Selection<ScalarNode>>) => {
-  if (accessor) {
-    const keyedValue = keyedMerge(data, accessor)
-    if (keyedValue) return
-  }
-
+const mergeScalar = (value: Value<ScalarNode>, data: any) => {
+  // Scalar's can't be keyed, so simply update
   value.data = data
 }
 
-const iterateArray = (value: Value<ArrayNode<Node & Outputable>>, data: unknown[], accessor?: Accessor<Selection<ArrayNode>>, ...selectionsFilter: Selection[]) => {
+const iterateArray = (cache: Cache, arrayValue: Value<ArrayNode<Node & DataTrait>>, data: any[], arrayExtensions: Extension[], ...selectionsFilter: Selection[]) => {
   data.forEach((data, key) => {
-    let keyValue = value.get(key)
-    let indexAccessor: IndexAccessor | undefined
+    const node = arrayValue.node.ofNode
+    const nodeImplementation = getAbstractImplementation(node, data?.__typename)
+    const extensions = extensionsForKey(arrayExtensions, e => e.childIndex(), node, nodeImplementation, node)
 
-    if (accessor) {
-      indexAccessor = accessor.get(key) || new IndexAccessor(accessor, key)
-      const keyedValue = keyedMerge(data, indexAccessor, ...selectionsFilter)
-      if (keyedValue) return
+    let value = arrayValue.get(key)
+
+    const keyedValue = keyedMerge(cache, nodeImplementation || node, data, extensions, ...selectionsFilter)
+    if (keyedValue) {
+      arrayValue.set(key, keyedValue)
+      return
     }
 
-    if (!keyValue) {
-      keyValue = createValue(value.node.ofNode, data)
-      value.set(key, keyValue)
+    if (!value) {
+      value = createValue(nodeImplementation || node, data)
+      arrayValue.set(key, value)
     }
 
-    merge(keyValue, data, indexAccessor, ...selectionsFilter)
+    merge(cache, value, data, extensions, ...selectionsFilter)
   })
 }
 
-const iterateObject = (value: Value<ObjectNode>, data: Record<string, any>, accessor?: Accessor<Selection<ObjectNode>>, ...selectionsFilter: Selection[]) => {
-  const selectionsForKey = (key: string, ...selectionsFilter: Selection[]) => {
-    const selections: Selection[] = []
-
-    for (const selection of selectionsFilter) {
-      if (selection instanceof Fragment) {
-        selections.push(...selectionsForKey(key, ...selection.selections))
-        continue
-      }
-
-      if (selection.toString() === key) {
-        selections.push(selection)
-      }
-    }
-
-    return selections
-  }
-
-  const mergeKey = (key: string, ...filteredSelections: Selection[]) => {
+const iterateObject = (cache: Cache, objectValue: Value<ObjectNode>, objectData: Record<string, any>, objectExtensions: Extension[], ...selectionsFilter: Selection[]) => {
+  function mergeKey(key: string, ...filteredSelections: Selection[]) {
     let fieldName = key
-    if (!value.node.fields.hasOwnProperty(key))  {
+    if (!objectValue.node.fields.hasOwnProperty(key))  {
       fieldName = fieldName.match(FIELD_NAME)?.[1]!
-      if (!fieldName || !value.node.fields.hasOwnProperty(fieldName)) return
+      if (!fieldName || !objectValue.node.fields.hasOwnProperty(fieldName)) return
     }
 
-    const field = value.node.fields[fieldName]
+    const field = objectValue.node.fields[fieldName] as FieldNode<UFieldsNode & DataTrait>
+    const data = objectData[key]
+    const node = field.ofNode
+    const nodeImplementation = getAbstractImplementation(node, data?.__typename)
+    const extensions = extensionsForKey(objectExtensions, e => e.childField(field), nodeImplementation, node)
 
-    let valueForKey = value.get(key)
-    let fieldAccessor: FieldAccessor | undefined
+    let value = objectValue.get(key)
 
-    if (accessor) {
-      fieldAccessor = accessor.get<FieldAccessor>(key)
-      if (!fieldAccessor) {
-        let fieldSelection = accessor.selection.get<FieldSelection>(key)
-        if (!fieldSelection) {
-          fieldSelection = new FieldSelection(field)
-          accessor.selection.add(fieldSelection)
-        }
-        fieldAccessor = new FieldAccessor(accessor, fieldSelection)
-      }
-
-
-      const keyedValue = keyedMerge(data[key], fieldAccessor)
-      if (keyedValue) return
+    const keyedValue = keyedMerge(cache, nodeImplementation || node, data, extensions, ...filteredSelections)
+    if (keyedValue) {
+      objectValue.set(key, keyedValue)
+      return
     }
 
-    if (!valueForKey) {
-      valueForKey = createValue(field.ofNode, data[key])
-      value.set(key, valueForKey)
+    if (!value) {
+      value = createValue(nodeImplementation || node, data)
+      objectValue.set(key, value)
     }
 
-    merge(valueForKey, data[key], fieldAccessor, ...filteredSelections)
+    merge(
+      cache,
+      value,
+      objectData[key],
+      extensions,
+      ...filteredSelections
+    )
   }
 
   const mergeFiltered: Function[] = []
 
-  for (const key of Object.keys(data)) {
+  for (const key of Object.keys(objectData)) {
     if (key === '__typename') continue
 
     const selections = selectionsForKey(key, ...selectionsFilter)
 
     // If it's not selected, add to mergeFiltered
-    if (selectionsFilter.length && !selectionsForKey.length) {
+    if (selectionsFilter.length && !selections.length) {
       mergeFiltered.push(() => mergeKey(key, ...selections))
       continue
     }

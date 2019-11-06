@@ -1,12 +1,15 @@
 import { Generic, Mix } from 'mix-classes'
-
-import { Accessor, ExtensionRef } from '../Accessor'
-import { Selection } from '../Selection'
 import { Node } from './abstract/Node'
-import { Outputable, IDataContext } from './abstract/Outputable'
-import { NodeExtension } from './Extension'
+import { IDataContext, getExtensions, getValue } from './abstract/Outputable'
+import {
+  NodeExtension,
+  StaticExtension,
+  ComputableExtension,
+  createExtension,
+} from './Extension'
 import { Matchable } from './abstract/Matchable'
 import { Value } from '../Cache'
+import { DataTrait } from './traits'
 
 export type IScalarNodeOptions = {
   name?: string
@@ -15,13 +18,19 @@ export type IScalarNodeOptions = {
 
 export interface ScalarNode<T extends any = any> extends Node<T> {}
 
-export class ScalarNode<T> extends Mix(Outputable, Matchable, Generic(Node)) {
+export class ScalarNode<T> extends Mix(Matchable, Generic(Node))
+  implements DataTrait {
+  public extension?: StaticExtension | ComputableExtension
   public name?: string
 
   constructor({ name, extension }: IScalarNodeOptions = {}) {
-    super([extension])
+    super()
 
     this.name = name
+
+    if (extension) {
+      this.extension = createExtension(this, extension)
+    }
   }
 
   public match(value: Value, data: any) {
@@ -41,12 +50,13 @@ export class ScalarNode<T> extends Mix(Outputable, Matchable, Generic(Node)) {
   }
 
   public getData(ctx: IDataContext) {
-    if (ctx.extensions?.length) {
-      return ctx.extensions[0].data
+    const extensions = getExtensions(ctx)
+    if (extensions.length) {
+      return extensions[0].data
     }
 
-    if (!ctx.value) return null
-
-    return ctx.value.data
+    const value = getValue(ctx)
+    if (!value) return null
+    return value.data
   }
 }

@@ -44,10 +44,10 @@ export class FragmentAccessor<
   protected initializeExtensions() {
     // Copy extensions from parent
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      const extensionRef = this.parent.extensions[i]
-      if (extensionRef.node !== this.selection.node) continue
+      const extension = this.parent.extensions[i]
+      if (extension.node !== this.selection.node) continue
 
-      this.extensions.unshift(extensionRef)
+      this.extensions.unshift(extension)
     }
   }
 

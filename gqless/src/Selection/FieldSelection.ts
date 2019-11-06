@@ -1,12 +1,12 @@
 import { buildArguments, Formatter } from '../QueryBuilder'
 
-import { FieldNode, Node, Outputable } from '../Node'
+import { FieldNode, Node, DataTrait } from '../Node'
 import { Selection } from './Selection'
 
 const argsFormatter = new Formatter({ prettify: false, variables: false })
 
 export class FieldSelection<
-  TNode extends Node & Outputable = Node & Outputable
+  TNode extends Node & DataTrait = Node & DataTrait
 > extends Selection<TNode> {
   constructor(
     public field: FieldNode<TNode>,

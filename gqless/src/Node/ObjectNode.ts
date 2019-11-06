@@ -1,5 +1,5 @@
 import { Generic, Mix } from 'mix-classes'
-import { Accessor, FieldAccessor } from '../Accessor'
+import { FieldAccessor } from '../Accessor'
 import { ACCESSOR } from '../Accessor/Accessor'
 import {
   FieldNode,
@@ -7,12 +7,15 @@ import {
   IFieldsNodeOptions,
   UFieldsNodeRecord,
   Matchable,
-  Outputable,
   getOutputableData,
   IDataContext,
+  getExtensions,
+  getValue,
 } from './abstract'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
+import { ComputableExtension, StaticExtension, createExtension } from './Extension'
+import { DataTrait } from './traits'
 
 export type IObjectNodeOptions = IFieldsNodeOptions
 
@@ -21,12 +24,17 @@ const TYPENAME_NODE = new ScalarNode()
 export interface ObjectNode<TData> extends FieldsNode<TData> {}
 export class ObjectNode<TData = any> extends Mix(
   Generic(FieldsNode),
-  Outputable,
   Matchable
-) {
+) implements DataTrait {
+  public extension?: ComputableExtension | StaticExtension
+
   constructor(fields: UFieldsNodeRecord, options: IObjectNodeOptions) {
     fields.__typename = new FieldNode(TYPENAME_NODE)
-    super([fields as any, options], [options.extension])
+    super([fields as any, options])
+
+    if (options.extension) {
+      this.extension = createExtension(this, options.extension)
+    }
   }
 
   public match(value: Value, data: any) {
@@ -53,8 +61,10 @@ export class ObjectNode<TData = any> extends Mix(
     return matches ? value : undefined
   }
 
-  public getData(ctx: IDataContext) {
-    if (ctx.value?.data === null) return null
+  public getData(ctx: IDataContext): any {
+    const value = getValue(ctx)
+
+    if (value?.data === null) return null
 
     return new Proxy({} as any, {
       get: (_, prop: any) => {
@@ -77,10 +87,10 @@ export class ObjectNode<TData = any> extends Mix(
         if (prop === 'toString') return () => this.toString()
 
         // fallback to extensions
-        if (ctx.extensions)
-          for (const extension of ctx.extensions) {
-            if (prop in extension.data) return extension.data[prop]
-          }
+
+        for (const extension of getExtensions(ctx)) {
+          if (prop in extension.data) return extension.data[prop]
+        }
       },
 
       set: (_, prop: string, value) => {
@@ -112,13 +122,12 @@ export class ObjectNode<TData = any> extends Mix(
         /**
          * else set it on the first extension with the property
          */
-        if (ctx.extensions)
-          for (const extension of ctx.extensions) {
-            if (prop in extension.data) {
-              extension.data[prop] = value
-              return true
-            }
+        for (const extension of getExtensions(ctx)) {
+          if (prop in extension.data) {
+            extension.data[prop] = value
+            return true
           }
+        }
 
         return true
       },

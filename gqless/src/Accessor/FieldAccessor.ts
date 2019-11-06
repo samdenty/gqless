@@ -1,6 +1,7 @@
 import { FieldSelection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
+import { ComputableExtension, ComputedExtension, DataTrait } from '../Node'
 
 export class FieldAccessor<
   TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
@@ -21,17 +22,21 @@ export class FieldAccessor<
     super.initializeExtensions()
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      const parentExtension = this.parent.extensions[i]
-      const extensionRef = parentExtension.childField(this)
+      let extension = this.parent.extensions[i].childField(this.selection.field)
+      if (!extension) continue
 
-      if (!extensionRef) continue
+      if (extension instanceof ComputableExtension) {
+        extension = new ComputedExtension(extension, this)
+      }
 
-      this.extensions.unshift(extensionRef)
+      this.extensions.unshift(extension)
     }
   }
 
   public getData(): any {
-    return this.selection.field.ofNode.getData(this)
+    return (this.selection.field.ofNode as DataTrait).getData({
+      accessor: this,
+    })
   }
 
   public toString() {

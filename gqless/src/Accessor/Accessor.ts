@@ -1,13 +1,12 @@
 import { createEvent, invariant, createMemo } from '@gqless/utils'
 
-import { Cache, Value, NodeEntry, afterTransaction } from '../Cache'
-import { Node, Outputable, ScalarNode, ObjectNode, keyIsValid, Abstract } from '../Node'
+import { Cache, Value, afterTransaction } from '../Cache'
+import { Node, ObjectNode, Abstract, DataTrait, ComputableExtension, ComputedExtension, StaticExtension } from '../Node'
 import { Scheduler, Query } from '../Scheduler'
 import { Selection, Fragment } from '../Selection'
 import { computed, Disposable, PathArray, arrayEqual } from '../utils'
 import { onDataChange } from './utils'
-import { FragmentAccessor, ExtensionRef } from '.'
-import { accessorInterceptors } from '../Interceptor'
+import { FragmentAccessor } from '.'
 
 export enum NetworkStatus {
   idle,
@@ -28,7 +27,7 @@ export abstract class Accessor<
   TChildren extends Accessor<Selection, any> = Accessor<Selection, any>
 > extends Disposable {
   // Ordered by most important -> least
-  public extensions: ExtensionRef[] = []
+  public extensions: (StaticExtension | ComputedExtension)[] = []
   public children: TChildren[] = []
 
   public scheduler: Scheduler = this.parent
@@ -54,7 +53,7 @@ export abstract class Accessor<
   constructor(
     public readonly parent: Accessor | undefined,
     public readonly selection: TSelection,
-    public readonly node = selection.node as Node & Outputable
+    public readonly node = selection.node
   ) {
     super()
 
@@ -134,16 +133,15 @@ export abstract class Accessor<
   }
 
   protected initializeExtensions() {
-    const addExtensions = (node: Node & Outputable) => {
+    const addExtensions = (node: Node & DataTrait) => {
       let extension = node.extension
-      if (typeof extension === 'function') {
-        extension = extension(this.data)
-      }
-      if (extension === undefined) return
-      if (node instanceof ScalarNode) return
+      if (!extension) return
 
-      const extensionRef = new ExtensionRef(undefined, this, extension, node)
-      this.extensions.unshift(extensionRef)
+      if (extension instanceof ComputableExtension) {
+        extension = new ComputedExtension(extension, this)
+      }
+
+      this.extensions.unshift(extension)
     }
 
     if (this.node instanceof Abstract) {
@@ -171,25 +169,16 @@ export abstract class Accessor<
 
     if (isTopLevel) {
       // Add keyFragments
-      this.extensions.forEach(({ keyFragment }) => {
-        if (!keyFragment) return
-        if (this.selection === (keyFragment as any)) return
+      this.extensions.forEach(({ fragment }) => {
+        if (!fragment) return
+        if (this.selection === (fragment as any)) return
 
-        this.selection.add(keyFragment, true)
+        this.selection.add(fragment, true)
       })
     }
 
-    // call Extension#GET_KEY for the first time, to record all selections onto
-    // the KeyedFragment
-    if (
-      !this.value &&
-      // FragmentAccessors copy extension instances, so no need to initialize
-      !(this instanceof FragmentAccessor)
-    ) {
-      this.getKey()
-    }
-
     if (!this.value) {
+      // TODO: Should this be here? or in merge.ts
       // Cache redirects
       if (this.cache.entries.has(this.node)) {
         for (const extension of this.extensions) {
@@ -251,82 +240,12 @@ export abstract class Accessor<
     return this.children.find(c => c.toString() === String(find)) as any
   }
 
-  public getKey(value: Value | undefined = this.value) {
-    if (!(this.isKeyable)) return
-
-    const prevValue = this.value
-    this.value = value
-
-    try {
-      const node = value?.node || this.node
-
-      let entry = this.cache.entries.get(node)
-
-      // Iterate through extensions and call GET_KEY
-      // if the key exists in the cache, then return it
-      // else create a new cache entry
-      let preferedKey: unknown
-      let result: { key: any, value: Value } | undefined
-      for (const extension of this.extensions) {
-        if (!extension.isKeyable) continue
-
-        const key = extension.getKey()
-        if (!keyIsValid(key)) continue
-        if (!keyIsValid(preferedKey)) preferedKey = key
-
-        // Check to see if the key already exists in cache
-        const keyedValue = entry?.getByKey(key)
-
-        if (!result && keyedValue) {
-          result = { key, value: keyedValue }
-          // if there's no value, complete loop before returning
-          if (value) return result
-        }
-      }
-
-      if (result) return result
-
-      // no keyed extension found
-      if (!keyIsValid(preferedKey) || !value) return
-
-      if (!entry) {
-        entry = new NodeEntry(node)
-        this.cache.entries.set(node, entry)
-      }
-
-      // add a new key to cache
-      entry.keys.set(preferedKey, value)
-
-      return { key: preferedKey, value }
-    } finally {
-      this.value = prevValue
-    }
-  }
-
   public getDefaultFragment(node: ObjectNode) {
     return memoized.fragment(() => {
       const fragment = new Fragment(node)
       this.selectionPath[this.selectionPath.length - 1].add(fragment)
       return fragment
     }, [node, ...this.selectionPath])
-  }
-
-  @computed()
-  public get isKeyable() {
-    return !!this.extensions.find(e => e.isKeyable)
-  }
-
-  public get keyFragments() {
-    return memoized.keyFragments(() => {
-      const fragments = new Set<Fragment>()
-      for (const extension of this.extensions) {
-        if (extension.keyFragment) {
-          fragments.add(extension.keyFragment)
-        }
-      }
-
-      return fragments
-    }, [this.extensions])
   }
 
   @computed()

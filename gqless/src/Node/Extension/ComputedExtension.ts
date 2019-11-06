@@ -1,13 +1,9 @@
 import { Extension } from './Extension'
-import { Node } from '../abstract'
-import { UNodeExtension } from './NodeExtension'
+import { Accessor } from '../../Accessor'
+import { ComputableExtension } from './ComputableExtension'
 
 export class ComputedExtension extends Extension {
-  constructor(
-    parent: Extension | undefined,
-    node: Node,
-    getData: (data: any) => UNodeExtension
-  ) {
-    super(parent, node)
+  constructor(parent: ComputableExtension, public accessor: Accessor) {
+    super(parent, parent.node)
   }
 }

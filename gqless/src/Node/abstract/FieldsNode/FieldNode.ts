@@ -3,25 +3,26 @@ import { Generic, Mix } from 'mix-classes'
 
 import { deepJSONEqual, computed } from '../../../utils'
 import { Arguments } from '../../Arguments'
-import { Accessor, FieldAccessor, getAccessorData } from '../../../Accessor'
+import { FieldAccessor, getAccessorData } from '../../../Accessor'
 import { FieldSelection } from '../../../Selection'
 import { EnumNode } from '../../EnumNode'
 import { ScalarNode } from '../../ScalarNode'
 import { Node } from '../Node'
 import { NodeContainer } from '../NodeContainer'
-import { Outputable, IDataContext, getOutputableData } from '../Outputable'
+import { IDataContext, getOutputableData, getSelection } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { Variable } from '../../../Variable'
+import { DataTrait } from '../../traits'
 
-export interface FieldNode<TNode extends Node & Outputable = any>
+export interface FieldNode<TNode extends Node & DataTrait = any>
   extends NodeContainer<TNode> {}
 
-export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
+export class FieldNode<TNode> extends Mix(Generic(NodeContainer)) implements DataTrait {
   // This is set inside FieldsNode
   public name: string = ''
 
   constructor(node: TNode, public args?: Arguments, nullable?: boolean) {
-    super([node, nullable], [])
+    super([node, nullable])
   }
 
   @computed()
@@ -38,7 +39,9 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
     ctx: IDataContext,
     args?: Record<string, any>
   ): FieldSelection<TNode> {
-    let selection = ctx.selection?.get<FieldSelection<TNode>>(selection => {
+    const parentSelection = getSelection(ctx)
+
+    let selection = parentSelection?.get<FieldSelection<TNode>>(selection => {
       if (!(selection instanceof FieldSelection)) return false
 
       return (
@@ -55,12 +58,12 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer), Outputable) {
     if (selection) return selection
 
     selection = new FieldSelection(this, args)
-    ctx.selection?.add(selection)
+    parentSelection?.add(selection)
 
     return selection
   }
 
-  public getData(ctx: IDataContext<FieldsNode>) {
+  public getData(ctx: IDataContext<FieldsNode & DataTrait>) {
     const getData = (selection: FieldSelection<TNode>): any => {
       if (ctx.accessor) {
         const accessor =

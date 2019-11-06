@@ -1,4 +1,9 @@
-import { ArrayNode } from '../Node'
+import {
+  ArrayNode,
+  ComputableExtension,
+  ComputedExtension,
+  DataTrait,
+} from '../Node'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
@@ -36,15 +41,21 @@ export class IndexAccessor<
     super.initializeExtensions()
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      const extensionRef = this.parent.extensions[i].childIndex(this)
-      if (!extensionRef) continue
+      let extension = this.parent.extensions[i].childIndex()
+      if (!extension) continue
 
-      this.extensions.unshift(extensionRef)
+      if (extension instanceof ComputableExtension) {
+        extension = new ComputedExtension(extension, this)
+      }
+
+      this.extensions.unshift(extension)
     }
   }
 
   public getData(): any {
-    return this.selection.node.ofNode.getData(this)
+    return (this.selection.node.ofNode as DataTrait).getData({
+      accessor: this,
+    })
   }
 
   public toString() {

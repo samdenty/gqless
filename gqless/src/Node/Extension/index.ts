@@ -1,2 +1,6 @@
-export * from './NodeExtension'
 export * from './Extension'
+export * from './NodeExtension'
+export * from './ComputableExtension'
+export * from './StaticExtension'
+export * from './ComputedExtension'
+export * from './createExtension'

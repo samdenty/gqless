@@ -1,20 +1,22 @@
 import { Generic, Mix } from 'mix-classes'
 
-import { Accessor, IndexAccessor } from '../Accessor'
-import { Selection } from '../Selection'
+import { IndexAccessor } from '../Accessor'
 import { ACCESSOR, getAccessorData } from './../Accessor'
 import {
   Node,
   NodeContainer,
   NodeDataType,
-  Outputable,
   Matchable,
   IDataContext,
   getOutputableData,
+  getExtensions,
+  getSelection,
+  getValue,
 } from './abstract'
 import { Value } from '../Cache'
 import { ArrayNodeExtension } from './Extension'
 import { createMemo } from '@gqless/utils'
+import { DataTrait } from './traits'
 
 export interface ArrayNode<TNode extends Node = Node>
   extends NodeContainer<TNode, NodeDataType<TNode>[]> {}
@@ -23,9 +25,8 @@ const memo = createMemo()
 
 export class ArrayNode<TNode> extends Mix(
   Generic(NodeContainer),
-  Matchable,
-  Outputable
-) {
+  Matchable
+) implements DataTrait {
   constructor(ofNode: TNode, nullable?: boolean) {
     // memoize instances of ArrayNode
     const existingNode = memo<ArrayNode<TNode>>([ofNode, nullable])
@@ -75,7 +76,7 @@ export class ArrayNode<TNode> extends Mix(
     const proxy: any[] = new Proxy([] as any[], {
       get: (target, prop: any) => {
         if (prop === ACCESSOR) return ctx.accessor
-        const arr = ctx.value?.data as any[] | undefined
+        const arr = getValue(ctx)?.data as any[] | undefined
 
         if (prop === 'length') {
           return arr?.length ?? 1
@@ -91,7 +92,6 @@ export class ArrayNode<TNode> extends Mix(
           if (!isNaN(index)) {
             // If the array is fetched, make sure index exists
             if (arr && index >= arr!.length) return undefined
-            if (!(this.ofNode instanceof Outputable)) return undefined
 
             if (ctx.accessor) {
               const accessor: IndexAccessor =
@@ -101,7 +101,7 @@ export class ArrayNode<TNode> extends Mix(
               return getAccessorData(accessor)
             }
 
-            return getOutputableData(this.ofNode, {
+            return getOutputableData(this.ofNode as Node & DataTrait, {
               value: ctx.value?.get(index),
               selection: ctx.selection,
               extensions: [] // todo
@@ -110,10 +110,9 @@ export class ArrayNode<TNode> extends Mix(
         }
 
         // fallback to extensions
-        if (ctx.extensions)
-          for (const extension of ctx.extensions) {
-            if (prop in extension.data) return (extension.data as ArrayNodeExtension)[prop]
-          }
+        for (const extension of getExtensions(ctx)) {
+          if (prop in extension.data) return (extension.data as ArrayNodeExtension)[prop]
+        }
 
         const arrayProperty = target[prop]
         if (typeof arrayProperty === 'function') {
@@ -123,12 +122,9 @@ export class ArrayNode<TNode> extends Mix(
         return arrayProperty
       },
       has: (target, prop) => {
-        if (ctx.value) {
-          if (ctx.value.data) {
-            return prop in (ctx.value.data as any[])
-          }
-
-          return false
+        const value = getValue(ctx)
+        if (value) {
+          return value.data ? prop in (value.data as any[]) : false
         }
 
         // todo read value

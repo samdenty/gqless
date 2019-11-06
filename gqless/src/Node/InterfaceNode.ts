@@ -9,9 +9,15 @@ import {
   getOutputableData,
   IDataContext,
 } from './abstract'
-import { NodeExtension } from './Extension'
+import {
+  NodeExtension,
+  StaticExtension,
+  ComputableExtension,
+  createExtension,
+} from './Extension'
 import { ObjectNode } from './ObjectNode'
-import { Accessor, FieldAccessor, getAccessorData } from '../Accessor'
+import { FieldAccessor } from '../Accessor'
+import { DataTrait } from './traits'
 
 export type IInterfaceNodeOptions = IFieldsNodeOptions & {
   extension?: NodeExtension
@@ -21,16 +27,21 @@ export interface InterfaceNode<TImplementation extends ObjectNode = ObjectNode>
   extends FieldsNode<NodeDataType<TImplementation>>,
     Abstract<TImplementation> {}
 
-export class InterfaceNode<TImplementation> extends Mix(
-  Generic(FieldsNode),
-  Generic(Abstract)
-) {
+export class InterfaceNode<TImplementation>
+  extends Mix(Generic(FieldsNode), Generic(Abstract))
+  implements DataTrait {
+  public extension?: StaticExtension | ComputableExtension
+
   constructor(
     fields: UFieldsNodeRecord,
     implementations: TImplementation[],
     options: IInterfaceNodeOptions
   ) {
-    super([fields, options], [implementations, options.extension])
+    super([fields, options], [implementations])
+
+    if (options.extension) {
+      this.extension = createExtension(this, options.extension)
+    }
   }
 
   public getData(ctx: IDataContext): any {
