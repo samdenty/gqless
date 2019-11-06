@@ -16,6 +16,9 @@ module.exports = root => {
 
     globals: {
       __DEV__: true,
+      'ts-jest': {
+        diagnostics: false,
+      },
     },
     displayName: name,
     name: name,
