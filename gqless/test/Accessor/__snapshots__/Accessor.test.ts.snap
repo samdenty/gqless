@@ -52,29 +52,3 @@ Query {
   arrayOfObjects(input:{string:"test1"})
 }
 `;
-
-exports[`supports extensions: accessors 1`] = `
-Query {
-  object {
-    overriddenInt
-    overriddenString
-  }
-  arrayOfObjects {
-    0 {
-      overriddenString
-    }
-  }
-}
-`;
-
-exports[`supports extensions: selections 1`] = `
-Query {
-  object {
-    overriddenInt
-    overriddenString
-  }
-  arrayOfObjects {
-    overriddenString
-  }
-}
-`;

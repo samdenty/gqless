@@ -6,6 +6,11 @@ type RepoKey = {
 }
 
 export const Query = {
+  user: {
+    [REDIRECT]({ login }: any, { getByKey }: RedirectHelpers) {
+      return getByKey(login)
+    },
+  },
   repository: {
     [REDIRECT](args: any, { getByKey }: RedirectHelpers) {
       return getByKey(args)

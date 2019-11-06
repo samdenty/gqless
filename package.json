@@ -11,6 +11,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "release": "yarn build && lerna publish",
+    "semantic-release": "lerna exec --concurrency 1 -- npx --no-install semantic-release -e semantic-release-monorepo",
     "test": "jest",
     "build": "yarn run build:all --since",
     "build:all": "lerna run build --no-private",
@@ -60,5 +61,8 @@
     "tsdx": "0.9.3",
     "typescript": "^3.7.1-rc"
   },
-  "dependencies": {}
+  "dependencies": {
+    "semantic-release": "^15.13.30",
+    "semantic-release-monorepo": "^6.1.1"
+  }
 }

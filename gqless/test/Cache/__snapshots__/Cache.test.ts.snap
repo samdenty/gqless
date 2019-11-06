@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`supports keys 3`] = `
+Object {
+  "data": Object {
+    "__typename": "Query",
+    "object": Object {
+      "__typename": "Object",
+      "int": 1,
+      "string": "a",
+      "string2": "b",
+    },
+    "object2": Object {
+      "__typename": "Object",
+      "int": 1,
+      "string": "a",
+      "string2": "b",
+    },
+  },
+  "types": Object {
+    "Int": Object {
+      "instances": Array [
+        1,
+      ],
+      "keys": Object {},
+    },
+    "Object": Object {
+      "instances": Array [
+        Object {
+          "__typename": "Object",
+          "int": 1,
+          "string": "a",
+          "string2": "b",
+        },
+      ],
+      "keys": Object {
+        "1": Object {
+          "__typename": "Object",
+          "int": 1,
+          "string": "a",
+          "string2": "b",
+        },
+      },
+    },
+    "Query": Object {
+      "instances": Array [
+        Object {
+          "__typename": "Query",
+          "object": Object {
+            "__typename": "Object",
+            "int": 1,
+            "string": "a",
+            "string2": "b",
+          },
+          "object2": Object {
+            "__typename": "Object",
+            "int": 1,
+            "string": "a",
+            "string2": "b",
+          },
+        },
+      ],
+      "keys": Object {},
+    },
+    "String": Object {
+      "instances": Array [
+        "a",
+        "b",
+      ],
+      "keys": Object {},
+    },
+  },
+}
+`;

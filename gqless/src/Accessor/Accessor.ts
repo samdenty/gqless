@@ -97,19 +97,21 @@ export abstract class Accessor<
   }
 
   public get data() {
-    accessorInterceptors.forEach((intercept) => intercept(this))
+    try {
+      if (this._data === undefined) {
+        try {
+          this.data = this.getData()
+        } catch (accessor) {
+          if (accessor instanceof Accessor) return accessor.data
 
-    if (this._data === undefined) {
-      try {
-        this.data = this.getData()
-      } catch (accessor) {
-        if (accessor instanceof Accessor) return accessor.data
-
-        throw accessor
+          throw accessor
+        }
       }
-    }
 
-    return this._data
+      return this._data
+    } finally {
+      accessorInterceptors.forEach((intercept) => intercept(this))
+    }
   }
   public set data(data: any) {
     this._data = data
