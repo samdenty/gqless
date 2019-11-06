@@ -17,7 +17,6 @@ jobs:
 
       - name: Setup
         run: |
-          npm install -g yarn
           yarn
           yarn bootstrap
 
@@ -26,7 +25,7 @@ jobs:
 
       - name: Check bundlesize
         env:
-          BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.BUNDLESIZE_GITHUB_TOKEN }}
+          BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn bundlesize
 
   test:
