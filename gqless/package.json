@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "watch": "tsdx watch",
-    "build": "cp ../README.md .; tsdx build --tsconfig ./tsconfig.build.json",
+    "build": "cp ../README.md .; tsdx build",
     "test": "jest"
   },
   "dependencies": {

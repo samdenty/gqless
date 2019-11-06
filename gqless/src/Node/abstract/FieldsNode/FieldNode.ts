@@ -1,6 +1,4 @@
 import { invariant } from '@gqless/utils'
-import { Generic, Mix } from 'mix-classes'
-
 import { deepJSONEqual, computed } from '../../../utils'
 import { Arguments } from '../../Arguments'
 import { FieldAccessor, getAccessorData } from '../../../Accessor'

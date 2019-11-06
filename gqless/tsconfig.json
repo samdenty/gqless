@@ -1,8 +1,9 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["src", "test"],
+  "include": ["src"],
   "compilerOptions": {
-    // https://github.com/parcel-bundler/parcel/issues/2856
-    "downlevelIteration": true
-  }
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "references": [{ "path": "../packages/utils" }]
 }

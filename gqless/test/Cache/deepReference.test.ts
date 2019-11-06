@@ -1,6 +1,6 @@
 import { schema } from '@internal/fixtures'
 import { Value } from 'gqless'
-import { deepReference } from 'gqless/src/Cache/utils'
+import { deepReference } from '../../src/Cache/utils'
 
 let rootValue: Value
 let events: ReturnType<typeof deepReference>

@@ -21,7 +21,7 @@
   },
   "scripts": {
     "watch": "tsdx watch",
-    "build": "tsdx build --tsconfig ./tsconfig.build.json",
+    "build": "tsdx build",
     "test": "jest"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"

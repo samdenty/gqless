@@ -1,8 +1,12 @@
 {
   "extends": "../../tsconfig.json",
+  "include": ["src"],
   "compilerOptions": {
+    "composite": false,
+    "rootDir": "src",
+    "outDir": "dist",
     "module": "commonjs",
     "target": "es2017"
   },
-  "include": ["src", "test"]
+  "references": [{ "path": "../schema" }, { "path": "../../gqless" }]
 }
