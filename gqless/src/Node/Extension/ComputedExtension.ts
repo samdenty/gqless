@@ -9,7 +9,7 @@ export class ComputedExtension extends Extension {
   }
 
   @computed()
-  public get data() {
+  public get data(): any {
     return (this.parent as ComputableExtension).getData(this.accessor.data)
   }
 }
