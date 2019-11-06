@@ -31,6 +31,20 @@
     ],
     "coverageDirectory": "<rootDir>/coverage/"
   },
+  "bundlesize": [
+    {
+      "path": "./packages/utils/dist/*.cjs.production.min.js",
+      "maxSize": "1.5 kB"
+    },
+    {
+      "path": "./packages/react/dist/*.cjs.production.min.js",
+      "maxSize": "3 kB"
+    },
+    {
+      "path": "./gqless/dist/*.cjs.production.min.js",
+      "maxSize": "15 kB"
+    }
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "yarn changelog && pretty-quick --staged"
@@ -47,6 +61,7 @@
     "@types/jest": "^24.0.22",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
+    "bundlesize": "^0.18.0",
     "codecov": "^3.5.0",
     "graphql-faker": "^2.0.0-rc.13",
     "husky": "^3.0.9",

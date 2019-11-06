@@ -24,6 +24,9 @@ jobs:
       - name: Build all packages
         run: yarn build:all
 
+      - name: Check bundlesize
+        run: yarn bundlesize
+
   test:
     runs-on: ubuntu-latest
 
