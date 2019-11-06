@@ -25,6 +25,8 @@ jobs:
         run: yarn build:all
 
       - name: Check bundlesize
+        env:
+          BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.BUNDLESIZE_GITHUB_TOKEN }}
         run: yarn bundlesize
 
   test:
