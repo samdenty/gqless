@@ -1,7 +1,7 @@
 import { Value } from '../Value'
-import { ScalarNode, DataTrait, Node } from '../../Node'
+import { ScalarNode, DataTrait } from '../../Node'
 
-export const createValue = (node: Node & DataTrait, data?: any) =>
+export const createValue = (node: DataTrait, data?: any) =>
   new Value(
     node,
     // Only initialize with data if it's a ScalarNode

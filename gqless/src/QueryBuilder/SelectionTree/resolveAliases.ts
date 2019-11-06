@@ -1,9 +1,9 @@
 import { SelectionTree } from './SelectionTree'
 import { invariant } from '@gqless/utils'
-import { ObjectNode, ArrayNode, Node } from '../../Node'
+import { ObjectNode, ArrayNode } from '../../Node'
 
 export function resolveAliases(this: SelectionTree, data: any) {
-  const recurse = (node: Node, data: any) => {
+  const recurse = (node: object, data: any) => {
     if (!data) return
 
     if (node instanceof ObjectNode) {

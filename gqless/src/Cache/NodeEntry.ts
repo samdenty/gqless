@@ -1,5 +1,5 @@
 import { Value } from './Value'
-import { Node, Matchable, keyIsEqual } from '../Node'
+import { Matchable, keyIsEqual, DataTrait } from '../Node'
 import { invariant } from '@gqless/utils'
 import stringify from 'json-stable-stringify'
 
@@ -7,7 +7,7 @@ export class NodeEntry {
   public instances = new Set<Value>()
   public keys = new Map<any, Value>()
 
-  constructor(public node: Node) {}
+  constructor(public node: DataTrait) {}
 
   public match(data: any) {
     invariant(

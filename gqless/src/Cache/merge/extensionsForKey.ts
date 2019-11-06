@@ -1,9 +1,9 @@
-import { Extension, DataTrait, Node } from '../../Node'
+import { Extension, DataTrait } from '../../Node'
 
 export const extensionsForKey = (
   extensions: Extension[],
   get: (e: Extension) => Extension | undefined,
-  ...nodes: (Node & DataTrait)[]
+  ...nodes: DataTrait[]
 ) => {
   const keyedExtensions: Extension[] = []
 

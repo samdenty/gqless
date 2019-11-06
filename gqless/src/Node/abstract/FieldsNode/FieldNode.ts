@@ -7,22 +7,17 @@ import { FieldAccessor, getAccessorData } from '../../../Accessor'
 import { FieldSelection } from '../../../Selection'
 import { EnumNode } from '../../EnumNode'
 import { ScalarNode } from '../../ScalarNode'
-import { Node } from '../Node'
 import { NodeContainer } from '../NodeContainer'
-import { IDataContext, getOutputableData, getSelection } from '../Outputable'
 import { FieldsNode } from './FieldsNode'
 import { Variable } from '../../../Variable'
-import { DataTrait } from '../../traits'
+import { DataTrait, DataContext, getSelection, interceptAccessor } from '../../traits'
 
-export interface FieldNode<TNode extends Node & DataTrait = any>
-  extends NodeContainer<TNode> {}
-
-export class FieldNode<TNode> extends Mix(Generic(NodeContainer)) implements DataTrait {
+export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContainer<TNode> implements DataTrait {
   // This is set inside FieldsNode
   public name: string = ''
 
   constructor(node: TNode, public args?: Arguments, nullable?: boolean) {
-    super([node, nullable])
+    super(node, nullable)
   }
 
   @computed()
@@ -36,9 +31,11 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer)) implements Dat
   }
 
   public getSelection(
-    ctx: IDataContext,
+    ctx: DataContext,
     args?: Record<string, any>
   ): FieldSelection<TNode> {
+    interceptAccessor(ctx)
+
     const parentSelection = getSelection(ctx)
 
     let selection = parentSelection?.get<FieldSelection<TNode>>(selection => {
@@ -63,7 +60,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer)) implements Dat
     return selection
   }
 
-  public getData(ctx: IDataContext<FieldsNode & DataTrait>) {
+  public getData(ctx: DataContext<FieldsNode & DataTrait>) {
     const getData = (selection: FieldSelection<TNode>): any => {
       if (ctx.accessor) {
         const accessor =
@@ -73,7 +70,7 @@ export class FieldNode<TNode> extends Mix(Generic(NodeContainer)) implements Dat
         return getAccessorData(accessor)
       }
 
-      return getOutputableData(this.ofNode, {
+      return this.ofNode.getData({
         selection,
         value: ctx.value?.get(selection.toString()),
         extensions: [] // TODO

@@ -18,15 +18,3 @@ const codegen = new Codegen(schemaDefs, { typescript: true })
 const files = codegen.generate()
 // => { path: string, contents: string }[]
 ```
-
-### Runtime
-
-```ts
-import { schemaNodes, fetchSchema } from '@gqless/schema'
-
-const schemaDefs = await fetchSchema(fetchQuery)
-const schema = schemaNodes(schemaDefs)
-
-// Usage in runtime:
-const graphql = new Client(schema)
-```

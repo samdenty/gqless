@@ -3,23 +3,16 @@ import { Generic, Mix } from 'mix-classes'
 import { IndexAccessor } from '../Accessor'
 import { ACCESSOR, getAccessorData } from './../Accessor'
 import {
-  Node,
   NodeContainer,
-  NodeDataType,
   Matchable,
-  IDataContext,
-  getOutputableData,
-  getExtensions,
-  getSelection,
-  getValue,
 } from './abstract'
 import { Value } from '../Cache'
 import { ArrayNodeExtension } from './Extension'
 import { createMemo } from '@gqless/utils'
-import { DataTrait } from './traits'
+import { DataTrait, DataContext, getValue, getExtensions, interceptAccessor } from './traits'
 
-export interface ArrayNode<TNode extends Node = Node>
-  extends NodeContainer<TNode, NodeDataType<TNode>[]> {}
+export interface ArrayNode<TNode extends object = object>
+  extends NodeContainer<TNode> {}
 
 const memo = createMemo()
 
@@ -59,7 +52,7 @@ export class ArrayNode<TNode> extends Mix(
     }
 
     // Array index match
-    const innerNode: Node = (value.node as ArrayNode).innerNode
+    const innerNode = (value.node as ArrayNode).innerNode
     if (!(innerNode instanceof Matchable)) return
 
     for (const indexValue of value.data as []) {
@@ -71,8 +64,10 @@ export class ArrayNode<TNode> extends Mix(
   }
 
   public getData(
-    ctx: IDataContext<ArrayNode<TNode>>
+    ctx: DataContext<ArrayNode<TNode>>
   ) {
+    interceptAccessor(ctx)
+
     const proxy: any[] = new Proxy([] as any[], {
       get: (target, prop: any) => {
         if (prop === ACCESSOR) return ctx.accessor
@@ -101,7 +96,7 @@ export class ArrayNode<TNode> extends Mix(
               return getAccessorData(accessor)
             }
 
-            return getOutputableData(this.ofNode as Node & DataTrait, {
+            return (this.ofNode as any as DataTrait).getData({
               value: ctx.value?.get(index),
               selection: ctx.selection,
               extensions: [] // todo

@@ -1,6 +1,3 @@
-import { Generic, Mix } from 'mix-classes'
-import { Node } from './abstract/Node'
-import { IDataContext, getExtensions, getValue } from './abstract/Outputable'
 import {
   NodeExtension,
   StaticExtension,
@@ -9,17 +6,20 @@ import {
 } from './Extension'
 import { Matchable } from './abstract/Matchable'
 import { Value } from '../Cache'
-import { DataTrait } from './traits'
+import {
+  DataTrait,
+  DataContext,
+  getExtensions,
+  getValue,
+  interceptAccessor,
+} from './traits'
 
 export type IScalarNodeOptions = {
   name?: string
   extension?: NodeExtension
 }
 
-export interface ScalarNode<T extends any = any> extends Node<T> {}
-
-export class ScalarNode<T> extends Mix(Matchable, Generic(Node))
-  implements DataTrait {
+export class ScalarNode extends Matchable implements DataTrait {
   public extension?: StaticExtension | ComputableExtension
   public name?: string
 
@@ -49,7 +49,9 @@ export class ScalarNode<T> extends Mix(Matchable, Generic(Node))
     return this.name || this.constructor.name
   }
 
-  public getData(ctx: IDataContext) {
+  public getData(ctx: DataContext) {
+    interceptAccessor(ctx)
+
     const extensions = getExtensions(ctx)
     if (extensions.length) {
       return extensions[0].data

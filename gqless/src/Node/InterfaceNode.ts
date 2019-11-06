@@ -3,11 +3,8 @@ import { Generic, Mix, getMixin } from 'mix-classes'
 import {
   FieldsNode,
   IFieldsNodeOptions,
-  NodeDataType,
   Abstract,
   UFieldsNodeRecord,
-  getOutputableData,
-  IDataContext,
 } from './abstract'
 import {
   NodeExtension,
@@ -17,18 +14,17 @@ import {
 } from './Extension'
 import { ObjectNode } from './ObjectNode'
 import { FieldAccessor } from '../Accessor'
-import { DataTrait } from './traits'
+import { DataTrait, DataContext } from './traits'
 
 export type IInterfaceNodeOptions = IFieldsNodeOptions & {
   extension?: NodeExtension
 }
 
 export interface InterfaceNode<TImplementation extends ObjectNode = ObjectNode>
-  extends FieldsNode<NodeDataType<TImplementation>>,
-    Abstract<TImplementation> {}
+  extends Abstract<TImplementation> {}
 
 export class InterfaceNode<TImplementation>
-  extends Mix(Generic(FieldsNode), Generic(Abstract))
+  extends Mix(FieldsNode, Generic(Abstract))
   implements DataTrait {
   public extension?: StaticExtension | ComputableExtension
 
@@ -44,7 +40,7 @@ export class InterfaceNode<TImplementation>
     }
   }
 
-  public getData(ctx: IDataContext): any {
+  public getData(ctx: DataContext): any {
     // @ts-ignore typescript limitation of mix-classes
     const data = super.getData(ctx)
     if (!data) return data
@@ -71,7 +67,7 @@ export class InterfaceNode<TImplementation>
           //   }
           // }
 
-          return getOutputableData(field, ctx)
+          return field.getData(ctx as any)
         }
 
         // if prop only in one implementation

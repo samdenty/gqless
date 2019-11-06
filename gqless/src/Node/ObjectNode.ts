@@ -1,4 +1,4 @@
-import { Generic, Mix } from 'mix-classes'
+import { Mix } from 'mix-classes'
 import { FieldAccessor } from '../Accessor'
 import { ACCESSOR } from '../Accessor/Accessor'
 import {
@@ -7,23 +7,18 @@ import {
   IFieldsNodeOptions,
   UFieldsNodeRecord,
   Matchable,
-  getOutputableData,
-  IDataContext,
-  getExtensions,
-  getValue,
 } from './abstract'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
 import { ComputableExtension, StaticExtension, createExtension } from './Extension'
-import { DataTrait } from './traits'
+import { DataTrait, DataContext, getValue, getExtensions } from './traits'
 
 export type IObjectNodeOptions = IFieldsNodeOptions
 
 const TYPENAME_NODE = new ScalarNode()
 
-export interface ObjectNode<TData> extends FieldsNode<TData> {}
-export class ObjectNode<TData = any> extends Mix(
-  Generic(FieldsNode),
+export class ObjectNode extends Mix(
+  FieldsNode,
   Matchable
 ) implements DataTrait {
   public extension?: ComputableExtension | StaticExtension
@@ -61,7 +56,7 @@ export class ObjectNode<TData = any> extends Mix(
     return matches ? value : undefined
   }
 
-  public getData(ctx: IDataContext): any {
+  public getData(ctx: DataContext): any {
     const value = getValue(ctx)
 
     if (value?.data === null) return null
@@ -81,7 +76,7 @@ export class ObjectNode<TData = any> extends Mix(
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
 
-          return getOutputableData(field, ctx)
+          return field.getData(ctx as any)
         }
 
         if (prop === 'toString') return () => this.toString()

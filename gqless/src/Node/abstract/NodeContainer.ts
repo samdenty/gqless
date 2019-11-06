@@ -1,16 +1,10 @@
 import { computed } from '../../utils'
-import { Node, NodeDataType } from './Node'
 
-export class NodeContainer<
-  TNode extends Node,
-  TData = NodeDataType<TNode>
-> extends Node<TData> {
-  constructor(public ofNode: TNode, public nullable = false) {
-    super()
-  }
+export class NodeContainer<TNode extends object> {
+  constructor(public ofNode: TNode, public nullable = false) {}
 
   @computed()
-  public get innerNode(): Node {
+  public get innerNode(): object {
     if (this.ofNode instanceof NodeContainer) {
       return this.ofNode.innerNode
     }

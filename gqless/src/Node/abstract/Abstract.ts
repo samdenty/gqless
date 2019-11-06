@@ -1,11 +1,15 @@
 import { ObjectNode } from '../ObjectNode'
-import { IDataContext, getExtensions, getValue } from './Outputable'
 import { ACCESSOR, FragmentAccessor } from '../../Accessor'
 import { invariant } from '@gqless/utils'
-import { DataTrait } from '../traits'
-import { Node } from './Node'
+import {
+  DataTrait,
+  DataContext,
+  getValue,
+  getExtensions,
+  interceptAccessor,
+} from '../traits'
 
-export const getAbstractImplementation = (node: Node, typename: string) => {
+export const getAbstractImplementation = (node: object, typename: string) => {
   if (node instanceof Abstract && typename) {
     const implementation = node.implementations.find(
       i => i.toString() === typename
@@ -21,7 +25,9 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
   implements DataTrait {
   constructor(public implementations: TNode[]) {}
 
-  public getData(ctx: IDataContext) {
+  public getData(ctx: DataContext) {
+    interceptAccessor(ctx)
+
     const value = getValue(ctx)
 
     // If the value is nulled, return null

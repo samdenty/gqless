@@ -1,5 +1,5 @@
-import { Node, NodeContainer, FieldsNode, FieldNode } from '../abstract'
-import { UNodeExtension, ProxyExtension, GET_KEY, ArrayNodeExtension, INDEX, ObjectNodeExtension, REDIRECT } from './NodeExtension'
+import { NodeContainer, FieldsNode, FieldNode } from '../abstract'
+import { ProxyExtension, GET_KEY, ArrayNodeExtension, INDEX, ObjectNodeExtension, REDIRECT } from './NodeExtension'
 import { computed, PathArray } from '../../utils'
 import { UFragment, Fragment } from '../../Selection'
 import { createMemo, invariant } from '@gqless/utils'
@@ -12,11 +12,11 @@ import { Value } from '../../Cache'
 const memo = createMemo()
 
 export abstract class Extension {
-  public data: UNodeExtension
+  public data: any
 
   constructor(
     public parent: Extension | undefined,
-    public node: Node & DataTrait,
+    public node: DataTrait,
     /** (optional) An object used to construct fragmentKey */
     private fragmentKeyedBy: any = parent ? undefined : node
   ) {
@@ -37,7 +37,7 @@ export abstract class Extension {
 
     let node = this.fragmentKey[this.fragmentKey.length - 1]
     if (node instanceof NodeContainer) {
-      node = node.innerNode as Node & DataTrait
+      node = node.innerNode as DataTrait
     }
 
     // Fragments only work with InterfaceNode / ObjectNode

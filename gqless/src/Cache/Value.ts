@@ -1,4 +1,4 @@
-import { Node, ArrayNode, ObjectNode, DataTrait } from '../Node'
+import { ArrayNode, ObjectNode, DataTrait } from '../Node'
 import { createEvent } from '@gqless/utils'
 
 export type UValueData =
@@ -11,7 +11,7 @@ export type UValueData =
 
 let id = 0
 
-export class Value<TNode extends Node & DataTrait = Node & DataTrait> {
+export class Value<TNode extends DataTrait = DataTrait> {
   public id = ++id
 
   private _data!: UValueData

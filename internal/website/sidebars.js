@@ -29,7 +29,7 @@ module.exports = {
       {
         type: 'category',
         label: '@gqless/schema',
-        items: ['api/schema/schemaNodes'],
+        items: [],
       },
     ],
   },

@@ -1,12 +1,13 @@
 import { createEvent, invariant, createMemo } from '@gqless/utils'
 
 import { Cache, Value, afterTransaction } from '../Cache'
-import { Node, ObjectNode, Abstract, DataTrait, ComputableExtension, ComputedExtension, StaticExtension } from '../Node'
+import { ObjectNode, Abstract, DataTrait, ComputableExtension, ComputedExtension, StaticExtension } from '../Node'
 import { Scheduler, Query } from '../Scheduler'
 import { Selection, Fragment } from '../Selection'
 import { computed, Disposable, PathArray, arrayEqual } from '../utils'
 import { onDataChange } from './utils'
 import { FragmentAccessor } from '.'
+import { accessorInterceptors } from '../Interceptor'
 
 export enum NetworkStatus {
   idle,
@@ -96,6 +97,8 @@ export abstract class Accessor<
   }
 
   public get data() {
+    accessorInterceptors.forEach((intercept) => intercept(this))
+
     if (this._data === undefined) {
       try {
         this.data = this.getData()
@@ -133,7 +136,7 @@ export abstract class Accessor<
   }
 
   protected initializeExtensions() {
-    const addExtensions = (node: Node & DataTrait) => {
+    const addExtensions = (node: DataTrait) => {
       let extension = node.extension
       if (!extension) return
 

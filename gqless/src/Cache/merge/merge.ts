@@ -1,5 +1,5 @@
 import { Value } from '../Value'
-import { ObjectNode, ScalarNode, ArrayNode, DataTrait, Node, Extension, FieldNode, UFieldsNode, getAbstractImplementation } from '../../Node'
+import { ObjectNode, ScalarNode, ArrayNode, DataTrait, Extension, FieldNode, UFieldsNode, getAbstractImplementation } from '../../Node'
 import { createValue } from './createValue'
 import { Selection, Fragment } from '../../Selection'
 import { extensionsForKey } from './extensionsForKey'
@@ -51,7 +51,7 @@ export const merge = (cache: Cache, value: Value, data: any, extensions: Extensi
   return
 }
 
-const keyedMerge = (cache: Cache, node: Node & DataTrait, data: any, extensions: Extension[], ...selectionsFilter: Selection[]) => {
+const keyedMerge = (cache: Cache, node: DataTrait, data: any, extensions: Extension[], ...selectionsFilter: Selection[]) => {
   const keyFragments = new Set<Fragment>()
   for (const extension of extensions) {
     if (extension.fragment) {
@@ -90,7 +90,7 @@ const mergeScalar = (value: Value<ScalarNode>, data: any) => {
   value.data = data
 }
 
-const iterateArray = (cache: Cache, arrayValue: Value<ArrayNode<Node & DataTrait>>, data: any[], arrayExtensions: Extension[], ...selectionsFilter: Selection[]) => {
+const iterateArray = (cache: Cache, arrayValue: Value<ArrayNode<DataTrait>>, data: any[], arrayExtensions: Extension[], ...selectionsFilter: Selection[]) => {
   data.forEach((data, key) => {
     const node = arrayValue.node.ofNode
     const nodeImplementation = getAbstractImplementation(node, data?.__typename)
