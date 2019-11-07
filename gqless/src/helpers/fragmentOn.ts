@@ -13,7 +13,7 @@ export const fragmentOn = (data: any, fragment: Fragment) => {
   let fragmentAccessor = (accessor instanceof FragmentAccessor
     ? accessor.parent
     : accessor
-  ).get(({ selection }) => selection === fragment)
+  ).get(fragment)
 
   if (!fragmentAccessor) {
     accessor.selection.add(fragment)

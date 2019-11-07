@@ -1,16 +1,12 @@
 import { buildArguments, Formatter } from '../QueryBuilder'
 
-import { FieldNode, Node, Outputable } from '../Node'
+import { FieldNode, DataTrait } from '../Node'
 import { Selection } from './Selection'
-import { computed } from '../utils'
-import { createMemo } from '@gqless/utils'
 
 const argsFormatter = new Formatter({ prettify: false, variables: false })
 
-const memo = createMemo()
-
 export class FieldSelection<
-  TNode extends Node & Outputable = Node & Outputable
+  TNode extends DataTrait = DataTrait
 > extends Selection<TNode> {
   constructor(
     public field: FieldNode<TNode>,

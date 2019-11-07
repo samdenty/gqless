@@ -3,7 +3,6 @@ import { useMemo, useEffect } from 'react'
 import { useForceUpdate } from '../hooks/useForceUpdate'
 import { StackContext } from '../Query'
 import { useInterceptor } from './useInterceptor'
-import { useComponentContext } from '../hooks/useComponentContext'
 
 export const useAccessors = (stack: StackContext) => {
   const accessors = useMemo(() => new Set<Accessor>(), [])
@@ -37,16 +36,14 @@ export const useAccessors = (stack: StackContext) => {
             accessor.onDataChange(() => {
               forceUpdate()
             }),
-            accessor.onStatusChange(
-              (prevValue: NetworkStatus, newValue: NetworkStatus) => {
-                const prevIdle = prevValue === NetworkStatus.idle
-                const active = newValue !== NetworkStatus.idle
+            accessor.onStatusChange((newValue, prevValue) => {
+              const prevIdle = prevValue === NetworkStatus.idle
+              const active = newValue !== NetworkStatus.idle
 
-                if (prevIdle && active) {
-                  forceUpdate()
-                }
+              if (prevIdle && active) {
+                forceUpdate()
               }
-            ),
+            }),
           ]
         )
       })

@@ -1,14 +1,25 @@
 import { Fragment } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
-import { resolveData } from '../Node'
+import { DataContext } from '../Node'
 
 export class FragmentAccessor<
   TFragment extends Fragment = Fragment,
   TChildren extends Accessor = Accessor
 > extends Accessor<TFragment, TChildren> {
+  protected _resolved =
+    this.parent!.resolved &&
+    (!this.parent!.value || this.parent!.value.node === this.selection.node)
+
   constructor(public parent: Accessor, fragment: TFragment) {
     super(parent, fragment)
+
+    if (fragment.node !== parent.node) {
+      this.parent.onValueChange(value => {
+        this.resolved =
+          this.parent.resolved && (!value || value.node === fragment.node)
+      })
+    }
 
     // Sync value with parent
     // (only if the node is the same)
@@ -33,11 +44,19 @@ export class FragmentAccessor<
 
   protected initializeExtensions() {
     // Copy extensions from parent
-    this.extensions.unshift(...(this.parent.extensions as any[]))
+    for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
+      const extension = this.parent.extensions[i]
+      if (extension.node !== this.selection.node) continue
+
+      this.extensions.unshift(extension)
+    }
   }
 
-  public get data(): any {
-    return resolveData(this.selection.node, this)
+  public getData(ctx?: DataContext): any {
+    return this.selection.node.getData({
+      accessor: this,
+      ...ctx,
+    })
   }
 
   public toString() {

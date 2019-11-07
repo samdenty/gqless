@@ -6,6 +6,7 @@ import {
   fragmentOn,
   Abstract,
   FragmentAccessor,
+  getAbstractImplementation,
 } from 'gqless'
 import { useMemo } from 'react'
 import { invariant } from '@gqless/utils'
@@ -39,17 +40,8 @@ export function useFragment<
         : accessor.node
 
     if (onType) {
-      if (node instanceof Abstract) {
-        const implementation = node.implementations.find(
-          node => node.toString() === onType
-        )
-        if (implementation) return implementation
-      }
-
-      invariant(
-        node.toString() === onType,
-        `'${onType}' is not a valid subtype of ${node}`
-      )
+      const nodeImplementation = getAbstractImplementation(node, onType)
+      if (nodeImplementation) return nodeImplementation
     }
 
     return node

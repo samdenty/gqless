@@ -17,12 +17,16 @@ jobs:
 
       - name: Setup
         run: |
-          npm install -g yarn
           yarn
           yarn bootstrap
 
       - name: Build all packages
         run: yarn build
+
+      - name: Check bundlesize
+        env:
+          BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn bundlesize
 
   test:
     runs-on: ubuntu-latest

@@ -20,6 +20,9 @@ export const schema = {
         get object() {
           return new FieldNode(schema.Object, undefined, false)
         },
+        get object2() {
+          return new FieldNode(schema.Object, undefined, false)
+        },
         get string() {
           return new FieldNode(schema.String, undefined, false)
         },
@@ -55,6 +58,9 @@ export const schema = {
     return new ObjectNode(
       {
         get string() {
+          return new FieldNode(schema.String, undefined, false)
+        },
+        get string2() {
           return new FieldNode(schema.String, undefined, false)
         },
         get int() {

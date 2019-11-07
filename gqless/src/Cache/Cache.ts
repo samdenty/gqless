@@ -2,18 +2,17 @@ import { Accessor } from '../Accessor'
 import { Value } from './Value'
 import { deepReference, createPath } from './utils'
 import { merge } from './merge'
-import { Node, ObjectNode, Outputable } from '../Node'
+import { ObjectNode, DataTrait } from '../Node'
 import { NodeEntry } from './NodeEntry'
 import { Disposable } from '../utils'
-import { createSetter } from '@gqless/utils'
+import { createEvent } from '@gqless/utils'
 import { Transaction } from './Transaction'
 
 export class Cache extends Disposable {
   public references!: ReturnType<typeof deepReference>
-  public entries = new Map<Node & Outputable, NodeEntry>()
-  public rootValue!: Value
+  public entries = new Map<DataTrait, NodeEntry>()
 
-  public onRootValueChange = createSetter(this as Cache, 'rootValue')
+  public onRootValueChange = createEvent<(rootValue: Value) => void>()
 
   constructor(node: ObjectNode) {
     super()
@@ -46,12 +45,23 @@ export class Cache extends Disposable {
     this.rootValue = new Value(node)
   }
 
+  private _rootValue!: Value
+  public get rootValue() {
+    return this._rootValue
+  }
+  public set rootValue(value: Value) {
+    const prevValue = this._rootValue
+    if (value === prevValue) return
+    this._rootValue = value
+    this.onRootValueChange.emit(value)
+  }
+
   public merge(accessor: Accessor, data: any) {
     const transaction = new Transaction()
 
     transaction.begin()
     const value = createPath(accessor, data)
-    merge(value, data, accessor)
+    merge(this, value, data, accessor.extensions)
     transaction.end()
   }
 

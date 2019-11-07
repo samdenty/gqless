@@ -1,7 +1,7 @@
 import { createEvent, invariant } from '@gqless/utils'
-import { Node } from '../Node'
+import { DataTrait } from '../Node'
 
-export class Selection<TNode extends Node = Node> {
+export class Selection<TNode extends DataTrait = DataTrait> {
   // Selections that should be fetched with all queries
   public keySelections = new Set<Selection>()
   public selections = new Set<Selection>()
@@ -32,10 +32,15 @@ export class Selection<TNode extends Node = Node> {
   }
 
   public get<TSelection extends Selection>(
-    compare: (selection: Selection) => boolean
-  ) {
+    find: ((selection: Selection) => boolean) | string | number
+  ): TSelection | undefined {
     for (const selection of this.selections) {
-      if (compare(selection)) return selection as TSelection
+      if (
+        typeof find === 'function'
+          ? find(selection)
+          : String(selection) === String(find)
+      )
+        return selection as any
     }
     return
   }

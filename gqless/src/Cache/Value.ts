@@ -1,4 +1,4 @@
-import { Node, ArrayNode, ObjectNode, Outputable } from '../Node'
+import { ArrayNode, ObjectNode, DataTrait } from '../Node'
 import { createEvent } from '@gqless/utils'
 
 export type UValueData =
@@ -11,7 +11,7 @@ export type UValueData =
 
 let id = 0
 
-export class Value<TNode extends Node & Outputable = Node & Outputable> {
+export class Value<TNode extends DataTrait = DataTrait> {
   public id = ++id
 
   private _data!: UValueData
@@ -106,7 +106,7 @@ export class Value<TNode extends Node & Outputable = Node & Outputable> {
       if (!this.data) return null
 
       const obj: any = {
-        __typename: this.node.name,
+        __typename: this.node.name
       }
 
       Object.entries(this.data).forEach(([key, value]) => {

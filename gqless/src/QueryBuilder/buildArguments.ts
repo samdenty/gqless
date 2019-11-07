@@ -7,11 +7,10 @@ import {
   ArrayNode,
   EnumNode,
   ScalarNode,
-  Node,
   UArguments,
 } from '../Node'
 
-interface ArgContext<TNode extends Node = Node> {
+interface ArgContext<TNode extends object = object> {
   node: TNode
   nullable: boolean
 }
@@ -24,7 +23,7 @@ export const buildArguments = (
   const buildKeyed = (
     arg: Record<string, any>,
     path: string[],
-    context?: ArgContext<Arguments | InputNode<any>>
+    context?: ArgContext<Arguments | InputNode>
   ) => {
     const keys = Object.keys(arg)
     keys.sort()

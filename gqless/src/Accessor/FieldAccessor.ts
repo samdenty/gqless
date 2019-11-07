@@ -1,23 +1,24 @@
-import {
-  UExtension,
-  resolveData,
-  ProxyExtension,
-  ObjectExtension,
-  Extension,
-} from '../Node'
 import { FieldSelection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
+import {
+  ComputableExtension,
+  ComputedExtension,
+  DataTrait,
+  DataContext,
+} from '../Node'
 
 export class FieldAccessor<
   TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TFieldSelection, TChildren> {
+  protected _resolved = this.parent.resolved
+
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
 
+    this.parent.onResolvedChange(resolved => (this.resolved = resolved))
     syncValue(this, this.toString())
-
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)
   }
@@ -26,17 +27,22 @@ export class FieldAccessor<
     super.initializeExtensions()
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      const parentExtension = this.parent.extensions[i]
-      const extensionRef = parentExtension.childField(this)
+      let extension = this.parent.extensions[i].childField(this.selection.field)
+      if (!extension) continue
 
-      if (!extensionRef) continue
+      if (extension instanceof ComputableExtension) {
+        extension = new ComputedExtension(extension, this)
+      }
 
-      this.extensions.unshift(extensionRef)
+      this.extensions.unshift(extension)
     }
   }
 
-  public get data(): any {
-    return resolveData(this.selection.field.ofNode, this)
+  public getData(ctx?: DataContext): any {
+    return (this.selection.field.ofNode as DataTrait).getData({
+      accessor: this,
+      ...ctx,
+    })
   }
 
   public toString() {

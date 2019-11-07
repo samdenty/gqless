@@ -1,4 +1,4 @@
-import { Plugins } from '../src'
+import { Plugins } from 'gqless'
 
 it('supports calling all plugins', () => {
   const plugins = new Plugins()

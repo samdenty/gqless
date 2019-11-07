@@ -4,7 +4,7 @@ import {
   Scheduler,
   RootAccessor,
   NetworkStatus,
-} from '../src'
+} from 'gqless'
 import { schema } from '@internal/fixtures'
 
 jest.useFakeTimers()

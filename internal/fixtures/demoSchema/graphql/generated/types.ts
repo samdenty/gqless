@@ -19,6 +19,7 @@ type t_Query = FieldsType<
   {
     __typename: t_String<'Query'>
     object: t_Object
+    object2: t_Object
     string: t_String
     arrayOfObjects: FieldsTypeArg<
       { string?: string | null; input?: Input | null },
@@ -38,6 +39,7 @@ type t_Object = FieldsType<
   {
     __typename: t_String<'Object'>
     string: t_String
+    string2: t_String
     int: t_Int
     enum: t_Enum
     overriddenString: t_String

@@ -1,1 +1,1 @@
-export GITHUB_AUTH=""
+export GITHUB_TOKEN=""

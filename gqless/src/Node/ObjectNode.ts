@@ -1,6 +1,5 @@
-import { Generic, Mix } from 'mix-classes'
-
-import { Accessor, FieldAccessor } from '../Accessor'
+import { Mix } from 'mix-classes'
+import { FieldAccessor } from '../Accessor'
 import { ACCESSOR } from '../Accessor/Accessor'
 import {
   FieldNode,
@@ -8,28 +7,29 @@ import {
   IFieldsNodeOptions,
   UFieldsNodeRecord,
   Matchable,
-  Outputable,
-  resolveData,
 } from './abstract'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
+import { ComputableExtension, StaticExtension, createExtension } from './Extension'
+import { DataTrait, DataContext, getValue, getExtensions } from './traits'
 
 export type IObjectNodeOptions = IFieldsNodeOptions
 
-export interface ObjectNode<TData> extends FieldsNode<TData> {}
-
 const TYPENAME_NODE = new ScalarNode()
 
-export class ObjectNode<TData = any> extends Mix(
-  Generic(FieldsNode),
-  Outputable,
+export class ObjectNode extends Mix(
+  FieldsNode,
   Matchable
-) {
-  constructor(fields: UFieldsNodeRecord, options: IObjectNodeOptions) {
-    // Add __typename node
-    fields.__typename = new FieldNode(TYPENAME_NODE)
+) implements DataTrait {
+  public extension?: ComputableExtension | StaticExtension
 
-    super([fields as any, options], [options.extension])
+  constructor(fields: UFieldsNodeRecord, options: IObjectNodeOptions) {
+    fields.__typename = new FieldNode(TYPENAME_NODE)
+    super([fields as any, options])
+
+    if (options.extension) {
+      this.extension = createExtension(this, options.extension)
+    }
   }
 
   public match(value: Value, data: any) {
@@ -56,23 +56,19 @@ export class ObjectNode<TData = any> extends Mix(
     return matches ? value : undefined
   }
 
-  public getData(accessor: Accessor): TData {
-    // @ts-ignore typescript limitation for mix-classes
-    super.getData(accessor)
+  public getData(ctx: DataContext): any {
+    const value = getValue(ctx)
 
-    // If the value is nulled, return null
-    if (accessor.value && accessor.value!.data === null) {
-      return null as any
-    }
+    if (value?.data === null) return null
 
     return new Proxy({} as any, {
       get: (_, prop: any) => {
-        if (accessor.fragmentToResolve) {
-          const { data } = accessor.fragmentToResolve
-          return data ? data[prop] : undefined
-        }
+        // if (accessor.fragmentToResolve) {
+        //   const { data } = accessor.fragmentToResolve
+        //   return data ? data[prop] : undefined
+        // }
 
-        if (prop === ACCESSOR) return accessor
+        if (prop === ACCESSOR) return ctx.accessor
         // Statically resolve __typename
         if (prop === '__typename') return this.name
 
@@ -80,23 +76,24 @@ export class ObjectNode<TData = any> extends Mix(
         if (this.fields.hasOwnProperty(prop)) {
           const field = this.fields[prop]
 
-          return resolveData(field, accessor)
+          return field.getData(ctx as any)
         }
 
         if (prop === 'toString') return () => this.toString()
 
         // fallback to extensions
-        for (const extension of accessor.extensions) {
+
+        for (const extension of getExtensions(ctx)) {
           if (prop in extension.data) return extension.data[prop]
         }
       },
 
       set: (_, prop: string, value) => {
-        if (accessor.fragmentToResolve) {
-          const { data } = accessor.fragmentToResolve
-          if (data) data[prop] = value
-          return true
-        }
+        // if (accessor.fragmentToResolve) {
+        //   const { data } = accessor.fragmentToResolve
+        //   if (data) data[prop] = value
+        //   return true
+        // }
 
         if (prop === '__typename') return true
 
@@ -104,12 +101,13 @@ export class ObjectNode<TData = any> extends Mix(
          * If setting a field, create a new accessor and set data
          */
         if (this.fields.hasOwnProperty(prop)) {
+          if (!ctx.accessor) return true
+
           const field = this.fields[prop]
-          const selection = field.getSelection(accessor).selection
+          const selection = field.getSelection(ctx)
 
           const fieldAccessor =
-            accessor.get(a => a.selection === selection) ||
-            new FieldAccessor(accessor, selection)
+            ctx.accessor.get(selection) || new FieldAccessor(ctx.accessor, selection)
 
           fieldAccessor.setData(value)
 
@@ -119,7 +117,7 @@ export class ObjectNode<TData = any> extends Mix(
         /**
          * else set it on the first extension with the property
          */
-        for (const extension of accessor.extensions) {
+        for (const extension of getExtensions(ctx)) {
           if (prop in extension.data) {
             extension.data[prop] = value
             return true

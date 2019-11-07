@@ -10,13 +10,14 @@
   ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "release": "yarn build && lerna publish",
+    "version": "changeset version",
+    "publish": "changeset publish",
+    "release": "yarn build && yarn publish",
     "test": "jest",
     "build": "lerna run build --no-private",
     "build:changed": "yarn run build --since",
     "docs": "yarn workspace @internal/website start",
-    "docs:build": "yarn workspace @internal/website build",
-    "changelog": "[[ -v GITHUB_AUTH ]] && lerna-changelog > CHANGELOG.md"
+    "docs:build": "yarn workspace @internal/website build"
   },
   "homepage": "https://gqless.netlify.com",
   "repository": {
@@ -31,34 +32,45 @@
     ],
     "coverageDirectory": "<rootDir>/coverage/"
   },
+  "bundlesize": [
+    {
+      "path": "./packages/utils/dist/*.cjs.production.min.js",
+      "maxSize": "1.5 kB"
+    },
+    {
+      "path": "./packages/react/dist/*.cjs.production.min.js",
+      "maxSize": "3 kB"
+    },
+    {
+      "path": "./gqless/dist/*.cjs.production.min.js",
+      "maxSize": "15 kB"
+    }
+  ],
   "husky": {
     "hooks": {
-      "pre-commit": "yarn changelog && pretty-quick --staged"
+      "pre-commit": "pretty-quick --staged"
     }
-  },
-  "changelog": {
-    "cacheDir": ".changelog"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
-    "@babel/plugin-proposal-decorators": "^7.6.0",
+    "@babel/plugin-proposal-decorators": "^7.7.0",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
-    "@types/jest": "^24.0.20",
+    "@changesets/cli": "^2.3.3",
+    "@types/jest": "^24.0.22",
     "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.9.3",
+    "@types/react-dom": "^16.9.4",
+    "bundlesize": "^0.18.0",
     "codecov": "^3.5.0",
     "graphql-faker": "^2.0.0-rc.13",
     "husky": "^3.0.9",
     "lerna": "^3.18.3",
-    "lerna-changelog": "^0.8.2",
     "parcel-bundler": "^1.12.4",
-    "pretty-quick": "^2.0.0",
+    "pretty-quick": "^2.0.1",
     "react": "^0.0.0-experimental-f6b8d31a7",
     "react-dom": "^0.0.0-experimental-f6b8d31a7",
     "tsconfig-paths": "^3.9.0",
-    "tsdx": "0.9.3",
-    "typescript": "^3.7.1-rc"
-  },
-  "dependencies": {}
+    "tsdx": "0.11.0",
+    "typescript": "^3.7.2"
+  }
 }

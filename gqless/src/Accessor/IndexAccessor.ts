@@ -1,4 +1,10 @@
-import { ArrayNode, INDEX, resolveData } from '../Node'
+import {
+  ArrayNode,
+  ComputableExtension,
+  ComputedExtension,
+  DataTrait,
+  DataContext,
+} from '../Node'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
@@ -7,6 +13,8 @@ export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelectionArray, TChildren> {
+  protected _resolved = this.parent.resolved
+
   constructor(public parent: Accessor<TSelectionArray>, public index: number) {
     super(
       parent,
@@ -19,13 +27,13 @@ export class IndexAccessor<
 
     // Sync from parent status
     this.addDisposer(
-      this.parent.onStatusChange((_, status) => {
+      this.parent.onStatusChange(status => {
         this.status = status
       })
     )
 
+    this.parent.onResolvedChange(resolved => (this.resolved = resolved))
     syncValue(this, this.toString())
-
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)
   }
@@ -34,15 +42,22 @@ export class IndexAccessor<
     super.initializeExtensions()
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      const extensionRef = this.parent.extensions[i].childIndex(this)
-      if (!extensionRef) continue
+      let extension = this.parent.extensions[i].childIndex()
+      if (!extension) continue
 
-      this.extensions.unshift(extensionRef)
+      if (extension instanceof ComputableExtension) {
+        extension = new ComputedExtension(extension, this)
+      }
+
+      this.extensions.unshift(extension)
     }
   }
 
-  public get data(): any {
-    return resolveData(this.selection.node.ofNode, this)
+  public getData(ctx?: DataContext): any {
+    return (this.selection.node.ofNode as DataTrait).getData({
+      accessor: this,
+      ...ctx,
+    })
   }
 
   public toString() {

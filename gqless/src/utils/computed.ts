@@ -8,6 +8,9 @@ const isDepsEqual = <T extends any[]>(a: T, b: T) => {
   return true
 }
 
+// @TODO Remove this
+// and replace with @memo
+
 export const computed = (getDependencies?: () => any[]) => <T>(
   target: T,
   propertyKey: string

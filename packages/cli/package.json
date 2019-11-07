@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
-    "@types/got": "^9.6.8",
+    "@types/got": "^9.6.9",
     "@types/mkdirp": "^0.5.2",
     "@types/node": "^12.12.5",
     "@types/prettier": "^1.18.3",
@@ -55,7 +55,8 @@
     ]
   },
   "scripts": {
-    "build": "rm -rf dist; tsc -p tsconfig.build.json && oclif-dev readme"
+    "dev": "./bin/run-dev",
+    "build": "rm -rf dist; tsc && oclif-dev readme"
   },
   "types": "dist/index.d.ts",
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"

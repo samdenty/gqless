@@ -8,3 +8,5 @@ ReactDOM.render(
   </React.Suspense>,
   document.getElementById('app')
 )
+
+Object.assign(window, {})

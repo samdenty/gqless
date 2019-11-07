@@ -1,21 +1,13 @@
-import { Outputable } from './abstract/Outputable'
-import { Node } from './abstract/Node'
-import { Selection } from '../Selection'
-import { Accessor } from '../Accessor'
-import { Mix, Generic } from 'mix-classes'
+import { DataTrait, DataContext, getValue, interceptAccessor } from './traits'
 
 export type IEnumNodeOptions = {
   name?: string
 }
 
-export interface EnumNode<T extends any = any> extends Node<T> {}
-
-export class EnumNode<T> extends Mix(Outputable, Generic(Node)) {
+export class EnumNode implements DataTrait {
   public name?: string
 
   constructor({ name }: IEnumNodeOptions = {}) {
-    super()
-
     this.name = name
   }
 
@@ -23,10 +15,12 @@ export class EnumNode<T> extends Mix(Outputable, Generic(Node)) {
     return this.name || this.constructor.name
   }
 
-  public getData(accessor: Accessor<Selection<EnumNode>>): any {
-    super.getData(accessor)
-    if (!accessor.value) return null
+  public getData(ctx: DataContext<EnumNode>): any {
+    interceptAccessor(ctx)
 
-    return accessor.value.data
+    const value = getValue(ctx)
+    if (!value) return null
+
+    return value.data
   }
 }

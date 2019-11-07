@@ -1,27 +1,37 @@
-import { Generic, Mix } from 'mix-classes'
-
-import { Accessor } from '../Accessor'
-import { Selection } from '../Selection'
-import { Node } from './abstract/Node'
-import { Outputable } from './abstract/Outputable'
-import { Extension, ScalarExtension } from './Extension'
+import {
+  NodeExtension,
+  StaticExtension,
+  ComputableExtension,
+  createExtension,
+  ComputedExtension,
+} from './Extension'
 import { Matchable } from './abstract/Matchable'
 import { Value } from '../Cache'
+import {
+  DataTrait,
+  DataContext,
+  getExtensions,
+  getValue,
+  interceptAccessor,
+} from './traits'
 
 export type IScalarNodeOptions = {
   name?: string
-  extension?: Extension
+  extension?: NodeExtension
 }
 
-export interface ScalarNode<T extends any = any> extends Node<T> {}
-
-export class ScalarNode<T> extends Mix(Outputable, Matchable, Generic(Node)) {
+export class ScalarNode extends Matchable implements DataTrait {
+  public extension?: StaticExtension | ComputableExtension
   public name?: string
 
   constructor({ name, extension }: IScalarNodeOptions = {}) {
-    super([extension])
+    super()
 
     this.name = name
+
+    if (extension) {
+      this.extension = createExtension(this, extension)
+    }
   }
 
   public match(value: Value, data: any) {
@@ -40,14 +50,18 @@ export class ScalarNode<T> extends Mix(Outputable, Matchable, Generic(Node)) {
     return this.name || this.constructor.name
   }
 
-  public getData(accessor: Accessor<Selection<ScalarNode>>): any {
-    super.getData(accessor)
+  public getData(ctx: DataContext) {
+    interceptAccessor(ctx)
 
-    if (accessor.extensions.length) {
-      return accessor.extensions[0].data
+    const extensions = getExtensions(ctx)
+    const value = getValue(ctx)
+
+    const extension = extensions[0]
+    if (extension) {
+      return extension.data
     }
 
-    if (!accessor.value) return null
-    return accessor.value.data
+    if (!value) return null
+    return value.data
   }
 }

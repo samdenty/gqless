@@ -1,4 +1,4 @@
-import { RootAccessor, IndexAccessor, Accessor } from './Accessor'
+import { RootAccessor, Accessor } from './Accessor'
 import { Cache } from './Cache'
 import { ObjectNode } from './Node'
 import { Plugins } from './Plugin'

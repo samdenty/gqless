@@ -5,6 +5,7 @@ enum Enum {
 
 type Object {
   string: String! @fake(type: firstName)
+  string2: String! @fake(type: lastName)
   int: Int!
   enum: Enum!
 
@@ -18,6 +19,8 @@ input Input {
 
 type Query {
   object: Object!
+  object2: Object!
+
   string: String! @fake(type: firstName)
 
   arrayOfObjects(string: String, input: Input): [Object!]!

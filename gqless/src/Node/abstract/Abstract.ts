@@ -1,41 +1,61 @@
 import { ObjectNode } from '../ObjectNode'
-import { Outputable } from './Outputable'
-import { Extension, ObjectExtension } from '../Extension'
-import { Accessor, ACCESSOR, FragmentAccessor } from '../../Accessor'
+import { ACCESSOR, FragmentAccessor } from '../../Accessor'
+import { invariant } from '@gqless/utils'
+import {
+  DataTrait,
+  DataContext,
+  getValue,
+  getExtensions,
+  interceptAccessor,
+} from '../traits'
 
-export class Abstract<
-  TNode extends ObjectNode = ObjectNode
-> extends Outputable {
-  constructor(public implementations: TNode[], extension?: Extension) {
-    super(extension)
+export const getAbstractImplementation = (node: object, typename: string) => {
+  if (node instanceof Abstract && typename) {
+    const implementation = node.implementations.find(
+      i => i.toString() === typename
+    )
+    invariant(implementation, `'${typename}' is not a valid subtype of ${node}`)
+    return implementation
   }
 
-  public getData(accessor: Accessor) {
-    super.getData(accessor)
+  return
+}
+
+export class Abstract<TNode extends ObjectNode = ObjectNode>
+  implements DataTrait {
+  constructor(public implementations: TNode[]) {}
+
+  public getData(ctx: DataContext) {
+    interceptAccessor(ctx)
+
+    const value = getValue(ctx)
 
     // If the value is nulled, return null
-    if (accessor.value) {
-      if (accessor.value.data === null) return null
+    if (value) {
+      if (value.data === null) return null
 
-      const fragment = accessor.getDefaultFragment(accessor.value
-        .node as ObjectNode)
-      const fragmentAccessor =
-        accessor.get(a => a.selection === fragment) ||
-        new FragmentAccessor(accessor, fragment)
+      if (ctx.accessor) {
+        const fragment = ctx.accessor.getDefaultFragment(
+          value.node as ObjectNode
+        )
+        const fragmentAccessor =
+          ctx.accessor.get(fragment) ||
+          new FragmentAccessor(ctx.accessor, fragment)
 
-      return fragmentAccessor.data
+        return fragmentAccessor.data
+      }
     }
 
     return new Proxy(
       {},
       {
         get(_, prop: any) {
-          if (accessor.fragmentToResolve) {
-            const { data } = accessor.fragmentToResolve
-            return data ? data[prop] : undefined
-          }
+          // if (accessor.fragmentToResolve) {
+          //   const { data } = accessor.fragmentToResolve
+          //   return data ? data[prop] : undefined
+          // }
 
-          if (prop === ACCESSOR) return accessor
+          if (prop === ACCESSOR) return ctx.accessor
 
           if (prop === '__typename') {
             // TODO: Support __typename for react without ofType
@@ -45,22 +65,20 @@ export class Abstract<
           if (prop === 'toString') return () => this.toString()
 
           // fallback to extensions
-          for (const extension of accessor.extensions) {
+          for (const extension of getExtensions(ctx)) {
             if (prop in extension.data) return extension.data[prop]
           }
         },
 
         set(_, prop: any, value: any) {
-          if (accessor.fragmentToResolve) {
-            const { data } = accessor.fragmentToResolve
-            if (data) data[prop] = value
-            return true
-          }
+          // if (accessor.fragmentToResolve) {
+          //   const { data } = accessor.fragmentToResolve
+          //   if (data) data[prop] = value
+          //   return true
+          // }
 
-          /**
-           * else set it on the first extension with the property
-           */
-          for (const extension of accessor.extensions) {
+          // else set it on the first extension with the property
+          for (const extension of getExtensions(ctx)) {
             if (prop in extension) {
               extension.data[prop] = value
               return true

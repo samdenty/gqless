@@ -1,43 +1,133 @@
-import { deepJSONEqual } from '../../utils'
+import { NodeContainer, FieldsNode, FieldNode } from '../abstract'
+import { ProxyExtension, GET_KEY, ArrayNodeExtension, INDEX, ObjectNodeExtension, REDIRECT } from './NodeExtension'
+import { computed, PathArray } from '../../utils'
+import { UFragment, Fragment } from '../../Selection'
+import { createMemo, invariant } from '@gqless/utils'
+import { DataTrait } from '../traits'
+import { ArrayNode } from '../ArrayNode'
+import { createExtension } from './createExtension'
+import { Accessor, FieldAccessor } from '../../Accessor'
 import { Value } from '../../Cache'
 
-export const REDIRECT = Symbol('Extension#redirect')
-export const INDEX = Symbol('Extension#index')
+const memo = createMemo()
 
-export const GET_KEY = Symbol('Extension#getKey')
-export const keyIsValid = (key: unknown) => key != null
-export const keyIsEqual = (a: unknown, b: unknown) => deepJSONEqual(a, b)
+export abstract class Extension {
+  public data: any
 
-export interface ProxyExtension<TData extends object = object> {
-  [key: string]: any
+  constructor(
+    public parent: Extension | undefined,
+    public node: DataTrait,
+    /** (optional) An object used to construct fragmentKey */
+    private fragmentKeyedBy: any = parent ? undefined : node
+  ) {
+  }
 
-  [REDIRECT]?(
-    args: Record<string, any> | undefined,
-    helpers: {
-      match: (data: any) => Value | undefined
+  @computed()
+  /** A unique key to share instances of a Fragment between extensions */
+  protected get fragmentKey() {
+    return this.path
+      .map(ref => ref.fragmentKeyedBy)
+      .filter(Boolean)
+  }
+
+  @computed()
+  public get fragment() {
+    const getKey = (this.data as ProxyExtension)?.[GET_KEY]
+    if (!getKey) return
+
+    let node = this.fragmentKey[this.fragmentKey.length - 1]
+    if (node instanceof NodeContainer) {
+      node = node.innerNode as DataTrait
     }
-  ): Value | undefined
 
-  [GET_KEY]?(data: TData): any
+    // Fragments only work with InterfaceNode / ObjectNode
+    if (!(node instanceof FieldsNode)) return
+
+    return memo.fragment(
+      () => {
+        const fragment = new Fragment(
+          node as UFragment,
+          `Keyed${this.fragmentKey.join('_')}`
+        )
+
+        // Initialize with selections
+        const data = node!.getData({ selection: fragment })
+        getKey(data)
+
+        return fragment
+      },
+      this.fragmentKey
+    )
+  }
+
+  public get isKeyable() {
+    return !!(this.data as ProxyExtension)?.[GET_KEY]
+  }
+
+  public getKey(value: Value) {
+    const getKey = (this.data as ProxyExtension)?.[GET_KEY]
+    if (!getKey) return
+    const data = value.node.getData({ value })
+    const key = getKey(data)
+
+    return key
+  }
+
+  public redirect(accessor: Accessor) {
+    const redirect = (this.data as ProxyExtension)?.[REDIRECT]
+    if (!redirect) return
+
+    const entry = accessor.cache.entries.get(accessor.node)
+    if (!entry) return
+
+    return redirect(
+      accessor instanceof FieldAccessor
+        ? // @TODO: toJSON everything (could be variables)
+          accessor.selection.args
+        : undefined,
+      {
+        instances: entry.instances,
+        match(data) {
+          return entry.match(data)?.value
+        },
+        getByKey(key) {
+          return entry.getByKey(key)
+        }
+      }
+    )
+  }
+
+  /** Returns a memoized child Extension */
+  public childIndex(): Extension | undefined {
+    return memo.childIndex(() => {
+      invariant(this.node instanceof ArrayNode)
+
+      const indexExtension = (this.data as ArrayNodeExtension)?.[INDEX]
+      if (indexExtension === undefined) return
+      return createExtension(this.node.ofNode, indexExtension, this)
+    }, [this])
+  }
+
+  /** Returns a memoized child Extension, for a given field */
+  public childField(field: FieldNode): Extension | undefined {
+    return memo.childField(() => {
+      invariant(this.node instanceof FieldsNode)
+
+      const fieldExtension = (this.data as ObjectNodeExtension)?.[field.name]
+      if (fieldExtension === undefined) return
+      return createExtension(field.ofNode, fieldExtension, this, field)
+    }, [this, field])
+  }
+
+  public toString() {
+    return this.fragmentKey.toString()
+  }
+
+  @computed()
+  public get path(): Extension[] {
+    const basePath = this.parent ? this.parent.path : []
+    const path = new PathArray(...basePath, this)
+
+    return path
+  }
 }
-
-export interface ArrayExtension<TArray extends unknown[] = unknown[]>
-  extends ProxyExtension<TArray> {
-  [INDEX]?: Extension<TArray[number]>
-  [GET_KEY]?(data: TArray[number]): any
-}
-
-export type ObjectExtension<TObject extends {} = {}> = ProxyExtension<TObject> &
-  { [K in keyof TObject]?: Extension<TObject[K]> }
-
-export type ScalarExtension<TData extends unknown = unknown> = TData
-
-export type UExtension<TData = unknown> = TData extends object
-  ? TData extends any[]
-    ? ArrayExtension<TData>
-    : ObjectExtension<TData>
-  : ScalarExtension<TData>
-
-export type Extension<TData = any> =
-  | UExtension<TData>
-  | ((data: TData) => UExtension<TData>)
