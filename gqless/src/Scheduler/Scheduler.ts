@@ -17,12 +17,12 @@ export class Scheduler extends Disposable {
   constructor(
     private fetchAccessors: AccessorFetcher,
     public plugins: Plugins = new Plugins(),
-    public interval = 1000
+    public interval = 50
   ) {
     super()
 
-    this.start()
-    this.addDisposer(this.cancel)
+    this.startTimer()
+    this.addDisposer(this.clearTimer)
   }
 
   public pushStack(...queries: Query[]) {
@@ -45,8 +45,8 @@ export class Scheduler extends Disposable {
     }
   }
 
-  private start() {
-    this.cancel()
+  private startTimer() {
+    this.clearTimer()
 
     // Don't create new Commit, if prev one unused
     if (!this.commit || this.commit.accessors.size) {
@@ -55,13 +55,23 @@ export class Scheduler extends Disposable {
       this.commit = new Commit(this.plugins, this.stack, this.fetchAccessors)
     }
 
-    this.timer = setTimeout(() => {
-      this.commit.fetch()
-      this.start()
-    }, this.interval)
+    const { commit } = this
+    commit.onActive.then(() => {
+      this.timer = setTimeout(() => {
+        commit.fetch()
+        this.startTimer()
+      }, this.interval)
+
+      commit.onIdle.then(() => {
+        if (commit !== this.commit) return
+
+        // Cancel timer, and wait until commit is active again
+        this.startTimer()
+      })
+    })
   }
 
-  private cancel() {
+  private clearTimer() {
     clearTimeout(this.timer)
   }
 }

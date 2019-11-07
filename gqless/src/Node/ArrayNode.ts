@@ -1,7 +1,7 @@
 import { Generic, Mix } from 'mix-classes'
 
 import { IndexAccessor } from '../Accessor'
-import { ACCESSOR, getAccessorData } from './../Accessor'
+import { ACCESSOR } from '../Accessor'
 import {
   NodeContainer,
   Matchable,
@@ -93,7 +93,7 @@ export class ArrayNode<TNode> extends Mix(
                 ctx.accessor.get(index) ||
                 new IndexAccessor(ctx.accessor, index)
 
-              return getAccessorData(accessor)
+              return accessor.data
             }
 
             return (this.ofNode as any as DataTrait).getData({

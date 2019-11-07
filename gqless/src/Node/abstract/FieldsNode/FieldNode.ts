@@ -1,7 +1,7 @@
 import { invariant } from '@gqless/utils'
 import { deepJSONEqual, computed } from '../../../utils'
 import { Arguments } from '../../Arguments'
-import { FieldAccessor, getAccessorData } from '../../../Accessor'
+import { FieldAccessor } from '../../../Accessor'
 import { FieldSelection } from '../../../Selection'
 import { EnumNode } from '../../EnumNode'
 import { ScalarNode } from '../../ScalarNode'
@@ -65,7 +65,7 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
           ctx.accessor.get(selection) ||
           new FieldAccessor(ctx.accessor, selection)
 
-        return getAccessorData(accessor)
+        return accessor.data
       }
 
       return this.ofNode.getData({

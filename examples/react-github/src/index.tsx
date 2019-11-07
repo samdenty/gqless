@@ -2,11 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { App } from './App'
 
-ReactDOM.render(
+ReactDOM.unstable_createRoot(document.getElementById('app')).render(
   <React.Suspense fallback="loading app">
     <App />
-  </React.Suspense>,
-  document.getElementById('app')
+  </React.Suspense>
 )
-
-Object.assign(window, {})
+// ReactDOM.render(
+//   <React.Suspense fallback="loading app">
+//     <App />
+//   </React.Suspense>,
+//   document.getElementById('app')
+// )

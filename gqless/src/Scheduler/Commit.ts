@@ -8,6 +8,9 @@ import { createEvent } from '@gqless/utils'
 const defaultQuery = new Query()
 
 export class Commit extends Disposable {
+  public onActive = createEvent()
+  public onIdle = createEvent()
+
   public onFetched = createEvent()
   public accessors = new Map<Accessor, Query[]>()
 
@@ -45,18 +48,20 @@ export class Commit extends Disposable {
     // or being (re-)fetched from a previous commit, don't re-fetch it
     if (this.disposed || accessor.status !== NetworkStatus.idle) return unstage
 
-    // If we already have the parent, remove the
-    // parent to narrow down the accessors. This is used when a accessor is created
-    // this could cause issues later, may need to add a recurse field to handle polling etc.
-    if (accessor.parent && this.accessors.has(accessor.parent)) {
-      this.unstage(accessor.parent)
-    }
+    if (!this.accessors.size) this.onActive.emit()
 
     accessor.status = accessor.value
       ? NetworkStatus.updating
       : NetworkStatus.loading
 
     this.accessors.set(accessor, [...this.stack, ...queries])
+
+    // If we already have the parent, remove the
+    // parent to narrow down the accessors. This is used when a accessor is created
+    // this could cause issues later, may need to add a recurse field to handle polling etc.
+    if (accessor.parent && this.accessors.has(accessor.parent)) {
+      this.unstage(accessor.parent)
+    }
 
     return unstage
   }
@@ -71,6 +76,8 @@ export class Commit extends Disposable {
     }
 
     this.accessors.delete(accessor)
+
+    if (!this.accessors.size) this.onIdle.emit()
   }
 
   public async fetch() {

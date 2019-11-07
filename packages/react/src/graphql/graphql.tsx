@@ -21,7 +21,7 @@ export interface IGraphQLOptions {
 export const graphql = <Props extends any>(
   component: (props: Props) => any,
   {
-    name,
+    name = (component as any)?.displayName,
     allowInheritance = null,
     seperateRequest = false,
   }: IGraphQLOptions = {}
@@ -63,7 +63,7 @@ export const graphql = <Props extends any>(
       stopIntercepting,
       updateAccessors,
     } = useAccessors(stack)
-    Object.assign(useComponentContext, { accessors, schedulers })
+    Object.assign(useComponentContext.value, { accessors, schedulers })
 
     const {
       variantFragments,
@@ -71,7 +71,7 @@ export const graphql = <Props extends any>(
       stopResolving,
       getRenderVariants,
     } = useFragments()
-    Object.assign(useComponentContext, { variantFragments })
+    Object.assign(useComponentContext.value, { variantFragments })
 
     try {
       startResolving()
@@ -142,7 +142,7 @@ export const graphql = <Props extends any>(
     return returnValue
   }
 
-  GraphQLComponent.displayName = (component as any).displayName
+  GraphQLComponent.displayName = name
   GraphQLComponent.query = query
 
   return GraphQLComponent

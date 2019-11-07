@@ -97,21 +97,17 @@ export abstract class Accessor<
   }
 
   public get data() {
-    try {
-      if (this._data === undefined) {
-        try {
-          this.data = this.getData()
-        } catch (accessor) {
-          if (accessor instanceof Accessor) return accessor.data
-
-          throw accessor
-        }
-      }
-
-      return this._data
-    } finally {
-      accessorInterceptors.forEach((intercept) => intercept(this))
+    if (this.fragmentToResolve) {
+      return this.fragmentToResolve.data
     }
+
+    if (this._data === undefined) {
+      this.data = this.getData()
+    }
+
+    accessorInterceptors.forEach((intercept) => intercept(this))
+
+    return this._data
   }
   public set data(data: any) {
     this._data = data
@@ -294,12 +290,4 @@ export abstract class Accessor<
       })
     }
   }
-}
-
-export const getAccessorData = (accessor: Accessor): any => {
-  if (accessor.fragmentToResolve) {
-    return getAccessorData(accessor.fragmentToResolve)
-  }
-
-  return accessor.data
 }

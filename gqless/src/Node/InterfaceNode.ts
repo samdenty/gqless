@@ -47,10 +47,8 @@ export class InterfaceNode<TImplementation>
 
     return new Proxy(data, {
       get: (_, prop: any) => {
-        // if (accessor.fragmentToResolve) {
-        //   const { data } = accessor.fragmentToResolve
-        //   return data ? data[prop] : undefined
-        // }
+        const fragment = ctx.accessor?.fragmentToResolve
+        if (fragment) return fragment.data?.[prop]
 
         // If the prop exists in this interface,
         // return directly from interface
@@ -78,11 +76,12 @@ export class InterfaceNode<TImplementation>
       },
 
       set: (_, prop: string, value) => {
-        // if (accessor.fragmentToResolve) {
-        //   const { data } = accessor.fragmentToResolve
-        //   if (data) data[prop] = value
-        //   return true
-        // }
+        const fragment = ctx.accessor?.fragmentToResolve
+        if (fragment) {
+          const { data } = fragment
+          if (data) data[prop] = value
+          return true
+        }
 
         if (prop === '__typename') return true
 

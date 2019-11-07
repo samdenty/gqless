@@ -1,6 +1,5 @@
-import { getAccessor, Abstract, getAbstractImplementation } from 'gqless'
+import { getAccessor, getAbstractImplementation } from 'gqless'
 import { useComponentContext } from '../hooks/useComponentContext'
-import { invariant } from '@gqless/utils'
 
 export function ofType<
   TData extends { __typename: string },
@@ -18,7 +17,9 @@ export function ofType<
 
       variantFragments.get(accessor)!.add(fragment)
     }
-  } catch {}
+  } catch {
+    // useComponentContext / getAccessor could fail
+  }
 
   return data.__typename === typename
 }

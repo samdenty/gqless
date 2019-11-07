@@ -8,18 +8,19 @@
 '@gqless/utils': patch
 ---
 
-## Cache
+**Cache**
 
 - Support for Keys
-  - Support for circular references
+  - They can now be used circularly
 - Support for partial merging
 
-## Optimizations
+**Optimizations**
 
 - Heavily reduced cost of merging to cache
 - Extension instances are now shared
 - Internal lazy intialized & memoized changes
 
-## Regressions
+**Fixes**
 
-- Fragments need to be rewired, currently don't work
+- Scheduler is now smarter, works reliably with concurrent mode
+- Fragments containing selections with arguments now work

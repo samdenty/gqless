@@ -50,10 +50,8 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
       {},
       {
         get(_, prop: any) {
-          // if (accessor.fragmentToResolve) {
-          //   const { data } = accessor.fragmentToResolve
-          //   return data ? data[prop] : undefined
-          // }
+          const fragment = ctx.accessor?.fragmentToResolve
+          if (fragment) return fragment.data?.[prop]
 
           if (prop === ACCESSOR) return ctx.accessor
 
@@ -71,11 +69,12 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
         },
 
         set(_, prop: any, value: any) {
-          // if (accessor.fragmentToResolve) {
-          //   const { data } = accessor.fragmentToResolve
-          //   if (data) data[prop] = value
-          //   return true
-          // }
+          const fragment = ctx.accessor?.fragmentToResolve
+          if (fragment) {
+            const { data } = fragment
+            if (data) data[prop] = value
+            return true
+          }
 
           // else set it on the first extension with the property
           for (const extension of getExtensions(ctx)) {

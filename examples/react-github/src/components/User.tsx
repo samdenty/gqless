@@ -3,8 +3,6 @@ import * as Types from '../graphql'
 import { graphql, useFragment } from '@gqless/react'
 import { Repo } from './Repo'
 import styled from 'styled-components'
-import { query } from '../graphql'
-import { getAccessor } from 'gqless'
 
 const StyledUser = styled.div`
   display: flex;
@@ -18,8 +16,7 @@ const Repos = styled.div`
 
 export const User = graphql(
   ({ user }: { user: Types.User }) => {
-    let userFragment = user
-    userFragment = useFragment(user)
+    const userFragment = useFragment(user)
 
     const repos = userFragment.repositories({
       first: 100,
