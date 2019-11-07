@@ -1,6 +1,7 @@
 {
   "license": "MIT",
   "name": "gqless",
+  "private": false,
   "version": "0.0.1-alpha.26",
   "sideEffects": false,
   "main": "dist/index.js",

@@ -1,5 +1,6 @@
 {
   "license": "MIT",
+  "private": false,
   "name": "@gqless/react",
   "version": "0.0.1-alpha.26",
   "sideEffects": false,

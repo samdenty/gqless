@@ -1,5 +1,6 @@
 {
   "license": "MIT",
+  "private": false,
   "name": "@gqless/cli",
   "description": "Codegen for gqless",
   "version": "0.0.1-alpha.27",

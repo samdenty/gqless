@@ -7,41 +7,32 @@ Create a typed gqless client from a graphql endpoint
 [![License](https://img.shields.io/npm/l/@oclif/example-multi-ts.svg)](https://github.com/oclif/example-multi-ts/blob/master/package.json)
 
 <!-- toc -->
-
-- [@gqless/cli](#gqlesscli)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`gqless generate [OUTPUT_DIR]`](#gqless-generate-outputdir)
-  - [`gqless help [COMMAND]`](#gqless-help-command)
-  <!-- tocstop -->
+* [@gqless/cli](#gqlesscli)
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@gqless/cli/0.0.1-alpha.24 linux-x64 node-v12.4.0
+@gqless/cli/0.0.1-alpha.27 linux-x64 node-v12.4.0
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [@gqless/cli](#gqlesscli)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`gqless generate [OUTPUT_DIR]`](#gqless-generate-outputdir)
-  - [`gqless help [COMMAND]`](#gqless-help-command)
+* [`gqless generate [OUTPUT_DIR]`](#gqless-generate-output_dir)
+* [`gqless help [COMMAND]`](#gqless-help-command)
 
 ## `gqless generate [OUTPUT_DIR]`
 
@@ -68,7 +59,7 @@ EXAMPLES
   $ gqless generate -c gqless.config.ts
 ```
 
-_See code: [dist/commands/generate.js](https://github.com/samdenty/gqless/blob/v0.0.1-alpha.24/dist/commands/generate.js)_
+_See code: [dist/commands/generate.js](https://github.com/samdenty/gqless/blob/v0.0.1-alpha.27/dist/commands/generate.js)_
 
 ## `gqless help [COMMAND]`
 
@@ -86,5 +77,4 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src/commands/help.ts)_
-
 <!-- commandsstop -->

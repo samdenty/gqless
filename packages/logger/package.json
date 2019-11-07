@@ -1,5 +1,6 @@
 {
   "license": "MIT",
+  "private": false,
   "name": "@gqless/logger",
   "version": "0.0.1-alpha.26",
   "main": "dist/index.js",
