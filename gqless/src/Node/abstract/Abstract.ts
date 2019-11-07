@@ -56,8 +56,7 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
           if (prop === ACCESSOR) return ctx.accessor
 
           if (prop === '__typename') {
-            // TODO: Support __typename for react without ofType
-            return null
+            return getValue(ctx)?.node.toString()
           }
 
           if (prop === 'toString') return () => this.toString()
