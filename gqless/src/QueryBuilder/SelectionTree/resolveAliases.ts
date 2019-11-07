@@ -1,7 +1,14 @@
 import { SelectionTree } from './SelectionTree'
 import { invariant } from '@gqless/utils'
 import { ObjectNode, ArrayNode } from '../../Node'
+import { Fragment } from '../../Selection'
 
+/**
+ * Resolves aliases from a JSON object, back into cache-compatible
+ * keys
+ *
+ * eg. user -> user(id: 100)
+ */
 export function resolveAliases(this: SelectionTree, data: any) {
   const recurse = (node: object, data: any) => {
     if (!data) return
@@ -10,30 +17,38 @@ export function resolveAliases(this: SelectionTree, data: any) {
       let originals = new Map<string, any>()
       let updated = new Set<string>()
 
-      this.children.forEach(tree => {
-        if (!data.hasOwnProperty(tree.key!)) return
-        const cacheKey = tree.selection.toString()
+      const recurseObjectTree = (tree: SelectionTree) =>
+        tree.children.forEach(tree => {
+          if (tree.selection instanceof Fragment) {
+            recurseObjectTree(tree)
+            return
+          }
 
-        let value = data[tree.key!]
-        if (originals.has(tree.key!)) {
-          value = originals.get(tree.key!)
-          originals.delete(tree.key!)
-        }
+          if (!data.hasOwnProperty(tree.key!)) return
+          const cacheKey = tree.selection.toString()
 
-        if (tree.key !== cacheKey) {
-          // If the key already exists, record original value
-          if (data.hasOwnProperty(cacheKey))
-            originals.set(cacheKey, data[cacheKey])
+          let value = data[tree.key!]
+          if (originals.has(tree.key!)) {
+            value = originals.get(tree.key!)
+            originals.delete(tree.key!)
+          }
 
-          data[cacheKey] = value
-          updated.add(cacheKey)
+          if (tree.key !== cacheKey) {
+            // If the key already exists, record original value
+            if (data.hasOwnProperty(cacheKey))
+              originals.set(cacheKey, data[cacheKey])
 
-          // Only delete, if it hasn't been updated
-          if (!updated.has(tree.key!)) delete data[tree.key!]
-        }
+            data[cacheKey] = value
+            updated.add(cacheKey)
 
-        tree.resolveAliases(value)
-      })
+            // Only delete, if it hasn't been updated
+            if (!updated.has(tree.key!)) delete data[tree.key!]
+          }
+
+          tree.resolveAliases(value)
+        })
+
+      recurseObjectTree(this)
 
       invariant(
         !originals.size,

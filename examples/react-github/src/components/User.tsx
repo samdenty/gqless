@@ -1,9 +1,10 @@
 import * as React from 'react'
 import * as Types from '../graphql'
-import { graphql } from '@gqless/react'
+import { graphql, useFragment } from '@gqless/react'
 import { Repo } from './Repo'
 import styled from 'styled-components'
 import { query } from '../graphql'
+import { getAccessor } from 'gqless'
 
 const StyledUser = styled.div`
   display: flex;
@@ -17,7 +18,10 @@ const Repos = styled.div`
 
 export const User = graphql(
   ({ user }: { user: Types.User }) => {
-    const repos = user.repositories({
+    let userFragment = user
+    userFragment = useFragment(user)
+
+    const repos = userFragment.repositories({
       first: 100,
       isFork: false,
       privacy: 'PUBLIC',
@@ -27,7 +31,7 @@ export const User = graphql(
 
     return (
       <StyledUser>
-        <h2>{user.name}</h2>
+        <h2>{userFragment.name}</h2>
         <React.Suspense fallback="loading repos">
           <Repos>
             {repos.map(repo => {

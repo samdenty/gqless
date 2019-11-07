@@ -4,12 +4,10 @@ import {
   NodeContainer,
   ObjectNode,
   fragmentOn,
-  Abstract,
   FragmentAccessor,
   getAbstractImplementation,
 } from 'gqless'
 import { useMemo } from 'react'
-import { invariant } from '@gqless/utils'
 import { useComponentMemo } from './useComponentMemo'
 
 type OfType<TData, TTypename> = TData extends { __typename: TTypename }
@@ -52,6 +50,7 @@ export function useFragment<
   ])
 
   useMemo(() => {
+    if (!fragmentName) return
     fragment.name = fragmentName
   }, [fragment, fragmentName])
 

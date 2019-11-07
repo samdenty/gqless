@@ -12,8 +12,8 @@ export const Query = {
     },
   },
   repository: {
-    [REDIRECT](args: any, { getByKey }: RedirectHelpers) {
-      return getByKey(args)
+    [REDIRECT]({ owner, name }: any, { getByKey }: RedirectHelpers) {
+      return getByKey({ owner, name })
     },
   },
 }
