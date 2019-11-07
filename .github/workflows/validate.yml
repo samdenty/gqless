@@ -21,7 +21,7 @@ jobs:
           yarn bootstrap
 
       - name: Build all packages
-        run: yarn build:all
+        run: yarn build
 
       - name: Check bundlesize
         env:

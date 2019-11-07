@@ -5,6 +5,7 @@ import { File } from './File'
 interface CodegenOptions {
   url?: string
   typescript?: boolean
+  headers?: Record<string, string>
 }
 
 export class Codegen {

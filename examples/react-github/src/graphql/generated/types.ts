@@ -617,6 +617,7 @@ type t_Query = FieldsType<
     >
 
     /**
+     * @deprecated `Query.sponsorsListing` will be removed. Use `Sponsorable.sponsorsListing` instead. Removal on 2020-04-01 UTC.
      * Look up a single Sponsors Listing
      */
     sponsorsListing: FieldsTypeArg<{ slug: string }, t_SponsorsListing | null>
@@ -1310,6 +1311,11 @@ type t_User = FieldsType<
       },
       t_SavedReplyConnection | null
     >
+
+    /**
+     * The GitHub Sponsors listing for this user.
+     */
+    sponsorsListing: t_SponsorsListing | null
 
     /**
      * This object's sponsorships as the maintainer.
@@ -5072,6 +5078,11 @@ type t_Organization = FieldsType<
      * The Organization's SAML identity providers
      */
     samlIdentityProvider: t_OrganizationIdentityProvider | null
+
+    /**
+     * The GitHub Sponsors listing for this user.
+     */
+    sponsorsListing: t_SponsorsListing | null
 
     /**
      * This object's sponsorships as the maintainer.

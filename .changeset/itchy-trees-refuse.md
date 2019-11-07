@@ -19,3 +19,7 @@
 - Heavily reduced cost of merging to cache
 - Extension instances are now shared
 - Internal lazy intialized & memoized changes
+
+## Regressions
+
+- Fragments need to be rewired, currently don't work

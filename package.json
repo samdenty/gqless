@@ -14,8 +14,8 @@
     "publish": "changeset publish",
     "release": "yarn build && yarn publish",
     "test": "jest",
-    "build": "yarn run build:all --since",
-    "build:all": "lerna run build --no-private",
+    "build": "lerna run build --no-private",
+    "build:changed": "yarn run build --since",
     "docs": "yarn workspace @internal/website start",
     "docs:build": "yarn workspace @internal/website build"
   },

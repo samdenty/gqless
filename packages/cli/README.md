@@ -7,51 +7,68 @@ Create a typed gqless client from a graphql endpoint
 [![License](https://img.shields.io/npm/l/@oclif/example-multi-ts.svg)](https://github.com/oclif/example-multi-ts/blob/master/package.json)
 
 <!-- toc -->
-* [@gqless/cli](#gqlesscli)
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
+
+- [@gqless/cli](#gqlesscli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`gqless generate [OUTPUT_DIR]`](#gqless-generate-outputdir)
+  - [`gqless help [COMMAND]`](#gqless-help-command)
+  <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@gqless/cli/0.0.1-alpha.23 linux-x64 node-v12.4.0
+@gqless/cli/0.0.1-alpha.24 linux-x64 node-v12.4.0
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`gqless generate OUTPUT_DIR`](#gqless-generate-output_dir)
-* [`gqless help [COMMAND]`](#gqless-help-command)
 
-## `gqless generate OUTPUT_DIR`
+- [@gqless/cli](#gqlesscli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`gqless generate [OUTPUT_DIR]`](#gqless-generate-outputdir)
+  - [`gqless help [COMMAND]`](#gqless-help-command)
 
-generate a client from a GraphQL endpoint
+## `gqless generate [OUTPUT_DIR]`
+
+Generate a client from a GraphQL endpoint
 
 ```
 USAGE
-  $ gqless generate OUTPUT_DIR
+  $ gqless generate [OUTPUT_DIR]
 
 OPTIONS
-  -h, --help        show CLI help
-  -t, --typescript  output typescript (instead of javascript)
-  -u, --url=url     (required) url to the GraphQL endpoint
-  --noComments      don't output comments (only useful for IDE intellisense)
-  --noPrettier      don't run prettier on the resulting code
+  -c, --config=config  Path to your gqless config file
+  -h, --help           show CLI help
+  -t, --typescript     output typescript (instead of javascript)
+  -u, --url=url        url to the GraphQL endpoint
+  --comments           output comments to type definitions (useful for IDE intellisense)
 
-EXAMPLE
-  $ gqless generate https://example.com/graphql
+  --header=header      Additional header to send to server for introspectionQuery. May be used multiple times to add
+                       multiple headers.
+
+  --usePost            use a POST request to retrieve the schema
+
+EXAMPLES
+  $ gqless generate ./src/gqless -u https://example.com/graphql
+  $ gqless generate -c gqless.config.ts
 ```
+
+_See code: [dist/commands/generate.js](https://github.com/samdenty/gqless/blob/v0.0.1-alpha.24/dist/commands/generate.js)_
 
 ## `gqless help [COMMAND]`
 
@@ -69,4 +86,5 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src/commands/help.ts)_
+
 <!-- commandsstop -->

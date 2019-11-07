@@ -7,6 +7,8 @@ This guide will help you create a `gqless` client for a GraphQL endpoint.
 
 ## Installation
 
+> Important: If using Typescript, ensure version is 3.7.0+
+
 Install the following dependencies to your project:
 
 ```bash
@@ -22,13 +24,22 @@ npm install @gqless/cli --save-dev
 
 `gqless` requires information about your schema, which is generated using the CLI.
 
-Add the following to your package.json, replacing `ENDPOINT_URL`:
+Create a new file named `.gqlessrc.json` at the root of your project, with the following contents:
+
+> You can also use the `gqless` key in your package.json, or `gqless.config.{js,ts}`
 
 ```json
-// if you're NOT using Typescript, then add --js
-// see `gqless generate --help` for more
+{
+  "url": "http://example.com/graphql",
+  "outputDir": "src/graphql"
+}
+```
+
+Next add a `generate` script to your `package.json`:
+
+```json
 "scripts": {
-  "generate": "gqless generate -u ENDPOINT_URL ./src/gqless"
+  "generate": "gqless generate"
 }
 ```
 
@@ -44,21 +55,23 @@ A folder will then be created with the following structure:
 
 ```bash
 src/gqless
-├── extensions # All your extensions go in this folder
-├── generated # Ignore this folder
+├── extensions/ # All your extensions go in this folder
+├── generated/ # Ignore this folder
 ├── client.ts # gqless client is exported from here
 └── index.ts
 ```
 
 ## Usage
 
-Make sure the endpoint in `client.ts` is correct, and you should be able to use the client
+Ensure that the `fetchQuery` in `src/gqless/client.ts` is correct, modifying it if need be.
+
+You should then be able to use the client ✨
 
 ```ts
 import { query } from './gqless'
 
-// eg.
+// for example
 query.me.name
 ```
 
-See also, [Usage with React](/docs/react/basic-usage)
+See [Usage with React](/docs/react/basic-usage)
