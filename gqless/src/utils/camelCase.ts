@@ -1,17 +1,7 @@
-const chars: RegExp = /([a-z0-9]+)/gi
-
-export const camelCase = (value: any): any => {
-  return value
-    .toLowerCase()
-    .match(chars)
+export const camelCase = (value: string[]): string =>
+  value
     .map((word: string, i: number) => {
-      // For the first word keep it lowercase
-      if (i === 0) {
-        return word
-      }
-
-      // Rest are supposed to be capitalized
+      if (i === 0) return word
       return word[0].toUpperCase() + word.substr(1)
     })
     .join('')
-}

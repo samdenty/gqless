@@ -16,7 +16,7 @@ interface ArgContext<TNode extends object = object> {
 }
 
 export const buildArguments = (
-  { SPACE, SEPARATOR, options }: Formatter,
+  { SPACE, SEPARATOR, options, formatter }: Formatter,
   args: Record<string, any>,
   info?: Omit<ConnectedVariable, 'nullable' | 'node'> & { node: Arguments }
 ) => {
@@ -53,8 +53,9 @@ export const buildArguments = (
   const build = (arg: any, path: string[], context?: ArgContext<any>): string => {
     if (options.variables && arg instanceof Variable) {
       return buildVariable(
+        formatter,
         arg,
-        info && {
+        {
           ...info,
           ...context as ArgContext<UArguments>,
           path: [...((info && info.path) || []), ...path],
@@ -64,8 +65,8 @@ export const buildArguments = (
 
     if (arg && typeof arg.toJSON === 'function') arg = arg.toJSON()
 
-    if (arg === null || context?.node instanceof ScalarNode) {
-      return JSON.stringify(arg)
+    if (arg === null) {
+      return 'null'
     }
 
     if (context?.node instanceof EnumNode) {
@@ -78,6 +79,12 @@ export const buildArguments = (
       typeof arg === 'boolean'
     )
       return JSON.stringify(arg)
+
+    if (context?.node instanceof ScalarNode) {
+      // Object / Array passed as scalar
+      // serialize as a JSON-string
+      return JSON.stringify(JSON.stringify(arg))
+    }
 
     if (Array.isArray(arg)) {
       let indexContext: ArgContext | undefined
@@ -92,7 +99,7 @@ export const buildArguments = (
       return `[${arg.map(a => build(a, path, indexContext)).join(SEPARATOR)}]`
     }
 
-    return `{${buildKeyed(arg, path, context)}}`
+    return `{${SPACE}${buildKeyed(arg, path, context)}${SPACE}}`
   }
 
   return buildKeyed(args, [], info && { node: info.node, nullable: false })

@@ -1,35 +1,32 @@
 import { Variable } from '../Variable'
 import { UArguments } from '../Node'
 import { uniquify, camelCase } from '../utils'
+import { Formatter } from './Formatter'
 
 export type Variables = Map<string, Variable>
 
 export interface ConnectedVariable {
-  node: UArguments
-  nullable: boolean
+  node?: UArguments
+  nullable?: boolean
   variables?: Map<string, Variable>
   path?: string[]
 }
 
-export const buildVariable = (
-  variable: Variable,
-  connected?: ConnectedVariable
-) => {
+export const buildVariable = ({ options }:  Formatter, variable: Variable, info?: ConnectedVariable) => {
   let name =
-    variable.name! ||
-    (connected && connected.path ? camelCase(connected.path as any) : 'var')
+    variable.name! || (options.prettify && info?.path ? camelCase(info.path) : 'v')
 
-  if (connected) {
-    variable.validateNode(connected.node, connected.nullable)
+  if (info) {
+    if (info.node) variable.validateNode(info.node, info.nullable)
 
-    if (connected.variables) {
-      const existingVariable = connected.variables.has(name)
+    if (info.variables) {
+      const existingVariable = info.variables.has(name)
 
       if (existingVariable) {
-        name = uniquify(name, name => connected.variables!.has(name))
+        name = uniquify(name, name => info.variables!.has(name))
       }
 
-      connected.variables.set(name, variable)
+      info.variables.set(name, variable)
     }
   }
 
