@@ -1,5 +1,11 @@
 # @gqless/utils
 
+## 0.0.1-alpha.26
+
+### Patch Changes
+
+- da2ae6e: re-release
+
 ## 0.0.1-alpha.25
 
 ### Patch Changes

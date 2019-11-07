@@ -15,5 +15,5 @@
     "@gqless/schema": "0.0.1-alpha.23",
     "@gqless/utils": "0.0.1-alpha.23"
   },
-  "changesets": ["itchy-trees-refuse"]
+  "changesets": ["itchy-trees-refuse", "wild-cars-beam"]
 }

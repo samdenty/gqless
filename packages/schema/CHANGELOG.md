@@ -1,5 +1,14 @@
 # @gqless/schema
 
+## 0.0.1-alpha.27
+
+### Patch Changes
+
+- da2ae6e: re-release
+- Updated dependencies [da2ae6e]
+  - gqless@0.0.1-alpha.26
+  - @gqless/utils@0.0.1-alpha.26
+
 ## 0.0.1-alpha.26
 
 ### Patch Changes
