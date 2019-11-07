@@ -25,8 +25,10 @@ export const buildQuery = (
       .join(SEPARATOR)})`
   }
 
+  const queryHeader = `${queryName ? ' ' + queryName : ''}${buildVariables()}`
+
   const query = [
-    `query${queryName ? ' ' + queryName : ''}${buildVariables()}${SPACE}${hug(
+    `${queryHeader ? `query${queryHeader}${SPACE}` : ''}${hug(
       indent(selections)
     )}`,
     buildFragments(formatter, rootTree),

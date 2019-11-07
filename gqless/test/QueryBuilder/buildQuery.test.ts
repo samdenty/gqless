@@ -13,7 +13,7 @@ it('works', () => {
 
   expect(buildQuery(new Formatter(), undefined, [selection]).query)
     .toMatchInlineSnapshot(`
-    "query {
+    "{
       object {
         __typename
       }
@@ -21,7 +21,7 @@ it('works', () => {
   `)
   expect(
     buildQuery(new Formatter({ prettify: false }), undefined, [selection]).query
-  ).toMatchInlineSnapshot(`"query{object{__typename}}"`)
+  ).toMatchInlineSnapshot(`"{object{__typename}}"`)
 })
 
 it('supports named queries', () => {
