@@ -1,7 +1,12 @@
 import { FieldSelection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
-import { ComputableExtension, ComputedExtension, DataTrait } from '../Node'
+import {
+  ComputableExtension,
+  ComputedExtension,
+  DataTrait,
+  DataContext,
+} from '../Node'
 
 export class FieldAccessor<
   TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
@@ -33,9 +38,10 @@ export class FieldAccessor<
     }
   }
 
-  public getData(): any {
+  public getData(ctx?: DataContext): any {
     return (this.selection.field.ofNode as DataTrait).getData({
       accessor: this,
+      ...ctx,
     })
   }
 

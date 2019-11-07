@@ -1,7 +1,7 @@
 import { createEvent, invariant, createMemo } from '@gqless/utils'
 
 import { Cache, Value, afterTransaction } from '../Cache'
-import { ObjectNode, Abstract, DataTrait, ComputableExtension, ComputedExtension, StaticExtension } from '../Node'
+import { ObjectNode, Abstract, DataTrait, ComputableExtension, ComputedExtension, StaticExtension, DataContext } from '../Node'
 import { Scheduler, Query } from '../Scheduler'
 import { Selection, Fragment } from '../Selection'
 import { computed, Disposable, PathArray, arrayEqual } from '../utils'
@@ -220,7 +220,7 @@ export abstract class Accessor<
     })
   }
 
-  public getData(): any {
+  public getData(ctx?: DataContext): any {
     return undefined
   }
 

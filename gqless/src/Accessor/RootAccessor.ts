@@ -1,5 +1,5 @@
 import { Cache, Value } from '../Cache'
-import { ObjectNode } from '../Node'
+import { ObjectNode, DataContext } from '../Node'
 import { Scheduler } from '../Scheduler'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
@@ -25,9 +25,10 @@ export class RootAccessor<
 
   // TODO: This should be replace with a Generic inside accessor
 
-  public getData(): any {
+  public getData(ctx?: DataContext): any {
     return this.selection.node.getData({
       accessor: this,
+      ...ctx,
     })
   }
 

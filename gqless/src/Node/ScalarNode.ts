@@ -3,6 +3,7 @@ import {
   StaticExtension,
   ComputableExtension,
   createExtension,
+  ComputedExtension,
 } from './Extension'
 import { Matchable } from './abstract/Matchable'
 import { Value } from '../Cache'
@@ -53,11 +54,13 @@ export class ScalarNode extends Matchable implements DataTrait {
     interceptAccessor(ctx)
 
     const extensions = getExtensions(ctx)
-    if (extensions.length) {
-      return extensions[0].data
+    const value = getValue(ctx)
+
+    const extension = extensions[0]
+    if (extension) {
+      return extension.data
     }
 
-    const value = getValue(ctx)
     if (!value) return null
     return value.data
   }

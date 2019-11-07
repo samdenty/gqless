@@ -52,13 +52,13 @@ export const merge = (cache: Cache, value: Value, data: any, extensions: Extensi
 }
 
 const keyedMerge = (cache: Cache, node: DataTrait, data: any, extensions: Extension[], ...selectionsFilter: Selection[]) => {
-  const keyFragments = new Set<Fragment>()
-  for (const extension of extensions) {
-    if (extension.fragment) {
-      keyFragments.add(extension.fragment)
-    }
+  const keyFragments: Fragment[] = []
+  for (const { fragment} of extensions) {
+    if (!fragment) continue
+    if (keyFragments.includes(fragment)) continue
+    keyFragments.push(fragment)
   }
-  if (!keyFragments.size) return
+  if (!keyFragments.length) return
 
   // Create a *temporary* value with the fields needed to perform a key-operation
   const keyedValue = createValue(node, data)

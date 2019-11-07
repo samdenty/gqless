@@ -1,6 +1,7 @@
 import { Fragment } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
+import { DataContext } from '../Node'
 
 export class FragmentAccessor<
   TFragment extends Fragment = Fragment,
@@ -51,8 +52,11 @@ export class FragmentAccessor<
     }
   }
 
-  public getData(): any {
-    return this.selection.node.getData(this)
+  public getData(ctx?: DataContext): any {
+    return this.selection.node.getData({
+      accessor: this,
+      ...ctx,
+    })
   }
 
   public toString() {

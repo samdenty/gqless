@@ -35,6 +35,7 @@ export const User = {
   [GET_KEY]: (user: any) => {
     return user.login
   },
+  name: (name: string) => `user_${name}`,
 
   repositories: {
     edges: {

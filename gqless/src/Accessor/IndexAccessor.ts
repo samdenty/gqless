@@ -3,6 +3,7 @@ import {
   ComputableExtension,
   ComputedExtension,
   DataTrait,
+  DataContext,
 } from '../Node'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
@@ -52,9 +53,10 @@ export class IndexAccessor<
     }
   }
 
-  public getData(): any {
+  public getData(ctx?: DataContext): any {
     return (this.selection.node.ofNode as DataTrait).getData({
       accessor: this,
+      ...ctx,
     })
   }
 
