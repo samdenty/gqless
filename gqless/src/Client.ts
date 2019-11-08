@@ -24,7 +24,7 @@ export class Client<TData = any> extends Disposable {
   public formatter: Formatter
 
   public scheduler = new Scheduler(
-    (accessors, name) => this.fetchAccessors(accessors, name)!,
+    (accessors, name) => this._fetchAccessors(accessors, name)!,
     this.plugins
   )
   public cache = new Cache(this.node)
@@ -47,31 +47,31 @@ export class Client<TData = any> extends Disposable {
       variables: true,
     })
     this.selection.onSelect(selection => {
-      this.plugins.all.onSelect(selection)
+      this.plugins._all.onSelect(selection)
     })
 
     this.selection.onUnselect(selection => {
-      this.plugins.all.onUnselect(selection)
+      this.plugins._all.onUnselect(selection)
     })
   }
 
-  protected fetchAccessors(accessors: Accessor[], queryName?: string) {
+  protected _fetchAccessors(accessors: Accessor[], queryName?: string) {
     const result = buildQuery(
       this.formatter,
       queryName,
-      ...accessors.map(accessor => accessor.selectionPath)
+      ...accessors.map(accessor => accessor._selectionPath)
     )
 
     if (!result) return
 
     const responsePromise = (async () => {
       const response = await this.fetchQuery(result.query, result.variables)
-      result.rootTree.resolveAliases(response.data)
-      this.cache.merge(this.accessor, response.data)
+      result.rootTree._resolveAliases(response.data)
+      this.cache._merge(this.accessor, response.data)
       return response
     })()
 
-    this.plugins.all.onFetch(
+    this.plugins._all.onFetch(
       accessors,
       responsePromise,
       result.variables,
@@ -86,6 +86,6 @@ export class Client<TData = any> extends Disposable {
     super.dispose()
     this.scheduler.dispose()
 
-    this.plugins.all.dispose()
+    this.plugins._all.dispose()
   }
 }

@@ -53,7 +53,7 @@ it('uses node to output valid syntax', () => {
       new Formatter(),
       { a: 'EnumOne', b: ['EnumTwo'] },
       {
-        node: new Arguments({
+        _node: new Arguments({
           a: new ArgumentsField(schema.Enum),
           b: new ArgumentsField(new ArrayNode(schema.Enum)),
         }),
@@ -66,7 +66,7 @@ it('uses node to output valid syntax', () => {
       new Formatter(),
       { a: [{ a: 100 }] },
       {
-        node: new Arguments({
+        _node: new Arguments({
           a: new ArgumentsField(schema.String),
         }),
       }

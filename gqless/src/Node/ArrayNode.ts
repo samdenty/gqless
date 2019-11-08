@@ -30,8 +30,8 @@ export class ArrayNode<TNode> extends Mix(
     memo(() => this, [ofNode, nullable])
   }
 
-  public match(value: Value, data: any) {
-    const result = super.match(value, data)
+  public _match(value: Value, data: any) {
+    const result = super._match(value, data)
     if (result !== undefined) return result
 
     // Whole array match
@@ -44,7 +44,7 @@ export class ArrayNode<TNode> extends Mix(
 
         if (!(indexValue.node instanceof Matchable)) return
 
-        return !indexValue.node.match(indexValue, data[i])
+        return !indexValue.node._match(indexValue, data[i])
       })
       if (badMatch) return
 
@@ -56,7 +56,7 @@ export class ArrayNode<TNode> extends Mix(
     if (!(innerNode instanceof Matchable)) return
 
     for (const indexValue of value.data as []) {
-      const match = innerNode.match(indexValue, data)
+      const match = innerNode._match(indexValue, data)
       if (match) return match
     }
 
@@ -96,7 +96,7 @@ export class ArrayNode<TNode> extends Mix(
               return accessor.data
             }
 
-            return (this.ofNode as any as DataTrait).getData({
+            return (this._ofNode as any as DataTrait).getData({
               value: ctx.value?.get(index),
               selection: ctx.selection,
               extensions: [] // todo
@@ -106,7 +106,7 @@ export class ArrayNode<TNode> extends Mix(
 
         // fallback to extensions
         for (const extension of getExtensions(ctx)) {
-          if (prop in extension.data) return (extension.data as ArrayNodeExtension)[prop]
+          if (prop in extension._data) return (extension._data as ArrayNodeExtension)[prop]
         }
 
         const arrayProperty = target[prop]
@@ -135,6 +135,6 @@ export class ArrayNode<TNode> extends Mix(
   }
 
   public toString() {
-    return `[${this.ofNode}${this.nullable ? '' : '!'}]`
+    return `[${this._ofNode}${this._nullable ? '' : '!'}]`
   }
 }

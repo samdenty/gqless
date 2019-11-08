@@ -52,7 +52,7 @@ export class Variable<TValue = any> {
     }
   }
 
-  public validateNode(node: UArguments, nullable?: boolean) {
+  public _validateNode(node: UArguments, nullable?: boolean) {
     if (!this.node) this.node = node
 
     invariant(

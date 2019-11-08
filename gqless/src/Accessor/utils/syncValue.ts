@@ -29,8 +29,8 @@ export const syncValue = (
       accessor.value = getValue(withAccessor.value)
 
       const onChange = isFn
-        ? withAccessor.value.onChange
-        : withAccessor.value.onSet.filter(k => k === getFromValue)
+        ? withAccessor.value._onChange
+        : withAccessor.value._onSet.filter(k => k === getFromValue)
 
       dispose = onChange(() => {
         accessor.value = getValue(withAccessor.value!)
@@ -43,6 +43,6 @@ export const syncValue = (
     accessor.value = undefined
   }
 
-  accessor.addDisposer(withAccessor.onValueChange(associateValue))
+  accessor.addDisposer(withAccessor._onValueChange(associateValue))
   associateValue()
 }

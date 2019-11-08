@@ -27,7 +27,7 @@ export class Plugins {
     })
   }
 
-  public all = new Proxy<
+  public _all = new Proxy<
     {
       [K in keyof Plugin]-?: (
         ...args: Parameters<PluginMethod<K>>
@@ -41,7 +41,7 @@ export class Plugins {
     },
   })
 
-  public first = new Proxy<
+  public _first = new Proxy<
     {
       [K in keyof Plugin]-?: (
         ...args: Parameters<PluginMethod<K>>

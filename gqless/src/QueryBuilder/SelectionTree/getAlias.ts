@@ -5,25 +5,25 @@ import { createMemo } from '@gqless/utils'
 const memoized = createMemo()
 
 export const getAlias = (tree: SelectionTree<FieldSelection>) => {
-  if (!tree.parent) return
+  if (!tree._parent) return
 
   const fieldAliases = memoized(() => {
     const aliases = new Map<FieldSelection, string>()
 
     let id = 0
-    tree.parent!.children.forEach(siblingTree => {
-      if (!(siblingTree.selection instanceof FieldSelection)) return
+    tree._parent!._children.forEach(siblingTree => {
+      if (!(siblingTree._selection instanceof FieldSelection)) return
 
       if (
-        tree.selection === siblingTree.selection ||
-        tree.selection.field !== siblingTree.selection.field
+        tree._selection === siblingTree._selection ||
+        tree._selection.field !== siblingTree._selection.field
       )
         return
 
-      aliases.set(tree.selection, `${tree.selection.field.name}__${++id}`)
+      aliases.set(tree._selection, `${tree._selection.field._name}__${++id}`)
     })
     return aliases
-  }, [tree.parent, tree.selection.field])
+  }, [tree._parent, tree._selection.field])
 
-  return fieldAliases.get(tree.selection)!
+  return fieldAliases.get(tree._selection)!
 }

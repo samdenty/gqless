@@ -11,7 +11,7 @@ import {
 
 export const getAbstractImplementation = (node: object, typename: string) => {
   if (node instanceof Abstract && typename) {
-    const implementation = node.implementations.find(
+    const implementation = node._implementations.find(
       i => i.toString() === typename
     )
     invariant(implementation, `'${typename}' is not a valid subtype of ${node}`)
@@ -23,7 +23,7 @@ export const getAbstractImplementation = (node: object, typename: string) => {
 
 export class Abstract<TNode extends ObjectNode = ObjectNode>
   implements DataTrait {
-  constructor(public implementations: TNode[]) {}
+  constructor(public _implementations: TNode[]) {}
 
   public getData(ctx: DataContext) {
     interceptAccessor(ctx)
@@ -50,7 +50,7 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
       {},
       {
         get(_, prop: any) {
-          const fragment = ctx.accessor?.fragmentToResolve
+          const fragment = ctx.accessor?._fragmentToResolve
           if (fragment) return fragment.data?.[prop]
 
           if (prop === ACCESSOR) return ctx.accessor
@@ -63,12 +63,12 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
 
           // fallback to extensions
           for (const extension of getExtensions(ctx)) {
-            if (prop in extension.data) return extension.data[prop]
+            if (prop in extension._data) return extension._data[prop]
           }
         },
 
         set(_, prop: any, value: any) {
-          const fragment = ctx.accessor?.fragmentToResolve
+          const fragment = ctx.accessor?._fragmentToResolve
           if (fragment) {
             const { data } = fragment
             if (data) data[prop] = value
@@ -78,7 +78,7 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
           // else set it on the first extension with the property
           for (const extension of getExtensions(ctx)) {
             if (prop in extension) {
-              extension.data[prop] = value
+              extension._data[prop] = value
               return true
             }
           }
@@ -90,6 +90,6 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
   }
 
   public toString() {
-    return this.implementations.join('|')
+    return this._implementations.join('|')
   }
 }

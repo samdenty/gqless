@@ -34,11 +34,11 @@ export const onDataChange = (accessor: Accessor) => {
       return
     }
 
-    dispose = value.onChange(check)
+    dispose = value._onChange(check)
     check()
   }
 
-  accessor.addDisposer(accessor.onValueChange(onValueAssociated))
+  accessor.addDisposer(accessor._onValueChange(onValueAssociated))
   onValueAssociated(undefined, accessor.value)
 
   return onDataChange

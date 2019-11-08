@@ -12,16 +12,16 @@ export class FieldSelection<
     public field: FieldNode<TNode>,
     public readonly args?: Record<string, any>
   ) {
-    super(field.ofNode)
+    super(field._ofNode)
   }
 
   public toString() {
     const args = this.args
       ? `(${buildArguments(argsFormatter, this.args, {
-          node: this.field.args!,
+          _node: this.field._args!,
         })})`
       : ''
 
-    return this.field.name + args
+    return this.field._name + args
   }
 }

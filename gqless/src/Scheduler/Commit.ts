@@ -8,16 +8,16 @@ import { createEvent } from '@gqless/utils'
 const defaultQuery = new Query()
 
 export class Commit extends Disposable {
-  public onActive = createEvent()
-  public onIdle = createEvent()
+  public _onActive = createEvent()
+  public _onIdle = createEvent()
 
-  public onFetched = createEvent()
-  public accessors = new Map<Accessor, Query[]>()
+  public _onFetched = createEvent()
+  public _accessors = new Map<Accessor, Query[]>()
 
   constructor(
-    private plugins: Plugins,
-    private stack: Query[],
-    private fetchAccessors: (
+    private _plugins: Plugins,
+    private _stack: Query[],
+    private _fetchAccessors: (
       accessors: Accessor<any>[],
       queryName?: string
     ) => any
@@ -25,15 +25,15 @@ export class Commit extends Disposable {
     super()
   }
 
-  public stageUntilValue(accessor: Accessor) {
-    if (!accessor.resolved) return
+  public _stageUntilValue(accessor: Accessor) {
+    if (!accessor._resolved) return
     if (accessor.value) return
 
-    const unstage = this.stage(accessor)
+    const unstage = this._stage(accessor)
 
     this.addDisposer(
-      accessor.onValueChange.then(unstage),
-      accessor.onResolvedChange.then(resolved => {
+      accessor._onValueChange.then(unstage),
+      accessor._onResolvedChange.then(resolved => {
         if (!resolved) unstage()
       })
     )
@@ -41,49 +41,49 @@ export class Commit extends Disposable {
     return unstage
   }
 
-  public stage(accessor: Accessor, ...queries: Query[]) {
-    const unstage = () => this.unstage(accessor)
+  public _stage(accessor: Accessor, ...queries: Query[]) {
+    const unstage = () => this._unstage(accessor)
 
     // If the accessor is in this current commit,
     // or being (re-)fetched from a previous commit, don't re-fetch it
     if (this.disposed || accessor.status !== NetworkStatus.idle) return unstage
 
-    if (!this.accessors.size) this.onActive.emit()
+    if (!this._accessors.size) this._onActive.emit()
 
     accessor.status = accessor.value
       ? NetworkStatus.updating
       : NetworkStatus.loading
 
-    this.accessors.set(accessor, [...this.stack, ...queries])
+    this._accessors.set(accessor, [...this._stack, ...queries])
 
     // If we already have the parent, remove the
     // parent to narrow down the accessors. This is used when a accessor is created
     // this could cause issues later, may need to add a recurse field to handle polling etc.
-    if (accessor.parent && this.accessors.has(accessor.parent)) {
-      this.unstage(accessor.parent)
+    if (accessor.parent && this._accessors.has(accessor.parent)) {
+      this._unstage(accessor.parent)
     }
 
     return unstage
   }
 
-  public unstage(accessor: Accessor) {
+  public _unstage(accessor: Accessor) {
     if (this.disposed) return
 
     // Only if the accessor is in our commits, set it as not fetching
     // otherwise it could be from a previous commit
-    if (this.accessors.has(accessor)) {
+    if (this._accessors.has(accessor)) {
       accessor.status = NetworkStatus.idle
     }
 
-    this.accessors.delete(accessor)
+    this._accessors.delete(accessor)
 
-    if (!this.accessors.size) this.onIdle.emit()
+    if (!this._accessors.size) this._onIdle.emit()
   }
 
-  public async fetch() {
-    if (!this.accessors.size) return
-    const accessors = Array.from(this.accessors.keys())
-    const stacks = Array.from(this.accessors.values())
+  public async _fetch() {
+    if (!this._accessors.size) return
+    const accessors = Array.from(this._accessors.keys())
+    const stacks = Array.from(this._accessors.values())
     const stackQueries = queriesFromStacks(stacks)
 
     const queries = new Map<Query | undefined, Accessor[]>()
@@ -105,12 +105,12 @@ export class Commit extends Disposable {
       queries.set(query, [accessor])
     })
 
-    this.plugins.all.onCommit({ stacks, stackQueries, accessors, queries })
+    this._plugins._all.onCommit({ stacks, stackQueries, accessors, queries })
 
     try {
       const promises = Array.from(queries)
         .map(async ([query, accessors]) => {
-          const promise = this.fetchAccessors(accessors, query && query.name)
+          const promise = this._fetchAccessors(accessors, query && query.name)
 
           try {
             await promise
@@ -127,6 +127,6 @@ export class Commit extends Disposable {
       console.error(e)
     }
 
-    this.onFetched.emit()
+    this._onFetched.emit()
   }
 }

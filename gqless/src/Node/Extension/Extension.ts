@@ -12,30 +12,30 @@ import { Value } from '../../Cache'
 const memo = createMemo()
 
 export abstract class Extension {
-  public data: any
+  public _data: any
 
   constructor(
-    public parent: Extension | undefined,
-    public node: DataTrait,
+    public _parent: Extension | undefined,
+    public _node: DataTrait,
     /** (optional) An object used to construct fragmentKey */
-    private fragmentKeyedBy: any = parent ? undefined : node
+    private _fragmentKeyedBy: any = _parent ? undefined : _node
   ) {
   }
 
   @computed()
   /** A unique key to share instances of a Fragment between extensions */
-  protected get fragmentKey() {
-    return this.path
-      .map(ref => ref.fragmentKeyedBy)
+  protected get _fragmentKey() {
+    return this._path
+      .map(ref => ref._fragmentKeyedBy)
       .filter(Boolean)
   }
 
   @computed()
-  public get fragment() {
-    const getKey = (this.data as ProxyExtension)?.[GET_KEY]
+  public get _fragment() {
+    const getKey = (this._data as ProxyExtension)?.[GET_KEY]
     if (!getKey) return
 
-    let node = this.fragmentKey[this.fragmentKey.length - 1]
+    let node = this._fragmentKey[this._fragmentKey.length - 1]
     if (node instanceof NodeContainer) {
       node = node.innerNode as DataTrait
     }
@@ -47,7 +47,7 @@ export abstract class Extension {
       () => {
         const fragment = new Fragment(
           node as UFragment,
-          `Keyed${this.fragmentKey.join('_')}`
+          `Keyed${this._fragmentKey.join('_')}`
         )
 
         // Initialize with selections
@@ -56,16 +56,16 @@ export abstract class Extension {
 
         return fragment
       },
-      this.fragmentKey
+      this._fragmentKey
     )
   }
 
-  public get isKeyable() {
-    return !!(this.data as ProxyExtension)?.[GET_KEY]
+  public get _isKeyable() {
+    return !!(this._data as ProxyExtension)?.[GET_KEY]
   }
 
-  public getKey(value: Value) {
-    const getKey = (this.data as ProxyExtension)?.[GET_KEY]
+  public _getKey(value: Value) {
+    const getKey = (this._data as ProxyExtension)?.[GET_KEY]
     if (!getKey) return
     const data = value.node.getData({ value })
     const key = getKey(data)
@@ -73,11 +73,11 @@ export abstract class Extension {
     return key
   }
 
-  public redirect(accessor: Accessor) {
-    const redirect = (this.data as ProxyExtension)?.[REDIRECT]
+  public _redirect(accessor: Accessor) {
+    const redirect = (this._data as ProxyExtension)?.[REDIRECT]
     if (!redirect) return
 
-    const entry = accessor.cache.entries.get(accessor.node)
+    const entry = accessor.cache._entries.get(accessor.node)
     if (!entry) return
 
     return redirect(
@@ -86,46 +86,46 @@ export abstract class Extension {
           accessor.selection.args
         : undefined,
       {
-        instances: entry.instances,
+        instances: entry._instances,
         match(data) {
-          return entry.match(data)?.value
+          return entry._match(data)?.value
         },
         getByKey(key) {
-          return entry.getByKey(key)
+          return entry._getByKey(key)
         }
       }
     )
   }
 
   /** Returns a memoized child Extension */
-  public childIndex(): Extension | undefined {
+  public _childIndex(): Extension | undefined {
     return memo.childIndex(() => {
-      invariant(this.node instanceof ArrayNode)
+      invariant(this._node instanceof ArrayNode)
 
-      const indexExtension = (this.data as ArrayNodeExtension)?.[INDEX]
+      const indexExtension = (this._data as ArrayNodeExtension)?.[INDEX]
       if (indexExtension === undefined) return
-      return createExtension(this.node.ofNode, indexExtension, this)
+      return createExtension(this._node._ofNode, indexExtension, this)
     }, [this])
   }
 
   /** Returns a memoized child Extension, for a given field */
-  public childField(field: FieldNode): Extension | undefined {
+  public _childField(field: FieldNode): Extension | undefined {
     return memo.childField(() => {
-      invariant(this.node instanceof FieldsNode)
+      invariant(this._node instanceof FieldsNode)
 
-      const fieldExtension = (this.data as ObjectNodeExtension)?.[field.name]
+      const fieldExtension = (this._data as ObjectNodeExtension)?.[field._name]
       if (fieldExtension === undefined) return
-      return createExtension(field.ofNode, fieldExtension, this, field)
+      return createExtension(field._ofNode, fieldExtension, this, field)
     }, [this, field])
   }
 
   public toString() {
-    return this.fragmentKey.toString()
+    return this._fragmentKey.toString()
   }
 
   @computed()
-  public get path(): Extension[] {
-    const basePath = this.parent ? this.parent.path : []
+  public get _path(): Extension[] {
+    const basePath = this._parent ? this._parent._path : []
     const path = new PathArray(...basePath, this)
 
     return path

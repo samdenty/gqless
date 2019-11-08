@@ -8,5 +8,5 @@ import { getAccessor } from '../Accessor'
  */
 export const refetch = (data: any) => {
   const accessor = getAccessor(data)
-  accessor.scheduler.commit.stage(accessor)
+  accessor.scheduler._commit._stage(accessor)
 }

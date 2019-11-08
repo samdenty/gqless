@@ -15,7 +15,7 @@ export enum NetworkStatus {
   updating,
 }
 
-export const ACCESSOR = Symbol('accessor')
+export const ACCESSOR = Symbol()
 // A query was made with minimal fields on it
 // to save bandwidth - predicted the IDs would match up
 // But returned ID were different, so refetch everything
@@ -38,18 +38,18 @@ export abstract class Accessor<
   // replaces refs of this accessor, with a Fragment
   // see FragmentAccessor#startResolving
 
-  public fragmentToResolve?: FragmentAccessor
+  public _fragmentToResolve?: FragmentAccessor
   protected _data: any
   protected _status: NetworkStatus = NetworkStatus.idle
   protected _value: Value | undefined
-  protected _resolved = true
+  protected __resolved = true
 
-  public onValueChange = createEvent<(value: Value | undefined, prevValue: Value | undefined) => void>()
   // Equality check only
   public onDataChange = onDataChange(this)
-  public onResolvedChange = createEvent<(resolved: boolean) => void>()
   public onStatusChange = createEvent<(status: NetworkStatus, prevStatus: NetworkStatus) => void>()
-  public onInitializeExtensions = createEvent()
+  public _onResolvedChange = createEvent<(resolved: boolean) => void>()
+  public _onInitializeExtensions = createEvent()
+  public _onValueChange = createEvent<(value: Value | undefined, prevValue: Value | undefined) => void>()
 
   constructor(
     public readonly parent: Accessor | undefined,
@@ -77,28 +77,28 @@ export abstract class Accessor<
     this.addDisposer(
       this.onDataChange(() => {
         this.data = undefined
-        this.loadExtensions()
+        this._loadExtensions()
       }),
-      parent?.onInitializeExtensions(() => {
-        this.loadExtensions()
+      parent?._onInitializeExtensions(() => {
+        this._loadExtensions()
       })
     )
   }
 
-  public get resolved() {
-    return this._resolved
+  public get _resolved() {
+    return this.__resolved
   }
 
-  public set resolved(resolved: boolean) {
-    const prevResolved = this._resolved
+  public set _resolved(resolved: boolean) {
+    const prevResolved = this.__resolved
     if (prevResolved === resolved) return
-    this._resolved = resolved
-    this.onResolvedChange.emit(resolved)
+    this.__resolved = resolved
+    this._onResolvedChange.emit(resolved)
   }
 
   public get data() {
-    if (this.fragmentToResolve) {
-      return this.fragmentToResolve.data
+    if (this._fragmentToResolve) {
+      return this._fragmentToResolve.data
     }
 
     if (this._data === undefined) {
@@ -127,15 +127,15 @@ export abstract class Accessor<
     const prevValue = this._value
     this._value = value
     if (prevValue === value) return
-    this.onValueChange.emit(value, prevValue)
+    this._onValueChange.emit(value, prevValue)
   }
   public get value() {
     return this._value
   }
 
-  protected initializeExtensions() {
+  protected _initializeExtensions() {
     const addExtensions = (node: DataTrait) => {
-      let extension = node.extension
+      let extension = node._extension
       if (!extension) return
 
       if (extension instanceof ComputableExtension) {
@@ -146,7 +146,7 @@ export abstract class Accessor<
     }
 
     if (this.node instanceof Abstract) {
-      for (const node of this.node.implementations) {
+      for (const node of this.node._implementations) {
         addExtensions(node)
       }
     }
@@ -154,14 +154,14 @@ export abstract class Accessor<
     addExtensions(this.node)
   }
 
-  protected loadExtensions() {
+  protected _loadExtensions() {
     const prevExtensions = this.extensions
     this.extensions = []
-    this.initializeExtensions()
+    this._initializeExtensions()
 
     if (arrayEqual(prevExtensions, this.extensions)) return
 
-    this.onInitializeExtensions.emit()
+    this._onInitializeExtensions.emit()
 
     if (!this.extensions.length) return
 
@@ -170,7 +170,7 @@ export abstract class Accessor<
 
     if (isTopLevel) {
       // Add keyFragments
-      this.extensions.forEach(({ fragment }) => {
+      this.extensions.forEach(({ _fragment: fragment }) => {
         if (!fragment) return
         if (this.selection === (fragment as any)) return
 
@@ -181,12 +181,12 @@ export abstract class Accessor<
     if (!this.value) {
       // TODO: Should this be here? or in merge.ts
       // Cache redirects
-      if (this.cache.entries.has(this.node)) {
+      if (this.cache._entries.has(this.node)) {
         for (const extension of this.extensions) {
-          const value = extension.redirect(this)
+          const value = extension._redirect(this)
 
           if (!(value instanceof Value)) continue
-          this.updateValue(value)
+          this._updateValue(value)
           break
         }
       }
@@ -194,7 +194,7 @@ export abstract class Accessor<
   }
 
   // Update the value, by modifying the cache
-  public updateValue(value: Value) {
+  public _updateValue(value: Value) {
     if (value === this.value) return
 
     invariant(
@@ -211,7 +211,7 @@ export abstract class Accessor<
       // If a child accessor is missing a value, then
       // re-fetch it entirely
       if (accessorWithoutValue) {
-        this.scheduler.commit.stage(this, KEYED_REFETCH)
+        this.scheduler._commit._stage(this, KEYED_REFETCH)
       }
     })
   }
@@ -223,7 +223,7 @@ export abstract class Accessor<
   public setData(data: any) {
     // @TODO
     console.log('set', this.path.toString(), data)
-    this.cache.merge(this, data)
+    this.cache._merge(this, data)
   }
 
   public get<TChild extends TChildren | FragmentAccessor>(
@@ -244,14 +244,14 @@ export abstract class Accessor<
   public getDefaultFragment(node: ObjectNode) {
     return memoized.fragment(() => {
       const fragment = new Fragment(node)
-      this.selectionPath[this.selectionPath.length - 1].add(fragment)
+      this._selectionPath[this._selectionPath.length - 1].add(fragment)
       return fragment
-    }, [node, ...this.selectionPath])
+    }, [node, ...this._selectionPath])
   }
 
   @computed()
-  public get selectionPath(): Selection[] {
-    const basePath = this.parent ? this.parent.selectionPath : new PathArray<Selection>()
+  public get _selectionPath(): Selection[] {
+    const basePath = this.parent ? this.parent._selectionPath : new PathArray<Selection>()
     const path =
       // Remove duplicated selections
       basePath[basePath.length - 1] === this.selection
@@ -278,15 +278,15 @@ export abstract class Accessor<
         this.parent.children.splice(idx, 1)
       }
 
-      this.scheduler.commit.unstage(this)
+      this.scheduler._commit._unstage(this)
 
-      this.scheduler.commit.accessors.forEach((_, accessor) => {
+      this.scheduler._commit._accessors.forEach((_, accessor) => {
         // if the accessor begins with this.path
         for (let i = 0; i < this.path.length; i++) {
           if (this.path[i] !== accessor.path[i]) return
         }
 
-        this.scheduler.commit.unstage(accessor)
+        this.scheduler._commit._unstage(accessor)
       })
     }
   }

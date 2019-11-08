@@ -13,7 +13,7 @@ export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelectionArray, TChildren> {
-  protected _resolved = this.parent.resolved
+  protected __resolved = this.parent._resolved
 
   constructor(public parent: Accessor<TSelectionArray>, public index: number) {
     super(
@@ -22,7 +22,7 @@ export class IndexAccessor<
       (parent instanceof IndexAccessor
         ? (parent.node as ArrayNode<any>)
         : parent.selection.node
-      ).ofNode
+      )._ofNode
     )
 
     // Sync from parent status
@@ -32,17 +32,17 @@ export class IndexAccessor<
       })
     )
 
-    this.parent.onResolvedChange(resolved => (this.resolved = resolved))
+    this.parent._onResolvedChange(resolved => (this._resolved = resolved))
     syncValue(this, this.toString())
-    this.loadExtensions()
-    this.scheduler.commit.stageUntilValue(this)
+    this._loadExtensions()
+    this.scheduler._commit._stageUntilValue(this)
   }
 
-  protected initializeExtensions() {
-    super.initializeExtensions()
+  protected _initializeExtensions() {
+    super._initializeExtensions()
 
     for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      let extension = this.parent.extensions[i].childIndex()
+      let extension = this.parent.extensions[i]._childIndex()
       if (!extension) continue
 
       if (extension instanceof ComputableExtension) {
@@ -54,7 +54,7 @@ export class IndexAccessor<
   }
 
   public getData(ctx?: DataContext): any {
-    return (this.selection.node.ofNode as DataTrait).getData({
+    return (this.selection.node._ofNode as DataTrait).getData({
       accessor: this,
       ...ctx,
     })

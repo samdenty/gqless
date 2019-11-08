@@ -14,13 +14,13 @@ export class RootAccessor<
     public cache: Cache = new Cache(selection.node)
   ) {
     super(undefined, selection)
-    this.value = cache.rootValue
+    this.value = cache._rootValue
 
     this.addDisposer(
-      cache.onRootValueChange(() => (this.value = cache.rootValue))
+      cache._onRootValueChange(() => (this.value = cache._rootValue))
     )
 
-    this.loadExtensions()
+    this._loadExtensions()
   }
 
   // TODO: This should be replace with a Generic inside accessor
@@ -32,8 +32,8 @@ export class RootAccessor<
     })
   }
 
-  public updateValue(value: Value) {
-    this.cache.rootValue = value
+  public _updateValue(value: Value) {
+    this.cache._rootValue = value
   }
 
   public toString() {

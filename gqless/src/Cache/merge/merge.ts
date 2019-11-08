@@ -53,10 +53,10 @@ export const merge = (cache: Cache, value: Value, data: any, extensions: Extensi
 
 const keyedMerge = (cache: Cache, node: DataTrait, data: any, extensions: Extension[], ...selectionsFilter: Selection[]) => {
   const keyFragments: Fragment[] = []
-  for (const { fragment} of extensions) {
-    if (!fragment) continue
-    if (keyFragments.includes(fragment)) continue
-    keyFragments.push(fragment)
+  for (const { _fragment } of extensions) {
+    if (!_fragment) continue
+    if (keyFragments.includes(_fragment)) continue
+    keyFragments.push(_fragment)
   }
   if (!keyFragments.length) return
 
@@ -74,15 +74,15 @@ const keyedMerge = (cache: Cache, node: DataTrait, data: any, extensions: Extens
 
   // If the value was already in the cache,
   // discard keyedValue and merge oncemore
-  if (result.value !== keyedValue) {
-    merge(cache, result.value, data, extensions, ...selectionsFilter)
+  if (result._value !== keyedValue) {
+    merge(cache, result._value, data, extensions, ...selectionsFilter)
   } else {
     // Value wasn't in cache, so merge the rest of data
     // on the keyedValue
     completeMerge?.()
   }
 
-  return result.value
+  return result._value
 }
 
 const mergeScalar = (value: Value<ScalarNode>, data: any) => {
@@ -92,9 +92,9 @@ const mergeScalar = (value: Value<ScalarNode>, data: any) => {
 
 const iterateArray = (cache: Cache, arrayValue: Value<ArrayNode<DataTrait>>, data: any[], arrayExtensions: Extension[], ...selectionsFilter: Selection[]) => {
   data.forEach((data, key) => {
-    const node = arrayValue.node.ofNode
+    const node = arrayValue.node._ofNode
     const nodeImplementation = getAbstractImplementation(node, data?.__typename)
-    const extensions = extensionsForKey(arrayExtensions, e => e.childIndex(), node, nodeImplementation, node)
+    const extensions = extensionsForKey(arrayExtensions, e => e._childIndex(), node, nodeImplementation, node)
 
     let value = arrayValue.get(key)
 
@@ -116,16 +116,16 @@ const iterateArray = (cache: Cache, arrayValue: Value<ArrayNode<DataTrait>>, dat
 const iterateObject = (cache: Cache, objectValue: Value<ObjectNode>, objectData: Record<string, any>, objectExtensions: Extension[], ...selectionsFilter: Selection[]) => {
   function mergeKey(key: string, ...filteredSelections: Selection[]) {
     let fieldName = key
-    if (!objectValue.node.fields.hasOwnProperty(key))  {
+    if (!objectValue.node._fields.hasOwnProperty(key))  {
       fieldName = fieldName.match(FIELD_NAME)?.[1]!
-      if (!fieldName || !objectValue.node.fields.hasOwnProperty(fieldName)) return
+      if (!fieldName || !objectValue.node._fields.hasOwnProperty(fieldName)) return
     }
 
-    const field = objectValue.node.fields[fieldName] as FieldNode<UFieldsNode & DataTrait>
+    const field = objectValue.node._fields[fieldName] as FieldNode<UFieldsNode & DataTrait>
     const data = objectData[key]
-    const node = field.ofNode
+    const node = field._ofNode
     const nodeImplementation = getAbstractImplementation(node, data?.__typename)
-    const extensions = extensionsForKey(objectExtensions, e => e.childField(field), nodeImplementation, node)
+    const extensions = extensionsForKey(objectExtensions, e => e._childField(field), nodeImplementation, node)
 
     let value = objectValue.get(key)
 

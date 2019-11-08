@@ -9,7 +9,7 @@ it('supports calling all plugins', () => {
   plugins.add({ dispose: plugin1 })
   plugins.add({ dispose: plugin2 })
 
-  expect(plugins.all.dispose()).toEqual([1, 2])
+  expect(plugins._all.dispose()).toEqual([1, 2])
 })
 
 it('supports finding a value from plugins', () => {
@@ -23,7 +23,7 @@ it('supports finding a value from plugins', () => {
   plugins.add({ dispose: plugin2 })
   plugins.add({ dispose: plugin3 })
 
-  expect(plugins.first.dispose()((value: any) => !!value)).toEqual(2)
+  expect(plugins._first.dispose()((value: any) => !!value)).toEqual(2)
 
   expect(plugin1).toBeCalled()
   expect(plugin3).not.toBeCalled()

@@ -26,7 +26,7 @@ export interface InterfaceNode<TImplementation extends ObjectNode = ObjectNode>
 export class InterfaceNode<TImplementation>
   extends Mix(FieldsNode, Generic(Abstract))
   implements DataTrait {
-  public extension?: StaticExtension | ComputableExtension
+  public _extension?: StaticExtension | ComputableExtension
 
   constructor(
     fields: UFieldsNodeRecord,
@@ -36,7 +36,7 @@ export class InterfaceNode<TImplementation>
     super([fields, options], [implementations])
 
     if (options.extension) {
-      this.extension = createExtension(this, options.extension)
+      this._extension = createExtension(this, options.extension)
     }
   }
 
@@ -47,13 +47,13 @@ export class InterfaceNode<TImplementation>
 
     return new Proxy(data, {
       get: (_, prop: any) => {
-        const fragment = ctx.accessor?.fragmentToResolve
+        const fragment = ctx.accessor?._fragmentToResolve
         if (fragment) return fragment.data?.[prop]
 
         // If the prop exists in this interface,
         // return directly from interface
-        if (this.fields.hasOwnProperty(prop)) {
-          const field = this.fields[prop]
+        if (this._fields.hasOwnProperty(prop)) {
+          const field = this._fields[prop]
 
           // if (field.args) {
           //   return (args: any) => {
@@ -76,7 +76,7 @@ export class InterfaceNode<TImplementation>
       },
 
       set: (_, prop: string, value) => {
-        const fragment = ctx.accessor?.fragmentToResolve
+        const fragment = ctx.accessor?._fragmentToResolve
         if (fragment) {
           const { data } = fragment
           if (data) data[prop] = value
@@ -88,11 +88,11 @@ export class InterfaceNode<TImplementation>
         /**
          * If setting a field, create a new accessor and set data
          */
-        if (this.fields.hasOwnProperty(prop)) {
+        if (this._fields.hasOwnProperty(prop)) {
           if (!ctx.accessor) return true
 
-          const field = this.fields[prop]
-          const selection = field.getSelection(ctx)
+          const field = this._fields[prop]
+          const selection = field._getSelection(ctx)
 
           const fieldAccessor =
             ctx.accessor.get(selection) ||

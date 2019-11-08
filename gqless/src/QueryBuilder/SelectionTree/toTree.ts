@@ -25,12 +25,12 @@ export const toTree = (selections: (Selection | Selection[])[]) => {
         if (!validSelection) return
       }
 
-      let index = tree.children.findIndex(t => t.selection === selection)
+      let index = tree._children.findIndex(t => t._selection === selection)
       if (index > -1) {
-        tree = tree.children[index]
+        tree = tree._children[index]
       } else {
         const newTree = new SelectionTree(selection, tree)
-        tree.children.push(newTree)
+        tree._children.push(newTree)
         tree = newTree
       }
 

@@ -1,10 +1,10 @@
 import { deepJSONEqual } from '../../utils'
 import { Value } from '../../Cache'
 
-export const REDIRECT = Symbol('Extension#redirect')
-export const INDEX = Symbol('Extension#index')
+export const REDIRECT = Symbol()
+export const INDEX = Symbol()
 
-export const GET_KEY = Symbol('Extension#getKey')
+export const GET_KEY = Symbol()
 export const keyIsValid = (key: unknown) => key != null
 export const keyIsEqual = (a: unknown, b: unknown) => deepJSONEqual(a, b)
 

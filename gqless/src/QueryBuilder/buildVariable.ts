@@ -6,27 +6,27 @@ import { Formatter } from './Formatter'
 export type Variables = Map<string, Variable>
 
 export interface ConnectedVariable {
-  node?: UArguments
-  nullable?: boolean
-  variables?: Map<string, Variable>
-  path?: string[]
+  _node?: UArguments
+  _nullable?: boolean
+  _variables?: Map<string, Variable>
+  _path?: string[]
 }
 
-export const buildVariable = ({ options }:  Formatter, variable: Variable, info?: ConnectedVariable) => {
+export const buildVariable = ({ _options }:  Formatter, variable: Variable, info?: ConnectedVariable) => {
   let name =
-    variable.name! || (options.prettify && info?.path ? camelCase(info.path) : 'v')
+    variable.name! || (_options.prettify && info?._path ? camelCase(info._path) : 'v')
 
   if (info) {
-    if (info.node) variable.validateNode(info.node, info.nullable)
+    if (info._node) variable._validateNode(info._node, info._nullable)
 
-    if (info.variables) {
-      const existingVariable = info.variables.has(name)
+    if (info._variables) {
+      const existingVariable = info._variables.has(name)
 
       if (existingVariable) {
-        name = uniquify(name, name => info.variables!.has(name))
+        name = uniquify(name, name => info._variables!.has(name))
       }
 
-      info.variables.set(name, variable)
+      info._variables.set(name, variable)
     }
   }
 

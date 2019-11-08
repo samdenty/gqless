@@ -28,7 +28,7 @@ export class Poller {
    * only after it's been fetched
    */
   private async poll() {
-    this.unstage = this.accessor.scheduler.commit.stage(
+    this.unstage = this.accessor.scheduler._commit._stage(
       this.accessor,
       ...(this.stack || [])
     )

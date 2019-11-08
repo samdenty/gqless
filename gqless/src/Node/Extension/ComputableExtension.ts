@@ -14,7 +14,7 @@ export class ComputableExtension extends Extension {
   }
 
   @computed()
-  public get data() {
+  public get _data() {
     // TODO: (Optimization) Could instead return data from an instance of ComputedExtension
     // if available. ChildField could then return already-computed instances
     return this.getData(null)

@@ -11,24 +11,24 @@ export class Transaction {
   public end() {
     if (currentTransaction !== this) return
     currentTransaction = undefined
-    this.flush()
+    this._flush()
   }
 
-  private flush() {
+  private _flush() {
     const callbacks = Array.from(this.callbacks)
     this.callbacks.clear()
 
     callbacks.forEach(callback => callback())
   }
 
-  public onComplete(callback: Function) {
+  public _onComplete(callback: Function) {
     this.callbacks.add(callback)
   }
 }
 
 export const afterTransaction = (callback: Function) => {
   if (currentTransaction) {
-    currentTransaction.onComplete(callback)
+    currentTransaction._onComplete(callback)
     return
   }
 

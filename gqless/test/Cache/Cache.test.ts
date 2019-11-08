@@ -10,33 +10,33 @@ it('records instances', () => {
   const value = new Value(schema.String)
   const value2 = new Value(schema.String)
 
-  expect(cache.entries.size).toBe(1)
+  expect(cache._entries.size).toBe(1)
 
-  cache.rootValue.set('a', value)
-  expect(cache.entries.size).toBe(2)
-  const entry = cache.entries.get(value.node)!
-  expect(entry.instances.has(value)).toBeTruthy()
+  cache._rootValue.set('a', value)
+  expect(cache._entries.size).toBe(2)
+  const entry = cache._entries.get(value.node)!
+  expect(entry._instances.has(value)).toBeTruthy()
 
-  cache.rootValue.set('a', value2)
-  expect(entry.instances.has(value)).toBeFalsy()
-  expect(entry.instances.has(value2)).toBeTruthy()
+  cache._rootValue.set('a', value2)
+  expect(entry._instances.has(value)).toBeFalsy()
+  expect(entry._instances.has(value2)).toBeTruthy()
 })
 
 it('supports matching', () => {
   const aValue = new Value(schema.String, 'test-a')
   const bValue = new Value(schema.String, 'test-b')
 
-  cache.rootValue.set('a', aValue)
-  cache.rootValue.set('b', bValue)
+  cache._rootValue.set('a', aValue)
+  cache._rootValue.set('b', bValue)
 
-  const stringEntry = cache.entries.get(schema.String)!
+  const stringEntry = cache._entries.get(schema.String)!
 
-  expect(stringEntry.match(/test-/)!.value).toBe(aValue)
-  expect(stringEntry.match(/b/)!.value).toBe(bValue)
+  expect(stringEntry._match(/test-/)!.value).toBe(aValue)
+  expect(stringEntry._match(/b/)!.value).toBe(bValue)
 })
 
 it('supports merging', () => {
-  merge(cache, cache.rootValue, { object: { int: 1 } })
+  merge(cache, cache._rootValue, { object: { int: 1 } })
 
   expect(cache.toJSON().data).toMatchInlineSnapshot(`
     Object {
@@ -48,7 +48,7 @@ it('supports merging', () => {
     }
   `)
 
-  merge(cache, cache.rootValue, { object: { string: 'test' } })
+  merge(cache, cache._rootValue, { object: { string: 'test' } })
 
   expect(cache.toJSON().data).toMatchInlineSnapshot(`
     Object {
@@ -61,7 +61,7 @@ it('supports merging', () => {
     }
   `)
 
-  merge(cache, cache.rootValue, { object: null })
+  merge(cache, cache._rootValue, { object: null })
 
   expect(cache.toJSON().data).toMatchInlineSnapshot(`
     Object {
@@ -85,13 +85,13 @@ it('supports keys', () => {
 
   merge(
     cache,
-    cache.rootValue,
+    cache._rootValue,
     { object: { int: 1, string: 'a' } },
     queryExtensions
   )
 
-  const objectKey = cache.entries.get(schema.Object)!
-  const keyedValue = objectKey.getByKey(1)!
+  const objectKey = cache._entries.get(schema.Object)!
+  const keyedValue = objectKey._getByKey(1)!
 
   expect(keyedValue.toJSON()).toMatchInlineSnapshot(`
     Object {
@@ -103,12 +103,12 @@ it('supports keys', () => {
 
   merge(
     cache,
-    cache.rootValue,
+    cache._rootValue,
     { object2: { int: 1, string2: 'b' } },
     queryExtensions
   )
 
-  expect(cache.rootValue.get('object')).toBe(cache.rootValue.get('object2'))
+  expect(cache._rootValue.get('object')).toBe(cache._rootValue.get('object2'))
 
   expect(keyedValue.toJSON()).toMatchInlineSnapshot(`
     Object {

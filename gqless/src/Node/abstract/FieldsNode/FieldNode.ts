@@ -12,23 +12,23 @@ import { DataTrait, DataContext, getSelection, interceptAccessor } from '../../t
 
 export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContainer<TNode> implements DataTrait {
   // This is set inside FieldsNode
-  public name: string = ''
+  public _name: string = ''
 
-  constructor(node: TNode, public args?: Arguments, nullable?: boolean) {
+  constructor(node: TNode, public _args?: Arguments, nullable?: boolean) {
     super(node, nullable)
   }
 
   @computed()
-  public get uncallable() {
+  public get _uncallable() {
     return !(
-      this.args &&
-      (this.args.required ||
-        this.ofNode instanceof ScalarNode ||
-        this.ofNode instanceof EnumNode)
+      this._args &&
+      (this._args._required ||
+        this._ofNode instanceof ScalarNode ||
+        this._ofNode instanceof EnumNode)
     )
   }
 
-  public getSelection(
+  public _getSelection(
     ctx: DataContext,
     args?: Record<string, any>
   ): FieldSelection<TNode> {
@@ -40,7 +40,7 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
       if (!(selection instanceof FieldSelection)) return false
 
       return (
-        selection.field.name === this.name &&
+        selection.field._name === this._name &&
         deepJSONEqual(selection.args, args, (a, b) => {
           // If either is a variable they need to be equal
           if (a instanceof Variable || b instanceof Variable) return a === b
@@ -68,7 +68,7 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
         return accessor.data
       }
 
-      return this.ofNode.getData({
+      return this._ofNode.getData({
         selection,
         value: ctx.value?.get(selection.toString()),
         extensions: [] // TODO
@@ -77,21 +77,21 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
 
     const argsFn = (args: any) => {
       const parsedArgs = args && (Object.keys(args).length ? args : undefined)
-      return getData(this.getSelection(ctx, parsedArgs))
+      return getData(this._getSelection(ctx, parsedArgs))
     }
 
-    if (!this.uncallable) return argsFn
+    if (!this._uncallable) return argsFn
 
     let selection: FieldSelection<TNode> | undefined
     let data: any
     const argumentlessData = () => {
       if (selection) return data
-      selection = this.getSelection(ctx)
+      selection = this._getSelection(ctx)
       data = getData(selection)
       return data
     }
 
-    if (this.args) {
+    if (this._args) {
       return new Proxy(argsFn, {
         get: (_, prop) => {
           const data = argumentlessData()
@@ -136,6 +136,6 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
   }
 
   public toString() {
-    return this.name
+    return this._name
   }
 }

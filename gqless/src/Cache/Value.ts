@@ -9,48 +9,44 @@ export type UValueData =
   | Value[]
   | null
 
-let id = 0
-
 export class Value<TNode extends DataTrait = DataTrait> {
-  public id = ++id
-
   private _data!: UValueData
-  public references = new Map<Value, Set<string | number>>()
+  public _references = new Map<Value, Set<string | number>>()
 
   constructor(
     public node: TNode,
     data: UValueData = node instanceof ArrayNode ? [] : {}
   ) {
     this.data = data
-    this.onSet((key, value) => {
-      if (!this.references.has(value)) this.references.set(value, new Set())
+    this._onSet((key, value) => {
+      if (!this._references.has(value)) this._references.set(value, new Set())
 
-      const referencedKeys = this.references.get(value)!
+      const referencedKeys = this._references.get(value)!
 
-      if (!referencedKeys.size) this.onReference.emit(value)
+      if (!referencedKeys.size) this._onReference.emit(value)
       referencedKeys.add(key)
 
-      this.onSet
+      this._onSet
         .filter(k => k === key)
         .then(() => {
           referencedKeys.delete(key)
           if (referencedKeys.size) return
 
-          this.references.delete(value)
-          this.onUnreference.emit(value)
+          this._references.delete(value)
+          this._onUnreference.emit(value)
         })
     })
   }
 
   // When a new Value is associated with a key
-  public onSet = createEvent<(key: string | number, value: Value) => void>()
+  public _onSet = createEvent<(key: string | number, value: Value) => void>()
   // When data is updated (reference equality)
-  public onChange = createEvent<(prevData?: UValueData) => void>()
+  public _onChange = createEvent<(prevData?: UValueData) => void>()
 
   // When a Value becomes referenced
-  public onReference = createEvent<(value: Value) => void>()
+  public _onReference = createEvent<(value: Value) => void>()
   // When a Value becomes de-refenerced
-  public onUnreference = createEvent<(value: Value) => void>()
+  public _onUnreference = createEvent<(value: Value) => void>()
 
   public get data() {
     return this._data
@@ -67,11 +63,11 @@ export class Value<TNode extends DataTrait = DataTrait> {
         key = String(key)
         if ((prevData as any)?.[key] === value) return
 
-        this.onSet.emit(key, value)
+        this._onSet.emit(key, value)
       })
     }
 
-    this.onChange.emit(prevData)
+    this._onChange.emit(prevData)
   }
 
   public get(key: string | number): Value | undefined {
@@ -90,7 +86,7 @@ export class Value<TNode extends DataTrait = DataTrait> {
     if (prevValue === value) return
 
     ;(this.data as any)[key] = value
-    this.onSet.emit(key, value)
+    this._onSet.emit(key, value)
   }
 
   public toJSON(deep = true): any {
@@ -106,7 +102,7 @@ export class Value<TNode extends DataTrait = DataTrait> {
       if (!this.data) return null
 
       const obj: any = {
-        __typename: this.node.name
+        __typename: this.node._name
       }
 
       Object.entries(this.data).forEach(([key, value]) => {

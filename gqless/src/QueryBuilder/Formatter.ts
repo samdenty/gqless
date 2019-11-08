@@ -1,5 +1,3 @@
-import { computed } from '../utils'
-
 export interface IFormatterOptions {
   /**
    * Makes the query human readable
@@ -24,50 +22,37 @@ export interface IFormatterOptions {
 }
 
 export class Formatter {
-  public formatter = this
-  public options: Required<IFormatterOptions>
+  public _formatter = this
+  public _options: Required<IFormatterOptions>
+
+  public _SPACE: string
+  public _SEPARATOR: string
+  public _LINE_SEPARATOR: string
+  public _NEWLINE: string
 
   constructor({
     prettify = __DEV__,
     variables = false,
     fragments = 'inline',
   }: IFormatterOptions = {}) {
-    this.options = {
+    this._options = {
       prettify,
       variables,
       fragments,
     }
+    this._SPACE = prettify ? ' ' : ''
+    this._SEPARATOR = `,${this._SPACE}`
+    this._LINE_SEPARATOR = prettify ? this._SEPARATOR : `\n`
+    this._NEWLINE = prettify ? '' : '\n'
   }
 
-  public indent = (string: string) => {
-    if (!this.SPACE) return string
+  public _indent = (string: string) => {
+    if (!this._SPACE) return string
 
-    return string.replace(/^/gm, this.SPACE.repeat(2))
+    return string.replace(/^/gm, this._SPACE.repeat(2))
   }
 
-  public hug = (string: string) => {
-    return `{${this.NEWLINE}${string}${this.NEWLINE}}`
-  }
-
-  @computed()
-  public get SPACE() {
-    return this.options.prettify ? ' ' : ''
-  }
-
-  @computed()
-  public get SEPARATOR() {
-    return `,${this.SPACE}`
-  }
-
-  @computed()
-  public get LINE_SEPARATOR() {
-    if (!this.options.prettify) return this.SEPARATOR
-    return `\n`
-  }
-
-  @computed()
-  public get NEWLINE() {
-    if (!this.options.prettify) return ''
-    return `\n`
+  public _hug = (string: string) => {
+    return `{${this._NEWLINE}${string}${this._NEWLINE}}`
   }
 }

@@ -21,18 +21,18 @@ export type UFieldsNode =
 export type UFieldsNodeRecord = Record<string, FieldNode<UFieldsNode>>
 
 export class FieldsNode {
-  public name: string
-  public fields: UFieldsNodeRecord
+  public _name: string
+  public _fields: UFieldsNodeRecord
 
   constructor(fields: UFieldsNodeRecord, { name }: IFieldsNodeOptions) {
-    this.name = name
-    this.fields = lazyGetters(fields, (fieldName, field) => {
+    this._name = name
+    this._fields = lazyGetters(fields, (fieldName, field) => {
       // Called when the getter prop is evaluated
-      field.name = fieldName as string
+      field._name = fieldName as string
     })
   }
 
   public toString() {
-    return this.name
+    return this._name
   }
 }

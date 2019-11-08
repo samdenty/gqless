@@ -6,11 +6,11 @@ import { ScalarNode } from '../ScalarNode'
 
 export class ComputedExtension extends Extension {
   constructor(parent: ComputableExtension, public accessor: Accessor) {
-    super(parent, parent.node)
+    super(parent, parent._node)
   }
 
   @computed()
-  public get data(): any {
+  public get _data(): any {
     const data =
       this.accessor.node instanceof ScalarNode
         ? this.accessor.getData({
@@ -19,6 +19,6 @@ export class ComputedExtension extends Extension {
           })
         : this.accessor.data
 
-    return (this.parent as ComputableExtension).getData(data)
+    return (this._parent as ComputableExtension).getData(data)
   }
 }

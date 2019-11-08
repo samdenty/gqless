@@ -17,8 +17,8 @@ export const computed = (getDependencies?: () => any[]) => <T>(
 ) => {
   const descriptor = Object.getOwnPropertyDescriptor(target, propertyKey)!
 
-  const DependenciesSymbol = Symbol(propertyKey + '.dependencies')
-  const LastValueSymbol = Symbol(propertyKey + '.lastValue')
+  const DependenciesSymbol = Symbol()
+  const LastValueSymbol = Symbol()
 
   const original = descriptor.get
 

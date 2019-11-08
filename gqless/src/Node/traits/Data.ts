@@ -39,6 +39,6 @@ export const getValue = (ctx: DataContext) => {
 }
 
 export interface DataTrait {
-  extension?: StaticExtension | ComputableExtension
+  _extension?: StaticExtension | ComputableExtension
   getData(ctx: DataContext): any
 }

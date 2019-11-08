@@ -1,7 +1,7 @@
 import { Value } from '../../Cache'
 
 export class Matchable {
-  public match(value: Value, data: any): Value | null | void {
+  public _match(value: Value, data: any): Value | null | void {
     // Direct equal
     if (value.data === data) return value
 
