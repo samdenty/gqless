@@ -27,6 +27,11 @@ export class Formatter {
   public formatter = this
   public options: Required<IFormatterOptions>
 
+  public SPACE: string
+  public SEPARATOR: string
+  public LINE_SEPARATOR: string
+  public NEWLINE: string
+
   constructor({
     prettify = __DEV__,
     variables = false,
@@ -37,6 +42,11 @@ export class Formatter {
       variables,
       fragments,
     }
+
+    this.SPACE = prettify ? ' ' : ''
+    this.SEPARATOR = `,${this.SPACE}`
+    this.LINE_SEPARATOR = prettify ? `\n` : this.SEPARATOR
+    this.NEWLINE = prettify ? '\n' : ''
   }
 
   public indent = (string: string) => {
@@ -47,27 +57,5 @@ export class Formatter {
 
   public hug = (string: string) => {
     return `{${this.NEWLINE}${string}${this.NEWLINE}}`
-  }
-
-  @computed()
-  public get SPACE() {
-    return this.options.prettify ? ' ' : ''
-  }
-
-  @computed()
-  public get SEPARATOR() {
-    return `,${this.SPACE}`
-  }
-
-  @computed()
-  public get LINE_SEPARATOR() {
-    if (!this.options.prettify) return this.SEPARATOR
-    return `\n`
-  }
-
-  @computed()
-  public get NEWLINE() {
-    if (!this.options.prettify) return ''
-    return `\n`
   }
 }

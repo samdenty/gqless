@@ -22,7 +22,7 @@ export abstract class Extension {
   ) {
   }
 
-  @computed()
+  @computed
   /** A unique key to share instances of a Fragment between extensions */
   protected get fragmentKey() {
     return this.path
@@ -30,7 +30,7 @@ export abstract class Extension {
       .filter(Boolean)
   }
 
-  @computed()
+  @computed
   public get fragment() {
     const getKey = (this.data as ProxyExtension)?.[GET_KEY]
     if (!getKey) return
@@ -123,7 +123,7 @@ export abstract class Extension {
     return this.fragmentKey.toString()
   }
 
-  @computed()
+  @computed
   public get path(): Extension[] {
     const basePath = this.parent ? this.parent.path : []
     const path = new PathArray(...basePath, this)

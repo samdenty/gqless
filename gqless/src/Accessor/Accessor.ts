@@ -15,7 +15,7 @@ export enum NetworkStatus {
   updating,
 }
 
-export const ACCESSOR = Symbol('accessor')
+export const ACCESSOR = Symbol()
 // A query was made with minimal fields on it
 // to save bandwidth - predicted the IDs would match up
 // But returned ID were different, so refetch everything
@@ -249,7 +249,7 @@ export abstract class Accessor<
     }, [node, ...this.selectionPath])
   }
 
-  @computed()
+  @computed
   public get selectionPath(): Selection[] {
     const basePath = this.parent ? this.parent.selectionPath : new PathArray<Selection>()
     const path =
@@ -261,7 +261,7 @@ export abstract class Accessor<
     return path
   }
 
-  @computed()
+  @computed
   public get path(): Accessor[] {
     const basePath = this.parent ? this.parent.path : []
     const path = new PathArray(...basePath, this)

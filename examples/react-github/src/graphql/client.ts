@@ -1,3 +1,4 @@
+import * as utils from '@gqless/utils'
 import * as gqless from 'gqless'
 import { Logger } from '@gqless/logger'
 import { Client, QueryFetcher } from 'gqless'
@@ -33,4 +34,12 @@ if (__DEV__) {
 
 export const query = client.query
 
-Object.assign(window, { client, query, schema, ...gqless, parse, stringify })
+Object.assign(window, {
+  client,
+  query,
+  schema,
+  ...gqless,
+  ...utils,
+  parse,
+  stringify,
+})

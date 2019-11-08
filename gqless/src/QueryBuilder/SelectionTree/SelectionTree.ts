@@ -45,18 +45,18 @@ export class SelectionTree<TSelection extends Selection = Selection> {
 
   public resolveAliases = resolveAliases
 
-  @computed()
+  @computed
   public get path(): SelectionTree<any>[] {
     return this.parent ? [...this.parent.path, this] : [this]
   }
 
-  @computed()
+  @computed
   public get alias(): string | undefined {
     if (!(this.selection instanceof FieldSelection)) return
     return getAlias(this as any)
   }
 
-  @computed()
+  @computed
   public get key() {
     if (!(this.selection instanceof FieldSelection)) return
     return this.alias || this.selection.field.name

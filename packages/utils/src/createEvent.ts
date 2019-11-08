@@ -42,13 +42,5 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
     return Array.from(listeners).map(emit => emit(...args))
   }
 
-  event.pause = () => {
-    paused = true
-  }
-
-  event.unpause = () => {
-    paused = false
-  }
-
   return event
 }

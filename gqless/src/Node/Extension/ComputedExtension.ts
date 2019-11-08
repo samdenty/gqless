@@ -9,7 +9,7 @@ export class ComputedExtension extends Extension {
     super(parent, parent.node)
   }
 
-  @computed()
+  @computed
   public get data(): any {
     const data =
       this.accessor.node instanceof ScalarNode

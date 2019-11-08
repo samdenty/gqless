@@ -13,7 +13,7 @@ export class ComputableExtension extends Extension {
     super(parent, node, keyedBy)
   }
 
-  @computed()
+  @computed
   public get data() {
     // TODO: (Optimization) Could instead return data from an instance of ComputedExtension
     // if available. ChildField could then return already-computed instances

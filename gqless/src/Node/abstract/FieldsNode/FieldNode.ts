@@ -18,7 +18,7 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
     super(node, nullable)
   }
 
-  @computed()
+  @computed
   public get uncallable() {
     return !(
       this.args &&
