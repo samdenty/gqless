@@ -25,5 +25,8 @@
     "build": "tsdx build",
     "test": "jest"
   },
-  "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
+  "gitHead": "7c27436fcea8e672f07233010401417ea7c59760",
+  "devDependencies": {
+    "@babel/core": "^7.7.2"
+  }
 }

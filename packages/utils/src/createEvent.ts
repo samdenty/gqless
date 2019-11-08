@@ -1,5 +1,4 @@
 export const createEvent = <TCallback extends (...args: any[]) => any>() => {
-  let paused = false
   const listeners = new Set<TCallback>()
 
   const event = (callback: TCallback) => {
@@ -38,8 +37,9 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
   }
 
   event.emit = (...args: Parameters<TCallback>) => {
-    if (paused) return
-    return Array.from(listeners).map(emit => emit(...args))
+    for (const emit of Array.from(listeners)) {
+      emit(...args)
+    }
   }
 
   return event

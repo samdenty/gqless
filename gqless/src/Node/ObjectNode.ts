@@ -38,7 +38,7 @@ export class ObjectNode extends Mix(
 
     let matches = 0
 
-    for (const key of Object.keys(data)) {
+    for (const key in data) {
       if (!this.fields.hasOwnProperty(key)) continue
       const field = this.fields[key]
       if (!(field.ofNode instanceof Matchable)) continue

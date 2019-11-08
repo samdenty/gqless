@@ -53,7 +53,7 @@ export const merge = (cache: Cache, value: Value, data: any, extensions: Extensi
 
 const keyedMerge = (cache: Cache, node: DataTrait, data: any, extensions: Extension[], ...selectionsFilter: Selection[]) => {
   const keyFragments: Fragment[] = []
-  for (const { fragment} of extensions) {
+  for (const { fragment } of extensions) {
     if (!fragment) continue
     if (keyFragments.includes(fragment)) continue
     keyFragments.push(fragment)
@@ -114,11 +114,11 @@ const iterateArray = (cache: Cache, arrayValue: Value<ArrayNode<DataTrait>>, dat
 }
 
 const iterateObject = (cache: Cache, objectValue: Value<ObjectNode>, objectData: Record<string, any>, objectExtensions: Extension[], ...selectionsFilter: Selection[]) => {
-  function mergeKey(key: string, ...filteredSelections: Selection[]) {
+  function mergeObjectKey(key: string, ...filteredSelections: Selection[]) {
     let fieldName = key
-    if (!objectValue.node.fields.hasOwnProperty(key))  {
+    if (!(key in objectValue.node.fields))  {
       fieldName = fieldName.match(FIELD_NAME)?.[1]!
-      if (!fieldName || !objectValue.node.fields.hasOwnProperty(fieldName)) return
+      if (!fieldName || !(fieldName in objectValue.node.fields)) return
     }
 
     const field = objectValue.node.fields[fieldName] as FieldNode<UFieldsNode & DataTrait>
@@ -151,18 +151,18 @@ const iterateObject = (cache: Cache, objectValue: Value<ObjectNode>, objectData:
 
   const mergeFiltered: Function[] = []
 
-  for (const key of Object.keys(objectData)) {
+  for (const key in objectData) {
     if (key === '__typename') continue
 
     const selections = selectionsForKey(key, ...selectionsFilter)
 
     // If it's not selected, add to mergeFiltered
     if (selectionsFilter.length && !selections.length) {
-      mergeFiltered.push(() => mergeKey(key, ...selections))
+      mergeFiltered.push(() => mergeObjectKey(key, ...selections))
       continue
     }
 
-    mergeKey(key, ...selections)
+    mergeObjectKey(key, ...selections)
   }
 
   return mergeFiltered.length ? () => {

@@ -8,10 +8,9 @@ it('emits events', () => {
   onEvent(callback)
   onEvent(() => 4)
 
-  const result = onEvent.emit(1, 2)
+  onEvent.emit(1, 2)
 
   expect(callback).toBeCalledWith(1, 2)
-  expect(result).toEqual([3, 4])
 })
 
 it('handles thenables', async () => {
