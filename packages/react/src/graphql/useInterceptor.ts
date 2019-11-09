@@ -17,10 +17,10 @@ export const useInterceptor = (stack: StackContext) => {
   interceptor.onAccessor(accessor => {
     interceptedAccessors.add(accessor)
 
-    if (schedulers.has(accessor.scheduler)) return
-    schedulers.add(accessor.scheduler)
+    if (schedulers.has(accessor._scheduler)) return
+    schedulers.add(accessor._scheduler)
 
-    accessor.scheduler.pushStack(...stack.frames)
+    accessor._scheduler.pushStack(...stack.frames)
   })
 
   return {

@@ -24,7 +24,7 @@ it('schedules selections with stacks', () => {
   scheduler.popStack(testQuery)
   expect(scheduler._stack).toEqual([])
 
-  expect(root.status !== NetworkStatus.idle).toBeTruthy()
+  expect(root._status !== NetworkStatus.idle).toBeTruthy()
 
   jest.runOnlyPendingTimers()
 })

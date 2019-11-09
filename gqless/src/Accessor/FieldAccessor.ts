@@ -12,23 +12,23 @@ export class FieldAccessor<
   TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TFieldSelection, TChildren> {
-  protected __resolved = this.parent._resolved
+  protected __resolved = this._parent._resolved
 
-  constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
-    super(parent, fieldSelection)
+  constructor(public _parent: Accessor, fieldSelection: TFieldSelection) {
+    super(_parent, fieldSelection)
 
-    this.parent._onResolvedChange(resolved => (this._resolved = resolved))
+    this._parent._onResolvedChange(resolved => (this._resolved = resolved))
     syncValue(this, this.toString())
     this._loadExtensions()
-    this.scheduler._commit._stageUntilValue(this)
+    this._scheduler._commit._stageUntilValue(this)
   }
 
   protected _initializeExtensions() {
     super._initializeExtensions()
 
-    for (let i = this.parent._extensions.length - 1; i >= 0; --i) {
-      let extension = this.parent._extensions[i]._childField(
-        this.selection._field
+    for (let i = this._parent._extensions.length - 1; i >= 0; --i) {
+      let extension = this._parent._extensions[i]._childField(
+        this._selection._field
       )
       if (!extension) continue
 
@@ -40,14 +40,14 @@ export class FieldAccessor<
     }
   }
 
-  public getData(ctx?: DataContext): any {
-    return (this.selection._field._ofNode as DataTrait).getData({
+  public _getData(ctx?: DataContext): any {
+    return (this._selection._field._ofNode as DataTrait).getData({
       accessor: this,
       ...ctx,
     })
   }
 
   public toString() {
-    return this.selection.toString()
+    return this._selection.toString()
   }
 }

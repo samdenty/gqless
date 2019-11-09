@@ -13,36 +13,36 @@ export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelectionArray, TChildren> {
-  protected __resolved = this.parent._resolved
+  protected __resolved = this._parent._resolved
 
-  constructor(public parent: Accessor<TSelectionArray>, public index: number) {
+  constructor(public _parent: Accessor<TSelectionArray>, public index: number) {
     super(
-      parent,
-      parent.selection,
-      (parent instanceof IndexAccessor
-        ? (parent.node as ArrayNode<any>)
-        : parent.selection._node
+      _parent,
+      _parent._selection,
+      (_parent instanceof IndexAccessor
+        ? (_parent._node as ArrayNode<any>)
+        : _parent._selection._node
       )._ofNode
     )
 
     // Sync from parent status
-    this.addDisposer(
-      this.parent.onStatusChange(status => {
-        this.status = status
+    this._addDisposer(
+      this._parent._onStatusChange(status => {
+        this._status = status
       })
     )
 
-    this.parent._onResolvedChange(resolved => (this._resolved = resolved))
+    this._parent._onResolvedChange(resolved => (this._resolved = resolved))
     syncValue(this, this.toString())
     this._loadExtensions()
-    this.scheduler._commit._stageUntilValue(this)
+    this._scheduler._commit._stageUntilValue(this)
   }
 
   protected _initializeExtensions() {
     super._initializeExtensions()
 
-    for (let i = this.parent._extensions.length - 1; i >= 0; --i) {
-      let extension = this.parent._extensions[i]._childIndex()
+    for (let i = this._parent._extensions.length - 1; i >= 0; --i) {
+      let extension = this._parent._extensions[i]._childIndex()
       if (!extension) continue
 
       if (extension instanceof ComputableExtension) {
@@ -53,8 +53,8 @@ export class IndexAccessor<
     }
   }
 
-  public getData(ctx?: DataContext): any {
-    return (this.selection._node._ofNode as DataTrait).getData({
+  public _getData(ctx?: DataContext): any {
+    return (this._selection._node._ofNode as DataTrait).getData({
       accessor: this,
       ...ctx,
     })

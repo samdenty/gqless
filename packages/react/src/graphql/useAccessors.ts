@@ -33,10 +33,10 @@ export const useAccessors = (stack: StackContext) => {
           accessor,
           // Make component update when data changes
           [
-            accessor.onDataChange(() => {
+            accessor._onDataChange(() => {
               forceUpdate()
             }),
-            accessor.onStatusChange((newValue, prevValue) => {
+            accessor._onStatusChange((newValue, prevValue) => {
               const prevIdle = prevValue === NetworkStatus.idle
               const active = newValue !== NetworkStatus.idle
 
@@ -54,7 +54,7 @@ export const useAccessors = (stack: StackContext) => {
         // Locate accessors currently being fetched,
         // and add to Set
         if (interceptor.interceptedAccessors.has(accessor)) {
-          if (accessor.status !== NetworkStatus.idle) {
+          if (accessor._status !== NetworkStatus.idle) {
             nonIdleAccessors.add(accessor)
           }
 
@@ -76,7 +76,7 @@ export const useAccessors = (stack: StackContext) => {
         const promise = new Promise<void>(r => (resolve = r))
 
         nonIdleAccessors.forEach(accessor => {
-          accessor.onStatusChange.then(() => {
+          accessor._onStatusChange.then(() => {
             nonIdleAccessors.delete(accessor)
             if (!nonIdleAccessors.size) resolve()
           })

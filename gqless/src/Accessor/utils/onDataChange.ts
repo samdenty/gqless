@@ -23,7 +23,7 @@ export const onDataChange = (accessor: Accessor) => {
       if (
         prevData !== undefined ||
         newData === null ||
-        accessor.node instanceof ScalarNode
+        accessor._node instanceof ScalarNode
       ) {
         onDataChange.emit(prevData)
       }
@@ -38,8 +38,8 @@ export const onDataChange = (accessor: Accessor) => {
     check()
   }
 
-  accessor.addDisposer(accessor._onValueChange(onValueAssociated))
-  onValueAssociated(undefined, accessor.value)
+  accessor._addDisposer(accessor._onValueChange(onValueAssociated))
+  onValueAssociated(undefined, accessor._value)
 
   return onDataChange
 }

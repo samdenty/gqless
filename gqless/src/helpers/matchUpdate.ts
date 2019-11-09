@@ -14,7 +14,7 @@ import { getAccessor } from '../Accessor'
  */
 export const matchUpdate = (data: any, pattern: any) => {
   const accessor = getAccessor(data)
-  const entry = accessor.cache._entries.get(accessor.node)
+  const entry = accessor._cache._entries.get(accessor._node)
   if (!entry) return false
 
   const match = entry._match(pattern)

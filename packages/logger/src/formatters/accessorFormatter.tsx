@@ -9,8 +9,8 @@ export const accessorFormatter = {
       if (!(accessor instanceof Accessor)) return null
 
       const path = config.objectDepth
-        ? accessor.path.slice(config.objectDepth)
-        : accessor.path
+        ? accessor._path.slice(config.objectDepth)
+        : accessor._path
 
       const { children } = accessor
       return (
@@ -30,12 +30,12 @@ export const accessorFormatter = {
               isFragment={accessor => accessor instanceof FragmentAccessor}
             />
           ) : (
-            (config.objectDepth || accessor.node instanceof ScalarNode) && (
+            (config.objectDepth || accessor._node instanceof ScalarNode) && (
               <span>
                 {`: `}
                 <object
                   // @ts-ignore
-                  object={accessor.value ? accessor.value.toJSON() : null}
+                  object={accessor._value ? accessor._value.toJSON() : null}
                 />
               </span>
             )

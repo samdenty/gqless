@@ -48,7 +48,7 @@ export class InterfaceNode<TImplementation>
     return new Proxy(data, {
       get: (_, prop: any) => {
         const fragment = ctx.accessor?._fragmentToResolve
-        if (fragment) return fragment.data?.[prop]
+        if (fragment) return fragment._data?.[prop]
 
         // If the prop exists in this interface,
         // return directly from interface
@@ -78,7 +78,7 @@ export class InterfaceNode<TImplementation>
       set: (_, prop: string, value) => {
         const fragment = ctx.accessor?._fragmentToResolve
         if (fragment) {
-          const { data } = fragment
+          const { _data: data } = fragment
           if (data) data[prop] = value
           return true
         }
@@ -95,10 +95,10 @@ export class InterfaceNode<TImplementation>
           const selection = field._getSelection(ctx)
 
           const fieldAccessor =
-            ctx.accessor.get(selection) ||
+            ctx.accessor._get(selection) ||
             new FieldAccessor(ctx.accessor, selection)
 
-          fieldAccessor.setData(data)
+          fieldAccessor._setData(data)
 
           return true
         }

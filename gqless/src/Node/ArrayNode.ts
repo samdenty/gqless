@@ -90,10 +90,10 @@ export class ArrayNode<TNode> extends Mix(
 
             if (ctx.accessor) {
               const accessor: IndexAccessor =
-                ctx.accessor.get(index) ||
+                ctx.accessor._get(index) ||
                 new IndexAccessor(ctx.accessor, index)
 
-              return accessor.data
+              return accessor._data
             }
 
             return (this._ofNode as any as DataTrait).getData({

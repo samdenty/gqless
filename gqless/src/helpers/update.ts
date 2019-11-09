@@ -13,5 +13,5 @@ import { getAccessor } from '../Accessor'
 export const update = (data: any, newData: any) => {
   const accessor = getAccessor(data)
 
-  return accessor.setData(newData)
+  return accessor._setData(newData)
 }

@@ -76,5 +76,8 @@
     "tsconfig-paths": "^3.9.0",
     "tsdx": "0.11.0",
     "typescript": "^3.7.2"
+  },
+  "resolutions": {
+    "rollup-plugin-terser": "git+https://git@github.com/samdenty/rollup-plugin-terser.git#patch-1"
   }
 }

@@ -1,26 +1,26 @@
 export class Disposable {
   private _disposers = new Set<Function>()
 
-  protected disposed = false
+  protected _disposed = false
 
-  public addDisposer(...disposers: any[]) {
+  public _addDisposer(...disposers: any[]) {
     disposers.forEach(
       dispose => typeof dispose === 'function' && this._disposers.add(dispose)
     )
-    return () => this.deleteDiposer(...disposers)
+    return () => this._deleteDiposer(...disposers)
   }
 
-  public deleteDiposer(...disposers: any[]) {
+  public _deleteDiposer(...disposers: any[]) {
     disposers.forEach(
       dispose =>
         typeof dispose === 'function' && this._disposers.delete(dispose)
     )
   }
 
-  public dispose() {
-    if (this.disposed) return
+  public _dispose() {
+    if (this._disposed) return
 
-    this.disposed = true
+    this._disposed = true
     this._disposers.forEach(dispose => dispose.call(this))
   }
 }

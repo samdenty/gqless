@@ -26,14 +26,14 @@ export const getExtensions = (ctx: DataContext) => {
 
 export const getSelection = (ctx: DataContext) => {
   if (ctx.selection) return ctx.selection
-  if (ctx.accessor) return ctx.accessor.selection
+  if (ctx.accessor) return ctx.accessor._selection
 
   return
 }
 
 export const getValue = (ctx: DataContext) => {
   if (ctx.value) return ctx.value
-  if (ctx.accessor) return ctx.accessor.value
+  if (ctx.accessor) return ctx.accessor._value
 
   return
 }

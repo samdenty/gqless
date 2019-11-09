@@ -64,7 +64,7 @@ export class ObjectNode extends Mix(
     return new Proxy({} as any, {
       get: (_, prop: any) => {
         const fragment = ctx.accessor?._fragmentToResolve
-        if (fragment) return fragment.data?.[prop]
+        if (fragment) return fragment._data?.[prop]
 
         if (prop === ACCESSOR) return ctx.accessor
         // Statically resolve __typename
@@ -89,7 +89,7 @@ export class ObjectNode extends Mix(
       set: (_, prop: string, value) => {
         const fragment = ctx.accessor?._fragmentToResolve
         if (fragment) {
-          const { data } = fragment
+          const { _data: data } = fragment
           if (data) data[prop] = value
           return true
         }
@@ -106,9 +106,9 @@ export class ObjectNode extends Mix(
           const selection = field._getSelection(ctx)
 
           const fieldAccessor =
-            ctx.accessor.get(selection) || new FieldAccessor(ctx.accessor, selection)
+            ctx.accessor._get(selection) || new FieldAccessor(ctx.accessor, selection)
 
-          fieldAccessor.setData(value)
+          fieldAccessor._setData(value)
 
           return true
         }

@@ -9,7 +9,7 @@ import { schema } from '@internal/fixtures'
 
 it('works', () => {
   const selection = new Selection(schema.Query)
-  selection.add(new FieldSelection(schema.Query.fields.object))
+  selection.add(new FieldSelection(schema.Query._fields.object))
 
   expect(buildQuery(new Formatter(), undefined, [selection]).query)
     .toMatchInlineSnapshot(`
@@ -26,7 +26,7 @@ it('works', () => {
 
 it('supports named queries', () => {
   const selection = new Selection(schema.Query)
-  selection.add(new FieldSelection(schema.Query.fields.object))
+  selection.add(new FieldSelection(schema.Query._fields.object))
 
   expect(buildQuery(new Formatter(), 'Test', [selection]).query)
     .toMatchInlineSnapshot(`
@@ -47,7 +47,7 @@ it('supports variables', () => {
 
   const selection = new Selection(schema.Query)
   selection.add(
-    new FieldSelection(schema.Query.fields.arrayOfObjects, {
+    new FieldSelection(schema.Query._fields.arrayOfObjects, {
       string: test,
       input: {
         string: test2,

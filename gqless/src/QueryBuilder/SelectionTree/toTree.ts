@@ -20,7 +20,7 @@ export const toTree = (selections: (Selection | Selection[])[]) => {
         //  frag B { }
         const validSelection = pathToSelection
           .slice(i)
-          .find(s => !(s instanceof Fragment) || s.selections.size)
+          .find(s => !(s instanceof Fragment) || s._selections.size)
 
         if (!validSelection) return
       }
@@ -42,7 +42,7 @@ export const toTree = (selections: (Selection | Selection[])[]) => {
 
     const selection = pathToSelection[pathToSelection.length - 1]
 
-    selection.selections.forEach(selection =>
+    selection._selections.forEach(selection =>
       addSelectionToTree(tree, selection)
     )
   }

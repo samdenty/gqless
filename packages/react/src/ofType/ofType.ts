@@ -9,9 +9,9 @@ export function ofType<
     const { variantFragments } = useComponentContext()
     const accessor = getAccessor(data)
 
-    const node = getAbstractImplementation(accessor.node, typename)
+    const node = getAbstractImplementation(accessor._node, typename)
     if (node) {
-      const fragment = accessor.getDefaultFragment(node)
+      const fragment = accessor._getDefaultFragment(node)
       if (!variantFragments.has(accessor))
         variantFragments.set(accessor, new Set())
 

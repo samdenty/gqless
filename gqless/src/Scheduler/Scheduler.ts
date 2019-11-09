@@ -22,7 +22,7 @@ export class Scheduler extends Disposable {
     super()
 
     this._startTimer()
-    this.addDisposer(this._clearTimer)
+    this._addDisposer(this._clearTimer)
   }
 
   public pushStack(...queries: Query[]) {
@@ -50,7 +50,7 @@ export class Scheduler extends Disposable {
 
     // Don't create new Commit, if prev one unused
     if (!this._commit || this._commit._accessors.size) {
-      if (this._commit) this._commit.dispose()
+      if (this._commit) this._commit._dispose()
 
       this._commit = new Commit(
         this._plugins,

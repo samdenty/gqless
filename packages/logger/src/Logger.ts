@@ -33,7 +33,7 @@ export class Logger implements Plugin {
     const obj = {} as any
 
     accessors.forEach((accessor, idx) => {
-      obj[accessor.path.toString()] = {
+      obj[accessor._path.toString()] = {
         Stack: `[${stacks[idx].join(', ')}]`,
         'Chosen query': stackQueries[idx].toString(),
       }

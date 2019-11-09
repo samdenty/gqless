@@ -8,16 +8,17 @@ export class FragmentAccessor<
   TChildren extends Accessor = Accessor
 > extends Accessor<TFragment, TChildren> {
   protected __resolved =
-    this.parent!._resolved &&
-    (!this.parent!.value || this.parent!.value.node === this.selection._node)
+    this._parent!._resolved &&
+    (!this._parent!._value ||
+      this._parent!._value.node === this._selection._node)
 
-  constructor(public parent: Accessor, fragment: TFragment) {
-    super(parent, fragment)
+  constructor(public _parent: Accessor, fragment: TFragment) {
+    super(_parent, fragment)
 
-    if (fragment._node !== parent.node) {
-      this.parent._onValueChange(value => {
+    if (fragment._node !== _parent._node) {
+      this._parent._onValueChange(value => {
         this._resolved =
-          this.parent._resolved && (!value || value.node === fragment._node)
+          this._parent._resolved && (!value || value.node === fragment._node)
       })
     }
 
@@ -34,34 +35,32 @@ export class FragmentAccessor<
    * this accessor's data
    */
   public startResolving() {
-    const originalAccessor = this.parent._fragmentToResolve
-    this.parent._fragmentToResolve = this
+    const originalAccessor = this._parent._fragmentToResolve
+    this._parent._fragmentToResolve = this
     const resetAccessor = () => {
-      this.parent._fragmentToResolve = originalAccessor
+      this._parent._fragmentToResolve = originalAccessor
       removeDisposer()
     }
-    const removeDisposer = this.addDisposer(resetAccessor)
+    const removeDisposer = this._addDisposer(resetAccessor)
     return resetAccessor
   }
 
   protected _initializeExtensions() {
     // Copy extensions from parent
-    for (let i = this.parent._extensions.length - 1; i >= 0; --i) {
-      const extension = this.parent._extensions[i]
-      if (extension._node !== this.selection._node) continue
+    for (let i = this._parent._extensions.length - 1; i >= 0; --i) {
+      const extension = this._parent._extensions[i]
+      if (extension._node !== this._selection._node) continue
 
       this._extensions.unshift(extension)
     }
   }
-
-  public getData(ctx?: DataContext): any {
-    return this.selection._node.getData({
+  public _getData(ctx?: DataContext): any {
+    return this._selection._node.getData({
       accessor: this,
       ...ctx,
     })
   }
-
   public toString() {
-    return this.selection.toString()
+    return this._selection.toString()
   }
 }

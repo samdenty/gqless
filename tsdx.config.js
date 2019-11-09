@@ -1,7 +1,8 @@
+const path = require('path')
 const fs = require('fs')
 const { terser } = require('rollup-plugin-terser')
 
-const cacheFileName = '/tmp/gqless_nameCache.json'
+const cacheFileName = path.resolve(__dirname, './mangle.json')
 const nameCache = fs.existsSync(cacheFileName)
   ? JSON.parse(fs.readFileSync(cacheFileName, 'utf8'))
   : {}
@@ -11,7 +12,6 @@ module.exports = {
     const terserIndex = config.plugins.findIndex(p => p && p.name === 'terser')
     const babelIndex = config.plugins.findIndex(p => p && p.name === 'rpt2')
 
-    console.log('test')
     const terserPlugin = terser({
       sourcemap: true,
       output: { comments: false },
@@ -43,5 +43,9 @@ module.exports = {
 }
 
 process.on('exit', () => {
-  fs.writeFileSync(cacheFileName, JSON.stringify(nameCache), 'utf8')
+  fs.writeFileSync(
+    cacheFileName,
+    JSON.stringify(nameCache, undefined, 2),
+    'utf8'
+  )
 })

@@ -27,11 +27,11 @@ export class Commit extends Disposable {
 
   public _stageUntilValue(accessor: Accessor) {
     if (!accessor._resolved) return
-    if (accessor.value) return
+    if (accessor._value) return
 
     const unstage = this._stage(accessor)
 
-    this.addDisposer(
+    this._addDisposer(
       accessor._onValueChange.then(unstage),
       accessor._onResolvedChange.then(resolved => {
         if (!resolved) unstage()
@@ -46,11 +46,12 @@ export class Commit extends Disposable {
 
     // If the accessor is in this current commit,
     // or being (re-)fetched from a previous commit, don't re-fetch it
-    if (this.disposed || accessor.status !== NetworkStatus.idle) return unstage
+    if (this._disposed || accessor._status !== NetworkStatus.idle)
+      return unstage
 
     if (!this._accessors.size) this._onActive.emit()
 
-    accessor.status = accessor.value
+    accessor._status = accessor._value
       ? NetworkStatus.updating
       : NetworkStatus.loading
 
@@ -59,20 +60,20 @@ export class Commit extends Disposable {
     // If we already have the parent, remove the
     // parent to narrow down the accessors. This is used when a accessor is created
     // this could cause issues later, may need to add a recurse field to handle polling etc.
-    if (accessor.parent && this._accessors.has(accessor.parent)) {
-      this._unstage(accessor.parent)
+    if (accessor._parent && this._accessors.has(accessor._parent)) {
+      this._unstage(accessor._parent)
     }
 
     return unstage
   }
 
   public _unstage(accessor: Accessor) {
-    if (this.disposed) return
+    if (this._disposed) return
 
     // Only if the accessor is in our commits, set it as not fetching
     // otherwise it could be from a previous commit
     if (this._accessors.has(accessor)) {
-      accessor.status = NetworkStatus.idle
+      accessor._status = NetworkStatus.idle
     }
 
     this._accessors.delete(accessor)
@@ -116,7 +117,7 @@ export class Commit extends Disposable {
             await promise
           } finally {
             accessors.forEach(accessor => {
-              accessor.status = NetworkStatus.idle
+              accessor._status = NetworkStatus.idle
             })
           }
         })

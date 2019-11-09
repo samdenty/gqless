@@ -32,7 +32,7 @@ export class Client<TData = any> extends Disposable {
   public selection = new Selection(this.node)
   public accessor = new RootAccessor(this.selection, this.scheduler, this.cache)
 
-  public query = this.accessor.data as TData
+  public query = this.accessor._data as TData
 
   constructor(
     protected node: ObjectNode,
@@ -82,9 +82,9 @@ export class Client<TData = any> extends Disposable {
     return responsePromise
   }
 
-  public dispose() {
-    super.dispose()
-    this.scheduler.dispose()
+  public _dispose() {
+    super._dispose()
+    this.scheduler._dispose()
 
     this.plugins._all.dispose()
   }

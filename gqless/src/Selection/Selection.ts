@@ -4,7 +4,7 @@ import { DataTrait } from '../Node'
 export class Selection<TNode extends DataTrait = DataTrait> {
   // Selections that should be fetched with all queries
   public _keySelections = new Set<Selection>()
-  public selections = new Set<Selection>()
+  public _selections = new Set<Selection>()
 
   /**
    * Emitted when a child selection is created
@@ -21,9 +21,9 @@ export class Selection<TNode extends DataTrait = DataTrait> {
     invariant(selection !== this, `Circular selections are not permitted!`)
 
     if (isKeySelection) this._keySelections.add(selection)
-    if (this.selections.has(selection)) return
+    if (this._selections.has(selection)) return
 
-    this.selections.add(selection)
+    this._selections.add(selection)
     this._onSelect.emit(selection)
 
     // Forward events
@@ -31,10 +31,10 @@ export class Selection<TNode extends DataTrait = DataTrait> {
     selection._onUnselect(this._onUnselect.emit)
   }
 
-  public get<TSelection extends Selection>(
+  public _get<TSelection extends Selection>(
     find: ((selection: Selection) => boolean) | string | number
   ): TSelection | undefined {
-    for (const selection of this.selections) {
+    for (const selection of this._selections) {
       if (
         typeof find === 'function'
           ? find(selection)
@@ -46,8 +46,8 @@ export class Selection<TNode extends DataTrait = DataTrait> {
   }
 
   public delete(selection: Selection) {
-    if (!this.selections.has(selection)) return
-    this.selections.delete(selection)
+    if (!this._selections.has(selection)) return
+    this._selections.delete(selection)
     this._keySelections.delete(selection)
 
     // Unforward events
@@ -57,7 +57,7 @@ export class Selection<TNode extends DataTrait = DataTrait> {
     const emitUnselect = (selection: Selection) => {
       // Emit unselect for each selection
       this._onUnselect.emit(selection)
-      selection.selections.forEach(emitUnselect)
+      selection._selections.forEach(emitUnselect)
     }
 
     emitUnselect(selection)

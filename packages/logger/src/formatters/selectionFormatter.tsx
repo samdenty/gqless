@@ -9,7 +9,7 @@ export const selectionFormatter = {
     try {
       if (!(selection instanceof Selection)) return null
 
-      const { selections } = selection
+      const { _selections: selections } = selection
       return (
         <div>
           <Path
@@ -33,7 +33,7 @@ export const selectionFormatter = {
   },
 
   body(selection: Selection, config: any = {}) {
-    const selections = Array.from(selection.selections)
+    const selections = Array.from(selection._selections)
     selections.sort(
       (a, b) => +(b instanceof Fragment) - +(a instanceof Fragment)
     )
@@ -43,7 +43,7 @@ export const selectionFormatter = {
         {selections.map(selection => (
           <TreeItem
             object={selection}
-            root={!!selection.selections.size}
+            root={!!selection._selections.size}
             objectDepth={(config.objectDepth || 0) + 1}
           />
         ))}
@@ -52,6 +52,6 @@ export const selectionFormatter = {
   },
 
   hasBody(selection: Selection) {
-    return !!selection.selections.size
+    return !!selection._selections.size
   },
 }

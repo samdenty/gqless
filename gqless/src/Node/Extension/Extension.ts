@@ -77,13 +77,13 @@ export abstract class Extension {
     const redirect = (this._data as ProxyExtension)?.[REDIRECT]
     if (!redirect) return
 
-    const entry = accessor.cache._entries.get(accessor.node)
+    const entry = accessor._cache._entries.get(accessor._node)
     if (!entry) return
 
     return redirect(
       accessor instanceof FieldAccessor
         ? // @TODO: toJSON everything (could be variables)
-          accessor.selection.args
+          accessor._selection.args
         : undefined,
       {
         instances: entry._instances,

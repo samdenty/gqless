@@ -35,14 +35,14 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
       if (value.data === null) return null
 
       if (ctx.accessor) {
-        const fragment = ctx.accessor.getDefaultFragment(
+        const fragment = ctx.accessor._getDefaultFragment(
           value.node as ObjectNode
         )
         const fragmentAccessor =
-          ctx.accessor.get(fragment) ||
+          ctx.accessor._get(fragment) ||
           new FragmentAccessor(ctx.accessor, fragment)
 
-        return fragmentAccessor.data
+        return fragmentAccessor._data
       }
     }
 
@@ -51,7 +51,7 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
       {
         get(_, prop: any) {
           const fragment = ctx.accessor?._fragmentToResolve
-          if (fragment) return fragment.data?.[prop]
+          if (fragment) return fragment._data?.[prop]
 
           if (prop === ACCESSOR) return ctx.accessor
 
@@ -70,7 +70,7 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
         set(_, prop: any, value: any) {
           const fragment = ctx.accessor?._fragmentToResolve
           if (fragment) {
-            const { data } = fragment
+            const { _data: data } = fragment
             if (data) data[prop] = value
             return true
           }

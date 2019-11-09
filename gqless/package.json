@@ -5,7 +5,7 @@
   "version": "0.0.1-alpha.26",
   "sideEffects": false,
   "main": "dist/index.js",
-  "source": "src/index.ts",
+  "source2": "src/index.ts",
   "module": "dist/gqless.esm.js",
   "homepage": "https://gqless.netlify.com",
   "repository": {

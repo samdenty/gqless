@@ -12,12 +12,12 @@ export class ComputedExtension extends Extension {
   @computed()
   public get _data(): any {
     const data =
-      this.accessor.node instanceof ScalarNode
-        ? this.accessor.getData({
+      this.accessor._node instanceof ScalarNode
+        ? this.accessor._getData({
             // Remove extensions, to prevent an infinite loop
             extensions: [],
           })
-        : this.accessor.data
+        : this.accessor._data
 
     return (this._parent as ComputableExtension).getData(data)
   }

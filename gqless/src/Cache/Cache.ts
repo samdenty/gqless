@@ -79,8 +79,8 @@ export class Cache extends Disposable {
     }
   }
 
-  public dispose() {
-    super.dispose()
+  public _dispose() {
+    super._dispose()
     this._references._dispose()
   }
 }

@@ -5,7 +5,7 @@ export const syncValue = (
   accessor: Accessor,
 
   getFromValue: ((accessorValue: Value) => Value | undefined) | string,
-  withAccessor = accessor.parent
+  withAccessor = accessor._parent
 ) => {
   if (!withAccessor) return
 
@@ -20,29 +20,29 @@ export const syncValue = (
   let dispose: Function | undefined
   const associateValue = () => {
     if (dispose) {
-      accessor.deleteDiposer(dispose)
+      accessor._deleteDiposer(dispose)
       dispose()
       dispose = undefined
     }
 
-    if (withAccessor.value) {
-      accessor.value = getValue(withAccessor.value)
+    if (withAccessor._value) {
+      accessor._value = getValue(withAccessor._value)
 
       const onChange = isFn
-        ? withAccessor.value._onChange
-        : withAccessor.value._onSet.filter(k => k === getFromValue)
+        ? withAccessor._value._onChange
+        : withAccessor._value._onSet.filter(k => k === getFromValue)
 
       dispose = onChange(() => {
-        accessor.value = getValue(withAccessor.value!)
+        accessor._value = getValue(withAccessor._value!)
       })
-      accessor.addDisposer(dispose)
+      accessor._addDisposer(dispose)
 
       return
     }
 
-    accessor.value = undefined
+    accessor._value = undefined
   }
 
-  accessor.addDisposer(withAccessor._onValueChange(associateValue))
+  accessor._addDisposer(withAccessor._onValueChange(associateValue))
   associateValue()
 }

@@ -36,7 +36,7 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
 
     const parentSelection = getSelection(ctx)
 
-    let selection = parentSelection?.get<FieldSelection<TNode>>(selection => {
+    let selection = parentSelection?._get<FieldSelection<TNode>>(selection => {
       if (!(selection instanceof FieldSelection)) return false
 
       return (
@@ -62,10 +62,10 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
     const getData = (selection: FieldSelection<TNode>): any => {
       if (ctx.accessor) {
         const accessor =
-          ctx.accessor.get(selection) ||
+          ctx.accessor._get(selection) ||
           new FieldAccessor(ctx.accessor, selection)
 
-        return accessor.data
+        return accessor._data
       }
 
       return this._ofNode.getData({
