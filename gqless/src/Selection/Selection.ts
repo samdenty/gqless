@@ -3,32 +3,32 @@ import { DataTrait } from '../Node'
 
 export class Selection<TNode extends DataTrait = DataTrait> {
   // Selections that should be fetched with all queries
-  public keySelections = new Set<Selection>()
+  public _keySelections = new Set<Selection>()
   public selections = new Set<Selection>()
 
   /**
    * Emitted when a child selection is created
    */
-  public onSelect = createEvent<(selection: Selection) => void>()
+  public _onSelect = createEvent<(selection: Selection) => void>()
   /**
    * Emitted when a child selection is unselected
    */
-  public onUnselect = createEvent<(selection: Selection) => void>()
+  public _onUnselect = createEvent<(selection: Selection) => void>()
 
-  constructor(public node: TNode) {}
+  constructor(public _node: TNode) {}
 
   public add(selection: Selection, isKeySelection = false) {
     invariant(selection !== this, `Circular selections are not permitted!`)
 
-    if (isKeySelection) this.keySelections.add(selection)
+    if (isKeySelection) this._keySelections.add(selection)
     if (this.selections.has(selection)) return
 
     this.selections.add(selection)
-    this.onSelect.emit(selection)
+    this._onSelect.emit(selection)
 
     // Forward events
-    selection.onSelect(this.onSelect.emit)
-    selection.onUnselect(this.onUnselect.emit)
+    selection._onSelect(this._onSelect.emit)
+    selection._onUnselect(this._onUnselect.emit)
   }
 
   public get<TSelection extends Selection>(
@@ -48,15 +48,15 @@ export class Selection<TNode extends DataTrait = DataTrait> {
   public delete(selection: Selection) {
     if (!this.selections.has(selection)) return
     this.selections.delete(selection)
-    this.keySelections.delete(selection)
+    this._keySelections.delete(selection)
 
     // Unforward events
-    selection.onSelect.off(this.onSelect.emit)
-    selection.onUnselect.off(this.onUnselect.emit)
+    selection._onSelect.off(this._onSelect.emit)
+    selection._onUnselect.off(this._onUnselect.emit)
 
     const emitUnselect = (selection: Selection) => {
       // Emit unselect for each selection
-      this.onUnselect.emit(selection)
+      this._onUnselect.emit(selection)
       selection.selections.forEach(emitUnselect)
     }
 
@@ -64,6 +64,6 @@ export class Selection<TNode extends DataTrait = DataTrait> {
   }
 
   public toString() {
-    return String(this.node)
+    return String(this._node)
   }
 }

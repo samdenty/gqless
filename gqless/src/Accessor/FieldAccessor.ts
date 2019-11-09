@@ -26,9 +26,9 @@ export class FieldAccessor<
   protected _initializeExtensions() {
     super._initializeExtensions()
 
-    for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      let extension = this.parent.extensions[i]._childField(
-        this.selection.field
+    for (let i = this.parent._extensions.length - 1; i >= 0; --i) {
+      let extension = this.parent._extensions[i]._childField(
+        this.selection._field
       )
       if (!extension) continue
 
@@ -36,12 +36,12 @@ export class FieldAccessor<
         extension = new ComputedExtension(extension, this)
       }
 
-      this.extensions.unshift(extension)
+      this._extensions.unshift(extension)
     }
   }
 
   public getData(ctx?: DataContext): any {
-    return (this.selection.field._ofNode as DataTrait).getData({
+    return (this.selection._field._ofNode as DataTrait).getData({
       accessor: this,
       ...ctx,
     })

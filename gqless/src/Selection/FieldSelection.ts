@@ -9,19 +9,19 @@ export class FieldSelection<
   TNode extends DataTrait = DataTrait
 > extends Selection<TNode> {
   constructor(
-    public field: FieldNode<TNode>,
-    public readonly args?: Record<string, any>
+    public _field: FieldNode<TNode>,
+    public readonly _args?: Record<string, any>
   ) {
-    super(field._ofNode)
+    super(_field._ofNode)
   }
 
   public toString() {
-    const args = this.args
-      ? `(${buildArguments(argsFormatter, this.args, {
-          _node: this.field._args!,
+    const args = this._args
+      ? `(${buildArguments(argsFormatter, this._args, {
+          _node: this._field._args!,
         })})`
       : ''
 
-    return this.field._name + args
+    return this._field._name + args
   }
 }

@@ -46,11 +46,11 @@ export class Client<TData = any> extends Disposable {
       fragments: 'auto',
       variables: true,
     })
-    this.selection.onSelect(selection => {
+    this.selection._onSelect(selection => {
       this.plugins._all.onSelect(selection)
     })
 
-    this.selection.onUnselect(selection => {
+    this.selection._onUnselect(selection => {
       this.plugins._all.onUnselect(selection)
     })
   }

@@ -19,7 +19,7 @@ export const interceptAccessor = (ctx: DataContext) => {
 
 export const getExtensions = (ctx: DataContext) => {
   if (ctx.extensions) return ctx.extensions
-  if (ctx.accessor) return ctx.accessor.extensions
+  if (ctx.accessor) return ctx.accessor._extensions
 
   return []
 }

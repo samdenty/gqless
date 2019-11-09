@@ -16,14 +16,14 @@ export const getAlias = (tree: SelectionTree<FieldSelection>) => {
 
       if (
         tree._selection === siblingTree._selection ||
-        tree._selection.field !== siblingTree._selection.field
+        tree._selection._field !== siblingTree._selection._field
       )
         return
 
-      aliases.set(tree._selection, `${tree._selection.field._name}__${++id}`)
+      aliases.set(tree._selection, `${tree._selection._field._name}__${++id}`)
     })
     return aliases
-  }, [tree._parent, tree._selection.field])
+  }, [tree._parent, tree._selection._field])
 
   return fieldAliases.get(tree._selection)!
 }

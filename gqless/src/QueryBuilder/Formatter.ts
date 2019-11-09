@@ -42,8 +42,8 @@ export class Formatter {
     }
     this._SPACE = prettify ? ' ' : ''
     this._SEPARATOR = `,${this._SPACE}`
-    this._LINE_SEPARATOR = prettify ? this._SEPARATOR : `\n`
-    this._NEWLINE = prettify ? '' : '\n'
+    this._LINE_SEPARATOR = prettify ? `\n` : this._SEPARATOR
+    this._NEWLINE = prettify ? '\n' : ''
   }
 
   public _indent = (string: string) => {

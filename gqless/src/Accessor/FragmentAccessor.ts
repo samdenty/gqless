@@ -9,21 +9,23 @@ export class FragmentAccessor<
 > extends Accessor<TFragment, TChildren> {
   protected __resolved =
     this.parent!._resolved &&
-    (!this.parent!.value || this.parent!.value.node === this.selection.node)
+    (!this.parent!.value || this.parent!.value.node === this.selection._node)
 
   constructor(public parent: Accessor, fragment: TFragment) {
     super(parent, fragment)
 
-    if (fragment.node !== parent.node) {
+    if (fragment._node !== parent.node) {
       this.parent._onValueChange(value => {
         this._resolved =
-          this.parent._resolved && (!value || value.node === fragment.node)
+          this.parent._resolved && (!value || value.node === fragment._node)
       })
     }
 
     // Sync value with parent
     // (only if the node is the same)
-    syncValue(this, value => (value.node === fragment.node ? value : undefined))
+    syncValue(this, value =>
+      value.node === fragment._node ? value : undefined
+    )
     this._loadExtensions()
   }
 
@@ -44,16 +46,16 @@ export class FragmentAccessor<
 
   protected _initializeExtensions() {
     // Copy extensions from parent
-    for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      const extension = this.parent.extensions[i]
-      if (extension._node !== this.selection.node) continue
+    for (let i = this.parent._extensions.length - 1; i >= 0; --i) {
+      const extension = this.parent._extensions[i]
+      if (extension._node !== this.selection._node) continue
 
-      this.extensions.unshift(extension)
+      this._extensions.unshift(extension)
     }
   }
 
   public getData(ctx?: DataContext): any {
-    return this.selection.node.getData({
+    return this.selection._node.getData({
       accessor: this,
       ...ctx,
     })

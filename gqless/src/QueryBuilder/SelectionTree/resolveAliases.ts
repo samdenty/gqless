@@ -63,5 +63,5 @@ export function resolveAliases(this: SelectionTree, data: any) {
     }
   }
 
-  recurse(this._selection.node, data)
+  recurse(this._selection._node, data)
 }

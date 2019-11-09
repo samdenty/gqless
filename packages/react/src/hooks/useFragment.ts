@@ -51,7 +51,7 @@ export function useFragment<
 
   useMemo(() => {
     if (!fragmentName) return
-    fragment.name = fragmentName
+    fragment._name = fragmentName
   }, [fragment, fragmentName])
 
   const fragmentData = useMemo(() => fragmentOn(accessor, fragment), [

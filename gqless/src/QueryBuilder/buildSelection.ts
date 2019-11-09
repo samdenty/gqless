@@ -11,9 +11,9 @@ export const buildSelections = (
   variables?: Variables
 ) => {
   const innerNode =
-    tree._selection.node instanceof NodeContainer
-      ? tree._selection.node.innerNode
-      : tree._selection.node
+    tree._selection._node instanceof NodeContainer
+      ? tree._selection._node.innerNode
+      : tree._selection._node
 
   if (innerNode instanceof ScalarNode) return ''
 
@@ -46,13 +46,13 @@ const buildFieldSelectionTree = (
   }
 
   const buildArgs = () => {
-    const args = tree._selection.args
+    const args = tree._selection._args
     if (!args) return ''
 
     return `(${buildArguments(_formatter, args, {
       _variables: variables,
-      _node: tree._selection.field._args!,
-      _path: [tree._selection.field._name],
+      _node: tree._selection._field._args!,
+      _path: [tree._selection._field._name],
     })})`
   }
 
@@ -64,7 +64,7 @@ const buildFieldSelectionTree = (
   }
 
   return `${buildAlias()}${
-    tree._selection!.field._name
+    tree._selection!._field._name
   }${buildArgs()}${buildChildren()}`
 }
 
@@ -79,12 +79,12 @@ const buildFragmentTree = (
   }
 
   const parentNode =
-    tree._parent!._selection.node instanceof NodeContainer
-      ? tree._parent!._selection.node.innerNode
-      : tree._parent!._selection.node
+    tree._parent!._selection._node instanceof NodeContainer
+      ? tree._parent!._selection._node.innerNode
+      : tree._parent!._selection._node
 
   // If it's on the same node, and inline then omit type
-  if (tree._selection.node === parentNode) {
+  if (tree._selection._node === parentNode) {
     return buildSelections(_formatter, tree)
   }
 
@@ -94,14 +94,14 @@ const buildFragmentTree = (
   let huggedSelections = _hug(_indent(selections))
 
   // Add comment with fragment name (for debugging)
-  if (__DEV__ && _formatter._options.prettify && tree._selection.name) {
+  if (__DEV__ && _formatter._options.prettify && tree._selection._name) {
     huggedSelections = huggedSelections.replace(
       '{',
-      `{ #[${tree._selection.name}]`
+      `{ #[${tree._selection._name}]`
     )
   }
 
-  return `...${_SPACE}on ${tree._selection.node}${_SPACE}${huggedSelections}`
+  return `...${_SPACE}on ${tree._selection._node}${_SPACE}${huggedSelections}`
 }
 
 export const buildSelectionTree = (

@@ -40,8 +40,8 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
       if (!(selection instanceof FieldSelection)) return false
 
       return (
-        selection.field._name === this._name &&
-        deepJSONEqual(selection.args, args, (a, b) => {
+        selection._field._name === this._name &&
+        deepJSONEqual(selection._args, args, (a, b) => {
           // If either is a variable they need to be equal
           if (a instanceof Variable || b instanceof Variable) return a === b
 

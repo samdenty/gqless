@@ -21,7 +21,7 @@ export class IndexAccessor<
       parent.selection,
       (parent instanceof IndexAccessor
         ? (parent.node as ArrayNode<any>)
-        : parent.selection.node
+        : parent.selection._node
       )._ofNode
     )
 
@@ -41,20 +41,20 @@ export class IndexAccessor<
   protected _initializeExtensions() {
     super._initializeExtensions()
 
-    for (let i = this.parent.extensions.length - 1; i >= 0; --i) {
-      let extension = this.parent.extensions[i]._childIndex()
+    for (let i = this.parent._extensions.length - 1; i >= 0; --i) {
+      let extension = this.parent._extensions[i]._childIndex()
       if (!extension) continue
 
       if (extension instanceof ComputableExtension) {
         extension = new ComputedExtension(extension, this)
       }
 
-      this.extensions.unshift(extension)
+      this._extensions.unshift(extension)
     }
   }
 
   public getData(ctx?: DataContext): any {
-    return (this.selection.node._ofNode as DataTrait).getData({
+    return (this.selection._node._ofNode as DataTrait).getData({
       accessor: this,
       ...ctx,
     })

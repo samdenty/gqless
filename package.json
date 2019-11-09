@@ -44,6 +44,10 @@
     {
       "path": "./gqless/dist/*.cjs.production.min.js",
       "maxSize": "15 kB"
+    },
+    {
+      "path": "./gqless/dist/*.esm.js",
+      "maxSize": "15 kB"
     }
   ],
   "husky": {

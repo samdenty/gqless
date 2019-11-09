@@ -61,7 +61,7 @@ export class Cache extends Disposable {
 
     transaction.begin()
     const value = createPath(accessor, data)
-    merge(this, value, data, accessor.extensions)
+    merge(this, value, data, accessor._extensions)
     transaction.end()
   }
 

@@ -13,7 +13,7 @@ export const buildFragments = (
     name: string,
     fragmentTree: SelectionTree<Fragment>
   ) => {
-    return `fragment ${name} on ${fragmentTree._selection.node}${_SPACE}${_hug(
+    return `fragment ${name} on ${fragmentTree._selection._node}${_SPACE}${_hug(
       _indent(buildSelections(_formatter, fragmentTree))
     )}`
   }

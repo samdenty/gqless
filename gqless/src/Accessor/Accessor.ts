@@ -28,16 +28,16 @@ export abstract class Accessor<
   TChildren extends Accessor<Selection, any> = Accessor<Selection, any>
 > extends Disposable {
   // Ordered by most important -> least
-  public extensions: (StaticExtension | ComputedExtension)[] = []
-  public children: TChildren[] = []
+  public _extensions: (StaticExtension | ComputedExtension)[] = []
+  public _children: TChildren[] = []
 
   public scheduler: Scheduler = this.parent
     ? (this.parent as any).scheduler
     : undefined!
   public cache: Cache = this.parent ? (this.parent as any).cache : undefined!
+
   // replaces refs of this accessor, with a Fragment
   // see FragmentAccessor#startResolving
-
   public _fragmentToResolve?: FragmentAccessor
   protected _data: any
   protected _status: NetworkStatus = NetworkStatus.idle
@@ -45,27 +45,27 @@ export abstract class Accessor<
   protected __resolved = true
 
   // Equality check only
-  public onDataChange = onDataChange(this)
   public onStatusChange = createEvent<(status: NetworkStatus, prevStatus: NetworkStatus) => void>()
   public _onResolvedChange = createEvent<(resolved: boolean) => void>()
   public _onInitializeExtensions = createEvent()
   public _onValueChange = createEvent<(value: Value | undefined, prevValue: Value | undefined) => void>()
+  public onDataChange = onDataChange(this)
 
   constructor(
     public readonly parent: Accessor | undefined,
     public readonly selection: TSelection,
-    public readonly node = selection.node
+    public readonly node = selection._node
   ) {
     super()
 
     if (parent) {
-      parent.children.push(this)
+      parent._children.push(this)
 
       this.addDisposer(
         // On un-select, dispose of self
         // used when you do `query.users()`, and an argumentless
         // selection is created before the function call
-        parent.selection.onUnselect.filter(s => s === selection)(() =>
+        parent.selection._onUnselect.filter(s => s === selection)(() =>
           this.dispose()
         )
       )
@@ -142,7 +142,7 @@ export abstract class Accessor<
         extension = new ComputedExtension(extension, this)
       }
 
-      this.extensions.unshift(extension)
+      this._extensions.unshift(extension)
     }
 
     if (this.node instanceof Abstract) {
@@ -155,22 +155,22 @@ export abstract class Accessor<
   }
 
   protected _loadExtensions() {
-    const prevExtensions = this.extensions
-    this.extensions = []
+    const prevExtensions = this._extensions
+    this._extensions = []
     this._initializeExtensions()
 
-    if (arrayEqual(prevExtensions, this.extensions)) return
+    if (arrayEqual(prevExtensions, this._extensions)) return
 
     this._onInitializeExtensions.emit()
 
-    if (!this.extensions.length) return
+    if (!this._extensions.length) return
 
     // If already a fragment, key fragments should only be added on different types
     const isTopLevel = !(this instanceof FragmentAccessor) || this.node !== this.parent.node
 
     if (isTopLevel) {
       // Add keyFragments
-      this.extensions.forEach(({ _fragment: fragment }) => {
+      this._extensions.forEach(({ _fragment: fragment }) => {
         if (!fragment) return
         if (this.selection === (fragment as any)) return
 
@@ -182,7 +182,7 @@ export abstract class Accessor<
       // TODO: Should this be here? or in merge.ts
       // Cache redirects
       if (this.cache._entries.has(this.node)) {
-        for (const extension of this.extensions) {
+        for (const extension of this._extensions) {
           const value = extension._redirect(this)
 
           if (!(value instanceof Value)) continue
@@ -202,11 +202,11 @@ export abstract class Accessor<
       `can't update ${this.path} value without parent value`
     )
 
-    const valueless = new Set(this.children.filter(a => !(a.value)))
+    const valueless = new Set(this._children.filter(a => !(a.value)))
     this.parent.value.set(this.toString(), value)
 
     afterTransaction(() => {
-      const accessorWithoutValue = this.children.find(a => !a.value && !valueless.has(a))
+      const accessorWithoutValue = this._children.find(a => !a.value && !valueless.has(a))
 
       // If a child accessor is missing a value, then
       // re-fetch it entirely
@@ -230,15 +230,15 @@ export abstract class Accessor<
     find: ((child: TChildren | FragmentAccessor) => boolean) | Selection | string | number
   ): TChild | undefined {
     if (typeof find === 'function') {
-      return this.children.find(find) as any
+      return this._children.find(find) as any
     }
 
     if (find instanceof Selection) {
-      const accessor = this.children.find(c => c.selection === find) as any
+      const accessor = this._children.find(c => c.selection === find) as any
       return accessor
     }
 
-    return this.children.find(c => c.toString() === String(find)) as any
+    return this._children.find(c => c.toString() === String(find)) as any
   }
 
   public getDefaultFragment(node: ObjectNode) {
@@ -273,9 +273,9 @@ export abstract class Accessor<
     super.dispose()
 
     if (this.parent) {
-      const idx = this.parent.children.indexOf(this)
+      const idx = this.parent._children.indexOf(this)
       if (idx !== -1) {
-        this.parent.children.splice(idx, 1)
+        this.parent._children.splice(idx, 1)
       }
 
       this.scheduler._commit._unstage(this)

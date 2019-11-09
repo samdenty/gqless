@@ -1,7 +1,7 @@
 let currentTransaction: Transaction | undefined
 
 export class Transaction {
-  private callbacks = new Set<Function>()
+  private _callbacks = new Set<Function>()
 
   public begin() {
     if (currentTransaction) return
@@ -15,14 +15,14 @@ export class Transaction {
   }
 
   private _flush() {
-    const callbacks = Array.from(this.callbacks)
-    this.callbacks.clear()
+    const callbacks = Array.from(this._callbacks)
+    this._callbacks.clear()
 
     callbacks.forEach(callback => callback())
   }
 
   public _onComplete(callback: Function) {
-    this.callbacks.add(callback)
+    this._callbacks.add(callback)
   }
 }
 

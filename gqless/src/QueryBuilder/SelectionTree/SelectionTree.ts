@@ -6,11 +6,11 @@ import { resolveAliases } from './resolveAliases'
 export class SelectionTree<TSelection extends Selection = Selection> {
   public _duplicatedFragments: Map<string, SelectionTree<Fragment>> = this
     ._parent
-    ? (this._parent as any).duplicatedFragments
+    ? (this._parent as any)._duplicatedFragments
     : new Map()
 
   public _allFragments: WeakMap<Fragment, string | undefined> = this._parent
-    ? (this._parent as any).allFragments
+    ? (this._parent as any)._allFragments
     : new WeakMap()
 
   public _children: SelectionTree[] = []
@@ -60,7 +60,7 @@ export class SelectionTree<TSelection extends Selection = Selection> {
   @computed()
   public get _key() {
     if (!(this._selection instanceof FieldSelection)) return
-    return this._alias || this._selection.field._name
+    return this._alias || this._selection._field._name
   }
 
   public toString() {

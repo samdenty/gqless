@@ -11,7 +11,7 @@ export class RootAccessor<
   constructor(
     selection: TSelection,
     public scheduler: Scheduler,
-    public cache: Cache = new Cache(selection.node)
+    public cache: Cache = new Cache(selection._node)
   ) {
     super(undefined, selection)
     this.value = cache._rootValue
@@ -26,7 +26,7 @@ export class RootAccessor<
   // TODO: This should be replace with a Generic inside accessor
 
   public getData(ctx?: DataContext): any {
-    return this.selection.node.getData({
+    return this.selection._node.getData({
       accessor: this,
       ...ctx,
     })

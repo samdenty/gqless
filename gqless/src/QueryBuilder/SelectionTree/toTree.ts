@@ -35,7 +35,7 @@ export const toTree = (selections: (Selection | Selection[])[]) => {
       }
 
       // Add all the keySelections to the tree
-      selection.keySelections.forEach(keySelection => {
+      selection._keySelections.forEach(keySelection => {
         addSelectionToTree(tree, keySelection)
       })
     }
