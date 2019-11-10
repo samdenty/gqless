@@ -11,6 +11,7 @@ This will happen through the *gqless compiler*. It will take your Typescript (or
 ```ts
 MyComponent.preload()
 UserComponent.preload({ user: query.me })
+//                      ^ Specifying props is easy
 ```
 
 ## Mutations
