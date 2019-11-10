@@ -51,7 +51,7 @@ export abstract class Extension {
         )
 
         // Initialize with selections
-        const data = node!.getData({ selection: fragment })
+        const data = node!.getData({ selection$: fragment })
         getKey(data)
 
         return fragment
