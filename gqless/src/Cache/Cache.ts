@@ -9,78 +9,78 @@ import { createEvent } from '@gqless/utils'
 import { Transaction } from './Transaction'
 
 export class Cache extends Disposable {
-  public _references!: ReturnType<typeof deepReference>
-  public _entries = new Map<DataTrait, NodeEntry>()
+  public references$!: ReturnType<typeof deepReference>
+  public entries$ = new Map<DataTrait, NodeEntry>()
 
-  public _onRootValueChange = createEvent<(rootValue: Value) => void>()
+  public onRootValueChange$ = createEvent<(rootValue: Value) => void>()
 
   constructor(node: ObjectNode) {
     super()
 
-    this._onRootValueChange(() => {
-      if (this._references) this._references._dispose()
+    this.onRootValueChange$(() => {
+      if (this.references$) this.references$.dispose$()
 
-      this._references = deepReference(this._rootValue)
+      this.references$ = deepReference(this.rootValue$)
 
       const addToEntries = (value: Value) => {
-        if (!this._entries.has(value.node))
-          this._entries.set(value.node, new NodeEntry(value.node))
-        const graphNode = this._entries.get(value.node)!
+        if (!this.entries$.has(value.node$))
+          this.entries$.set(value.node$, new NodeEntry(value.node$))
+        const graphNode = this.entries$.get(value.node$)!
 
-        if (graphNode._instances.has(value)) return
+        if (graphNode.instances$.has(value)) return
 
-        graphNode._instances.add(value)
+        graphNode.instances$.add(value)
       }
 
-      addToEntries(this._rootValue)
-      this._references._onReference(addToEntries)
-      this._references._onUnreference(value => {
-        if (!this._entries.has(value.node)) return
-        const graphNode = this._entries.get(value.node)!
+      addToEntries(this.rootValue$)
+      this.references$.onReference$(addToEntries)
+      this.references$.onUnreference$(value => {
+        if (!this.entries$.has(value.node$)) return
+        const graphNode = this.entries$.get(value.node$)!
 
-        graphNode._instances.delete(value)
+        graphNode.instances$.delete(value)
       })
     })
 
-    this._rootValue = new Value(node)
+    this.rootValue$ = new Value(node)
   }
 
-  private __rootValue!: Value
-  public get _rootValue() {
-    return this.__rootValue
+  private _rootValue$!: Value
+  public get rootValue$() {
+    return this._rootValue$
   }
-  public set _rootValue(value: Value) {
-    const prevValue = this.__rootValue
+  public set rootValue$(value: Value) {
+    const prevValue = this._rootValue$
     if (value === prevValue) return
-    this.__rootValue = value
-    this._onRootValueChange.emit(value)
+    this._rootValue$ = value
+    this.onRootValueChange$.emit(value)
   }
 
-  public _merge(accessor: Accessor, data: any) {
+  public merge$(accessor: Accessor, data: any) {
     const transaction = new Transaction()
 
     transaction.begin()
     const value = createPath(accessor, data)
-    merge(this, value, data, accessor._extensions)
+    merge(this, value, data, accessor.extensions$)
     transaction.end()
   }
 
   public toJSON(deep = true) {
     const types: any = {}
 
-    this._entries.forEach(nodeEntry => {
-      types[nodeEntry._node.toString()] =
+    this.entries$.forEach(nodeEntry => {
+      types[nodeEntry.node$.toString()] =
         deep === true ? nodeEntry.toJSON() : nodeEntry
     })
 
     return {
-      data: deep === true ? this._rootValue.toJSON() : this._rootValue,
+      data: deep === true ? this.rootValue$.toJSON() : this.rootValue$,
       types,
     }
   }
 
-  public _dispose() {
-    super._dispose()
-    this._references._dispose()
+  public dispose$() {
+    super.dispose$()
+    this.references$.dispose$()
   }
 }

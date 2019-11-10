@@ -16,14 +16,14 @@ export const onDataChange = (accessor: Accessor) => {
 
     // Hook for onDataUpdate event
     const check = () => {
-      const newData = value?.data
-      const prevData = prevValue?.data
+      const newData = value?.data$
+      const prevData = prevValue?.data$
       if (newData === prevData) return
 
       if (
         prevData !== undefined ||
         newData === null ||
-        accessor._node instanceof ScalarNode
+        accessor.node$ instanceof ScalarNode
       ) {
         onDataChange.emit(prevData)
       }
@@ -34,12 +34,12 @@ export const onDataChange = (accessor: Accessor) => {
       return
     }
 
-    dispose = value._onChange(check)
+    dispose = value.onChange$(check)
     check()
   }
 
-  accessor._addDisposer(accessor._onValueChange(onValueAssociated))
-  onValueAssociated(undefined, accessor._value)
+  accessor.addDisposer$(accessor.onValueChange$(onValueAssociated))
+  onValueAssociated(undefined, accessor.value$)
 
   return onDataChange
 }

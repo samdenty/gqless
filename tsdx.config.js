@@ -1,6 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 const { terser } = require('rollup-plugin-terser')
+const replace = require('@rollup/plugin-replace')
 
 const cacheFileName = path.resolve(__dirname, './mangle.json')
 const nameCache = fs.existsSync(cacheFileName)
@@ -22,13 +23,13 @@ module.exports = {
       },
       mangle: {
         properties: {
-          regex: /^_/,
+          regex: /\$$/,
           reserved: ['__typename'],
         },
       },
       nameCache,
       ecma: 5,
-      toplevel: options.format === 'cjs',
+      toplevel: true,
       warnings: true,
     })
 
@@ -37,6 +38,24 @@ module.exports = {
     } else {
       config.plugins.splice(babelIndex, 0, terserPlugin)
     }
+
+    config.plugins.push({
+      transform(code, id) {
+        const { props } = nameCache.props
+        const values = {}
+
+        for (const key in props) {
+          values[`"${key.substr(1)}"`] = `"${props[key]}"`
+        }
+
+        const { transform } = replace({
+          values,
+          delimiters: ['', ''],
+        })
+
+        return transform.call(this, code, id)
+      },
+    })
 
     return config
   },

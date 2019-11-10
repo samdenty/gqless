@@ -18,22 +18,22 @@ export function resolveAliases(this: SelectionTree, data: any) {
       let updated = new Set<string>()
 
       const recurseObjectTree = (tree: SelectionTree) =>
-        tree._children.forEach(tree => {
-          if (tree._selection instanceof Fragment) {
+        tree.children$.forEach(tree => {
+          if (tree.selection$ instanceof Fragment) {
             recurseObjectTree(tree)
             return
           }
 
-          if (!data.hasOwnProperty(tree._key!)) return
-          const cacheKey = tree._selection.toString()
+          if (!data.hasOwnProperty(tree.key$!)) return
+          const cacheKey = tree.selection$.toString()
 
-          let value = data[tree._key!]
-          if (originals.has(tree._key!)) {
-            value = originals.get(tree._key!)
-            originals.delete(tree._key!)
+          let value = data[tree.key$!]
+          if (originals.has(tree.key$!)) {
+            value = originals.get(tree.key$!)
+            originals.delete(tree.key$!)
           }
 
-          if (tree._key !== cacheKey) {
+          if (tree.key$ !== cacheKey) {
             // If the key already exists, record original value
             if (data.hasOwnProperty(cacheKey))
               originals.set(cacheKey, data[cacheKey])
@@ -42,10 +42,10 @@ export function resolveAliases(this: SelectionTree, data: any) {
             updated.add(cacheKey)
 
             // Only delete, if it hasn't been updated
-            if (!updated.has(tree._key!)) delete data[tree._key!]
+            if (!updated.has(tree.key$!)) delete data[tree.key$!]
           }
 
-          tree._resolveAliases(value)
+          tree.resolveAliases$(value)
         })
 
       recurseObjectTree(this)
@@ -59,9 +59,9 @@ export function resolveAliases(this: SelectionTree, data: any) {
     }
 
     if (node instanceof ArrayNode) {
-      ;(data as any[]).forEach(indexData => recurse(node._ofNode, indexData))
+      ;(data as any[]).forEach(indexData => recurse(node.ofNode$, indexData))
     }
   }
 
-  recurse(this._selection._node, data)
+  recurse(this.selection$.node$, data)
 }

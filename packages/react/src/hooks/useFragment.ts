@@ -28,14 +28,14 @@ export function useFragment<
   let accessor = getAccessor(data)
 
   if (accessor instanceof FragmentAccessor) {
-    accessor = accessor._parent
+    accessor = accessor.parent$
   }
 
   const node = useMemo(() => {
     const node =
-      accessor._node instanceof NodeContainer
-        ? accessor._node.innerNode
-        : accessor._node
+      accessor.node$ instanceof NodeContainer
+        ? accessor.node$.innerNode$
+        : accessor.node$
 
     if (onType) {
       const nodeImplementation = getAbstractImplementation(node, onType)
@@ -43,7 +43,7 @@ export function useFragment<
     }
 
     return node
-  }, [accessor._node, onType]) as ObjectNode
+  }, [accessor.node$, onType]) as ObjectNode
 
   const fragment = useComponentMemo(() => new Fragment(node, fragmentName), [
     node,
@@ -51,7 +51,7 @@ export function useFragment<
 
   useMemo(() => {
     if (!fragmentName) return
-    fragment._name = fragmentName
+    fragment.name$ = fragmentName
   }, [fragment, fragmentName])
 
   const fragmentData = useMemo(() => fragmentOn(accessor, fragment), [

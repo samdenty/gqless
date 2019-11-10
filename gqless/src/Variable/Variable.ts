@@ -14,11 +14,11 @@ export interface IVariableOptions {
 }
 
 export class Variable<TValue = any> {
-  public node?: UArguments
-  public value?: TValue
+  public node$?: UArguments
+  public value$?: TValue
 
-  public nullable?: boolean
-  public name?: string
+  public nullable$?: boolean
+  public name$?: string
 
   constructor(value?: TValue, public options: IVariableOptions = {}) {
     Object.assign(this, options)
@@ -27,49 +27,49 @@ export class Variable<TValue = any> {
   }
 
   public updateValue(value?: TValue) {
-    if (value === this.value) return
+    if (value === this.value$) return
 
     if (value === null) {
       invariant(
-        this.nullable !== false,
-        `Can't set non-nullable variable of type ${this.node}, to null`
+        this.nullable$ !== false,
+        `Can't set non-nullable variable of type ${this.node$}, to null`
       )
     }
 
-    this.value = value
+    this.value$ = value
   }
 
-  public updateNullable(nullable: boolean) {
-    if (this.nullable === true) {
+  public updateNullable$(nullable: boolean) {
+    if (this.nullable$ === true) {
       invariant(
         nullable,
-        `Can't convert a nullable variable of type ${this.node}, to non-nullable`
+        `Can't convert a nullable variable of type ${this.node$}, to non-nullable`
       )
     }
 
-    if (this.nullable !== false) {
-      this.nullable = nullable
+    if (this.nullable$ !== false) {
+      this.nullable$ = nullable
     }
   }
 
-  public _validateNode(node: UArguments, nullable?: boolean) {
-    if (!this.node) this.node = node
+  public validateNode$(node: UArguments, nullable?: boolean) {
+    if (!this.node$) this.node$ = node
 
     invariant(
-      this.node === node,
-      `Cannot change variable from type '${this.node}' to '${node}`
+      this.node$ === node,
+      `Cannot change variable from type '${this.node$}' to '${node}`
     )
 
     if (nullable !== undefined) {
-      this.updateNullable(nullable)
+      this.updateNullable$(nullable)
     }
   }
 
   public toString() {
-    return `${this.node}${this.nullable ? '' : '!'}`
+    return `${this.node$}${this.nullable$ ? '' : '!'}`
   }
 
   public toJSON() {
-    return this.value
+    return this.value$
   }
 }

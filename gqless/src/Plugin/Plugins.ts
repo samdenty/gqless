@@ -3,7 +3,7 @@ import { Plugin, PluginMethod } from './Plugin'
 type ComposablePlugin = (plugin: Plugin[]) => Plugin[]
 
 export class Plugins {
-  private plugins: Plugin[] = []
+  private plugins$: Plugin[] = []
 
   public add(...plugins: Plugin[]): void
   public add(plugin: ComposablePlugin): void
@@ -11,23 +11,23 @@ export class Plugins {
   public add(...args: any[]) {
     if (args.length === 1 && typeof args[0] === 'function') {
       const plugin: ComposablePlugin = args[0]
-      this.plugins = plugin(this.plugins)
+      this.plugins$ = plugin(this.plugins$)
     } else {
-      this.plugins.push(...(args as Plugin[]))
+      this.plugins$.push(...(args as Plugin[]))
     }
   }
 
   public remove(...plugins: Plugin[]) {
     plugins.forEach(plugin => {
-      const idx = this.plugins.indexOf(plugin)
+      const idx = this.plugins$.indexOf(plugin)
 
       if (idx > -1) {
-        this.plugins.splice(idx, 1)
+        this.plugins$.splice(idx, 1)
       }
     })
   }
 
-  public _all = new Proxy<
+  public all$ = new Proxy<
     {
       [K in keyof Plugin]-?: (
         ...args: Parameters<PluginMethod<K>>
@@ -35,13 +35,13 @@ export class Plugins {
     }
   >({} as any, {
     get: (_, key: keyof Plugin) => (...args: any[]) => {
-      return this.plugins
+      return this.plugins$
         .filter(plugin => key in plugin)
         .map(plugin => (plugin[key] as Function)(...args))
     },
   })
 
-  public _first = new Proxy<
+  public first$ = new Proxy<
     {
       [K in keyof Plugin]-?: (
         ...args: Parameters<PluginMethod<K>>
@@ -53,7 +53,7 @@ export class Plugins {
     get: (_, key: keyof Plugin) => (...args: any[]) => (
       isCorrectValue: (value: any) => boolean
     ) => {
-      for (const plugin of this.plugins.filter(plugin => key in plugin)) {
+      for (const plugin of this.plugins$.filter(plugin => key in plugin)) {
         const value = (plugin[key] as Function)(...args)
         if (isCorrectValue(value)) return value
       }

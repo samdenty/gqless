@@ -5,15 +5,15 @@ import { Query } from '../Scheduler'
 // if it's been called from outside
 
 export class Poller {
-  private accessor: Accessor
+  private accessor$: Accessor
 
-  private timer?: number
-  private unstage?: Function
+  private timer$?: number
+  private unstage$?: Function
 
   public polling = false
 
   constructor(data: any, public interval: number, public stack?: Query[]) {
-    this.accessor = getAccessor(data)
+    this.accessor$ = getAccessor(data)
   }
 
   public updateInterval(interval: number) {
@@ -27,26 +27,26 @@ export class Poller {
    * Polls the selection, scheduling a new poll
    * only after it's been fetched
    */
-  private async poll() {
-    this.unstage = this.accessor._scheduler._commit._stage(
-      this.accessor,
+  private async poll$() {
+    this.unstage$ = this.accessor$.scheduler$.commit$.stage$(
+      this.accessor$,
       ...(this.stack || [])
     )
 
     // Wait until it's been fetched, before polling again
-    await this.accessor._onStatusChange
+    await this.accessor$.onStatusChange$
 
-    this.unstage = undefined
+    this.unstage$ = undefined
 
     // If we're still polling after we've fetched
     // the selection, then poll again
     if (!this.polling) return
 
-    this.pollAfterInterval()
+    this.pollAfterInterval$()
   }
 
-  private pollAfterInterval() {
-    this.timer = setTimeout(() => this.poll(), this.interval)
+  private pollAfterInterval$() {
+    this.timer$ = setTimeout(() => this.poll$(), this.interval)
   }
 
   public resetTimer() {
@@ -56,11 +56,11 @@ export class Poller {
   public toggle(poll = !this.polling) {
     this.polling = poll
 
-    this.unstage && this.unstage()
-    clearTimeout(this.timer)
+    this.unstage$ && this.unstage$()
+    clearTimeout(this.timer$)
 
     if (!poll) return
 
-    this.pollAfterInterval()
+    this.pollAfterInterval$()
   }
 }

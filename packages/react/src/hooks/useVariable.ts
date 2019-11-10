@@ -26,7 +26,7 @@ export function useVariable(value: any, _1?: any, _2?: any) {
   useEffect(() => {
     if (nullable === undefined) return
 
-    variable.updateNullable(nullable)
+    variable.updateNullable$(nullable)
   }, [variable, nullable])
 
   useEffect(() => {

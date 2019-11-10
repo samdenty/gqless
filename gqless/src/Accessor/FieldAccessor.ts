@@ -12,23 +12,23 @@ export class FieldAccessor<
   TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TFieldSelection, TChildren> {
-  protected __resolved = this._parent._resolved
+  protected _resolved$ = this.parent$.resolved$
 
-  constructor(public _parent: Accessor, fieldSelection: TFieldSelection) {
-    super(_parent, fieldSelection)
+  constructor(public parent$: Accessor, fieldSelection: TFieldSelection) {
+    super(parent$, fieldSelection)
 
-    this._parent._onResolvedChange(resolved => (this._resolved = resolved))
+    this.parent$.onResolvedChange$(resolved => (this.resolved$ = resolved))
     syncValue(this, this.toString())
-    this._loadExtensions()
-    this._scheduler._commit._stageUntilValue(this)
+    this.loadExtensions$()
+    this.scheduler$.commit$.stageUntilValue$(this)
   }
 
-  protected _initializeExtensions() {
-    super._initializeExtensions()
+  protected initializeExtensions$() {
+    super.initializeExtensions$()
 
-    for (let i = this._parent._extensions.length - 1; i >= 0; --i) {
-      let extension = this._parent._extensions[i]._childField(
-        this._selection._field
+    for (let i = this.parent$.extensions$.length - 1; i >= 0; --i) {
+      let extension = this.parent$.extensions$[i].childField$(
+        this.selection$.field$
       )
       if (!extension) continue
 
@@ -36,18 +36,18 @@ export class FieldAccessor<
         extension = new ComputedExtension(extension, this)
       }
 
-      this._extensions.unshift(extension)
+      this.extensions$.unshift(extension)
     }
   }
 
-  public _getData(ctx?: DataContext): any {
-    return (this._selection._field._ofNode as DataTrait).getData({
-      accessor: this,
+  public getData$(ctx?: DataContext): any {
+    return (this.selection$.field$.ofNode$ as DataTrait).getData({
+      accessor$: this,
       ...ctx,
     })
   }
 
   public toString() {
-    return this._selection.toString()
+    return this.selection$.toString()
   }
 }

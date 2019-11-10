@@ -21,25 +21,25 @@ export type IScalarNodeOptions = {
 }
 
 export class ScalarNode extends Matchable implements DataTrait {
-  public _extension?: StaticExtension | ComputableExtension
-  public _name?: string
+  public extension$?: StaticExtension | ComputableExtension
+  public name$?: string
 
   constructor({ name, extension }: IScalarNodeOptions = {}) {
     super()
 
-    this._name = name
+    this.name$ = name
 
     if (extension) {
-      this._extension = createExtension(this, extension)
+      this.extension$ = createExtension(this, extension)
     }
   }
 
-  public _match(value: Value, data: any) {
-    const result = super._match(value, data)
+  public match$(value: Value, data: any) {
+    const result = super.match$(value, data)
     if (result !== undefined) return result
 
     if (data instanceof RegExp) {
-      const input = String(value.data)
+      const input = String(value.data$)
       return input.match(data) ? value : undefined
     }
 
@@ -47,7 +47,7 @@ export class ScalarNode extends Matchable implements DataTrait {
   }
 
   public toString() {
-    return this._name || this.constructor.name
+    return this.name$ || this.constructor.name
   }
 
   public getData(ctx: DataContext) {
@@ -58,10 +58,10 @@ export class ScalarNode extends Matchable implements DataTrait {
 
     const extension = extensions[0]
     if (extension) {
-      return extension._data
+      return extension.data$
     }
 
     if (!value) return null
-    return value.data
+    return value.data$
   }
 }

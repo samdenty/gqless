@@ -11,14 +11,14 @@ export const fragmentOn = (data: any, fragment: Fragment) => {
   const accessor = getAccessor(data)
 
   let fragmentAccessor = (accessor instanceof FragmentAccessor
-    ? accessor._parent
+    ? accessor.parent$
     : accessor
-  )._get(fragment)
+  ).get$(fragment)
 
   if (!fragmentAccessor) {
-    accessor._selection.add(fragment)
+    accessor.selection$.add(fragment)
     fragmentAccessor = new FragmentAccessor(accessor, fragment)
   }
 
-  return fragmentAccessor._data
+  return fragmentAccessor.data$
 }

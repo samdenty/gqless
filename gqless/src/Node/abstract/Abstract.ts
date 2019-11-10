@@ -11,7 +11,7 @@ import {
 
 export const getAbstractImplementation = (node: object, typename: string) => {
   if (node instanceof Abstract && typename) {
-    const implementation = node._implementations.find(
+    const implementation = node.implementations$.find(
       i => i.toString() === typename
     )
     invariant(implementation, `'${typename}' is not a valid subtype of ${node}`)
@@ -23,7 +23,7 @@ export const getAbstractImplementation = (node: object, typename: string) => {
 
 export class Abstract<TNode extends ObjectNode = ObjectNode>
   implements DataTrait {
-  constructor(public _implementations: TNode[]) {}
+  constructor(public implementations$: TNode[]) {}
 
   public getData(ctx: DataContext) {
     interceptAccessor(ctx)
@@ -32,17 +32,17 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
 
     // If the value is nulled, return null
     if (value) {
-      if (value.data === null) return null
+      if (value.data$ === null) return null
 
-      if (ctx.accessor) {
-        const fragment = ctx.accessor._getDefaultFragment(
-          value.node as ObjectNode
+      if (ctx.accessor$) {
+        const fragment = ctx.accessor$.getDefaultFragment$(
+          value.node$ as ObjectNode
         )
         const fragmentAccessor =
-          ctx.accessor._get(fragment) ||
-          new FragmentAccessor(ctx.accessor, fragment)
+          ctx.accessor$.get$(fragment) ||
+          new FragmentAccessor(ctx.accessor$, fragment)
 
-        return fragmentAccessor._data
+        return fragmentAccessor.data$
       }
     }
 
@@ -50,27 +50,27 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
       {},
       {
         get(_, prop: any) {
-          const fragment = ctx.accessor?._fragmentToResolve
-          if (fragment) return fragment._data?.[prop]
+          const fragment = ctx.accessor$?.fragmentToResolve$
+          if (fragment) return fragment.data$?.[prop]
 
-          if (prop === ACCESSOR) return ctx.accessor
+          if (prop === ACCESSOR) return ctx.accessor$
 
           if (prop === '__typename') {
-            return getValue(ctx)?.node.toString()
+            return getValue(ctx)?.node$.toString()
           }
 
           if (prop === 'toString') return () => this.toString()
 
           // fallback to extensions
           for (const extension of getExtensions(ctx)) {
-            if (prop in extension._data) return extension._data[prop]
+            if (prop in extension.data$) return extension.data$[prop]
           }
         },
 
         set(_, prop: any, value: any) {
-          const fragment = ctx.accessor?._fragmentToResolve
+          const fragment = ctx.accessor$?.fragmentToResolve$
           if (fragment) {
-            const { _data: data } = fragment
+            const { data$: data } = fragment
             if (data) data[prop] = value
             return true
           }
@@ -78,7 +78,7 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
           // else set it on the first extension with the property
           for (const extension of getExtensions(ctx)) {
             if (prop in extension) {
-              extension._data[prop] = value
+              extension.data$[prop] = value
               return true
             }
           }
@@ -90,6 +90,6 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
   }
 
   public toString() {
-    return this._implementations.join('|')
+    return this.implementations$.join('|')
   }
 }

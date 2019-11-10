@@ -4,9 +4,9 @@ import { Client, Variable } from 'gqless'
 jest.useFakeTimers()
 
 const commitFetched = async (client: Client) => {
-  const { _commit: commit } = client.scheduler
+  const { commit$: commit } = client.scheduler
   jest.runOnlyPendingTimers()
-  await commit._onFetched
+  await commit.onFetched$
 }
 
 it('fetches values', async () => {
@@ -26,7 +26,7 @@ it('fetches values', async () => {
 
   expect(client.cache.toJSON()).toMatchSnapshot()
 
-  expect(client.scheduler._commit._accessors.size).toEqual(0)
+  expect(client.scheduler.commit$.accessors$.size).toEqual(0)
 })
 
 it(`shares cache for arguments with/without variables`, async () => {
@@ -47,5 +47,5 @@ it(`shares cache for arguments with/without variables`, async () => {
 
   expect(client.cache.toJSON()).toMatchSnapshot()
 
-  expect(client.scheduler._commit._accessors.size).toEqual(0)
+  expect(client.scheduler.commit$.accessors$.size).toEqual(0)
 })

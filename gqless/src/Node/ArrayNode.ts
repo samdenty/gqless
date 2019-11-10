@@ -30,21 +30,21 @@ export class ArrayNode<TNode> extends Mix(
     memo(() => this, [ofNode, nullable])
   }
 
-  public _match(value: Value, data: any) {
-    const result = super._match(value, data)
+  public match$(value: Value, data: any) {
+    const result = super.match$(value, data)
     if (result !== undefined) return result
 
     // Whole array match
     if (Array.isArray(data)) {
-      if (data.length !== (value.data! as []).length) return
+      if (data.length !== (value.data$! as []).length) return
 
       const badMatch = data.find((match, i) => {
-        const indexValue = value.get(i)
+        const indexValue = value.get$(i)
         if (!indexValue) return true
 
-        if (!(indexValue.node instanceof Matchable)) return
+        if (!(indexValue.node$ instanceof Matchable)) return
 
-        return !indexValue.node._match(indexValue, data[i])
+        return !indexValue.node$.match$(indexValue, data[i])
       })
       if (badMatch) return
 
@@ -52,11 +52,11 @@ export class ArrayNode<TNode> extends Mix(
     }
 
     // Array index match
-    const innerNode = (value.node as ArrayNode).innerNode
+    const innerNode = (value.node$ as ArrayNode).innerNode$
     if (!(innerNode instanceof Matchable)) return
 
-    for (const indexValue of value.data as []) {
-      const match = innerNode._match(indexValue, data)
+    for (const indexValue of value.data$ as []) {
+      const match = innerNode.match$(indexValue, data)
       if (match) return match
     }
 
@@ -70,8 +70,8 @@ export class ArrayNode<TNode> extends Mix(
 
     const proxy: any[] = new Proxy([] as any[], {
       get: (target, prop: any) => {
-        if (prop === ACCESSOR) return ctx.accessor
-        const arr = getValue(ctx)?.data as any[] | undefined
+        if (prop === ACCESSOR) return ctx.accessor$
+        const arr = getValue(ctx)?.data$ as any[] | undefined
 
         if (prop === 'length') {
           return arr?.length ?? 1
@@ -88,25 +88,25 @@ export class ArrayNode<TNode> extends Mix(
             // If the array is fetched, make sure index exists
             if (arr && index >= arr!.length) return undefined
 
-            if (ctx.accessor) {
+            if (ctx.accessor$) {
               const accessor: IndexAccessor =
-                ctx.accessor._get(index) ||
-                new IndexAccessor(ctx.accessor, index)
+                ctx.accessor$.get$(index) ||
+                new IndexAccessor(ctx.accessor$, index)
 
-              return accessor._data
+              return accessor.data$
             }
 
-            return (this._ofNode as any as DataTrait).getData({
-              value: ctx.value?.get(index),
-              selection: ctx.selection,
-              extensions: [] // todo
+            return (this.ofNode$ as any as DataTrait).getData({
+              value$: ctx.value$?.get$(index),
+              selection$: ctx.selection$,
+              extensions$: [] // todo
             })
           }
         }
 
         // fallback to extensions
         for (const extension of getExtensions(ctx)) {
-          if (prop in extension._data) return (extension._data as ArrayNodeExtension)[prop]
+          if (prop in extension.data$) return (extension.data$ as ArrayNodeExtension)[prop]
         }
 
         const arrayProperty = target[prop]
@@ -119,7 +119,7 @@ export class ArrayNode<TNode> extends Mix(
       has: (target, prop) => {
         const value = getValue(ctx)
         if (value) {
-          return value.data ? prop in (value.data as any[]) : false
+          return value.data$ ? prop in (value.data$ as any[]) : false
         }
 
         // todo read value
@@ -135,6 +135,6 @@ export class ArrayNode<TNode> extends Mix(
   }
 
   public toString() {
-    return `[${this._ofNode}${this._nullable ? '' : '!'}]`
+    return `[${this.ofNode$}${this.nullable$ ? '' : '!'}]`
   }
 }

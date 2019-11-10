@@ -9,73 +9,73 @@ import { Accessor } from '../Accessor'
 export type AccessorFetcher = (accessors: Accessor[], queryName?: string) => any
 
 export class Scheduler extends Disposable {
-  private _timer: any
+  private timer$: any
 
-  public _stack: Query[] = []
-  public _commit: Commit = undefined!
+  public stack$: Query[] = []
+  public commit$: Commit = undefined!
 
   constructor(
-    private _fetchAccessors: AccessorFetcher,
-    public _plugins: Plugins = new Plugins(),
-    public _interval = 50
+    private fetchAccessors$: AccessorFetcher,
+    public plugins$: Plugins = new Plugins(),
+    public interval$ = 50
   ) {
     super()
 
-    this._startTimer()
-    this._addDisposer(this._clearTimer)
+    this.startTimer$()
+    this.addDisposer$(this.clearTimer$)
   }
 
-  public pushStack(...queries: Query[]) {
-    this._stack.push(...queries)
+  public pushStack$(...queries: Query[]) {
+    this.stack$.push(...queries)
   }
 
-  public popStack(...queries: Query[]) {
+  public popStack$(...queries: Query[]) {
     for (let i = queries.length - 1; i >= 0; i--) {
       const query = queries[i]
-      const idx = this._stack.length - 1
+      const idx = this.stack$.length - 1
 
       invariant(
-        this._stack[idx] === query,
-        `Scheduler#popStack called with '${query}', but not last in stack [${this._stack.join(
+        this.stack$[idx] === query,
+        `Scheduler#popStack called with '${query}', but not last in stack [${this.stack$.join(
           ', '
         )}]`
       )
 
-      this._stack.splice(idx, 1)
+      this.stack$.splice(idx, 1)
     }
   }
 
-  private _startTimer() {
-    this._clearTimer()
+  private startTimer$() {
+    this.clearTimer$()
 
     // Don't create new Commit, if prev one unused
-    if (!this._commit || this._commit._accessors.size) {
-      if (this._commit) this._commit._dispose()
+    if (!this.commit$ || this.commit$.accessors$.size) {
+      if (this.commit$) this.commit$.dispose$()
 
-      this._commit = new Commit(
-        this._plugins,
-        this._stack,
-        this._fetchAccessors
+      this.commit$ = new Commit(
+        this.plugins$,
+        this.stack$,
+        this.fetchAccessors$
       )
     }
 
-    const { _commit } = this
-    _commit._onActive.then(() => {
-      this._timer = setTimeout(() => {
-        _commit._fetch()
-        this._startTimer()
-      }, this._interval)
+    const { commit$ } = this
+    commit$.onActive$.then(() => {
+      this.timer$ = setTimeout(() => {
+        commit$.fetch$()
+        this.startTimer$()
+      }, this.interval$)
 
-      _commit._onIdle.then(() => {
-        if (_commit !== this._commit) return
+      commit$.onIdle$.then(() => {
+        if (commit$ !== this.commit$) return
 
         // Cancel timer, and wait until commit is active again
-        this._startTimer()
+        this.startTimer$()
       })
     })
   }
 
-  private _clearTimer() {
-    clearTimeout(this._timer)
+  private clearTimer$() {
+    clearTimeout(this.timer$)
   }
 }

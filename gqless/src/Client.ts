@@ -24,19 +24,19 @@ export class Client<TData = any> extends Disposable {
   public formatter: Formatter
 
   public scheduler = new Scheduler(
-    (accessors, name) => this._fetchAccessors(accessors, name)!,
+    (accessors, name) => this.fetchAccessors$(accessors, name)!,
     this.plugins
   )
-  public cache = new Cache(this.node)
+  public cache = new Cache(this.node$)
 
-  public selection = new Selection(this.node)
+  public selection = new Selection(this.node$)
   public accessor = new RootAccessor(this.selection, this.scheduler, this.cache)
 
-  public query = this.accessor._data as TData
+  public query = this.accessor.data$ as TData
 
   constructor(
-    protected node: ObjectNode,
-    protected fetchQuery: QueryFetcher,
+    protected node$: ObjectNode,
+    protected fetchQuery$: QueryFetcher,
     { prettifyQueries }: ClientOptions = {}
   ) {
     super()
@@ -46,46 +46,46 @@ export class Client<TData = any> extends Disposable {
       fragments: 'auto',
       variables: true,
     })
-    this.selection._onSelect(selection => {
-      this.plugins._all.onSelect(selection)
+    this.selection.onSelect$(selection => {
+      this.plugins.all$.onSelect(selection)
     })
 
-    this.selection._onUnselect(selection => {
-      this.plugins._all.onUnselect(selection)
+    this.selection.onUnselect$(selection => {
+      this.plugins.all$.onUnselect(selection)
     })
   }
 
-  protected _fetchAccessors(accessors: Accessor[], queryName?: string) {
+  protected fetchAccessors$(accessors: Accessor[], queryName?: string) {
     const result = buildQuery(
       this.formatter,
       queryName,
-      ...accessors.map(accessor => accessor._selectionPath)
+      ...accessors.map(accessor => accessor.selectionPath$)
     )
 
     if (!result) return
 
     const responsePromise = (async () => {
-      const response = await this.fetchQuery(result.query, result.variables)
-      result.rootTree._resolveAliases(response.data)
-      this.cache._merge(this.accessor, response.data)
+      const response = await this.fetchQuery$(result.query$, result.variables$)
+      result.rootTree$.resolveAliases$(response.data)
+      this.cache.merge$(this.accessor, response.data)
       return response
     })()
 
-    this.plugins._all.onFetch(
+    this.plugins.all$.onFetch(
       accessors,
       responsePromise,
-      result.variables,
-      result.query,
+      result.variables$,
+      result.query$,
       queryName
     )
 
     return responsePromise
   }
 
-  public _dispose() {
-    super._dispose()
-    this.scheduler._dispose()
+  public dispose$() {
+    super.dispose$()
+    this.scheduler.dispose$()
 
-    this.plugins._all.dispose()
+    this.plugins.all$.dispose()
   }
 }

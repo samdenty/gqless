@@ -12,32 +12,32 @@ import { Value } from '../../Cache'
 const memo = createMemo()
 
 export abstract class Extension {
-  public _data: any
+  public data$: any
 
   constructor(
-    public _parent: Extension | undefined,
-    public _node: DataTrait,
-    /** (optional) An object used to construct fragmentKey */
-    private _fragmentKeyedBy: any = _parent ? undefined : _node
+    public parent$: Extension | undefined,
+    public node$: DataTrait,
+    /** @optional An object used to construct fragmentKey */
+    private fragmentKeyedBy$: any = parent$ ? undefined : node$
   ) {
   }
 
   @computed()
   /** A unique key to share instances of a Fragment between extensions */
-  protected get _fragmentKey() {
-    return this._path
-      .map(ref => ref._fragmentKeyedBy)
+  protected get fragmentKey$() {
+    return this.path$
+      .map(ref => ref.fragmentKeyedBy$)
       .filter(Boolean)
   }
 
   @computed()
-  public get _fragment() {
-    const getKey = (this._data as ProxyExtension)?.[GET_KEY]
+  public get fragment$() {
+    const getKey = (this.data$ as ProxyExtension)?.[GET_KEY]
     if (!getKey) return
 
-    let node = this._fragmentKey[this._fragmentKey.length - 1]
+    let node = this.fragmentKey$[this.fragmentKey$.length - 1]
     if (node instanceof NodeContainer) {
-      node = node.innerNode as DataTrait
+      node = node.innerNode$ as DataTrait
     }
 
     // Fragments only work with InterfaceNode / ObjectNode
@@ -47,7 +47,7 @@ export abstract class Extension {
       () => {
         const fragment = new Fragment(
           node as UFragment,
-          `Keyed${this._fragmentKey.join('_')}`
+          `Keyed${this.fragmentKey$.join('_')}`
         )
 
         // Initialize with selections
@@ -56,76 +56,76 @@ export abstract class Extension {
 
         return fragment
       },
-      this._fragmentKey
+      this.fragmentKey$
     )
   }
 
-  public get _isKeyable() {
-    return !!(this._data as ProxyExtension)?.[GET_KEY]
+  public get isKeyable$() {
+    return !!(this.data$ as ProxyExtension)?.[GET_KEY]
   }
 
-  public _getKey(value: Value) {
-    const getKey = (this._data as ProxyExtension)?.[GET_KEY]
+  public getKey$(value: Value) {
+    const getKey = (this.data$ as ProxyExtension)?.[GET_KEY]
     if (!getKey) return
-    const data = value.node.getData({ value })
+    const data = value.node$.getData({ value$: value })
     const key = getKey(data)
 
     return key
   }
 
-  public _redirect(accessor: Accessor) {
-    const redirect = (this._data as ProxyExtension)?.[REDIRECT]
+  public redirect$(accessor: Accessor) {
+    const redirect = (this.data$ as ProxyExtension)?.[REDIRECT]
     if (!redirect) return
 
-    const entry = accessor._cache._entries.get(accessor._node)
+    const entry = accessor.cache$.entries$.get(accessor.node$)
     if (!entry) return
 
     return redirect(
       accessor instanceof FieldAccessor
         ? // @TODO: toJSON everything (could be variables)
-          accessor._selection.args
+          accessor.selection$.args
         : undefined,
       {
-        instances: entry._instances,
+        instances: entry.instances$,
         match(data) {
-          return entry._match(data)?.value
+          return entry.match$(data)?.value
         },
         getByKey(key) {
-          return entry._getByKey(key)
+          return entry.getByKey$(key)
         }
       }
     )
   }
 
   /** Returns a memoized child Extension */
-  public _childIndex(): Extension | undefined {
+  public childIndex$(): Extension | undefined {
     return memo.childIndex(() => {
-      invariant(this._node instanceof ArrayNode)
+      invariant(this.node$ instanceof ArrayNode)
 
-      const indexExtension = (this._data as ArrayNodeExtension)?.[INDEX]
+      const indexExtension = (this.data$ as ArrayNodeExtension)?.[INDEX]
       if (indexExtension === undefined) return
-      return createExtension(this._node._ofNode, indexExtension, this)
+      return createExtension(this.node$.ofNode$, indexExtension, this)
     }, [this])
   }
 
   /** Returns a memoized child Extension, for a given field */
-  public _childField(field: FieldNode): Extension | undefined {
+  public childField$(field: FieldNode): Extension | undefined {
     return memo.childField(() => {
-      invariant(this._node instanceof FieldsNode)
+      invariant(this.node$ instanceof FieldsNode)
 
-      const fieldExtension = (this._data as ObjectNodeExtension)?.[field._name]
+      const fieldExtension = (this.data$ as ObjectNodeExtension)?.[field.name$]
       if (fieldExtension === undefined) return
-      return createExtension(field._ofNode, fieldExtension, this, field)
+      return createExtension(field.ofNode$, fieldExtension, this, field)
     }, [this, field])
   }
 
   public toString() {
-    return this._fragmentKey.toString()
+    return this.fragmentKey$.toString()
   }
 
   @computed()
-  public get _path(): Extension[] {
-    const basePath = this._parent ? this._parent._path : []
+  public get path$(): Extension[] {
+    const basePath = this.parent$ ? this.parent$.path$ : []
     const path = new PathArray(...basePath, this)
 
     return path

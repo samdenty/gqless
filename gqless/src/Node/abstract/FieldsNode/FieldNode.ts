@@ -12,23 +12,23 @@ import { DataTrait, DataContext, getSelection, interceptAccessor } from '../../t
 
 export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContainer<TNode> implements DataTrait {
   // This is set inside FieldsNode
-  public _name: string = ''
+  public name$: string = ''
 
-  constructor(node: TNode, public _args?: Arguments, nullable?: boolean) {
+  constructor(node: TNode, public args$?: Arguments, nullable?: boolean) {
     super(node, nullable)
   }
 
   @computed()
-  public get _uncallable() {
+  public get uncallable$() {
     return !(
-      this._args &&
-      (this._args._required ||
-        this._ofNode instanceof ScalarNode ||
-        this._ofNode instanceof EnumNode)
+      this.args$ &&
+      (this.args$.required$ ||
+        this.ofNode$ instanceof ScalarNode ||
+        this.ofNode$ instanceof EnumNode)
     )
   }
 
-  public _getSelection(
+  public getSelection$(
     ctx: DataContext,
     args?: Record<string, any>
   ): FieldSelection<TNode> {
@@ -36,12 +36,12 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
 
     const parentSelection = getSelection(ctx)
 
-    let selection = parentSelection?._get<FieldSelection<TNode>>(selection => {
+    let selection = parentSelection?.get$<FieldSelection<TNode>>(selection => {
       if (!(selection instanceof FieldSelection)) return false
 
       return (
-        selection._field._name === this._name &&
-        deepJSONEqual(selection._args, args, (a, b) => {
+        selection.field$.name$ === this.name$ &&
+        deepJSONEqual(selection.args$, args, (a, b) => {
           // If either is a variable they need to be equal
           if (a instanceof Variable || b instanceof Variable) return a === b
 
@@ -60,38 +60,38 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
 
   public getData(ctx: DataContext<FieldsNode & DataTrait>) {
     const getData = (selection: FieldSelection<TNode>): any => {
-      if (ctx.accessor) {
+      if (ctx.accessor$) {
         const accessor =
-          ctx.accessor._get(selection) ||
-          new FieldAccessor(ctx.accessor, selection)
+          ctx.accessor$.get$(selection) ||
+          new FieldAccessor(ctx.accessor$, selection)
 
-        return accessor._data
+        return accessor.data$
       }
 
-      return this._ofNode.getData({
-        selection,
-        value: ctx.value?.get(selection.toString()),
-        extensions: [] // TODO
+      return this.ofNode$.getData({
+        selection$: selection,
+        value$: ctx.value$?.get$(selection.toString()),
+        extensions$: [] // TODO
       })
     }
 
     const argsFn = (args: any) => {
       const parsedArgs = args && (Object.keys(args).length ? args : undefined)
-      return getData(this._getSelection(ctx, parsedArgs))
+      return getData(this.getSelection$(ctx, parsedArgs))
     }
 
-    if (!this._uncallable) return argsFn
+    if (!this.uncallable$) return argsFn
 
     let selection: FieldSelection<TNode> | undefined
     let data: any
     const argumentlessData = () => {
       if (selection) return data
-      selection = this._getSelection(ctx)
+      selection = this.getSelection$(ctx)
       data = getData(selection)
       return data
     }
 
-    if (this._args) {
+    if (this.args$) {
       return new Proxy(argsFn, {
         get: (_, prop) => {
           const data = argumentlessData()
@@ -136,6 +136,6 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
   }
 
   public toString() {
-    return this._name
+    return this.name$
   }
 }

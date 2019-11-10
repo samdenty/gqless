@@ -6,7 +6,7 @@ export class StaticExtension extends Extension {
   constructor(
     parent: Extension | undefined,
     node: DataTrait,
-    public _data: UNodeExtension,
+    public data$: UNodeExtension,
     keyedBy?: any
   ) {
     super(parent, node, keyedBy)

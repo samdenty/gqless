@@ -1,7 +1,7 @@
 let currentTransaction: Transaction | undefined
 
 export class Transaction {
-  private _callbacks = new Set<Function>()
+  private callbacks$ = new Set<Function>()
 
   public begin() {
     if (currentTransaction) return
@@ -11,24 +11,24 @@ export class Transaction {
   public end() {
     if (currentTransaction !== this) return
     currentTransaction = undefined
-    this._flush()
+    this.flush$()
   }
 
-  private _flush() {
-    const callbacks = Array.from(this._callbacks)
-    this._callbacks.clear()
+  private flush$() {
+    const callbacks = Array.from(this.callbacks$)
+    this.callbacks$.clear()
 
     callbacks.forEach(callback => callback())
   }
 
-  public _onComplete(callback: Function) {
-    this._callbacks.add(callback)
+  public onComplete$(callback: Function) {
+    this.callbacks$.add(callback)
   }
 }
 
 export const afterTransaction = (callback: Function) => {
   if (currentTransaction) {
-    currentTransaction._onComplete(callback)
+    currentTransaction.onComplete$(callback)
     return
   }
 

@@ -9,9 +9,9 @@ import { schema } from '@internal/fixtures'
 
 it('works', () => {
   const selection = new Selection(schema.Query)
-  selection.add(new FieldSelection(schema.Query._fields.object))
+  selection.add(new FieldSelection(schema.Query.fields$.object))
 
-  expect(buildQuery(new Formatter(), undefined, [selection]).query)
+  expect(buildQuery(new Formatter(), undefined, [selection]).query$)
     .toMatchInlineSnapshot(`
     "{
       object {
@@ -20,15 +20,16 @@ it('works', () => {
     }"
   `)
   expect(
-    buildQuery(new Formatter({ prettify: false }), undefined, [selection]).query
+    buildQuery(new Formatter({ prettify: false }), undefined, [selection])
+      .query$
   ).toMatchInlineSnapshot(`"{object{__typename}}"`)
 })
 
 it('supports named queries', () => {
   const selection = new Selection(schema.Query)
-  selection.add(new FieldSelection(schema.Query._fields.object))
+  selection.add(new FieldSelection(schema.Query.fields$.object))
 
-  expect(buildQuery(new Formatter(), 'Test', [selection]).query)
+  expect(buildQuery(new Formatter(), 'Test', [selection]).query$)
     .toMatchInlineSnapshot(`
     "query Test {
       object {
@@ -37,7 +38,7 @@ it('supports named queries', () => {
     }"
   `)
   expect(
-    buildQuery(new Formatter({ prettify: false }), 'Test', [selection]).query
+    buildQuery(new Formatter({ prettify: false }), 'Test', [selection]).query$
   ).toMatchInlineSnapshot(`"query Test{object{__typename}}"`)
 })
 
@@ -47,7 +48,7 @@ it('supports variables', () => {
 
   const selection = new Selection(schema.Query)
   selection.add(
-    new FieldSelection(schema.Query._fields.arrayOfObjects, {
+    new FieldSelection(schema.Query.fields$.arrayOfObjects, {
       string: test,
       input: {
         string: test2,
@@ -56,7 +57,8 @@ it('supports variables', () => {
   )
 
   expect(
-    buildQuery(new Formatter({ variables: true }), undefined, [selection]).query
+    buildQuery(new Formatter({ variables: true }), undefined, [selection])
+      .query$
   ).toMatchInlineSnapshot(`
     "query($arrayOfObjectsInputString: String!, $arrayOfObjectsString: String) {
       arrayOfObjects(input: { string: $arrayOfObjectsInputString }, string: $arrayOfObjectsString) {
@@ -67,7 +69,7 @@ it('supports variables', () => {
   expect(
     buildQuery(new Formatter({ prettify: false, variables: true }), undefined, [
       selection,
-    ]).query
+    ]).query$
   ).toMatchInlineSnapshot(
     `"query($v:String!,$v2:String){arrayOfObjects(input:{string:$v},string:$v2){__typename}}"`
   )

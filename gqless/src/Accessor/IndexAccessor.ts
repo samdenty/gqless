@@ -13,54 +13,57 @@ export class IndexAccessor<
   TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
   TChildren extends Accessor = Accessor
 > extends Accessor<TSelectionArray, TChildren> {
-  protected __resolved = this._parent._resolved
+  protected _resolved$ = this.parent$.resolved$
 
-  constructor(public _parent: Accessor<TSelectionArray>, public index: number) {
+  constructor(
+    public parent$: Accessor<TSelectionArray>,
+    public index$: number
+  ) {
     super(
-      _parent,
-      _parent._selection,
-      (_parent instanceof IndexAccessor
-        ? (_parent._node as ArrayNode<any>)
-        : _parent._selection._node
-      )._ofNode
+      parent$,
+      parent$.selection$,
+      (parent$ instanceof IndexAccessor
+        ? (parent$.node$ as ArrayNode<any>)
+        : parent$.selection$.node$
+      ).ofNode$
     )
 
     // Sync from parent status
-    this._addDisposer(
-      this._parent._onStatusChange(status => {
-        this._status = status
+    this.addDisposer$(
+      this.parent$.onStatusChange$(status => {
+        this.status$ = status
       })
     )
 
-    this._parent._onResolvedChange(resolved => (this._resolved = resolved))
+    this.parent$.onResolvedChange$(resolved => (this.resolved$ = resolved))
     syncValue(this, this.toString())
-    this._loadExtensions()
-    this._scheduler._commit._stageUntilValue(this)
+    this.loadExtensions$()
+    this.scheduler$.commit$.stageUntilValue$(this)
   }
 
-  protected _initializeExtensions() {
-    super._initializeExtensions()
+  protected initializeExtensions$() {
+    super.initializeExtensions$()
 
-    for (let i = this._parent._extensions.length - 1; i >= 0; --i) {
-      let extension = this._parent._extensions[i]._childIndex()
+    for (let i = this.parent$.extensions$.length - 1; i >= 0; --i) {
+      let extension = this.parent$.extensions$[i].childIndex$()
       if (!extension) continue
 
       if (extension instanceof ComputableExtension) {
         extension = new ComputedExtension(extension, this)
       }
 
-      this._extensions.unshift(extension)
+      this.extensions$.unshift(extension)
     }
   }
 
-  public _getData(ctx?: DataContext): any {
-    return (this._selection._node._ofNode as DataTrait).getData({
-      accessor: this,
+  public getData$(ctx?: DataContext): any {
+    return (this.selection$.node$.ofNode$ as DataTrait).getData({
+      accessor$: this,
       ...ctx,
     })
   }
 
   public toString() {
-    return `${this.index}`
+    return `${this.index$}`
   }
 }

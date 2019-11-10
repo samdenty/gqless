@@ -28,45 +28,45 @@ export abstract class Accessor<
   TChildren extends Accessor<Selection, any> = Accessor<Selection, any>
 > extends Disposable {
   // Ordered by most important -> least
-  public _extensions: (StaticExtension | ComputedExtension)[] = []
-  public _children: TChildren[] = []
+  public extensions$: (StaticExtension | ComputedExtension)[] = []
+  public children$: TChildren[] = []
 
-  public _scheduler: Scheduler = this._parent
-    ? (this._parent as any).scheduler
+  public scheduler$: Scheduler = this.parent$
+    ? (this.parent$ as any).scheduler$
     : undefined!
-  public _cache: Cache = this._parent ? (this._parent as any).cache : undefined!
+  public cache$: Cache = this.parent$ ? (this.parent$ as any).cache$ : undefined!
 
   // replaces refs of this accessor, with a Fragment
   // see FragmentAccessor#startResolving
-  public _fragmentToResolve?: FragmentAccessor
-  protected __data: any
-  protected __status: NetworkStatus = NetworkStatus.idle
-  protected __value: Value | undefined
-  protected __resolved = true
+  public fragmentToResolve$?: FragmentAccessor
+  protected _data$: any
+  protected _status$: NetworkStatus = NetworkStatus.idle
+  protected _value$: Value | undefined
+  protected _resolved$ = true
 
   // Equality check only
-  public _onStatusChange = createEvent<(status: NetworkStatus, prevStatus: NetworkStatus) => void>()
-  public _onResolvedChange = createEvent<(resolved: boolean) => void>()
-  public _onInitializeExtensions = createEvent()
-  public _onValueChange = createEvent<(value: Value | undefined, prevValue: Value | undefined) => void>()
-  public _onDataChange = onDataChange(this)
+  public onStatusChange$ = createEvent<(status: NetworkStatus, prevStatus: NetworkStatus) => void>()
+  public onResolvedChange$ = createEvent<(resolved: boolean) => void>()
+  public onInitializeExtensions$ = createEvent()
+  public onValueChange$ = createEvent<(value: Value | undefined, prevValue: Value | undefined) => void>()
+  public onDataChange$ = onDataChange(this)
 
   constructor(
-    public readonly _parent: Accessor | undefined,
-    public readonly _selection: TSelection,
-    public readonly _node = _selection._node
+    public readonly parent$: Accessor | undefined,
+    public readonly selection$: TSelection,
+    public readonly node$ = selection$.node$
   ) {
     super()
 
-    if (_parent) {
-      _parent._children.push(this)
+    if (parent$) {
+      parent$.children$.push(this)
 
-      this._addDisposer(
+      this.addDisposer$(
         // On un-select, dispose of self
         // used when you do `query.users()`, and an argumentless
         // selection is created before the function call
-        _parent._selection._onUnselect.filter(s => s === _selection)(() =>
-          this._dispose()
+        parent$.selection$.onUnselect$.filter(s => s === selection$)(() =>
+          this.dispose$()
         )
       )
     }
@@ -74,119 +74,119 @@ export abstract class Accessor<
     // Update the extensions change when:
     // - data changes (from null -> object)
     // - parent extensions change
-    this._addDisposer(
-      this._onDataChange(() => {
-        this._data = undefined
-        this._loadExtensions()
+    this.addDisposer$(
+      this.onDataChange$(() => {
+        this.data$ = undefined
+        this.loadExtensions$()
       }),
-      _parent?._onInitializeExtensions(() => {
-        this._loadExtensions()
+      parent$?.onInitializeExtensions$(() => {
+        this.loadExtensions$()
       })
     )
   }
 
-  public get _resolved() {
-    return this.__resolved
+  public get resolved$() {
+    return this._resolved$
   }
 
-  public set _resolved(resolved: boolean) {
-    const prevResolved = this.__resolved
+  public set resolved$(resolved: boolean) {
+    const prevResolved = this._resolved$
     if (prevResolved === resolved) return
-    this.__resolved = resolved
-    this._onResolvedChange.emit(resolved)
+    this._resolved$ = resolved
+    this.onResolvedChange$.emit(resolved)
   }
 
-  public get _data() {
-    if (this._fragmentToResolve) {
-      return this._fragmentToResolve._data
+  public get data$() {
+    if (this.fragmentToResolve$) {
+      return this.fragmentToResolve$.data$
     }
 
-    if (this.__data === undefined) {
-      this.__data = this._getData()
+    if (this._data$ === undefined) {
+      this._data$ = this.getData$()
     }
 
     accessorInterceptors.forEach((intercept) => intercept(this))
 
-    return this.__data
+    return this._data$
   }
-  public set _data(data: any) {
-    this.__data = data
+  public set data$(data: any) {
+    this._data$ = data
   }
 
-  public set _status(status: NetworkStatus) {
-    const prevStatus = this.__status
-    this.__status = status
+  public set status$(status: NetworkStatus) {
+    const prevStatus = this._status$
+    this._status$ = status
     if (prevStatus === status) return
-    this._onStatusChange.emit(status, prevStatus)
+    this.onStatusChange$.emit(status, prevStatus)
   }
-  public get _status() {
-    return this.__status
+  public get status$() {
+    return this._status$
   }
 
-  public set _value(value: Value | undefined) {
-    const prevValue = this.__value
-    this.__value = value
+  public set value$(value: Value | undefined) {
+    const prevValue = this._value$
+    this._value$ = value
     if (prevValue === value) return
-    this._onValueChange.emit(value, prevValue)
+    this.onValueChange$.emit(value, prevValue)
   }
-  public get _value() {
-    return this.__value
+  public get value$() {
+    return this._value$
   }
 
-  protected _initializeExtensions() {
+  protected initializeExtensions$() {
     const addExtensions = (node: DataTrait) => {
-      let extension = node._extension
+      let extension = node.extension$
       if (!extension) return
 
       if (extension instanceof ComputableExtension) {
         extension = new ComputedExtension(extension, this)
       }
 
-      this._extensions.unshift(extension)
+      this.extensions$.unshift(extension)
     }
 
-    if (this._node instanceof Abstract) {
-      for (const node of this._node._implementations) {
+    if (this.node$ instanceof Abstract) {
+      for (const node of this.node$.implementations$) {
         addExtensions(node)
       }
     }
 
-    addExtensions(this._node)
+    addExtensions(this.node$)
   }
 
-  protected _loadExtensions() {
-    const prevExtensions = this._extensions
-    this._extensions = []
-    this._initializeExtensions()
+  protected loadExtensions$() {
+    const prevExtensions = this.extensions$
+    this.extensions$ = []
+    this.initializeExtensions$()
 
-    if (arrayEqual(prevExtensions, this._extensions)) return
+    if (arrayEqual(prevExtensions, this.extensions$)) return
 
-    this._onInitializeExtensions.emit()
+    this.onInitializeExtensions$.emit()
 
-    if (!this._extensions.length) return
+    if (!this.extensions$.length) return
 
     // If already a fragment, key fragments should only be added on different types
-    const isTopLevel = !(this instanceof FragmentAccessor) || this._node !== this._parent._node
+    const isTopLevel = !(this instanceof FragmentAccessor) || this.node$ !== this.parent$.node$
 
     if (isTopLevel) {
       // Add keyFragments
-      this._extensions.forEach(({ _fragment: fragment }) => {
+      this.extensions$.forEach(({ fragment$: fragment }) => {
         if (!fragment) return
-        if (this._selection === (fragment as any)) return
+        if (this.selection$ === (fragment as any)) return
 
-        this._selection.add(fragment, true)
+        this.selection$.add(fragment, true)
       })
     }
 
-    if (!this._value) {
+    if (!this.value$) {
       // TODO: Should this be here? or in merge.ts
       // Cache redirects
-      if (this._cache._entries.has(this._node)) {
-        for (const extension of this._extensions) {
-          const value = extension._redirect(this)
+      if (this.cache$.entries$.has(this.node$)) {
+        for (const extension of this.extensions$) {
+          const value = extension.redirect$(this)
 
           if (!(value instanceof Value)) continue
-          this._updateValue(value)
+          this.updateValue$(value)
           break
         }
       }
@@ -194,99 +194,99 @@ export abstract class Accessor<
   }
 
   // Update the value, by modifying the cache
-  public _updateValue(value: Value) {
-    if (value === this._value) return
+  public updateValue$(value: Value) {
+    if (value === this.value$) return
 
     invariant(
-      this._parent?._value,
-      `can't update ${this._path} value without parent value`
+      this.parent$?.value$,
+      `can't update ${this.path$} value without parent value`
     )
 
-    const valueless = new Set(this._children.filter(a => !(a._value)))
-    this._parent._value.set(this.toString(), value)
+    const valueless = new Set(this.children$.filter(a => !(a.value$)))
+    this.parent$.value$.set$(this.toString(), value)
 
     afterTransaction(() => {
-      const accessorWithoutValue = this._children.find(a => !a._value && !valueless.has(a))
+      const accessorWithoutValue = this.children$.find(a => !a.value$ && !valueless.has(a))
 
       // If a child accessor is missing a value, then
       // re-fetch it entirely
       if (accessorWithoutValue) {
-        this._scheduler._commit._stage(this, KEYED_REFETCH)
+        this.scheduler$.commit$.stage$(this, KEYED_REFETCH)
       }
     })
   }
 
-  public _getData(ctx?: DataContext): any {
+  public getData$(ctx?: DataContext): any {
     return undefined
   }
 
-  public _setData(data: any) {
+  public setData$(data: any) {
     // @TODO
-    console.log('set', this._path.toString(), data)
-    this._cache._merge(this, data)
+    console.log('set', this.path$.toString(), data)
+    this.cache$.merge$(this, data)
   }
 
-  public _get<TChild extends TChildren | FragmentAccessor>(
+  public get$<TChild extends TChildren | FragmentAccessor>(
     find: ((child: TChildren | FragmentAccessor) => boolean) | Selection | string | number
   ): TChild | undefined {
     if (typeof find === 'function') {
-      return this._children.find(find) as any
+      return this.children$.find(find) as any
     }
 
     if (find instanceof Selection) {
-      const accessor = this._children.find(c => c._selection === find) as any
+      const accessor = this.children$.find(c => c.selection$ === find) as any
       return accessor
     }
 
-    return this._children.find(c => c.toString() === String(find)) as any
+    return this.children$.find(c => c.toString() === String(find)) as any
   }
 
-  public _getDefaultFragment(node: ObjectNode) {
+  public getDefaultFragment$(node: ObjectNode) {
     return memoized.fragment(() => {
       const fragment = new Fragment(node)
-      this._selectionPath[this._selectionPath.length - 1].add(fragment)
+      this.selectionPath$[this.selectionPath$.length - 1].add(fragment)
       return fragment
-    }, [node, ...this._selectionPath])
+    }, [node, ...this.selectionPath$])
   }
 
   @computed()
-  public get _selectionPath(): Selection[] {
-    const basePath = this._parent ? this._parent._selectionPath : new PathArray<Selection>()
+  public get selectionPath$(): Selection[] {
+    const basePath = this.parent$ ? this.parent$.selectionPath$ : new PathArray<Selection>()
     const path =
       // Remove duplicated selections
-      basePath[basePath.length - 1] === this._selection
+      basePath[basePath.length - 1] === this.selection$
         ? basePath
-        : new PathArray(...basePath, this._selection)
+        : new PathArray(...basePath, this.selection$)
 
     return path
   }
 
   @computed()
-  public get _path(): Accessor[] {
-    const basePath = this._parent ? this._parent._path : []
+  public get path$(): Accessor[] {
+    const basePath = this.parent$ ? this.parent$.path$ : []
     const path = new PathArray(...basePath, this)
 
     return path
   }
 
-  public _dispose() {
-    super._dispose()
+  public dispose$() {
+    super.dispose$()
 
-    if (this._parent) {
-      const idx = this._parent._children.indexOf(this)
+    if (this.parent$) {
+      const idx = this.parent$.children$.indexOf(this)
       if (idx !== -1) {
-        this._parent._children.splice(idx, 1)
+        this.parent$.children$.splice(idx, 1)
       }
 
-      this._scheduler._commit._unstage(this)
+      this.scheduler$.commit$.unstage$(this)
 
-      this._scheduler._commit._accessors.forEach((_, accessor) => {
+      this.scheduler$.commit$.accessors$.forEach((_, accessor) => {
         // if the accessor begins with this.path
-        for (let i = 0; i < this._path.length; i++) {
-          if (this._path[i] !== accessor._path[i]) return
+        for (let i = 0; i < this.path$.length; i++) {
+          if (this.path$[i] !== accessor.path$[i]) return
         }
 
-        this._scheduler._commit._unstage(accessor)
+        this.scheduler$.commit$.unstage$(accessor)
       })
     }
   }

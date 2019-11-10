@@ -44,12 +44,12 @@ export const getAccessor = (input: any): Accessor => {
 
   // Check to see if lastAccessor is the same value as
   // input. If it is, then return it
-  const data = lastAccessor._data
+  const data = lastAccessor.data$
 
   invariant(
     data === input,
     lastAccessorErrorMessage(
-      `'${input}' not equal to '${lastAccessor._path}' (last referenced accessor)`
+      `'${input}' not equal to '${lastAccessor.path$}' (last referenced accessor)`
     )
   )
 

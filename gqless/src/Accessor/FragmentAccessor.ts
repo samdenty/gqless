@@ -7,27 +7,27 @@ export class FragmentAccessor<
   TFragment extends Fragment = Fragment,
   TChildren extends Accessor = Accessor
 > extends Accessor<TFragment, TChildren> {
-  protected __resolved =
-    this._parent!._resolved &&
-    (!this._parent!._value ||
-      this._parent!._value.node === this._selection._node)
+  protected _resolved$ =
+    this.parent$!.resolved$ &&
+    (!this.parent$!.value$ ||
+      this.parent$!.value$.node$ === this.selection$.node$)
 
-  constructor(public _parent: Accessor, fragment: TFragment) {
-    super(_parent, fragment)
+  constructor(public parent$: Accessor, fragment: TFragment) {
+    super(parent$, fragment)
 
-    if (fragment._node !== _parent._node) {
-      this._parent._onValueChange(value => {
-        this._resolved =
-          this._parent._resolved && (!value || value.node === fragment._node)
+    if (fragment.node$ !== parent$.node$) {
+      this.parent$.onValueChange$(value => {
+        this.resolved$ =
+          this.parent$.resolved$ && (!value || value.node$ === fragment.node$)
       })
     }
 
     // Sync value with parent
     // (only if the node is the same)
     syncValue(this, value =>
-      value.node === fragment._node ? value : undefined
+      value.node$ === fragment.node$ ? value : undefined
     )
-    this._loadExtensions()
+    this.loadExtensions$()
   }
 
   /**
@@ -35,32 +35,32 @@ export class FragmentAccessor<
    * this accessor's data
    */
   public startResolving() {
-    const originalAccessor = this._parent._fragmentToResolve
-    this._parent._fragmentToResolve = this
+    const originalAccessor = this.parent$.fragmentToResolve$
+    this.parent$.fragmentToResolve$ = this
     const resetAccessor = () => {
-      this._parent._fragmentToResolve = originalAccessor
+      this.parent$.fragmentToResolve$ = originalAccessor
       removeDisposer()
     }
-    const removeDisposer = this._addDisposer(resetAccessor)
+    const removeDisposer = this.addDisposer$(resetAccessor)
     return resetAccessor
   }
 
-  protected _initializeExtensions() {
+  protected initializeExtensions$() {
     // Copy extensions from parent
-    for (let i = this._parent._extensions.length - 1; i >= 0; --i) {
-      const extension = this._parent._extensions[i]
-      if (extension._node !== this._selection._node) continue
+    for (let i = this.parent$.extensions$.length - 1; i >= 0; --i) {
+      const extension = this.parent$.extensions$[i]
+      if (extension.node$ !== this.selection$.node$) continue
 
-      this._extensions.unshift(extension)
+      this.extensions$.unshift(extension)
     }
   }
-  public _getData(ctx?: DataContext): any {
-    return this._selection._node.getData({
-      accessor: this,
+  public getData$(ctx?: DataContext): any {
+    return this.selection$.node$.getData({
+      accessor$: this,
       ...ctx,
     })
   }
   public toString() {
-    return this._selection.toString()
+    return this.selection$.toString()
   }
 }

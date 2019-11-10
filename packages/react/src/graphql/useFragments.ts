@@ -16,7 +16,7 @@ export const useFragments = () => {
     startResolving() {
       variant.forEach(([accessor, fragment]) => {
         const fragmentAccessor =
-          accessor._get<FragmentAccessor>(a => a._selection === fragment) ||
+          accessor.get$<FragmentAccessor>(a => a.selection$ === fragment) ||
           new FragmentAccessor(accessor, fragment)
 
         stopResolving.push(fragmentAccessor.startResolving())
@@ -31,7 +31,7 @@ export const useFragments = () => {
       variantFragments.forEach((fragments, accessor) => {
         // Only render variations for accessors
         // without a value and non-idle
-        if (accessor._value || accessor._status === NetworkStatus.idle) return
+        if (accessor.value$ || accessor.status$ === NetworkStatus.idle) return
 
         if (!variants.length) {
           fragments.forEach(fragment => variants.push([[accessor, fragment]]))

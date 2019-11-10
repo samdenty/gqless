@@ -4,19 +4,19 @@ import { invariant } from '@gqless/utils'
 import stringify from 'json-stable-stringify'
 
 export class NodeEntry {
-  public _instances = new Set<Value>()
-  public _keys = new Map<any, Value>()
+  public instances$ = new Set<Value>()
+  public keys$ = new Map<any, Value>()
 
-  constructor(public _node: DataTrait) {}
+  constructor(public node$: DataTrait) {}
 
-  public _match(data: any) {
+  public match$(data: any) {
     invariant(
-      this._node instanceof Matchable,
-      `${this._node} does not support pattern matching`
+      this.node$ instanceof Matchable,
+      `${this.node$} does not support pattern matching`
     )
 
-    for (const value of this._instances) {
-      const exactValue = this._node._match(value, data)
+    for (const value of this.instances$) {
+      const exactValue = this.node$.match$(value, data)
       if (exactValue)
         return {
           value,
@@ -27,12 +27,12 @@ export class NodeEntry {
     return
   }
 
-  public _getByKey(key: any) {
+  public getByKey$(key: any) {
     // First try and find key directly
-    if (this._keys.has(key)) return this._keys.get(key)
+    if (this.keys$.has(key)) return this.keys$.get(key)
 
     // else find structurally equal value
-    for (const [possibleKey, value] of this._keys) {
+    for (const [possibleKey, value] of this.keys$) {
       if (keyIsEqual(key, possibleKey)) return value
     }
 
@@ -42,13 +42,13 @@ export class NodeEntry {
   public toJSON(deep = true) {
     const keys: Record<string, any> = {}
 
-    this._keys.forEach((value, key) => {
+    this.keys$.forEach((value, key) => {
       keys[stringify(key)] = deep === true ? value.toJSON() : value
     })
 
     return {
       keys,
-      instances: Array.from(this._instances).map(value =>
+      instances: Array.from(this.instances$).map(value =>
         deep === true ? value.toJSON() : value
       ),
     }

@@ -6,114 +6,114 @@ import { ScalarNode, NodeContainer, ObjectNode } from '../Node'
 import { Variables } from './buildVariable'
 
 export const buildSelections = (
-  { _LINE_SEPARATOR, _formatter }: Formatter,
+  { LINE_SEPARATOR$, formatter$ }: Formatter,
   tree: SelectionTree,
   variables?: Variables
 ) => {
   const innerNode =
-    tree._selection._node instanceof NodeContainer
-      ? tree._selection._node.innerNode
-      : tree._selection._node
+    tree.selection$.node$ instanceof NodeContainer
+      ? tree.selection$.node$.innerNode$
+      : tree.selection$.node$
 
   if (innerNode instanceof ScalarNode) return ''
 
   const includeTypename =
     // When no selections or not on ObjectNode
-    (!tree._children.length || !(innerNode instanceof ObjectNode)) &&
+    (!tree.children$.length || !(innerNode instanceof ObjectNode)) &&
     // fragments should never need __typename
-    !(tree._selection instanceof Fragment)
+    !(tree.selection$ instanceof Fragment)
 
   const selections = [
     includeTypename && '__typename',
-    ...tree._children.map(tree =>
-      buildSelectionTree(_formatter, tree, variables)
+    ...tree.children$.map(tree =>
+      buildSelectionTree(formatter$, tree, variables)
     ),
   ].filter(Boolean)
 
   if (!selections.length) return ''
 
-  return selections.join(_LINE_SEPARATOR)
+  return selections.join(LINE_SEPARATOR$)
 }
 
 const buildFieldSelectionTree = (
-  { _SPACE, _hug, _indent, _formatter }: Formatter,
+  { SPACE$, hug$, indent$, formatter$ }: Formatter,
   tree: SelectionTree<FieldSelection>,
   variables?: Variables
 ): string => {
   const buildAlias = () => {
-    if (!tree._alias) return ''
-    return `${tree._alias}:${_SPACE}`
+    if (!tree.alias$) return ''
+    return `${tree.alias$}:${SPACE$}`
   }
 
   const buildArgs = () => {
-    const args = tree._selection._args
+    const args = tree.selection$.args$
     if (!args) return ''
 
-    return `(${buildArguments(_formatter, args, {
-      _variables: variables,
-      _node: tree._selection._field._args!,
-      _path: [tree._selection._field._name],
+    return `(${buildArguments(formatter$, args, {
+      variables$: variables,
+      node$: tree.selection$.field$.args$!,
+      path$: [tree.selection$.field$.name$],
     })})`
   }
 
   const buildChildren = () => {
-    const selections = buildSelections(_formatter, tree, variables)
+    const selections = buildSelections(formatter$, tree, variables)
     if (!selections) return ''
 
-    return `${_SPACE}${_hug(_indent(selections))}`
+    return `${SPACE$}${hug$(indent$(selections))}`
   }
 
   return `${buildAlias()}${
-    tree._selection!._field._name
+    tree.selection$!.field$.name$
   }${buildArgs()}${buildChildren()}`
 }
 
 const buildFragmentTree = (
-  { _SPACE, _hug, _indent, _formatter }: Formatter,
+  { SPACE$, hug$, indent$, formatter$ }: Formatter,
   tree: SelectionTree<Fragment>
 ) => {
-  const fragmentName = tree._allFragments.get(tree._selection)
+  const fragmentName = tree.allFragments$.get(tree.selection$)
 
-  if (_formatter._options.fragments !== 'inline' && fragmentName) {
+  if (formatter$.options$.fragments !== 'inline' && fragmentName) {
     return `...${fragmentName}`
   }
 
   const parentNode =
-    tree._parent!._selection._node instanceof NodeContainer
-      ? tree._parent!._selection._node.innerNode
-      : tree._parent!._selection._node
+    tree.parent$!.selection$.node$ instanceof NodeContainer
+      ? tree.parent$!.selection$.node$.innerNode$
+      : tree.parent$!.selection$.node$
 
   // If it's on the same node, and inline then omit type
-  if (tree._selection._node === parentNode) {
-    return buildSelections(_formatter, tree)
+  if (tree.selection$.node$ === parentNode) {
+    return buildSelections(formatter$, tree)
   }
 
-  let selections = buildSelections(_formatter, tree)
+  let selections = buildSelections(formatter$, tree)
   if (!selections) return ''
 
-  let huggedSelections = _hug(_indent(selections))
+  let huggedSelections = hug$(indent$(selections))
 
   // Add comment with fragment name (for debugging)
-  if (__DEV__ && _formatter._options.prettify && tree._selection._name) {
+  if (__DEV__ && formatter$.options$.prettify && tree.selection$.name$) {
     huggedSelections = huggedSelections.replace(
       '{',
-      `{ #[${tree._selection._name}]`
+      `{ #[${tree.selection$.name$}]`
     )
   }
 
-  return `...${_SPACE}on ${tree._selection._node}${_SPACE}${huggedSelections}`
+  return `...${SPACE$}on ${tree.selection$.node$}${SPACE$}${huggedSelections}`
 }
 
 export const buildSelectionTree = (
-  { _formatter }: Formatter,
+  { formatter$ }: Formatter,
   tree: SelectionTree,
   variables?: Variables
 ): string => {
-  if (tree._selection instanceof FieldSelection)
-    return buildFieldSelectionTree(_formatter, tree as any, variables)
+  if (tree.selection$ instanceof FieldSelection)
+    return buildFieldSelectionTree(formatter$, tree as any, variables)
 
-  if (tree._selection instanceof Fragment)
-    return buildFragmentTree(_formatter, tree as any)
+  if (tree.selection$ instanceof Fragment)
+    return buildFragmentTree(formatter$, tree as any)
 
-  return buildSelections(_formatter, tree, variables)
+  return buildSelections(formatter$, tree, variables)
 }

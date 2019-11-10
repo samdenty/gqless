@@ -10,7 +10,7 @@ import { schema } from '@internal/fixtures'
 
 it('works', () => {
   const selection = new Selection(schema.Query)
-  selection.add(new FieldSelection(schema.Query._fields.object))
+  selection.add(new FieldSelection(schema.Query.fields$.object))
   const tree = toTree([selection])
 
   expect(buildSelections(new Formatter(), tree)).toMatchInlineSnapshot(`
@@ -28,7 +28,7 @@ it('works', () => {
 it('works with arguments', () => {
   const selection = new Selection(schema.Query)
   selection.add(
-    new FieldSelection(schema.Query._fields.arrayOfObjects, {
+    new FieldSelection(schema.Query.fields$.arrayOfObjects, {
       string: 'test',
       input: {
         string: 'test2',
@@ -55,7 +55,7 @@ describe('works with fragments', () => {
   const selection = new Selection(schema.Query)
   const fragment = new Fragment(schema.Query)
   selection.add(fragment)
-  fragment.add(new FieldSelection(schema.Query._fields.string))
+  fragment.add(new FieldSelection(schema.Query.fields$.string))
 
   const tree = toTree([selection])
 
@@ -70,7 +70,7 @@ describe('works with fragments', () => {
   ).toMatchInlineSnapshot(`"__typename,string"`)
 
   it('and duplicated fragments', () => {
-    const queryQuery = new FieldSelection(schema.Query._fields.query)
+    const queryQuery = new FieldSelection(schema.Query.fields$.query)
     queryQuery.add(fragment)
     selection.add(queryQuery)
 

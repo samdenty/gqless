@@ -20,49 +20,49 @@ describe('emits correctly', () => {
     value1 = new Value(schema.Object)
     value2 = new Value(schema.Object)
 
-    events._onReference(onReference)
-    events._onUnreference(onUnreference)
+    events.onReference$(onReference)
+    events.onUnreference$(onUnreference)
   })
 
   test('for root values', () => {
-    rootValue.set('a', value1)
-    rootValue.set('b', value1)
+    rootValue.set$('a', value1)
+    rootValue.set$('b', value1)
     expect(onReference).toBeCalledTimes(1)
     expect(onReference).toBeCalledWith(value1)
 
     // Unreferences
-    rootValue.set('a', rootValue)
+    rootValue.set$('a', rootValue)
     expect(onUnreference).not.toBeCalled()
 
-    rootValue.set('b', rootValue)
+    rootValue.set$('b', rootValue)
     expect(onUnreference).toBeCalledTimes(1)
     expect(onUnreference).toBeCalledWith(value1)
   })
 
   test('for child values', () => {
-    rootValue.set('a', value1)
+    rootValue.set$('a', value1)
     onReference.mockClear()
 
-    value1.set('a', value2)
+    value1.set$('a', value2)
     expect(onReference).toBeCalledTimes(1)
     expect(onReference).toBeCalledWith(value2)
 
     onReference.mockClear()
-    rootValue.set('c', value1)
+    rootValue.set$('c', value1)
     expect(onReference).not.toBeCalled()
 
     // Unreferences
-    rootValue.set('c', rootValue)
+    rootValue.set$('c', rootValue)
     expect(onUnreference).not.toBeCalled()
 
-    value1.set('a', rootValue)
+    value1.set$('a', rootValue)
     expect(onUnreference).toBeCalledTimes(1)
     expect(onUnreference).toBeCalledWith(value2)
   })
 
   test('for existing references', () => {
-    value1.set('a', value2)
-    rootValue.set('a', value1)
+    value1.set$('a', value2)
+    rootValue.set$('a', value1)
 
     expect(onReference).toBeCalledTimes(2)
     expect(onReference).toBeCalledWith(value1)
@@ -70,12 +70,12 @@ describe('emits correctly', () => {
   })
 
   test('for unreferences', () => {
-    value1.set('a', value2)
-    rootValue.set('a', value1)
+    value1.set$('a', value2)
+    rootValue.set$('a', value1)
 
     expect(onReference).toBeCalledTimes(2)
 
-    rootValue.set('a', rootValue)
+    rootValue.set$('a', rootValue)
 
     expect(onUnreference).toBeCalledTimes(1)
     expect(onUnreference).toBeCalledWith(value1)

@@ -4,21 +4,21 @@ import { Fragment } from '../Selection'
 import { buildSelections } from './buildSelection'
 
 export const buildFragments = (
-  { _SPACE, _NEWLINE, _hug, _indent, _formatter }: Formatter,
+  { SPACE$, NEWLINE$, hug$, indent$, formatter$ }: Formatter,
   tree: SelectionTree
 ) => {
-  if (_formatter._options.fragments === 'inline') return ''
+  if (formatter$.options$.fragments === 'inline') return ''
 
   const buildFragment = (
     name: string,
     fragmentTree: SelectionTree<Fragment>
   ) => {
-    return `fragment ${name} on ${fragmentTree._selection._node}${_SPACE}${_hug(
-      _indent(buildSelections(_formatter, fragmentTree))
+    return `fragment ${name} on ${fragmentTree.selection$.node$}${SPACE$}${hug$(
+      indent$(buildSelections(formatter$, fragmentTree))
     )}`
   }
 
-  return Array.from(tree._duplicatedFragments)
+  return Array.from(tree.duplicatedFragments$)
     .map(([name, tree]) => buildFragment(name, tree))
-    .join(_NEWLINE)
+    .join(NEWLINE$)
 }

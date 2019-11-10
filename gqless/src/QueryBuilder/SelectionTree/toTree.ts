@@ -20,29 +20,29 @@ export const toTree = (selections: (Selection | Selection[])[]) => {
         //  frag B { }
         const validSelection = pathToSelection
           .slice(i)
-          .find(s => !(s instanceof Fragment) || s._selections.size)
+          .find(s => !(s instanceof Fragment) || s.selections$.size)
 
         if (!validSelection) return
       }
 
-      let index = tree._children.findIndex(t => t._selection === selection)
+      let index = tree.children$.findIndex(t => t.selection$ === selection)
       if (index > -1) {
-        tree = tree._children[index]
+        tree = tree.children$[index]
       } else {
         const newTree = new SelectionTree(selection, tree)
-        tree._children.push(newTree)
+        tree.children$.push(newTree)
         tree = newTree
       }
 
       // Add all the keySelections to the tree
-      selection._keySelections.forEach(keySelection => {
+      selection.keySelections$.forEach(keySelection => {
         addSelectionToTree(tree, keySelection)
       })
     }
 
     const selection = pathToSelection[pathToSelection.length - 1]
 
-    selection._selections.forEach(selection =>
+    selection.selections$.forEach(selection =>
       addSelectionToTree(tree, selection)
     )
   }

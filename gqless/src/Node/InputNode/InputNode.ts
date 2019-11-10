@@ -14,15 +14,15 @@ export type IInputNodeOptions = {
 }
 
 export class InputNode {
-  public _name?: string
-  public _inputs: UInputNodeRecord
+  public name$?: string
+  public inputs$: UInputNodeRecord
 
   constructor(inputs: UInputNodeRecord, { name }: IInputNodeOptions) {
-    this._name = name
-    this._inputs = lazyGetters(inputs)
+    this.name$ = name
+    this.inputs$ = lazyGetters(inputs)
   }
 
   public toString() {
-    return this._name || this.constructor.name
+    return this.name$ || this.constructor.name
   }
 }

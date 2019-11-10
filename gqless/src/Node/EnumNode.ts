@@ -21,6 +21,6 @@ export class EnumNode implements DataTrait {
     const value = getValue(ctx)
     if (!value) return null
 
-    return value.data
+    return value.data$
   }
 }

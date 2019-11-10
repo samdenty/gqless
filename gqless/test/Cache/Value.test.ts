@@ -10,19 +10,19 @@ describe('emits onChange', () => {
   let onChange: any
   beforeEach(() => {
     onChange = jest.fn()
-    value._onChange(onChange)
+    value.onChange$(onChange)
   })
 
   test('on update', () => {
     expect(onChange).not.toBeCalled()
-    value.data = null
+    value.data$ = null
     expect(onChange).toBeCalledWith({})
   })
 
   test('not on set', () => {
     expect(onChange).not.toBeCalled()
 
-    value.set('a', value)
+    value.set$('a', value)
 
     expect(onChange).not.toBeCalled()
   })
@@ -32,24 +32,24 @@ describe('emits onSet', () => {
   let onSet: any
   beforeEach(() => {
     onSet = jest.fn()
-    value._onSet(onSet)
+    value.onSet$(onSet)
   })
 
   test('on set', () => {
     expect(onSet).not.toBeCalled()
 
-    value.set('a', value)
+    value.set$('a', value)
     expect(onSet).toBeCalledWith('a', value)
-    value.set('a', value)
+    value.set$('a', value)
     expect(onSet).toBeCalledTimes(1)
   })
 
   test('on update', () => {
     expect(onSet).not.toBeCalled()
 
-    value.data = { a: value }
+    value.data$ = { a: value }
     expect(onSet).toBeCalledWith('a', value)
-    value.data = { a: value, b: value }
+    value.data$ = { a: value, b: value }
 
     expect(onSet).toBeCalledWith('b', value)
     expect(onSet).toBeCalledTimes(2)
@@ -59,21 +59,21 @@ describe('emits onSet', () => {
 test('handles references', () => {
   const onReference = jest.fn()
   const onUnreference = jest.fn()
-  value._onReference(onReference)
-  value._onUnreference(onUnreference)
+  value.onReference$(onReference)
+  value.onUnreference$(onUnreference)
 
   const object = new Value(schema.Object)
 
-  value.set('a', object)
-  value.set('b', object)
+  value.set$('a', object)
+  value.set$('b', object)
 
   expect(onReference).toBeCalledTimes(1)
   expect(onReference).toBeCalledWith(object)
-  expect(value._references.keys()).toContain(object)
+  expect(value.references$.keys()).toContain(object)
 
-  value.set('a', value)
+  value.set$('a', value)
   expect(onUnreference).not.toBeCalled()
-  value.set('b', value)
+  value.set$('b', value)
 
   expect(onUnreference).toBeCalledWith(object)
 })

@@ -6,11 +6,11 @@ export type UFragment = ObjectNode | InterfaceNode
 export class Fragment<TNode extends UFragment = UFragment> extends Selection<
   TNode
 > {
-  constructor(node: TNode, public _name?: string) {
+  constructor(node: TNode, public name$?: string) {
     super(node)
   }
 
   public toString() {
-    return this._name || `${this._node || ''}Fragment`
+    return this.name$ || `${this.node$ || ''}Fragment`
   }
 }

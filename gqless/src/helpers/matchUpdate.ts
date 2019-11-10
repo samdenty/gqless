@@ -14,12 +14,12 @@ import { getAccessor } from '../Accessor'
  */
 export const matchUpdate = (data: any, pattern: any) => {
   const accessor = getAccessor(data)
-  const entry = accessor._cache._entries.get(accessor._node)
+  const entry = accessor.cache$.entries$.get(accessor.node$)
   if (!entry) return false
 
-  const match = entry._match(pattern)
+  const match = entry.match$(pattern)
   if (!match) return false
 
-  accessor._updateValue(match.value)
+  accessor.updateValue$(match.value)
   return true
 }

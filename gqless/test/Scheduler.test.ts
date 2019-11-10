@@ -19,12 +19,12 @@ it('schedules selections with stacks', () => {
 
   const root = new RootAccessor(new Selection(schema.Query), scheduler)
 
-  scheduler.pushStack(testQuery)
-  scheduler._commit._stage(root)
-  scheduler.popStack(testQuery)
-  expect(scheduler._stack).toEqual([])
+  scheduler.pushStack$(testQuery)
+  scheduler.commit$.stage$(root)
+  scheduler.popStack$(testQuery)
+  expect(scheduler.stack$).toEqual([])
 
-  expect(root._status !== NetworkStatus.idle).toBeTruthy()
+  expect(root.status$ !== NetworkStatus.idle).toBeTruthy()
 
   jest.runOnlyPendingTimers()
 })
@@ -35,7 +35,7 @@ it('unstages selections', () => {
 
   const root = new RootAccessor(new Selection(schema.Query), scheduler)
 
-  const unstage = scheduler._commit._stage(root)
+  const unstage = scheduler.commit$.stage$(root)
   unstage()
 
   jest.runOnlyPendingTimers()
@@ -49,9 +49,9 @@ it('calls plugin methods', () => {
   const scheduler = new Scheduler(() => {})
   const root = new RootAccessor(new Selection(schema.Query), scheduler)
 
-  scheduler._plugins.add({ onCommit })
+  scheduler.plugins$.add({ onCommit })
 
-  scheduler._commit._stage(root)
+  scheduler.commit$.stage$(root)
 
   jest.runOnlyPendingTimers()
 
@@ -62,9 +62,9 @@ it('emits onFetched when complete', async () => {
   const scheduler = new Scheduler(() => {})
   const root = new RootAccessor(new Selection(schema.Query), scheduler)
 
-  const { _commit: commit } = scheduler
-  commit._stage(root)
+  const { commit$: commit } = scheduler
+  commit.stage$(root)
   jest.runOnlyPendingTimers()
 
-  await commit._onFetched
+  await commit.onFetched$
 })

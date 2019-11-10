@@ -11,5 +11,5 @@ it(`doesn't allow setting to null, if non-nullable`, () => {
 it(`prevents conversion from nullable to non-nullable`, () => {
   const variable = new Variable(null, { nullable: true })
 
-  expect(() => variable.updateNullable(false)).toThrow()
+  expect(() => variable.updateNullable$(false)).toThrow()
 })

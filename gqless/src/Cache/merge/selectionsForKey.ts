@@ -8,7 +8,7 @@ export const selectionsForKey = (
 
   for (const selection of selectionsFilter) {
     if (selection instanceof Fragment) {
-      selections.push(...selectionsForKey(key, ...selection._selections))
+      selections.push(...selectionsForKey(key, ...selection.selections$))
       continue
     }
 

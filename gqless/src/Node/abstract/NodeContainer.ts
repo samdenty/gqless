@@ -1,14 +1,14 @@
 import { computed } from '../../utils'
 
 export class NodeContainer<TNode extends object> {
-  constructor(public _ofNode: TNode, public _nullable = false) {}
+  constructor(public ofNode$: TNode, public nullable$ = false) {}
 
   @computed()
-  public get innerNode(): object {
-    if (this._ofNode instanceof NodeContainer) {
-      return this._ofNode.innerNode
+  public get innerNode$(): object {
+    if (this.ofNode$ instanceof NodeContainer) {
+      return this.ofNode$.innerNode$
     }
 
-    return this._ofNode
+    return this.ofNode$
   }
 }

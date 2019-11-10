@@ -14,7 +14,7 @@ export const extensionsForKey = (
   }
 
   for (const node of nodes) {
-    const extension = node?._extension
+    const extension = node?.extension$
     if (!extension) continue
     keyedExtensions.push(extension)
   }

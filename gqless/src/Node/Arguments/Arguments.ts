@@ -14,12 +14,12 @@ export type UArguments =
 type UArgumentsRecord = Record<string, ArgumentsField>
 
 export class Arguments {
-  public _inputs: UArgumentsRecord
+  public inputs$: UArgumentsRecord
 
-  constructor(inputs: UArgumentsRecord, public _required = false) {
-    this._inputs = lazyGetters(inputs, (fieldName, field) => {
+  constructor(inputs: UArgumentsRecord, public required$ = false) {
+    this.inputs$ = lazyGetters(inputs, (fieldName, field) => {
       // Called when the getter prop is evaluated
-      field._name = fieldName as string
+      field.name$ = fieldName as string
     })
   }
 }

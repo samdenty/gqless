@@ -1,6 +1,6 @@
 import * as React from '../jsx'
 
-export function Path<T extends { node: any }>({
+export function Path<T extends { node$: any }>({
   path,
   isRoot,
   isFragment,
@@ -49,7 +49,7 @@ export function Path<T extends { node: any }>({
                   {' '}
                   on{' '}
                   <span style={{ color: '#E36EEC' }}>
-                    {String(element.node)}
+                    {String(element.node$)}
                   </span>
                 </span>
 

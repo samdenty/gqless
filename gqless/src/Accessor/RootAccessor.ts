@@ -10,33 +10,33 @@ export class RootAccessor<
 > extends Accessor<TSelection, TChildren> {
   constructor(
     selection: TSelection,
-    public _scheduler: Scheduler,
-    public _cache: Cache = new Cache(selection._node)
+    public scheduler$: Scheduler,
+    public cache$: Cache = new Cache(selection.node$)
   ) {
     super(undefined, selection)
-    this._value = _cache._rootValue
+    this.value$ = cache$.rootValue$
 
-    this._addDisposer(
-      _cache._onRootValueChange(() => (this._value = _cache._rootValue))
+    this.addDisposer$(
+      cache$.onRootValueChange$(() => (this.value$ = cache$.rootValue$))
     )
 
-    this._loadExtensions()
+    this.loadExtensions$()
   }
 
   // TODO: This should be replace with a Generic inside accessor
 
-  public _getData(ctx?: DataContext): any {
-    return this._selection._node.getData({
-      accessor: this,
+  public getData$(ctx?: DataContext): any {
+    return this.selection$.node$.getData({
+      accessor$: this,
       ...ctx,
     })
   }
 
-  public _updateValue(value: Value) {
-    this._cache._rootValue = value
+  public updateValue$(value: Value) {
+    this.cache$.rootValue$ = value
   }
 
   public toString() {
-    return this._selection.toString()
+    return this.selection$.toString()
   }
 }

@@ -9,10 +9,10 @@ export const accessorFormatter = {
       if (!(accessor instanceof Accessor)) return null
 
       const path = config.objectDepth
-        ? accessor._path.slice(config.objectDepth)
-        : accessor._path
+        ? accessor.path$.slice(config.objectDepth)
+        : accessor.path$
 
-      const { children } = accessor
+      const { children$ } = accessor
       return (
         <div>
           <Path
@@ -22,20 +22,20 @@ export const accessorFormatter = {
             isFragment={accessor => accessor instanceof FragmentAccessor}
           />
 
-          {children.length ? (
+          {children$.length ? (
             <Preview
-              elements={children}
+              elements={children$}
               objectDepth={config.objectDepth}
               colon={!(accessor instanceof FragmentAccessor)}
               isFragment={accessor => accessor instanceof FragmentAccessor}
             />
           ) : (
-            (config.objectDepth || accessor._node instanceof ScalarNode) && (
+            (config.objectDepth || accessor.node$ instanceof ScalarNode) && (
               <span>
                 {`: `}
                 <object
                   // @ts-ignore
-                  object={accessor._value ? accessor._value.toJSON() : null}
+                  object={accessor.value$ ? accessor.value$.toJSON() : null}
                 />
               </span>
             )
@@ -48,7 +48,7 @@ export const accessorFormatter = {
   },
 
   body(accessor: Accessor) {
-    const children = [...accessor.children]
+    const children = [...accessor.children$]
     children.sort(
       (a, b) =>
         +(b instanceof FragmentAccessor) - +(a instanceof FragmentAccessor)
@@ -59,14 +59,14 @@ export const accessorFormatter = {
         {children.map(accessor => (
           <TreeItem
             object={accessor}
-            root={!!accessor.children.length}
-            objectDepth={accessor.path.length - 1}
+            root={!!accessor.children$.length}
+            objectDepth={accessor.path$.length - 1}
           />
         ))}
       </Tree>
     )
   },
   hasBody(accessor: Accessor) {
-    return !!accessor.children.length
+    return !!accessor.children$.length
   },
 }

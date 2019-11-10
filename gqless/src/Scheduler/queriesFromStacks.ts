@@ -1,7 +1,7 @@
 interface Weight {
-  _amount: number
-  _count: number
-  _priority?: number
+  amount$: number
+  count$: number
+  priority$?: number
 }
 
 /**
@@ -22,7 +22,7 @@ export const queriesFromStacks = <T extends any>(stacks: T[][]) => {
       return queryWeights.get(query)!
     }
 
-    const weights: Weight = { _amount: 0, _count: 0 }
+    const weights: Weight = { amount$: 0, count$: 0 }
     queryWeights.set(query, weights)
     return weights
   }
@@ -33,14 +33,14 @@ export const queriesFromStacks = <T extends any>(stacks: T[][]) => {
       const amount = stack.length - i
 
       const weights = getWeights(query)
-      weights._count++
-      weights._amount += amount
+      weights.count$++
+      weights.amount$ += amount
     })
   })
 
   // Calculate priority
   const sortedWeights = Array.from(queryWeights).sort(
-    ([, a], [, b]) => b._count - a._count || b._amount - a._amount
+    ([, a], [, b]) => b.count$ - a.count$ || b.amount$ - a.amount$
   )
 
   // Calculate query priorities
@@ -49,15 +49,15 @@ export const queriesFromStacks = <T extends any>(stacks: T[][]) => {
       const prevWeight = sortedWeights[idx - 1][1]
 
       if (
-        weight._amount / weight._count ===
-        prevWeight._amount / prevWeight._count
+        weight.amount$ / weight.count$ ===
+        prevWeight.amount$ / prevWeight.count$
       ) {
-        weight._priority = prevWeight._priority
+        weight.priority$ = prevWeight.priority$
         return
       }
     }
 
-    weight._priority = idx
+    weight.priority$ = idx
   })
 
   const finalQueries = new Set()
@@ -72,14 +72,14 @@ export const queriesFromStacks = <T extends any>(stacks: T[][]) => {
     // is most likely to be at the end
     for (let i = stackSize; i >= 0; i--) {
       const query = stack[i]
-      const { _priority } = queryWeights.get(query)!
+      const { priority$ } = queryWeights.get(query)!
       const positionRating = stackSize - i
 
       // If the positionRating is greater
       // than the lowest recorded rating, then we've already found it
       if (lowestRating !== undefined && positionRating > lowestRating) break
 
-      const rating = _priority! + positionRating
+      const rating = priority$! + positionRating
 
       if (lowestRating === undefined || rating <= lowestRating) {
         // If it's the same rating, add to possible queries

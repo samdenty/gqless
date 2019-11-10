@@ -5,7 +5,7 @@ export const create = (fetchSelections: AccessorFetcher = () => {}) => {
   const selection = new Selection(schema.Query)
   const scheduler = new Scheduler(fetchSelections)
   const accessor = new RootAccessor(selection, scheduler)
-  return { selection, scheduler, accessor, data: accessor._data as Query }
+  return { selection, scheduler, accessor, data: accessor.data$ as Query }
 }
 
 export const snapshotAccessor = (getMatches: (data: Query) => void) => {
