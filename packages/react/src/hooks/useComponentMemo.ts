@@ -9,10 +9,10 @@ export const useComponentMemo = <T>(
   dependencies?: any[]
 ) => {
   const context = useComponentContext()
-  const stateIndex = ++context.lastStateIndex
+  const stateIndex = ++context.lastStateIndex$
 
   const memo: ReturnType<typeof createMemo> =
-    context.state[stateIndex] || (context.state[stateIndex] = createMemo())
+    context.state$[stateIndex] || (context.state$[stateIndex] = createMemo())
 
   return memo(getValue, dependencies)
 }

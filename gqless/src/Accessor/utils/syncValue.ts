@@ -30,7 +30,7 @@ export const syncValue = (
 
       const onChange = isFn
         ? withAccessor.value$.onChange$
-        : withAccessor.value$.onSet$.filter(k => k === getFromValue)
+        : withAccessor.value$.onSet$.filter$(k => k === getFromValue)
 
       dispose = onChange(() => {
         accessor.value$ = getValue(withAccessor.value$!)

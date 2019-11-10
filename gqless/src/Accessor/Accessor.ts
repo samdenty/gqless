@@ -65,7 +65,7 @@ export abstract class Accessor<
         // On un-select, dispose of self
         // used when you do `query.users()`, and an argumentless
         // selection is created before the function call
-        parent$.selection$.onUnselect$.filter(s => s === selection$)(() =>
+        parent$.selection$.onUnselect$.filter$(s => s === selection$)(() =>
           this.dispose$()
         )
       )
@@ -93,7 +93,7 @@ export abstract class Accessor<
     const prevResolved = this._resolved$
     if (prevResolved === resolved) return
     this._resolved$ = resolved
-    this.onResolvedChange$.emit(resolved)
+    this.onResolvedChange$.emit$(resolved)
   }
 
   public get data$() {
@@ -117,7 +117,7 @@ export abstract class Accessor<
     const prevStatus = this._status$
     this._status$ = status
     if (prevStatus === status) return
-    this.onStatusChange$.emit(status, prevStatus)
+    this.onStatusChange$.emit$(status, prevStatus)
   }
   public get status$() {
     return this._status$
@@ -127,7 +127,7 @@ export abstract class Accessor<
     const prevValue = this._value$
     this._value$ = value
     if (prevValue === value) return
-    this.onValueChange$.emit(value, prevValue)
+    this.onValueChange$.emit$(value, prevValue)
   }
   public get value$() {
     return this._value$
@@ -161,7 +161,7 @@ export abstract class Accessor<
 
     if (arrayEqual(prevExtensions, this.extensions$)) return
 
-    this.onInitializeExtensions$.emit()
+    this.onInitializeExtensions$.emit$()
 
     if (!this.extensions$.length) return
 

@@ -7,13 +7,13 @@ export const VariantContext = createContext<Variant>([])
 
 export const useFragments = () => {
   const variant = useContext(VariantContext)
-  const variantFragments: VariantFragments = new Map()
+  const variantFragments$: VariantFragments = new Map()
 
   const stopResolving: Function[] = []
 
   return {
-    variantFragments,
-    startResolving() {
+    variantFragments$,
+    startResolving$() {
       variant.forEach(([accessor, fragment]) => {
         const fragmentAccessor =
           accessor.get$<FragmentAccessor>(a => a.selection$ === fragment) ||
@@ -22,13 +22,13 @@ export const useFragments = () => {
         stopResolving.push(fragmentAccessor.startResolving())
       })
     },
-    stopResolving() {
+    stopResolving$() {
       stopResolving.forEach(stop => stop())
     },
-    getRenderVariants() {
+    getRenderVariants$() {
       let variants: Variant[] = []
 
-      variantFragments.forEach((fragments, accessor) => {
+      variantFragments$.forEach((fragments, accessor) => {
         // Only render variations for accessors
         // without a value and non-idle
         if (accessor.value$ || accessor.status$ === NetworkStatus.idle) return

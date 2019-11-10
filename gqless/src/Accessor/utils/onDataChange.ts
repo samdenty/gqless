@@ -25,7 +25,7 @@ export const onDataChange = (accessor: Accessor) => {
         newData === null ||
         accessor.node$ instanceof ScalarNode
       ) {
-        onDataChange.emit(prevData)
+        onDataChange.emit$(prevData)
       }
     }
 

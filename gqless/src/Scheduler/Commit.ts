@@ -49,7 +49,7 @@ export class Commit extends Disposable {
     if (this.disposed$ || accessor.status$ !== NetworkStatus.idle)
       return unstage
 
-    if (!this.accessors$.size) this.onActive$.emit()
+    if (!this.accessors$.size) this.onActive$.emit$()
 
     accessor.status$ = accessor.value$
       ? NetworkStatus.updating
@@ -78,7 +78,7 @@ export class Commit extends Disposable {
 
     this.accessors$.delete(accessor)
 
-    if (!this.accessors$.size) this.onIdle$.emit()
+    if (!this.accessors$.size) this.onIdle$.emit$()
   }
 
   public async fetch$() {
@@ -128,6 +128,6 @@ export class Commit extends Disposable {
       console.error(e)
     }
 
-    this.onFetched$.emit()
+    this.onFetched$.emit$()
   }
 }

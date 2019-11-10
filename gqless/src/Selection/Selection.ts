@@ -24,11 +24,11 @@ export class Selection<TNode extends DataTrait = DataTrait> {
     if (this.selections$.has(selection)) return
 
     this.selections$.add(selection)
-    this.onSelect$.emit(selection)
+    this.onSelect$.emit$(selection)
 
     // Forward events
-    selection.onSelect$(this.onSelect$.emit)
-    selection.onUnselect$(this.onUnselect$.emit)
+    selection.onSelect$(this.onSelect$.emit$)
+    selection.onUnselect$(this.onUnselect$.emit$)
   }
 
   public get$<TSelection extends Selection>(
@@ -51,12 +51,12 @@ export class Selection<TNode extends DataTrait = DataTrait> {
     this.keySelections$.delete(selection)
 
     // Unforward events
-    selection.onSelect$.off(this.onSelect$.emit)
-    selection.onUnselect$.off(this.onUnselect$.emit)
+    selection.onSelect$.off$(this.onSelect$.emit$)
+    selection.onUnselect$.off$(this.onUnselect$.emit$)
 
     const emitUnselect = (selection: Selection) => {
       // Emit unselect for each selection
-      this.onUnselect$.emit(selection)
+      this.onUnselect$.emit$(selection)
       selection.selections$.forEach(emitUnselect)
     }
 

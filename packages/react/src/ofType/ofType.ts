@@ -6,16 +6,16 @@ export function ofType<
   T extends TData['__typename']
 >(data: TData, typename: T): data is TData & { __typename: T } {
   try {
-    const { variantFragments } = useComponentContext()
+    const { variantFragments$ } = useComponentContext()
     const accessor = getAccessor(data)
 
     const node = getAbstractImplementation(accessor.node$, typename)
     if (node) {
       const fragment = accessor.getDefaultFragment$(node)
-      if (!variantFragments.has(accessor))
-        variantFragments.set(accessor, new Set())
+      if (!variantFragments$.has(accessor))
+        variantFragments$.set(accessor, new Set())
 
-      variantFragments.get(accessor)!.add(fragment)
+      variantFragments$.get(accessor)!.add(fragment)
     }
   } catch {
     // useComponentContext / getAccessor could fail

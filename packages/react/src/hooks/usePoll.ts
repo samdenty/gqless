@@ -4,7 +4,7 @@ import { useComponentContext } from './useComponentContext'
 
 export const usePoll = (data: any, interval: number, initialPoll = true) => {
   const accessor = getAccessor(data)
-  const { stack } = useComponentContext()
+  const { stack$: stack } = useComponentContext()
   const [isPolling, setIsPolling] = useState(initialPoll)
 
   const poller = useMemo(() => new Poller(accessor, interval, stack.frames), [

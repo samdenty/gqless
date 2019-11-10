@@ -16,7 +16,7 @@ export const deepReference = (rootValue: Value) => {
     const handleReference = (value: Value) => {
       if (!valueReferences.has(value)) valueReferences.set(value, { count$: 0 })
       const references = valueReferences.get(value)!
-      const unrefFromParent = parentValue.onUnreference$.filter(
+      const unrefFromParent = parentValue.onUnreference$.filter$(
         v => v === value
       )
 
@@ -26,20 +26,20 @@ export const deepReference = (rootValue: Value) => {
         references.count$--
 
         if (references.count$) return
-        onUnreference$.emit(value)
+        onUnreference$.emit$(value)
       })
 
       // If there's another reference beside our own,
       // delegate to it
       if (references.count$ !== 1) return
 
-      onReference$.emit(value)
+      onReference$.emit$(value)
       const dispose = watchAndEmit(value)
 
       // When the root is disposed, dispose watcher
       disposers.add(dispose)
       // else wait until value is globally unreferenced
-      onUnreference$.filter(v => v === value).then(dispose)
+      onUnreference$.filter$(v => v === value).then(dispose)
     }
 
     // Handle references created, before watchAndEmit called

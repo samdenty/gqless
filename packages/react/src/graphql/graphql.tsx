@@ -46,44 +46,44 @@ export const graphql = <Props extends any>(
       }
     }, [seperateRequest || parentStack])
 
-    useComponentContext.value = {
-      variantFragments: undefined!,
-      lastStateIndex: -1,
-      state,
-      stack,
-      accessors: undefined!,
-      query,
-      schedulers: undefined!,
+    useComponentContext.value$ = {
+      variantFragments$: undefined!,
+      lastStateIndex$: -1,
+      state$: state,
+      stack$: stack,
+      accessors$: undefined!,
+      query$: query,
+      schedulers$: undefined!,
     }
 
     const {
-      accessors,
-      schedulers,
-      startIntercepting,
-      stopIntercepting,
-      updateAccessors,
+      accessors$,
+      schedulers$,
+      startIntercepting$,
+      stopIntercepting$,
+      updateAccessors$,
     } = useAccessors(stack)
-    Object.assign(useComponentContext.value, { accessors, schedulers })
+    Object.assign(useComponentContext.value$, { accessors$, schedulers$ })
 
     const {
-      variantFragments,
-      startResolving,
-      stopResolving,
-      getRenderVariants,
+      variantFragments$,
+      startResolving$,
+      stopResolving$,
+      getRenderVariants$,
     } = useFragments()
-    Object.assign(useComponentContext.value, { variantFragments })
+    Object.assign(useComponentContext.value$, { variantFragments$ })
 
     try {
-      startResolving()
-      startIntercepting()
+      startResolving$()
+      startIntercepting$()
 
       var returnValue = component(props)
     } catch (e) {
       throw e
     } finally {
-      useComponentContext.value = undefined
-      stopIntercepting()
-      stopResolving()
+      useComponentContext.value$ = undefined
+      stopIntercepting$()
+      stopResolving$()
     }
 
     // If we've recorded Abstract accessors in the
@@ -93,8 +93,8 @@ export const graphql = <Props extends any>(
     // then return a new component for each variant,
     // which will convert accessors into fragmentaccessors
     // at render.
-    if (variantFragments.size) {
-      const renderVariants = getRenderVariants()
+    if (variantFragments$.size) {
+      const renderVariants = getRenderVariants$()
 
       if (renderVariants.length)
         return renderVariants.map((variant, i) => (
@@ -111,7 +111,7 @@ export const graphql = <Props extends any>(
       <StackContext.Provider value={stack}>{returnValue}</StackContext.Provider>
     )
 
-    const promise = updateAccessors()
+    const promise = updateAccessors$()
 
     // React suspense support
     if (promise) {

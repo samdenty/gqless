@@ -6,17 +6,17 @@ export type VariantFragments = Map<Accessor, Set<Fragment>>
 export type ComponentFragment = WeakMap<ObjectNode, Fragment>
 
 export interface ComponentContext {
-  query: Query
-  stack: StackContext
-  accessors: Set<Accessor>
-  schedulers: Set<Scheduler>
+  query$: Query
+  stack$: StackContext
+  accessors$: Set<Accessor>
+  schedulers$: Set<Scheduler>
 
   // Fragments to be used for render variants
-  variantFragments: VariantFragments
+  variantFragments$: VariantFragments
 
   // Global component state
-  lastStateIndex: number
-  state: any[]
+  lastStateIndex$: number
+  state$: any[]
 }
 
 /**
@@ -25,11 +25,11 @@ export interface ComponentContext {
  */
 export const useComponentContext = () => {
   invariant(
-    useComponentContext.value,
+    useComponentContext.value$,
     `not called within a wrapped graphql() component's render phase`
   )
 
-  return useComponentContext.value
+  return useComponentContext.value$
 }
 
-useComponentContext.value = undefined as ComponentContext | undefined
+useComponentContext.value$ = undefined as ComponentContext | undefined

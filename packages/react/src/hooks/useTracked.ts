@@ -1,7 +1,7 @@
 import { useComponentContext } from './useComponentContext'
 
 export const useTracked = () => {
-  const { stack, schedulers } = useComponentContext()
+  const { stack$: stack, schedulers$: schedulers } = useComponentContext()
 
   return <T>(callback: () => T): T => {
     try {

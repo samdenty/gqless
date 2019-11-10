@@ -1,5 +1,5 @@
 import { Variable } from 'gqless'
-import { useMemo, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useComponentMemo } from './useComponentMemo'
 
 export function useVariable<TValue>(

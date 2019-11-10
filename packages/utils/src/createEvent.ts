@@ -1,14 +1,13 @@
 export const createEvent = <TCallback extends (...args: any[]) => any>() => {
-  let paused = false
   const listeners = new Set<TCallback>()
 
   const event = (callback: TCallback) => {
     listeners.add(callback)
 
-    return () => event.off(callback)
+    return () => event.off$(callback)
   }
 
-  event.filter = (
+  event.filter$ = (
     filter: (...parameters: Parameters<TCallback>) => boolean
   ) => {
     const filteredEvent = createEvent<TCallback>()
@@ -17,7 +16,7 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
       const shouldEmit = filter(...args)
       if (!shouldEmit) return
 
-      return filteredEvent.emit(...args)
+      return filteredEvent.emit$(...args)
     }) as TCallback)
     return filteredEvent
   }
@@ -25,7 +24,7 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
   // Called once, then disposed
   event.then = (callback: TCallback) => {
     const listener = ((...args: any[]) => {
-      event.off(listener)
+      event.off$(listener)
 
       return callback(...args)
     }) as TCallback
@@ -33,21 +32,12 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
     return event(listener)
   }
 
-  event.off = (callback: TCallback) => {
+  event.off$ = (callback: TCallback) => {
     listeners.delete(callback)
   }
 
-  event.emit = (...args: Parameters<TCallback>) => {
-    if (paused) return
+  event.emit$ = (...args: Parameters<TCallback>) => {
     return Array.from(listeners).map(emit => emit(...args))
-  }
-
-  event.pause = () => {
-    paused = true
-  }
-
-  event.unpause = () => {
-    paused = false
   }
 
   return event

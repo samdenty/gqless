@@ -53,7 +53,7 @@ export class Cache extends Disposable {
     const prevValue = this._rootValue$
     if (value === prevValue) return
     this._rootValue$ = value
-    this.onRootValueChange$.emit(value)
+    this.onRootValueChange$.emit$(value)
   }
 
   public merge$(accessor: Accessor, data: any) {

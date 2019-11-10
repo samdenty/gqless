@@ -23,17 +23,17 @@ export class Value<TNode extends DataTrait = DataTrait> {
 
       const referencedKeys = this.references$.get(value)!
 
-      if (!referencedKeys.size) this.onReference$.emit(value)
+      if (!referencedKeys.size) this.onReference$.emit$(value)
       referencedKeys.add(key)
 
       this.onSet$
-        .filter(k => k === key)
+        .filter$(k => k === key)
         .then(() => {
           referencedKeys.delete(key)
           if (referencedKeys.size) return
 
           this.references$.delete(value)
-          this.onUnreference$.emit(value)
+          this.onUnreference$.emit$(value)
         })
     })
   }
@@ -63,11 +63,11 @@ export class Value<TNode extends DataTrait = DataTrait> {
         key = String(key)
         if ((prevData as any)?.[key] === value) return
 
-        this.onSet$.emit(key, value)
+        this.onSet$.emit$(key, value)
       })
     }
 
-    this.onChange$.emit(prevData)
+    this.onChange$.emit$(prevData)
   }
 
   public get$(key: string | number): Value | undefined {
@@ -86,7 +86,7 @@ export class Value<TNode extends DataTrait = DataTrait> {
     if (prevValue === value) return
 
     ;(this.data$ as any)[key] = value
-    this.onSet$.emit(key, value)
+    this.onSet$.emit$(key, value)
   }
 
   public toJSON(deep = true): any {

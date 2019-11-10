@@ -10,12 +10,12 @@ export class Interceptor {
   public onAccessor = createEvent<AccessorInterceptor>()
 
   public start() {
-    accessorInterceptors.add(this.onAccessor.emit)
+    accessorInterceptors.add(this.onAccessor.emit$)
     this.listening = true
   }
 
   public stop() {
-    accessorInterceptors.delete(this.onAccessor.emit)
+    accessorInterceptors.delete(this.onAccessor.emit$)
     this.listening = false
   }
 }

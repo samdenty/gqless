@@ -1,15 +1,15 @@
 type Dependency = {
-  weak: WeakMap<any, Dependency>
-  strong: Map<any, Dependency>
-  value?: any
+  weak$: WeakMap<any, Dependency>
+  strong$: Map<any, Dependency>
+  value$?: any
 }
 const createDependency = (): Dependency => ({
-  weak: new WeakMap(),
-  strong: new Map(),
+  weak$: new WeakMap(),
+  strong$: new Map(),
 })
 
 const dependencyType = (data: any) =>
-  data && data instanceof Object ? 'weak' : 'strong'
+  data && data instanceof Object ? 'weak$' : 'strong$'
 
 /**
  * Memory-leak free memoization
@@ -52,7 +52,7 @@ export function createMemo() {
         return false
       })
 
-      if (!changedDependency && 'value' in dependency) return dependency.value
+      if (!changedDependency && 'value$' in dependency) return dependency.value$
 
       if (!get) return
 
@@ -64,7 +64,7 @@ export function createMemo() {
       }
 
       const value = get()
-      dependency.value = value
+      dependency.value$ = value
       return value
     }
 

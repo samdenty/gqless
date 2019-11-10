@@ -5,7 +5,7 @@ import { StackContext } from '../Query'
 import { useInterceptor } from './useInterceptor'
 
 export const useAccessors = (stack: StackContext) => {
-  const accessors = useMemo(() => new Set<Accessor>(), [])
+  const accessors$ = useMemo(() => new Set<Accessor>(), [])
 
   const accessorDisposers = useMemo(() => new Map<Accessor, Function[]>(), [])
   const forceUpdate = useForceUpdate()
@@ -18,17 +18,17 @@ export const useAccessors = (stack: StackContext) => {
     }
   }, [])
 
-  const interceptor = useInterceptor(stack)
+  const interceptor$ = useInterceptor(stack)
 
   return {
-    ...interceptor,
-    accessors,
-    updateAccessors(): Promise<void> | void {
+    ...interceptor$,
+    accessors$,
+    updateAccessors$(): Promise<void> | void {
       // Find all the new accessors and add to Set
-      interceptor.interceptedAccessors.forEach(accessor => {
-        if (accessors.has(accessor)) return
+      interceptor$.interceptedAccessors$.forEach(accessor => {
+        if (accessors$.has(accessor)) return
 
-        accessors.add(accessor)
+        accessors$.add(accessor)
         accessorDisposers.set(
           accessor,
           // Make component update when data changes
@@ -50,10 +50,10 @@ export const useAccessors = (stack: StackContext) => {
 
       const nonIdleAccessors = new Set<Accessor>()
 
-      accessors.forEach(accessor => {
+      accessors$.forEach(accessor => {
         // Locate accessors currently being fetched,
         // and add to Set
-        if (interceptor.interceptedAccessors.has(accessor)) {
+        if (interceptor$.interceptedAccessors$.has(accessor)) {
           if (accessor.status$ !== NetworkStatus.idle) {
             nonIdleAccessors.add(accessor)
           }
@@ -68,7 +68,7 @@ export const useAccessors = (stack: StackContext) => {
           accessorDisposers.delete(accessor)
           disposers.forEach(dispose => dispose())
         }
-        accessors.delete(accessor)
+        accessors$.delete(accessor)
       })
 
       if (nonIdleAccessors.size) {
