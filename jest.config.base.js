@@ -32,6 +32,11 @@ module.exports = root => {
 
       'gqless/(?:dist|src)(.*)$': path.resolve(__dirname, './gqless/src$1'),
       gqless$: path.resolve(__dirname, './gqless/src'),
+
+      'babel-plugin-gqless$': path.resolve(
+        __dirname,
+        './packages/babel-plugin-gqless'
+      ),
     },
   }
 }

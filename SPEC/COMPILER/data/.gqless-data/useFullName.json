@@ -1,0 +1,5 @@
+{
+  "useFullName": {
+    "data": ["0.firstName", "0.lastName"]
+  }
+}

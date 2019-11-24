@@ -1,5 +1,3 @@
-import { computed } from '../utils'
-
 export interface IFormatterOptions {
   /**
    * Makes the query human readable

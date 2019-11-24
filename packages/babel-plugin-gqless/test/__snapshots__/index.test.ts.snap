@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gqless test: test 1`] = `
+
+import { graphql } from '@gqless/react'
+
+export const Component = graphql(() => {
+  return <div>test</div>
+})
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { graphql } from '@gqless/react';
+export const Component = graphql(() => {
+  return <div>test</div>;
+});
+
+`;
