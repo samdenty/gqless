@@ -1,80 +1,84 @@
-import { types as t } from '@babel/core'
+import { types as t, NodePath } from '@babel/core'
 
-export const reactTransform = (
-  importName: string,
-  callExpression: t.Node,
-  variableDeclarator: t.Node
-) => {
+export const reactTransform = (importName: string, callPath: NodePath) => {
+  const varPath = callPath.parentPath
+
   if (
-    !t.isCallExpression(callExpression) ||
-    !t.isVariableDeclarator(variableDeclarator) ||
-    !t.isIdentifier(variableDeclarator.id)
+    !t.isCallExpression(callPath.node) ||
+    !t.isVariableDeclarator(varPath.node) ||
+    !t.isIdentifier(varPath.node.id)
   )
     return
 
+  const varName = varPath.node.id.name
+
   switch (importName) {
     case 'graphql': {
-      addComponentName(callExpression, variableDeclarator.id.name)
+      addComponentName(callPath as any, varName)
       break
     }
 
     case 'useVariable': {
-      addVariableName(callExpression, variableDeclarator.id.name)
+      addVariableName(callPath as any, varName)
       break
     }
 
     case 'useFragment': {
-      addFragmentName(callExpression, variableDeclarator.id.name)
+      addFragmentName(callPath as any, varName)
       break
     }
   }
 }
 
-const addVariableName = (callExpression: t.CallExpression, name: string) => {
-  const args = callExpression.arguments
-  if (!args.length) return
-  if (args.length === 3) return
+const addVariableName = (path: NodePath<t.CallExpression>, name: string) => {
+  const argsPath = path.get('arguments')
+  if (!argsPath.length) return
+  if (argsPath.length === 3) return
 
   const nameLiteral = t.stringLiteral(name)
-  const nullableOrName = args[1]
+  const nullableOrName = argsPath[1]
 
-  if (!nullableOrName || !t.isStringLiteral(nullableOrName)) {
-    args.push(nameLiteral)
+  if (!nullableOrName || !t.isStringLiteral(nullableOrName.node)) {
+    path.pushContainer('arguments', nameLiteral)
   }
 }
 
 export const addFragmentName = (
-  callExpression: t.CallExpression,
+  path: NodePath<t.CallExpression>,
   name: string
 ) => {
-  const args = callExpression.arguments
-  if (!args.length) return
+  const argsPath = path.get('arguments')
+  if (!argsPath.length) return
 
-  if (!args[1]) args[1] = t.identifier('undefined')
-  if (!args[2]) args[2] = t.stringLiteral(name)
+  if (!argsPath[1]) {
+    path.pushContainer('arguments', t.identifier('undefined'))
+  }
+  if (!argsPath[2]) {
+    path.pushContainer('arguments', t.stringLiteral(name))
+  }
 }
 
-const addComponentName = (callExpression: t.CallExpression, name: string) => {
-  const args = callExpression.arguments
-  if (!args.length) return
+const addComponentName = (path: NodePath<t.CallExpression>, name: string) => {
+  const argsPath = path.get('arguments')
+  if (!argsPath.length) return
 
   const nameProperty = t.objectProperty(
     t.identifier('name'),
     t.stringLiteral(name)
   )
 
-  if (args.length > 1) {
-    const options = args[1]
-    if (!t.isObjectExpression(options)) return
+  if (argsPath.length > 1) {
+    const optionsPath = argsPath[1]
+    if (!t.isObjectExpression(optionsPath.node)) return
 
-    for (const prop of options.properties) {
+    for (const prop of optionsPath.node.properties) {
       if (!t.isObjectProperty(prop)) continue
       if (prop.key.name === 'name') return
     }
 
-    options.properties.unshift(nameProperty)
+    optionsPath.unshiftContainer('properties', nameProperty)
     return
   }
 
-  args.push(t.objectExpression([nameProperty]))
+  path.pushContainer('arguments', t.objectExpression([nameProperty]))
 }

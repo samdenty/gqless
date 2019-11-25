@@ -2,12 +2,7 @@ import { types as t, NodePath } from '@babel/core'
 
 export const importReferences = (
   path: NodePath<t.ImportDeclaration>,
-  recurseRef: (data: {
-    importName: string
-    node: t.Node
-    path: NodePath<t.Node>
-    isNamespace: boolean
-  }) => void
+  recurseRef: (importName: string, path: NodePath<t.Node>) => void
 ) => {
   for (const specifier of path.node.specifiers) {
     if (t.isImportDefaultSpecifier(specifier)) continue
@@ -15,13 +10,14 @@ export const importReferences = (
 
     const isNamespace = t.isImportNamespaceSpecifier(specifier)
 
-    for (const { parent, parentPath: path } of binding.referencePaths) {
-      const node = isNamespace ? path.parent : path.node
+    for (const { parentPath } of binding.referencePaths) {
+      const path = isNamespace ? parentPath.parentPath : parentPath
+
       const importName = isNamespace
-        ? (parent as t.MemberExpression).property.name
+        ? (parentPath.node as t.MemberExpression).property.name
         : (specifier as t.ImportSpecifier).imported.name
 
-      recurseRef({ importName, node, isNamespace, path })
+      recurseRef(importName, path)
     }
   }
 }

@@ -1,63 +1,39 @@
 import { invariant } from '@gqless/utils'
-import { dirname } from 'path'
-import { Scope } from '@babel/traverse'
+import { Scope, NodePath } from '@babel/traverse'
 import { types as t } from '@babel/core'
-import { findModule } from './utils'
+import { FileAnalysis, analyze } from './analysis'
 
 export const gqlessTransform = (
-  fileName: string,
+  analysis: FileAnalysis,
   importName: string,
-  node: t.Node,
-  scope: Scope
+  path: NodePath
 ) => {
-  console.log(node, scope)
   switch (importName) {
     case 'preload': {
-      recursePreload(node, fileName, scope)
+      recursePreload(analysis, path)
       break
     }
   }
 }
 
-const recursePreload = (node: t.Node, fileName: string, scope: Scope) => {
-  // node = preload(FUNC)
-  if (!t.isCallExpression(node)) return
+const recursePreload = (analysis: FileAnalysis, callPath: NodePath) => {
+  if (!t.isCallExpression(callPath.node)) return
+  callPath.node.arguments.forEach(a => invariant(t.isExpression(a)))
 
   // Get the function to preload
-  const funcToPreload = node.arguments[0]
+  const preloadNode = callPath.node.arguments[0]
+  invariant(preloadNode)
   const getName = (node: t.Node) => {
     if (t.isIdentifier(node)) return node.name
     if (t.isMemberExpression(node)) return getName(node.object)
   }
-  const funcName = getName(funcToPreload)
+  const funcName = getName(preloadNode)
+
   if (!funcName) return
 
   // Get the definition of the function
-  const bindingPath = scope.getBinding(funcName)?.path
-  if (!bindingPath) return
+  const path = callPath.scope.getBinding(funcName)?.path
+  if (!path) return
 
-  const declaration = bindingPath.parent
-
-  if (t.isImportDeclaration(declaration)) {
-    const specifier = bindingPath.node
-    const getExportName = (): string | void => {
-      if (t.isImportSpecifier(specifier)) {
-        return specifier.imported.name
-      }
-      if (t.isImportDefaultSpecifier(specifier)) {
-        return 'default'
-      }
-      if (t.isImportNamespaceSpecifier(specifier)) {
-        invariant(t.isMemberExpression(funcToPreload))
-        invariant(t.isIdentifier(funcToPreload.property))
-        return funcToPreload.property.name
-      }
-    }
-    const exportName = getExportName()
-    if (!exportName) return
-
-    const modulePath = findModule(dirname(fileName), declaration.source.value)
-    console.log(modulePath, exportName)
-    return
-  }
+  analyze(analysis, path, callPath.get('arguments') as NodePath<t.Expression>[])
 }
