@@ -15,14 +15,15 @@ extern "C" {
   fn testing(test: &dyn Fn(String)) -> String;
 }
 
-trait Outputable {
+pub trait Outputable {
   fn output(self, accessor: Rc<RefCell<Accessor>>) -> JsValue;
 }
 
 impl Type {
   pub fn output(&self, accessor: Rc<RefCell<Accessor>>) -> JsValue {
     match self {
-      // Type::Scalar(t) => t.clone().output(accessor),
+      Type::Array(t) => t.clone().output(accessor),
+      Type::Scalar(t) => t.clone().output(accessor),
       Type::Object(t) => t.clone().output(accessor),
       _ => JsValue::UNDEFINED,
     }
@@ -35,84 +36,118 @@ impl Outputable for ScalarType {
   }
 }
 
-impl ObjectType {
+impl Outputable for ArrayType {
   fn output(self, accessor: Rc<RefCell<Accessor>>) -> JsValue {
     let target = Object::new();
     let handler = Object::new();
 
-    let b: Box<dyn Fn(JsValue, String)> = Box::new(move |obj, prop| {
-      // let field = Rc::new(RefCell::new(self.fields.get(&prop).unwrap()));
-      // let field_accessor = Accessor::new(field, Some(accessor), None);
+    let get: Box<dyn Fn(JsValue, String) -> JsValue> = Box::new(move |_obj, prop| {
+      let index = prop.parse::<u16>();
 
-      // console_log!(" {:#?}", selection);
-      match self.fields.get(&prop) {
-        Some(field) => {
-          let selection = Selection::new(field, None);
-          let field_accessor = Accessor::new(&selection, Some(&accessor), None);
+      match index {
+        Ok(index) => {
+          let mut accessor_br = accessor.borrow_mut();
+          let existing_accessor = accessor_br.get_child(None, Some(index));
 
-          accessor.borrow_mut().add_accessor(&field_accessor);
+          let index_accessor = if let Some(existing_accessor) = existing_accessor {
+            existing_accessor.clone()
+          } else {
+            let index_accessor = Accessor::new(
+              &accessor_br.selection,
+              Some(&accessor),
+              match &accessor_br.of_type {
+                Type::Array(array_type) => Some(&*array_type.of_type),
+                _ => panic!(),
+              },
+              Some(index),
+            );
+            accessor_br.add_child(&index_accessor);
+            index_accessor
+          };
 
-          // accessor.borrow();
-
-          console_log!(" {:#?}", accessor);
+          Accessor::output(&index_accessor.clone())
         }
-        None => {
-          console_log!("no {}", prop);
-        }
-      };
+        _ => JsValue::UNDEFINED,
+      }
     });
 
-    let cb = Closure::wrap(b);
-
-    Reflect::set(&handler, &"get".into(), &cb.as_ref().into());
-
-    cb.forget();
+    let get_cl = Closure::wrap(get);
+    Reflect::set(&handler, &"get".into(), &get_cl.as_ref().into());
+    get_cl.forget();
 
     Proxy::new(&target, &handler).into()
   }
 }
 
-// #[derive(Clone)]
-// struct A {
-//   parent: Box<A>,
-//   b: Option<B>,
-// }
+impl Outputable for ObjectType {
+  fn output(self, accessor: Rc<RefCell<Accessor>>) -> JsValue {
+    let target = Object::new();
+    let handler = Object::new();
 
-// impl A {
-//   pub fn new(parent: A, string: &String) -> Self {
-//     Self {
-//       parent: Box::new(parent.clone()),
-//       b: None,
-//     }
-//   }
-// }
+    let get: Box<dyn Fn(JsValue, String) -> JsValue> =
+      Box::new(move |_obj, prop| match self.fields.get(&prop) {
+        Some(field) => Box::leak(Box::new(field.clone())).output(accessor.clone()),
+        None => {
+          console_log!("unknown key {}", prop);
+          JsValue::UNDEFINED
+        }
+      });
 
-// struct C {
-//   a: A
-// }
-// impl C {
-//   pub fn new(a: A) -> Self {
-//     C { a }
-//   }
-// }
+    let get_cl = Closure::wrap(get);
+    Reflect::set(&handler, &"get".into(), &get_cl.as_ref().into());
+    get_cl.forget();
 
-// #[derive(Clone)]
-// struct B {
-//   s: HashMap<String, String>,
-// }
-// impl B {
-//   fn c(self, a: A) {
-//     let b: Box<dyn Fn(String)> = Box::new(move |string| {
-//       // self.a;
-//       match self.s.get(&string) {
-//         Some(string) => {
-//           let a = A::new(a.clone(), string);
-//           let c = C::new(a);
-//         },
-//         _ => {}
-//       }
-//     });
+    Proxy::new(&target, &handler).into()
+  }
+}
 
-//     Closure::wrap(b);
-//   }
-// }
+impl Field {
+  pub fn output(&'static self, accessor: Rc<RefCell<Accessor>>) -> JsValue {
+    let get_output = move || -> JsValue {
+      let mut accessor_br = accessor.borrow_mut();
+      let existing_accessor = accessor_br.get_child(Some(self), None);
+
+      let field_accessor = if let Some(existing_accessor) = existing_accessor {
+        existing_accessor.clone()
+      } else {
+        let selection = Selection::new(self, None);
+        let field_accessor = Accessor::new(&selection, Some(&accessor), None, None);
+        accessor_br.add_child(&field_accessor);
+        field_accessor
+      };
+
+      Accessor::output(&field_accessor.clone())
+    };
+
+    match &self.arguments {
+      Some(arguments) => {
+        let handler = Object::new();
+
+        let mut argumentless_output = None;
+        let get: Box<dyn FnMut(JsValue, String) -> JsValue> = Box::new(move |_obj, prop| {
+          if argumentless_output.is_none() {
+            argumentless_output = Some(get_output());
+          }
+          let output = argumentless_output.clone().unwrap();
+
+          Reflect::get(&output, &prop.into()).expect("Cannot read property on null")
+        });
+
+        let args: Box<dyn Fn()> = Box::new(move || {
+          console_log!("called");
+        });
+
+        let get_cl = Closure::wrap(get);
+        Reflect::set(&handler, &"get".into(), &get_cl.as_ref().into()).unwrap();
+        get_cl.forget();
+
+        let args_cl = Closure::wrap(args);
+        let args_fn: JsValue = args_cl.as_ref().into();
+        args_cl.forget();
+
+        Proxy::new(&args_fn, &handler).into()
+      }
+      None => get_output(),
+    }
+  }
+}

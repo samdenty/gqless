@@ -48,7 +48,7 @@ pub struct InterfaceType {
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub struct InputType {
   pub name: String,
-  pub fields: HashMap<String, InputField>,
+  pub fields: HashMap<String, Field>,
 }
 
 #[derive(Derivative, Clone)]
@@ -65,19 +65,20 @@ pub struct UnionType {
   pub possible_types: HashSet<Type>,
 }
 
-// Field types
+#[derive(PartialEq, Clone)]
+#[cfg_attr(debug_assertions, derive(Debug))]
+pub struct Arguments {
+  pub inputs: HashMap<String, Field>,
+}
+
 #[derive(PartialEq, Clone)]
 #[cfg_attr(debug_assertions, derive(Debug))]
 pub struct Field {
   pub name: String,
   pub nullable: bool,
   pub of_type: Type,
-}
 
-#[derive(Clone)]
-#[cfg_attr(debug_assertions, derive(Debug))]
-pub struct InputField {
-  pub name: String,
+  pub arguments: Option<Arguments>,
 }
 
 impl ScalarType {
@@ -112,7 +113,7 @@ impl InterfaceType {
 }
 
 impl InputType {
-  pub fn new(name: &str, fields: &HashMap<String, InputField>) -> Type {
+  pub fn new(name: &str, fields: &HashMap<String, Field>) -> Type {
     Type::Input(Self {
       name: name.to_string(),
       fields: fields.clone(),
@@ -137,20 +138,21 @@ impl UnionType {
   }
 }
 
-impl Field {
-  pub fn new(name: &str, of_type: &Type, nullable: bool) -> Self {
+impl Arguments {
+  pub fn new(inputs: &HashMap<String, Field>) -> Self {
     Self {
-      name: name.to_string(),
-      nullable,
-      of_type: of_type.clone(),
+      inputs: inputs.clone(),
     }
   }
 }
 
-impl InputField {
-  pub fn new(name: &str) -> Self {
+impl Field {
+  pub fn new(name: &str, of_type: &Type, nullable: bool, arguments: Option<&Arguments>) -> Self {
     Self {
       name: name.to_string(),
+      nullable,
+      of_type: of_type.clone(),
+      arguments: arguments.and_then(|a| Some(a.clone())),
     }
   }
 }

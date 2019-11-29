@@ -21,37 +21,38 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 pub fn test2() -> JsValue {
-  let query_user: Field = Field::new(
-    "me",
-    &ObjectType::new(
-      "User",
-      &hashmap! {
-        "name".to_string() => Field::new(
-          "me",
-          &ScalarType::new("String"),
-          false
-        )
-      },
-    ),
-    false,
+  let user = ObjectType::new(
+    "User",
+    &hashmap! {
+      "name".into() => Field::new(
+        "me",
+        &ScalarType::new("String"),
+        false,
+        None
+      )
+    },
   );
+  let query_me = Field::new("me", &user, false, None);
   let query: Type = ObjectType::new(
     "Query",
     &hashmap! {
-      "me".to_string() => query_user.clone()
+      "me".into() => query_me.clone(),
+      "users".into() => Field::new("users", &ArrayType::new(&user, false), false, None),
+      "user".into() => Field::new(
+        "user",
+        &user,
+        true,
+        Some(&Arguments::new(&hashmap! {
+          "id".into() => Field::new("id", &ScalarType::new("String"), false, None)
+        }))
+      ),
     },
   );
 
   let selection = Selection::new(&query, None);
-  let selection2 = Selection::new(&query_user, None);
-  // selection.add(&selection2, false);
+  let accessor = Accessor::new(&selection, None, None, None);
 
-  let mut accessor = Accessor::new(&selection, None, None);
-  // accessor.selection.borrow_mut().add(&selection2, false);
-  // let accessor2 = Accessor::new(&selection2, Some(&accessor), None);
-  // console_log!("{:#?}", accessor);
-  let bor = accessor.borrow();
-  bor.of_type.output(accessor.clone())
+  Accessor::output(&accessor)
   // accessor.get_data()
   //   let mut selection = Selection::new(&Query);
   //   // selection.on_unselect.on(&|data| {
@@ -76,7 +77,7 @@ pub fn test() -> js_sys::Proxy {
 
   let i = "asd";
   let closure = Closure::wrap(Box::new(move || {
-    console_log!("called {}", i);
+    // console_log!("called {}", i);
   }) as Box<Fn()>);
   js_sys::Reflect::set(&handler, &"get".into(), &closure.as_ref().clone());
 

@@ -1,5 +1,6 @@
 use std::ptr;
 use std::rc::Rc;
+use wasm_bindgen::prelude::*;
 
 #[macro_export]
 macro_rules! console_log {
@@ -43,7 +44,8 @@ impl<T> Event<T> {
   }
 }
 
+#[cfg(debug_assertions)]
+#[wasm_bindgen(start)]
 pub fn set_panic_hook() {
-  #[cfg(feature = "console_error_panic_hook")]
   console_error_panic_hook::set_once();
 }
