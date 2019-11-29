@@ -4,10 +4,15 @@ import { query } from './client'
 import testDefault, { Test, test } from './test2'
 import * as test2 from './test2'
 
-export const App = user => {
-  user.name
-  query.me
-  test(query.me)
+export const App = props => {
+  var b = props.user
+  props.user.name
+
+  for (a of props.user) {
+  }
+  testa(props.user)
+  // query.me
+  // test(query.me)
 }
 
 function AppFunc(user) {
@@ -16,7 +21,7 @@ function AppFunc(user) {
   test(query.me)
 }
 
-preload(App, user)
+preload(App, { user: user })
 preload(AppFunc, user)
 preload(Test)
 preload(testDefault)

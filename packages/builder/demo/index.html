@@ -1,0 +1,21 @@
+<script type="module">
+  import * as b from '../pkg/builder.js'
+  window.testing = (c) => {
+    const proxy = new Proxy({}, {
+      get(_, prop) {
+
+      }
+    })
+    // setTimeout(() => {c("t")})
+    return 'a'
+  }
+  b.default().then(wasm => {
+    console.log(b, wasm)
+
+    // let sel = new b.Selection()
+    // let sel2 = new b.Selection()
+    const data = b.test2()
+    console.warn(data)
+    Object.assign(window,{...wasm,...b,data})
+  })
+</script>

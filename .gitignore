@@ -15,3 +15,7 @@ build
 .env
 .envrc
 .changelog
+target
+pkg
+wasm-pack.log
+**/*.rs.bk

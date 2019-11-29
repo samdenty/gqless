@@ -1,7 +1,7 @@
 import { dirname } from 'path'
 import { types as t, NodePath } from '@babel/core'
 import { invariant } from '@gqless/utils'
-import { findModule } from '../utils'
+import { findModule, filterPath } from '../utils'
 import { FileAnalysis } from './Cache'
 
 const analyzeImport = (
@@ -44,21 +44,65 @@ const analyzeVariable = (
 ) => {
   const init = path.get('init')
 
-  const funcArgs = args.slice(1)
-  if (funcArgs.length) {
-  }
+  console.group(path)
   if (
     t.isFunctionExpression(init.node) ||
     t.isArrowFunctionExpression(init.node)
   ) {
-    const funcBody = (init as NodePath<
+    const func = init as NodePath<
       t.FunctionExpression | t.ArrowFunctionExpression
-    >).get('body')
+    >
+    const funcParams = func.get('params')
+    const funcStatement = func.get('body')
+    const preloadArgs = args.slice(1)
 
-    if (t.isBlockStatement(funcBody.node)) {
-      const blockBody = (funcBody as NodePath<t.BlockStatement>).get('body')
+    preloadArgs.forEach((preloadArg, i) => {
+      console.group('param', i)
+      const param = funcParams[i]
 
-      // console.log({ analysis, init, funcBody, blockBody, args })
+      if (t.isIdentifier(param.node)) {
+        const binding = param.scope.getBinding(param.node.name)!
+
+        for (const path of binding.referencePaths) {
+          if (t.isMemberExpression(path.parent)) {
+            const memberExpression = path.parentPath as NodePath<
+              t.MemberExpression
+            >
+
+            const property = memberExpression.get('property') as NodePath<
+              t.Node
+            >
+
+            if (t.isIdentifier(property.node)) {
+              const shouldRecurse = filterPath(preloadArg, property)
+
+              console.log(
+                'is',
+                property.node.name,
+                'in',
+                preloadArg.node,
+                shouldRecurse
+              )
+            }
+          }
+        }
+      }
+      console.groupEnd()
+    })
+
+    if (t.isBlockStatement(funcStatement.node)) {
+      const blockStatement = funcStatement as NodePath<t.BlockStatement>
+      const blockBody = funcStatement.get('body')
+
+      console.log({
+        analysis,
+        init,
+        funcParams,
+        funcStatement,
+        blockBody,
+        preloadArgs,
+      })
+      console.groupEnd()
       return
     }
   }
