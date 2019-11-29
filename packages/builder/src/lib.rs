@@ -42,11 +42,11 @@ pub fn test2() -> JsValue {
     },
   );
 
-  let mut selection = Rc::new(RefCell::new(Selection::new(&query, None)));
-  let selection2 = Rc::new(RefCell::new(Selection::new(&query_user, None)));
+  let selection = Selection::new(&query, None);
+  let selection2 = Selection::new(&query_user, None);
   // selection.add(&selection2, false);
 
-  let mut accessor = Rc::new(RefCell::new(Accessor::new(&selection, None, None)));
+  let mut accessor = Accessor::new(&selection, None, None);
   // accessor.selection.borrow_mut().add(&selection2, false);
   // let accessor2 = Accessor::new(&selection2, Some(&accessor), None);
   // console_log!("{:#?}", accessor);

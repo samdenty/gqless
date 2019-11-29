@@ -21,8 +21,8 @@ impl Accessor {
     selection: &Rc<RefCell<Selection>>,
     parent: Option<&Rc<RefCell<Accessor>>>,
     of_type: Option<&Type>,
-  ) -> Self {
-    Accessor {
+  ) -> Rc<RefCell<Self>> {
+    Rc::new(RefCell::new(Accessor {
       of_type: if let Some(of_type) = of_type {
         of_type.clone()
       } else {
@@ -35,7 +35,7 @@ impl Accessor {
       },
       selection: selection.clone(),
       children: vec![],
-    }
+    }))
   }
 
   // pub fn find_child_selection(&self, selection: &Rc<RefCell<Selection>>) -> Option<&Accessor> {

@@ -25,7 +25,7 @@ pub struct Selection {
 }
 
 impl Selection {
-  pub fn new(type_or_field: &dyn Any, fragment_name: Option<String>) -> Self {
+  pub fn new(type_or_field: &dyn Any, fragment_name: Option<String>) -> Rc<RefCell<Self>> {
     let (of_type, field) = match type_or_field.downcast_ref::<Field>() {
       Some(t) => (t.of_type.clone(), Some(t.clone())),
       None => (
@@ -37,7 +37,7 @@ impl Selection {
       ),
     };
 
-    Self {
+    Rc::new(RefCell::new(Self {
       of_type,
       field,
       fragment_name,
@@ -45,7 +45,7 @@ impl Selection {
       key_selections: vec![],
       on_select: Event::new(),
       on_unselect: Event::new(),
-    }
+    }))
   }
 
   pub fn add(&mut self, selection: &Rc<RefCell<Selection>>, is_key: bool) {

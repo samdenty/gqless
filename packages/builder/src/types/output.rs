@@ -47,12 +47,9 @@ impl ObjectType {
       // console_log!(" {:#?}", selection);
       match self.fields.get(&prop) {
         Some(field) => {
-          let selection = Rc::new(RefCell::new(Selection::new(field, None)));
-          let field_accessor = Rc::new(RefCell::new(Accessor::new(
-            &selection,
-            Some(&accessor),
-            None,
-          )));
+          let selection = Selection::new(field, None);
+          let field_accessor = Accessor::new(&selection, Some(&accessor), None);
+
           accessor.borrow_mut().add_accessor(&field_accessor);
 
           // accessor.borrow();
