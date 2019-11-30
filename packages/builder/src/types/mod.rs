@@ -83,16 +83,14 @@ pub struct Field {
 
 impl ScalarType {
   pub fn new(name: &str) -> Type {
-    Type::Scalar(Self {
-      name: name.to_string(),
-    })
+    Type::Scalar(Self { name: name.into() })
   }
 }
 
 impl ObjectType {
   pub fn new(name: &str, fields: &HashMap<String, Field>) -> Type {
     Type::Object(Self {
-      name: name.to_string(),
+      name: name.into(),
       fields: fields.clone(),
     })
   }
@@ -105,7 +103,7 @@ impl InterfaceType {
     possible_types: &HashSet<ObjectType>,
   ) -> Type {
     Type::Interface(Self {
-      name: name.to_string(),
+      name: name.into(),
       fields: fields.clone(),
       possible_types: possible_types.clone(),
     })
@@ -115,7 +113,7 @@ impl InterfaceType {
 impl InputType {
   pub fn new(name: &str, fields: &HashMap<String, Field>) -> Type {
     Type::Input(Self {
-      name: name.to_string(),
+      name: name.into(),
       fields: fields.clone(),
     })
   }
@@ -149,10 +147,10 @@ impl Arguments {
 impl Field {
   pub fn new(name: &str, of_type: &Type, nullable: bool, arguments: Option<&Arguments>) -> Self {
     Self {
-      name: name.to_string(),
+      name: name.into(),
       nullable,
       of_type: of_type.clone(),
-      arguments: arguments.and_then(|a| Some(a.clone())),
+      arguments: arguments.map(|a| a.clone()),
     }
   }
 }

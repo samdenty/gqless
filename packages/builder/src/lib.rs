@@ -1,7 +1,6 @@
+#![feature(arbitrary_self_types)]
 #[macro_use]
 extern crate maplit;
-#[macro_use]
-extern crate lazy_static;
 
 pub mod accessors;
 pub mod selections;
@@ -10,8 +9,6 @@ pub mod utils;
 
 use accessors::*;
 use selections::*;
-use std::cell::RefCell;
-use std::rc::Rc;
 use types::*;
 use wasm_bindgen::prelude::*;
 
@@ -25,7 +22,7 @@ pub fn test2() -> JsValue {
     "User",
     &hashmap! {
       "name".into() => Field::new(
-        "me",
+        "name",
         &ScalarType::new("String"),
         false,
         None
@@ -50,9 +47,9 @@ pub fn test2() -> JsValue {
   );
 
   let selection = Selection::new(&query, None);
-  let accessor = Accessor::new(&selection, None, None, None);
+  let accessor = Accessor::new(selection, None, None, None);
 
-  Accessor::output(&accessor)
+  Accessor::output(accessor)
   // accessor.get_data()
   //   let mut selection = Selection::new(&Query);
   //   // selection.on_unselect.on(&|data| {
@@ -68,20 +65,4 @@ pub fn test2() -> JsValue {
   //   //   console_log!("{:#?}", accessor);
 
   //   //   console_log!("{:#?}", Query);
-}
-
-#[wasm_bindgen]
-pub fn test() -> js_sys::Proxy {
-  let target = js_sys::Object::new();
-  let handler = js_sys::Object::new();
-
-  let i = "asd";
-  let closure = Closure::wrap(Box::new(move || {
-    // console_log!("called {}", i);
-  }) as Box<Fn()>);
-  js_sys::Reflect::set(&handler, &"get".into(), &closure.as_ref().clone());
-
-  closure.forget();
-
-  js_sys::Proxy::new(&target, &handler)
 }

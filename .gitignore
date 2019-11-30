@@ -19,3 +19,4 @@ target
 pkg
 wasm-pack.log
 **/*.rs.bk
+.history
