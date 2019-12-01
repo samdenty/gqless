@@ -1,8 +1,9 @@
 use crate::utils::*;
 use crate::*;
 use derivative::Derivative;
+use std::rc::Rc;
 
-pub type SelectionPtr<'a> = *mut Selection<'a>;
+pub type SelectionPtr<'a> = Rc<Selection<'a>>;
 
 #[derive(Clone, Debug, Derivative)]
 #[derivative(PartialEq)]
@@ -21,8 +22,8 @@ pub struct Selection<'a> {
 }
 
 impl<'a> Selection<'a> {
-  pub fn new(of_type: &Type, fragment_name: Option<String>) -> &mut Self {
-    Box::leak(Box::new(Self {
+  pub fn new(of_type: &Type, fragment_name: Option<String>) -> SelectionPtr<'a> {
+    Rc::new(Self {
       of_type: of_type.clone(),
       field: None,
       fragment_name,
@@ -30,11 +31,11 @@ impl<'a> Selection<'a> {
       key_selections: vec![],
       on_select: Event::new(),
       on_unselect: Event::new(),
-    }))
+    })
   }
 
-  pub fn new_field(field: &Field) -> &mut Self {
-    Box::leak(Box::new(Self {
+  pub fn new_field(field: &Field) -> SelectionPtr<'a> {
+    Rc::new(Self {
       of_type: field.of_type.clone(),
       field: Some(field.clone()),
       fragment_name: None,
@@ -42,12 +43,12 @@ impl<'a> Selection<'a> {
       key_selections: vec![],
       on_select: Event::new(),
       on_unselect: Event::new(),
-    }))
+    })
   }
 
-  pub fn add(&mut self, selection: SelectionPtr<'a>, is_key: bool) {
-    if is_key && !(self.key_selections.iter().any(|s| *s == selection)) {
-      self.key_selections.push(selection)
+  pub fn add(&mut self, selection: &SelectionPtr<'a>, is_key: bool) {
+    if is_key && !(self.key_selections.iter().any(|s| *s == *selection)) {
+      self.key_selections.push(selection.clone())
     }
     if self.has(selection) {
       return;
@@ -56,17 +57,17 @@ impl<'a> Selection<'a> {
     (*self).on_select.emit(selection.clone());
   }
 
-  pub fn has(&self, selection: SelectionPtr<'a>) -> bool {
-    self.selections.iter().any(|s| *s == selection)
+  pub fn has(&self, selection: &SelectionPtr<'a>) -> bool {
+    self.selections.iter().any(|s| *s == *selection)
   }
 
-  pub fn delete(&mut self, selection: SelectionPtr<'a>) {
+  pub fn delete(&mut self, selection: &SelectionPtr<'a>) {
     if !self.has(selection) {
       return;
     }
 
-    self.key_selections.retain(|s| *s != selection);
-    self.selections.retain(|s| *s != selection);
+    self.key_selections.retain(|s| *s != *selection);
+    self.selections.retain(|s| *s != *selection);
 
     self.on_unselect.emit(selection.clone());
   }

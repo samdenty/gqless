@@ -50,7 +50,7 @@ pub fn test2() -> JsValue {
   );
 
   let value = Value::new(&query, Data::Object(hashmap! {}));
-  let accessor = Accessor::new_root(&query, &value.clone());
+  let accessor = Box::leak(Box::new(Accessor::new_root(&query, &value.clone())));
 
   let mut val_mut = value.borrow_mut();
   console_log!("{:#?}", val_mut.get_key("me"));
