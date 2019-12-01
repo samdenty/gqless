@@ -1,15 +1,18 @@
-#![feature(arbitrary_self_types)]
+#![feature(arbitrary_self_types, get_mut_unchecked)]
 #[macro_use]
 extern crate maplit;
 
-pub mod accessors;
-pub mod selections;
+pub mod accessor;
+pub mod selection;
 pub mod types;
 pub mod utils;
+pub mod value;
 
-use accessors::*;
-use selections::*;
-use types::*;
+pub use accessor::*;
+pub use selection::*;
+use serde_json::json;
+pub use types::*;
+pub use value::*;
 use wasm_bindgen::prelude::*;
 
 #[cfg(feature = "wee_alloc")]
@@ -46,10 +49,17 @@ pub fn test2() -> JsValue {
     },
   );
 
-  let selection = Selection::new(&query, None);
-  let accessor = Accessor::new(selection, None, None, None);
+  let value = Value::new(&query, Data::Object(hashmap! {}));
+  let accessor = Accessor::new_root(&query, &value.clone());
 
-  Accessor::output(accessor)
+  let mut val_mut = value.borrow_mut();
+  console_log!("{:#?}", val_mut.get_key("me"));
+  val_mut.set_key("me", &Value::new(&user, Data::Null));
+  console_log!("{:#?}", val_mut.get_key("me"));
+  // value.borrow_mut().a = 1;
+  // console_log!("{}", value.borrow().a);
+  // console_log!("{}", accessor.value.as_ref().unwrap().borrow().a);
+  accessor.output()
   // accessor.get_data()
   //   let mut selection = Selection::new(&Query);
   //   // selection.on_unselect.on(&|data| {

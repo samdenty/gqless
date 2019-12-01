@@ -6,13 +6,11 @@ use derivative::Derivative;
 use std::collections::*;
 
 #[derive(Clone)]
-#[cfg_attr(debug_assertions, derive(Debug))]
 pub struct ScalarType {
   pub name: String,
 }
 
-#[derive(Clone)]
-#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Debug, Clone)]
 pub struct EnumType {
   pub name: String,
 }
@@ -28,51 +26,46 @@ pub enum Type {
   Input(InputType),
 }
 
-#[derive(Derivative, Clone)]
-#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Clone, Debug)]
 pub struct ObjectType {
   pub name: String,
   pub fields: HashMap<String, Field>,
 }
 
 #[derive(Derivative, Clone)]
-#[cfg_attr(debug_assertions, derivative(Debug))]
+#[derivative(Debug)]
 pub struct InterfaceType {
   pub name: String,
   pub fields: HashMap<String, Field>,
-  #[cfg_attr(debug_assertions, derivative(Debug = "ignore"))]
+  #[derivative(Debug = "ignore")]
   pub possible_types: HashSet<ObjectType>,
 }
 
-#[derive(Derivative, Clone)]
-#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Clone, Debug)]
 pub struct InputType {
   pub name: String,
   pub fields: HashMap<String, Field>,
 }
 
-#[derive(Derivative, Clone)]
-#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(Clone, Debug)]
 pub struct ArrayType {
   pub nullable: bool,
   pub of_type: Box<Type>,
 }
 
 #[derive(Derivative, Clone)]
-#[cfg_attr(debug_assertions, derivative(Debug))]
+#[derivative(Debug)]
 pub struct UnionType {
-  #[cfg_attr(debug_assertions, derivative(Debug = "ignore"))]
+  #[derivative(Debug = "ignore")]
   pub possible_types: HashSet<Type>,
 }
 
-#[derive(PartialEq, Clone)]
-#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(PartialEq, Clone, Debug)]
 pub struct Arguments {
   pub inputs: HashMap<String, Field>,
 }
 
-#[derive(PartialEq, Clone)]
-#[cfg_attr(debug_assertions, derive(Debug))]
+#[derive(PartialEq, Clone, Debug)]
 pub struct Field {
   pub name: String,
   pub nullable: bool,

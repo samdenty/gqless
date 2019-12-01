@@ -1,7 +1,6 @@
-use crate::types::*;
+use crate::*;
 use std::fmt;
 
-#[cfg(debug_assertions)]
 impl fmt::Debug for Type {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     let mut fmt = |t: &dyn fmt::Debug| {
@@ -20,5 +19,11 @@ impl fmt::Debug for Type {
       Type::Union(t) => fmt(&t),
       Type::Input(t) => fmt(&t),
     }
+  }
+}
+
+impl fmt::Debug for ScalarType {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    write!(f, "{}", self.name)
   }
 }
