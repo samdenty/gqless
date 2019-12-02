@@ -23,7 +23,7 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 pub fn test2() -> JsValue {
   let user = ObjectType::new(
     "User",
-    &hashmap! {
+    hashmap! {
       "name".into() => Field::new(
         "name",
         &ScalarType::new("String"),
@@ -32,17 +32,16 @@ pub fn test2() -> JsValue {
       )
     },
   );
-  let query_me = Field::new("me", &user, false, None);
-  let query: Type = ObjectType::new(
+  let query = ObjectType::new(
     "Query",
-    &hashmap! {
-      "me".into() => query_me.clone(),
+    hashmap! {
+      "me".into() => Field::new("me", &user, false, None),
       "users".into() => Field::new("users", &ArrayType::new(&user, false), false, None),
       "user".into() => Field::new(
         "user",
         &user,
         true,
-        Some(&Arguments::new(&hashmap! {
+        Some(Arguments::new(hashmap! {
           "id".into() => Field::new("id", &ScalarType::new("String"), false, None)
         }))
       ),
@@ -52,10 +51,16 @@ pub fn test2() -> JsValue {
   let value = Value::new(&query, Data::Object(hashmap! {}));
   let accessor = Box::leak(Box::new(Accessor::new_root(&query, &value.clone())));
 
-  let mut val_mut = value.borrow_mut();
-  console_log!("{:#?}", val_mut.get_key("me"));
-  val_mut.set_key("me", &Value::new(&user, Data::Null));
-  console_log!("{:#?}", val_mut.get_key("me"));
+  {
+    let mut val_mut = value.borrow_mut();
+    console_log!("{:#?}", val_mut.get_key("me"));
+    val_mut.set_key("me", &Value::new(&user, Data::Null));
+    console_log!("{:#?}", val_mut.get_key("me"));
+  }
+  console_log!(
+    "{:#?}",
+    accessor.value.clone().unwrap().borrow().get_key("me")
+  );
   // value.borrow_mut().a = 1;
   // console_log!("{}", value.borrow().a);
   // console_log!("{}", accessor.value.as_ref().unwrap().borrow().a);

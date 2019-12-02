@@ -69,81 +69,82 @@ pub struct Arguments {
 pub struct Field {
   pub name: String,
   pub nullable: bool,
-  pub of_type: Type,
+  pub of_type: Box<Type>,
 
   pub arguments: Option<Arguments>,
 }
 
 impl ScalarType {
-  pub fn new(name: &str) -> Type {
-    Type::Scalar(Self { name: name.into() })
+  pub fn new(name: &str) -> Box<Type> {
+    Box::new(Type::Scalar(Self { name: name.into() }))
   }
 }
 
 impl ObjectType {
-  pub fn new(name: &str, fields: &HashMap<String, Field>) -> Type {
-    Type::Object(Self {
+  pub fn new(name: &str, fields: HashMap<String, Field>) -> Box<Type> {
+    Box::new(Type::Object(Self {
       name: name.into(),
-      fields: fields.clone(),
-    })
+      fields,
+    }))
   }
 }
 
 impl InterfaceType {
   pub fn new(
     name: &str,
-    fields: &HashMap<String, Field>,
-    possible_types: &HashSet<ObjectType>,
-  ) -> Type {
-    Type::Interface(Self {
+    fields: HashMap<String, Field>,
+    possible_types: HashSet<ObjectType>,
+  ) -> Box<Type> {
+    Box::new(Type::Interface(Self {
       name: name.into(),
-      fields: fields.clone(),
-      possible_types: possible_types.clone(),
-    })
+      fields,
+      possible_types,
+    }))
   }
 }
 
 impl InputType {
-  pub fn new(name: &str, fields: &HashMap<String, Field>) -> Type {
-    Type::Input(Self {
+  pub fn new(name: &str, fields: HashMap<String, Field>) -> Box<Type> {
+    Box::new(Type::Input(Self {
       name: name.into(),
-      fields: fields.clone(),
-    })
+      fields,
+    }))
   }
 }
 
 impl ArrayType {
-  pub fn new(of_type: &Type, nullable: bool) -> Type {
-    Type::Array(Self {
-      of_type: Box::new(of_type.clone()),
+  pub fn new(of_type: &Box<Type>, nullable: bool) -> Box<Type> {
+    Box::new(Type::Array(Self {
+      of_type: of_type.clone(),
       nullable,
-    })
+    }))
   }
 }
 
 impl UnionType {
-  pub fn new(possible_types: &HashSet<Type>) -> Type {
-    Type::Union(Self {
-      possible_types: possible_types.clone(),
-    })
+  pub fn new(possible_types: HashSet<Type>) -> Box<Type> {
+    Box::new(Type::Union(Self { possible_types }))
   }
 }
 
 impl Arguments {
-  pub fn new(inputs: &HashMap<String, Field>) -> Self {
-    Self {
-      inputs: inputs.clone(),
-    }
+  pub fn new(inputs: HashMap<String, Field>) -> Self {
+    Self { inputs }
   }
 }
 
 impl Field {
-  pub fn new(name: &str, of_type: &Type, nullable: bool, arguments: Option<&Arguments>) -> Self {
+  pub fn new(
+    name: &str,
+    of_type: &Box<Type>,
+    nullable: bool,
+    arguments: Option<Arguments>,
+  ) -> Self {
     Self {
       name: name.into(),
-      nullable,
       of_type: of_type.clone(),
-      arguments: arguments.map(|a| a.clone()),
+      nullable,
+      arguments,
     }
   }
 }

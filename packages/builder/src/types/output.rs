@@ -11,28 +11,28 @@ extern "C" {
 }
 
 pub trait Outputable {
-  fn output(&'static self, accessor: &'static mut AccessorPtr<'static>) -> JsValue;
+  fn output(&'static self, accessor: AccessorRef<'static>) -> JsValue;
 }
 
 impl Type {
-  pub fn output(&self, accessor: &'static mut AccessorPtr<'static>) -> JsValue {
+  pub fn output(&'static self, accessor: AccessorRef<'static>) -> JsValue {
     match self {
-      Type::Array(t) => Box::leak(Box::new(t.clone())).output(accessor),
-      Type::Scalar(t) => Box::leak(Box::new(t.clone())).output(accessor),
-      Type::Object(t) => Box::leak(Box::new(t.clone())).output(accessor),
+      Type::Array(ref t) => t.output(accessor),
+      Type::Scalar(ref t) => t.output(accessor),
+      Type::Object(ref t) => t.output(accessor),
       _ => JsValue::UNDEFINED,
     }
   }
 }
 
 impl Outputable for ScalarType {
-  fn output(&'static self, accessor: &'static mut AccessorPtr<'static>) -> JsValue {
+  fn output(&'static self, accessor: AccessorRef<'static>) -> JsValue {
     JsValue::NULL
   }
 }
 
 impl Outputable for ArrayType {
-  fn output(&'static self, accessor: &'static mut AccessorPtr<'static>) -> JsValue {
+  fn output(&'static self, accessor: AccessorRef<'static>) -> JsValue {
     let target = Object::new();
     let handler = Object::new();
 
@@ -69,15 +69,13 @@ impl Outputable for ArrayType {
 }
 
 impl Outputable for ObjectType {
-  fn output(&'static self, accessor: &'static mut AccessorPtr<'static>) -> JsValue {
+  fn output(&'static self, accessor: AccessorRef<'static>) -> JsValue {
     let target = Object::new();
     let handler = Object::new();
 
     let get: Box<dyn FnMut(JsValue, String) -> JsValue> =
       Box::new(move |_obj, prop| match self.fields.get(&prop) {
-        Some(field) => {
-          Box::leak(Box::new(field.clone())).output(Box::leak(Box::new(accessor.clone())))
-        }
+        Some(field) => field.output(accessor.clone()),
         None => {
           // console_log!("unknown key {}", prop);
           JsValue::UNDEFINED
@@ -93,9 +91,9 @@ impl Outputable for ObjectType {
 }
 
 impl Field {
-  pub fn output(&'static self, parent_accessor: &'static mut AccessorPtr<'static>) -> JsValue {
+  pub fn output(&'static self, parent_accessor: AccessorRef<'static>) -> JsValue {
     let get_output =
-      move |parent_accessor: &mut AccessorPtr<'static>, args: Option<Object>| -> JsValue {
+      move |mut parent_accessor: AccessorRef<'static>, args: Option<Object>| -> JsValue {
         unsafe {
           let existing_accessor = parent_accessor.get_child(Some(self), None);
 
@@ -108,7 +106,7 @@ impl Field {
               &selection,
               None,
             )));
-            Rc::get_mut_unchecked(parent_accessor).add_child(field_accessor);
+            Rc::get_mut_unchecked(&mut parent_accessor).add_child(field_accessor);
             field_accessor.output()
           }
         }
@@ -118,14 +116,14 @@ impl Field {
       Some(arguments) => {
         let handler = Object::new();
 
-        let parent_accessor_cp = Box::leak(Box::new(parent_accessor.clone()));
+        let parent_accessor_cp = parent_accessor.clone();
         let args: Box<dyn FnMut(Option<Object>) -> JsValue> =
-          Box::new(move |args| get_output(parent_accessor_cp, args));
+          Box::new(move |args| get_output(parent_accessor_cp.clone(), args));
 
         let mut argumentless_output = None;
         let get: Box<dyn FnMut(JsValue, String) -> JsValue> = Box::new(move |_obj, prop| {
           if argumentless_output.is_none() {
-            argumentless_output = Some(get_output(parent_accessor, None));
+            argumentless_output = Some(get_output(parent_accessor.clone(), None));
           }
           let output = argumentless_output.clone().unwrap();
 
