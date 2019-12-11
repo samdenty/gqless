@@ -1,7 +1,6 @@
 use crate::utils::*;
 use crate::*;
 use derivative::Derivative;
-use serde_json::value::Number;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
@@ -10,8 +9,9 @@ use std::rc::Rc;
 pub enum Data<'a> {
   Null,
   Bool(bool),
-  Number(Number),
+  Number(i32),
   String(String),
+  JSON(JsValue),
   Array(Vec<ValueRef<'a>>),
   Object(HashMap<String, ValueRef<'a>>),
 }
@@ -68,7 +68,7 @@ impl<'a> Value<'a> {
   pub fn set_index(&mut self, key: usize, value: &ValueRef<'a>) -> Result<(), ()> {
     match self.data {
       Data::Array(ref mut arr) => {
-        arr.insert(key.into(), value.clone());
+        arr.insert(key, value.clone());
         Ok(())
       }
       _ => Err(()),

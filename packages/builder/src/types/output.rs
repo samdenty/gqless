@@ -1,4 +1,3 @@
-#[macro_use]
 use crate::*;
 use js_sys::{Object, Proxy, Reflect};
 use std::rc::Rc;
@@ -27,7 +26,16 @@ impl Type {
 
 impl Outputable for ScalarType {
   fn output(&'static self, accessor: AccessorRef<'static>) -> JsValue {
-    JsValue::NULL
+    match &accessor.value {
+      Some(value) => match &value.borrow().data {
+        Data::String(string) => string.into(),
+        Data::Number(number) => (*number).into(),
+        Data::JSON(json) => json.clone(),
+        Data::Null => JsValue::NULL,
+        _ => JsValue::UNDEFINED,
+      },
+      None => JsValue::NULL,
+    }
   }
 }
 
@@ -37,22 +45,34 @@ impl Outputable for ArrayType {
     let handler = Object::new();
 
     let get: Box<dyn FnMut(JsValue, String) -> JsValue> = Box::new(move |_obj, prop| {
-      let index = prop.parse::<u16>();
+      let index = prop.parse::<usize>();
 
       match index {
         Ok(index) => unsafe {
-          let existing_accessor = accessor.get_child(None, Some(index));
+          let index_accessor = accessor.get_index(index);
 
-          if let Some(existing_accessor) = existing_accessor {
-            Box::leak(Box::new(existing_accessor)).output()
+          if let Some(index_accessor) = index_accessor {
+            Box::leak(Box::new(index_accessor)).output()
           } else {
+            let get_value =
+              move |value: &ValueRef<'static>| value.borrow().get_index(index).cloned();
+
             let index_accessor = Box::leak(Box::new(Accessor::new_index(
-              &accessor.clone(),
+              &mut accessor.clone(),
               index,
-              None,
+              accessor.value.as_ref().and_then(get_value).as_ref(),
             )));
-            let mut accessor_cp = accessor.clone();
-            Rc::get_mut_unchecked(&mut accessor_cp).add_child(index_accessor);
+
+            let accessor_mut = Rc::get_mut_unchecked(Box::leak(Box::new(accessor.clone())));
+            accessor_mut.add_child(index_accessor);
+
+            let accessor_mut2 = Rc::get_mut_unchecked(Box::leak(Box::new(accessor.clone())));
+
+            accessor_mut.on_value_change.on(move |value| {
+              accessor_mut2.set_value(get_value(value).as_ref());
+              console_log!("changed!");
+            });
+
             index_accessor.output()
           }
         },
@@ -77,7 +97,7 @@ impl Outputable for ObjectType {
       Box::new(move |_obj, prop| match self.fields.get(&prop) {
         Some(field) => field.output(accessor.clone()),
         None => {
-          // console_log!("unknown key {}", prop);
+          console_log!("unknown key {} on {:#?}", prop, accessor);
           JsValue::UNDEFINED
         }
       });
@@ -95,18 +115,28 @@ impl Field {
     let get_output =
       move |mut parent_accessor: AccessorRef<'static>, args: Option<Object>| -> JsValue {
         unsafe {
-          let existing_accessor = parent_accessor.get_child(Some(self), None);
+          let field_accessor = parent_accessor.get_field(self);
 
-          if let Some(existing_accessor) = existing_accessor {
-            Box::leak(Box::new(existing_accessor)).output()
+          if let Some(field_accessor) = field_accessor {
+            Box::leak(Box::new(field_accessor)).output()
           } else {
-            let selection = Selection::new_field(self);
+            let get_value =
+              move |value: &ValueRef<'static>| value.borrow().get_key(&self.name).cloned();
+
             let field_accessor = Box::leak(Box::new(Accessor::new_field(
               &parent_accessor,
-              &selection,
-              None,
+              &Selection::new_field(self),
+              parent_accessor.value.as_ref().and_then(get_value).as_ref(),
             )));
+
+            let accessor_mut = Rc::get_mut_unchecked(Box::leak(Box::new(parent_accessor.clone())));
             Rc::get_mut_unchecked(&mut parent_accessor).add_child(field_accessor);
+
+            let accessor_mut2 = Rc::get_mut_unchecked(Box::leak(Box::new(parent_accessor.clone())));
+
+            accessor_mut.on_value_change.on(move |value| {
+              accessor_mut2.set_value(get_value(value).as_ref());
+            });
             field_accessor.output()
           }
         }
@@ -114,14 +144,20 @@ impl Field {
 
     match &self.arguments {
       Some(arguments) => {
-        let handler = Object::new();
-
         let parent_accessor_cp = parent_accessor.clone();
         let args: Box<dyn FnMut(Option<Object>) -> JsValue> =
           Box::new(move |args| get_output(parent_accessor_cp.clone(), args));
 
+        let args_cl = Closure::wrap(args);
+        let args_fn: JsValue = args_cl.as_ref().into();
+        args_cl.forget();
+
+        if arguments.no_nullable_field() {
+          return args_fn;
+        };
+
         let mut argumentless_output = None;
-        let get: Box<dyn FnMut(JsValue, String) -> JsValue> = Box::new(move |_obj, prop| {
+        let get: Box<dyn FnMut(JsValue, String) -> JsValue> = Box::new(move |_, prop| {
           if argumentless_output.is_none() {
             argumentless_output = Some(get_output(parent_accessor.clone(), None));
           }
@@ -130,13 +166,10 @@ impl Field {
           Reflect::get(&output, &prop.into()).expect("Cannot read property on null")
         });
 
+        let handler = Object::new();
         let get_cl = Closure::wrap(get);
         Reflect::set(&handler, &"get".into(), &get_cl.as_ref().into()).unwrap();
         get_cl.forget();
-
-        let args_cl = Closure::wrap(args);
-        let args_fn: JsValue = args_cl.as_ref().into();
-        args_cl.forget();
 
         Proxy::new(&args_fn, &handler).into()
       }

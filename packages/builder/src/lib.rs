@@ -1,16 +1,22 @@
-#![feature(arbitrary_self_types, get_mut_unchecked)]
+#![allow(unused_must_use)]
+#![feature(arbitrary_self_types, get_mut_unchecked, option_result_contains)]
 #[macro_use]
 extern crate maplit;
+#[macro_use]
+extern crate lazy_static;
 
 pub mod accessor;
+pub mod scheduler;
 pub mod selection;
 pub mod types;
 pub mod utils;
 pub mod value;
 
 pub use accessor::*;
+use js_sys::{Object, Proxy, Reflect};
+pub use scheduler::*;
 pub use selection::*;
-use serde_json::json;
+use std::rc::Rc;
 pub use types::*;
 pub use value::*;
 use wasm_bindgen::prelude::*;
@@ -21,12 +27,13 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
 pub fn test2() -> JsValue {
+  let string = ScalarType::new("String");
   let user = ObjectType::new(
     "User",
     hashmap! {
       "name".into() => Field::new(
         "name",
-        &ScalarType::new("String"),
+        &string,
         false,
         None
       )
@@ -42,42 +49,41 @@ pub fn test2() -> JsValue {
         &user,
         true,
         Some(Arguments::new(hashmap! {
-          "id".into() => Field::new("id", &ScalarType::new("String"), false, None)
+          "id".into() => Field::new("id", &string, false, None)
         }))
       ),
     },
   );
 
-  let value = Value::new(&query, Data::Object(hashmap! {}));
-  let accessor = Box::leak(Box::new(Accessor::new_root(&query, &value.clone())));
+  let value = Value::new(
+    &query,
+    Data::Object(hashmap! {
+      "me".into() => Value::new(&user, Data::Object(hashmap! {
+        "name".into() => Value::new(&string, Data::String("bob".into()))
+      }))
+    }),
+  );
+  let scheduler = Scheduler::new();
+  let accessor = Accessor::new_root(scheduler, &query, &value.clone());
 
-  {
-    let mut val_mut = value.borrow_mut();
-    console_log!("{:#?}", val_mut.get_key("me"));
-    val_mut.set_key("me", &Value::new(&user, Data::Null));
-    console_log!("{:#?}", val_mut.get_key("me"));
-  }
   console_log!(
     "{:#?}",
     accessor.value.clone().unwrap().borrow().get_key("me")
   );
-  // value.borrow_mut().a = 1;
-  // console_log!("{}", value.borrow().a);
-  // console_log!("{}", accessor.value.as_ref().unwrap().borrow().a);
-  accessor.output()
-  // accessor.get_data()
-  //   let mut selection = Selection::new(&Query);
-  //   // selection.on_unselect.on(&|data| {
-  //   //     console_log!("unselect");
-  //   // });
-  //   // selection.on_select.on(&|data| {
-  //   //     console_log!("select");
-  //   // });
-  //   let selection2 = Selection::new(&Query);
 
-  //   //   console_log!("{:#?}", accessor);
-  //   accessor.selection.delete(&selection2);
-  //   //   console_log!("{:#?}", accessor);
+  let obj = Object::new();
 
-  //   //   console_log!("{:#?}", Query);
+  Reflect::set(&obj, &"output".into(), &accessor.output());
+
+  let cb = Closure::wrap(Box::new(move || unsafe {
+    Rc::get_mut_unchecked(scheduler).push_stack(Query::new("asd"));
+  }) as Box<FnMut()>);
+
+  Reflect::set(&obj, &"add_stack".into(), &cb.as_ref().into());
+  cb.forget();
+
+  obj.into()
+
+  // (accessor.output(), cb)
+  // cb
 }

@@ -1,4 +1,4 @@
-use crate::types::*;
+use crate::*;
 
 impl PartialEq for ScalarType {
   fn eq(&self, other: &Self) -> bool {
@@ -34,12 +34,6 @@ impl PartialEq for InputType {
   }
 }
 impl Eq for InputType {}
-
-impl PartialEq for ArrayType {
-  fn eq(&self, other: &Self) -> bool {
-    self.nullable == other.nullable && *self.of_type == *other.of_type
-  }
-}
 
 impl PartialEq for UnionType {
   fn eq(&self, other: &Self) -> bool {

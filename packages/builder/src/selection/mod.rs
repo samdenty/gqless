@@ -6,18 +6,19 @@ use std::rc::Rc;
 pub type SelectionRef<'a> = Rc<Selection<'a>>;
 
 #[derive(Clone, Debug, Derivative)]
-#[derivative(PartialEq)]
+#[derivative(Hash, PartialEq)]
 pub struct Selection<'a> {
   pub fragment_name: Option<String>,
   pub field: Option<Field>,
   pub of_type: Box<Type>,
 
   pub selections: Vec<SelectionRef<'a>>,
+  #[derivative(Hash = "ignore")]
   pub key_selections: Vec<SelectionRef<'a>>,
 
-  #[derivative(PartialEq = "ignore")]
+  #[derivative(PartialEq = "ignore", Hash = "ignore")]
   pub on_select: Event<'a, SelectionRef<'a>>,
-  #[derivative(PartialEq = "ignore")]
+  #[derivative(PartialEq = "ignore", Hash = "ignore")]
   pub on_unselect: Event<'a, SelectionRef<'a>>,
 }
 

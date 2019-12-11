@@ -1,9 +1,14 @@
 mod debug;
 mod equality;
+mod hash;
 pub mod output;
 
 use derivative::Derivative;
 use std::collections::*;
+
+pub trait Fields {
+  fn no_nullable_field(&self) -> bool;
+}
 
 #[derive(Clone)]
 pub struct ScalarType {
@@ -15,7 +20,7 @@ pub struct EnumType {
   pub name: String,
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Hash, Clone, PartialEq)]
 pub enum Type {
   Scalar(ScalarType),
   Object(ObjectType),
@@ -47,7 +52,7 @@ pub struct InputType {
   pub fields: HashMap<String, Field>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Hash, PartialEq, Clone, Debug)]
 pub struct ArrayType {
   pub nullable: bool,
   pub of_type: Box<Type>,
@@ -62,10 +67,10 @@ pub struct UnionType {
 
 #[derive(PartialEq, Clone, Debug)]
 pub struct Arguments {
-  pub inputs: HashMap<String, Field>,
+  pub fields: HashMap<String, Field>,
 }
 
-#[derive(PartialEq, Clone, Debug)]
+#[derive(Hash, PartialEq, Clone, Debug)]
 pub struct Field {
   pub name: String,
   pub nullable: bool,
@@ -128,8 +133,8 @@ impl UnionType {
 }
 
 impl Arguments {
-  pub fn new(inputs: HashMap<String, Field>) -> Self {
-    Self { inputs }
+  pub fn new(fields: HashMap<String, Field>) -> Self {
+    Self { fields }
   }
 }
 
@@ -146,5 +151,18 @@ impl Field {
       nullable,
       arguments,
     }
+  }
+}
+
+// FieldsRequired
+impl Fields for Arguments {
+  fn no_nullable_field(&self) -> bool {
+    self.fields.values().all(|field| !field.nullable)
+  }
+}
+
+impl Fields for InputType {
+  fn no_nullable_field(&self) -> bool {
+    self.fields.values().all(|field| !field.nullable)
   }
 }
