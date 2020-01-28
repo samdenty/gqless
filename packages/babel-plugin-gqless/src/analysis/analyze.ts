@@ -63,11 +63,41 @@ const analyzeParam = (
     t.Identifier | t.Pattern | t.RestElement | t.TSParameterProperty
   >
 ) => {
-  invariant(path.isIdentifier())
-  const binding = path.scope.getBinding(path.node.name)!
+  // function ({ })
+  if (path.isObjectPattern()) {
+    for (const prop of path.get('properties')) {
+      // function ({ arg })
+      if (prop.isObjectProperty()) {
+        const binding = path.scope.getBinding(objectPropValue(prop))!
 
-  for (const refPath of binding.referencePaths) {
-    analyzeProp(analysis, refPath)
+        const propName = evalAsString(prop, evalProperty)
+        if (propName === undefined) return
+
+        for (const refPath of binding.referencePaths) {
+          analyzeProp(analysis.getProperty(propName), refPath)
+        }
+      }
+
+      // function ({ ...rest })
+      if (prop.isRestElement()) {
+        const binding = path.scope.getBinding(
+          (prop.node.argument as t.Identifier).name
+        )!
+
+        for (const refPath of binding.referencePaths) {
+          analyzeProp(analysis, refPath)
+        }
+      }
+    }
+  }
+
+  // function (arg)
+  if (path.isIdentifier()) {
+    const binding = path.scope.getBinding(path.node.name)!
+
+    for (const refPath of binding.referencePaths) {
+      analyzeProp(analysis, refPath)
+    }
   }
 }
 
@@ -75,14 +105,19 @@ const analyzeProp = (
   analysis: PropAnalysis | ParamAnalysis,
   path: NodePath
 ) => {
-  console.log(path)
+  if (path.parentPath.isCallExpression()) {
+    const callPath = path.parentPath
+  }
+
   if (path.parentPath.isVariableDeclarator()) {
     const id = path.parentPath.get('id')
     const init = path.parentPath.get('init')
     if (init.node === null) return
 
+    // var { }
     if (id.isObjectPattern()) {
       for (const prop of id.get('properties')) {
+        // var { ...rest }
         if (prop.isRestElement()) {
           const binding = path.scope.getBinding(
             (prop.node.argument as t.Identifier).name
@@ -93,17 +128,22 @@ const analyzeProp = (
           }
         }
 
+        // var { prop }
         if (prop.isObjectProperty()) {
           const propName = objectPropValue(prop)
           const binding = path.scope.getBinding(propName)!
 
           for (const refPath of binding.referencePaths) {
-            analyzeProp(analysis.getProperty(propName), refPath)
+            analyzeProp(
+              analysis.getProperty(isNaN(+propName) ? propName : 0),
+              refPath
+            )
           }
         }
       }
     }
 
+    // var x
     if (id.isIdentifier()) {
       const binding = id.scope.getBinding(id.node.name)
       if (!binding) return
@@ -116,8 +156,8 @@ const analyzeProp = (
 
   if (path.parentPath.isMemberExpression()) {
     const memberPath = path.parentPath
-    const property = evalAsString(memberPath, evalProperty)
-    if (property === undefined) return
+    const propName = evalAsString(memberPath, evalProperty)
+    if (propName === undefined) return
 
     let variables: any
 
@@ -127,7 +167,10 @@ const analyzeProp = (
       console.log(variables)
     }
 
-    const propAnalysis = analysis.getProperty(property, variables)
+    const propAnalysis = analysis.getProperty(
+      isNaN(+propName) ? propName : 0,
+      variables
+    )
     analyzeProp(propAnalysis, memberPath)
   }
 }
@@ -149,13 +192,6 @@ const analyzeFunction = (
     analyzeParam(funcAnalysis.getParam(param), param)
   })
 
-  const funcBody = path.get('body')
-
-  if (funcBody.isBlockStatement()) {
-    const blockBody = funcBody.get('body')
-
-    console.log({ analysis, blockBody, args, params })
-  }
   return funcAnalysis
 }
 

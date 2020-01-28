@@ -29,7 +29,7 @@ export class Analysis {
     return funcAnalysis
   }
 
-  public getProperty(property: string, variables?: object) {
+  public getProperty(property: string | 0, variables?: object) {
     for (const propAnalysis of this.properties) {
       if (
         propAnalysis.name === property &&

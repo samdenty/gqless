@@ -1,4 +1,5 @@
 import { types as t, NodePath } from '@babel/core'
+import { DynGlobal, DynImport } from './Dyn'
 
 /**
  * Evaluate an expression
@@ -97,9 +98,12 @@ export const evaluate = (path: NodePath) => {
   if (path.isIdentifier()) {
     const varName = path.node.name
     const binding = path.scope.getBinding(varName)
-    // TODO globals
-    if (!binding) return
 
+    if (!binding) {
+      return new DynGlobal(varName)
+    }
+
+    console.log(binding.path)
     if (binding.path.isVariableDeclarator()) {
       const id = binding.path.get('id')
       const init = binding.path.get('init')
@@ -136,6 +140,22 @@ export const evaluate = (path: NodePath) => {
       }
 
       return data
+    }
+
+    if (binding.path.parentPath.isImportDeclaration()) {
+      const source = binding.path.parentPath.node.source.value
+
+      if (binding.path.isImportDefaultSpecifier()) {
+        return new DynImport(source, 'default')
+      }
+
+      if (binding.path.isImportSpecifier()) {
+        return new DynImport(source, binding.path.node.imported.name)
+      }
+
+      if (binding.path.isImportNamespaceSpecifier()) {
+        return new DynImport(source, null)
+      }
     }
   }
 }

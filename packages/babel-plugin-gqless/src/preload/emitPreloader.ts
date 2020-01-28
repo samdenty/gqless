@@ -1,7 +1,7 @@
 import { types as t, NodePath } from '@babel/core'
 import { FunctionAnalysis, PropAnalysis } from '../analysis'
 import { ParamAnalysis } from '../analysis'
-import { evalAsString, evalProperty } from '../utils'
+import { evalAsString, evalProperty, serialize } from '../utils'
 
 const shouldEmit = (
   preloadArg: NodePath | null,
@@ -43,13 +43,20 @@ const analysisLoader = (
     t.blockStatement(
       Array.from(analysis.properties)
         .map(prop => {
-          const memberExp = t.memberExpression(id, t.identifier(prop.name))
-          const memberArg = shouldEmit(arg, prop.name)
-          console.warn(memberArg, arg, prop.name)
+          const propName = String(prop.name)
+          const isIndex = prop.name === 0
+          const memberExp = t.memberExpression(
+            id,
+            isIndex
+              ? t.numericLiteral(prop.name as number)
+              : t.identifier(propName),
+            isIndex
+          )
+          const memberArg = shouldEmit(arg, propName)
           if (memberArg === false) return []
 
           if (prop.properties.size) {
-            const id = path.scope.generateUidIdentifier(prop.name)
+            const id = path.scope.generateUidIdentifier(propName)
 
             return [
               t.variableDeclaration('const', [
@@ -60,7 +67,9 @@ const analysisLoader = (
           }
 
           return t.expressionStatement(
-            prop.variables ? t.callExpression(memberExp, []) : memberExp
+            prop.variables
+              ? t.callExpression(memberExp, [serialize(path, prop.variables)])
+              : memberExp
           )
         })
         .flat()
@@ -82,7 +91,7 @@ export const emitPreloader = (
     return path.scope.generateUidIdentifier(
       (t.isIdentifier(paramNode) && paramNode.name) ||
         (arg.isIdentifier() && arg.node.name) ||
-        `${i}`
+        `arg`
     )
   })
   path.set('params', argIds as any)

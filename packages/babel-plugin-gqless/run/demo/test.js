@@ -3,15 +3,23 @@ import * as React from 'react'
 import { query } from './client'
 import testDefault, { Test, test } from './test2'
 import * as test2 from './test2'
+import TEST from 'react'
 
-export const App = props => {
-  props2.somethingElse
-  var user2 = props.user
+function fn(a) {
+  a.name
+}
+export const App = ({ users }) => {
+  // users['0']
 
-  var { name } = props.user
+  fn(users)
 
-  name.name2
-  user2.track({ a: 1 })
+  // props2.somethingElse
+  // var user2 = props.user
+
+  // var { name } = props.user
+
+  // name.name2
+  // user2.track({ a: 1, a: TEST })
 
   // props.user.avatarUrl({ userId: props.user.id })
 
@@ -27,7 +35,7 @@ export const App = props => {
   query.me
   test(query.me)
 }
-preload(App, { user })
+preload(App, { user, users })
 
 // function AppFunc(user) {
 //   user.name
