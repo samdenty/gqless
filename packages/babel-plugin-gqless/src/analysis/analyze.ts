@@ -1,38 +1,16 @@
 import { dirname } from 'path'
 import { types as t, NodePath } from '@babel/core'
 import { invariant } from '@gqless/utils'
-import { findModule, evaluate, evalAsString, evalProperty } from '../utils'
+import {
+  findModule,
+  evaluate,
+  evalAsString,
+  evalProperty,
+  objectPropValue,
+} from '../utils'
 import { Analysis } from './Analysis'
-import { FunctionAnalysis } from './FunctionAnalysis'
 import { PropAnalysis } from './PropAnalysis'
 import { ParamAnalysis } from './ParamAnalysis'
-
-const shouldAnalyze = (
-  filter: NodePath<t.Node>,
-  test: NodePath<t.Node>
-): boolean => {
-  if (filter.isObjectExpression()) {
-    const propToTest = evalAsString(test)
-    if (!propToTest) return true
-
-    for (const prop of filter.get('properties')) {
-      if (prop.isObjectProperty()) {
-        if (evalAsString(prop) === propToTest) return true
-      }
-    }
-
-    return false
-  }
-
-  // if (
-  //   filter.isNullLiteral() ||
-  //   (filter.isIdentifier() && filter.node.name === 'undefined')
-  // ) {
-  //   return false
-  // }
-
-  return true
-}
 
 const analyzeImport = (
   { file, cache }: Analysis,
@@ -79,49 +57,78 @@ const analyzeVariable = (
   }
 }
 
-const analyzeMemberExpression = (
-  analysis: PropAnalysis | ParamAnalysis,
-  path: NodePath<t.MemberExpression>,
-  arg: NodePath<t.Expression>
-) => {
-  const property = evalAsString(path, evalProperty)
-  if (property === undefined) return
-
-  let variables: any
-
-  if (path.parentPath.isCallExpression()) {
-    const [varsPath] = path.parentPath.get('arguments')
-    variables = evaluate(varsPath)
-  }
-
-  const propAnalysis = analysis.getProperty(property, variables)
-  analyzeProp(propAnalysis, path, arg)
-}
-
 const analyzeParam = (
   analysis: PropAnalysis | ParamAnalysis,
   path: NodePath<
     t.Identifier | t.Pattern | t.RestElement | t.TSParameterProperty
-  >,
-  arg: NodePath<t.Expression>
+  >
 ) => {
   invariant(path.isIdentifier())
   const binding = path.scope.getBinding(path.node.name)!
 
   for (const refPath of binding.referencePaths) {
-    if (refPath.parentPath.isMemberExpression()) {
-      analyzeMemberExpression(analysis, refPath.parentPath, arg)
-    }
+    analyzeProp(analysis, refPath)
   }
 }
 
 const analyzeProp = (
   analysis: PropAnalysis | ParamAnalysis,
-  path: NodePath<t.MemberExpression>,
-  arg: NodePath<t.Expression>
+  path: NodePath
 ) => {
+  console.log(path)
+  if (path.parentPath.isVariableDeclarator()) {
+    const id = path.parentPath.get('id')
+    const init = path.parentPath.get('init')
+    if (init.node === null) return
+
+    if (id.isObjectPattern()) {
+      for (const prop of id.get('properties')) {
+        if (prop.isRestElement()) {
+          const binding = path.scope.getBinding(
+            (prop.node.argument as t.Identifier).name
+          )!
+
+          for (const refPath of binding.referencePaths) {
+            analyzeProp(analysis, refPath)
+          }
+        }
+
+        if (prop.isObjectProperty()) {
+          const propName = objectPropValue(prop)
+          const binding = path.scope.getBinding(propName)!
+
+          for (const refPath of binding.referencePaths) {
+            analyzeProp(analysis.getProperty(propName), refPath)
+          }
+        }
+      }
+    }
+
+    if (id.isIdentifier()) {
+      const binding = id.scope.getBinding(id.node.name)
+      if (!binding) return
+
+      for (const refPath of binding.referencePaths) {
+        analyzeProp(analysis, refPath)
+      }
+    }
+  }
+
   if (path.parentPath.isMemberExpression()) {
-    return analyzeMemberExpression(analysis, path.parentPath, arg)
+    const memberPath = path.parentPath
+    const property = evalAsString(memberPath, evalProperty)
+    if (property === undefined) return
+
+    let variables: any
+
+    if (memberPath.parentPath.isCallExpression()) {
+      const [varsPath] = memberPath.parentPath.get('arguments')
+      variables = evaluate(varsPath)
+      console.log(variables)
+    }
+
+    const propAnalysis = analysis.getProperty(property, variables)
+    analyzeProp(propAnalysis, memberPath)
   }
 }
 
@@ -137,9 +144,9 @@ const analyzeFunction = (
 
   args.slice(1).forEach((arg, i) => {
     const param = params[i]
-    if (!param || !shouldAnalyze(arg, param)) return
+    if (!param) return
 
-    analyzeParam(funcAnalysis.getParam(param), param, arg)
+    analyzeParam(funcAnalysis.getParam(param), param)
   })
 
   const funcBody = path.get('body')

@@ -5,22 +5,29 @@ import testDefault, { Test, test } from './test2'
 import * as test2 from './test2'
 
 export const App = props => {
-  const [name, setName] = React.useState('bob')
+  props2.somethingElse
+  var user2 = props.user
 
-  props.user.avatarUrl({ userId: props.user.id })
+  var { name } = props.user
 
-  return (
-    <div>
-      {props.user.age}
-      {props.user.name}
-    </div>
-  )
+  name.name2
+  user2.track({ a: 1 })
+
+  // props.user.avatarUrl({ userId: props.user.id })
+
+  // return (
+  //   <div>
+  //     {props.user.age}
+  //     {props.user.name}
+  //   </div>
+  // )
+  // const [name, setName] = React.useState('bob')
   // const { age2 } = { age2: 100 }
   // const { age, ...rest } = { age: 100 + age2, a: 1, b: 2 }
   query.me
   test(query.me)
 }
-preload(App, { user: userRef })
+preload(App, { user })
 
 // function AppFunc(user) {
 //   user.name

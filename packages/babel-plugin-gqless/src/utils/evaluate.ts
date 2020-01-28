@@ -1,5 +1,18 @@
 import { types as t, NodePath } from '@babel/core'
 
+/**
+ * Evaluate an expression
+ *
+ * Differences to babel's path.evaluate:
+ * - Supports dynamic runtime-only data
+ *     Output's objects containing information on how
+ *     to get the value at runtime. For example importing a
+ *     module, looking up global variable etc.
+ *
+ * - Supports spread operator on objects
+ * - Supports variable destructuring
+ * - Silently fails with undefined, instead of outright failure
+ */
 export const evaluate = (path: NodePath) => {
   // Literals
   if (
@@ -114,7 +127,7 @@ export const evaluate = (path: NodePath) => {
 
           // var { prop } =
           if (prop.isObjectProperty()) {
-            if ((prop.node.value as t.Identifier).name === varName) {
+            if (objectPropValue(prop) === varName) {
               const propName = evalAsString(prop)
               return propName !== undefined && data?.[propName]
             }
@@ -163,4 +176,12 @@ export const evalAsNumber = (
 ): number | void => {
   const str = _evaluate(path)
   if (str !== undefined) return Number(str)
+}
+
+export const objectPropValue = (property: NodePath<t.ObjectProperty>) => {
+  const value = property.get('value')
+  if (value.isAssignmentPattern()) {
+    return (value.node.left as t.Identifier).name
+  }
+  return (value.node as t.Identifier).name
 }
