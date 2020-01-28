@@ -1,2 +1,6 @@
 export * from './Cache'
+export * from './Analysis'
+export * from './PropAnalysis'
+export * from './FileAnalysis'
+export * from './FunctionAnalysis'
 export * from './analyze'

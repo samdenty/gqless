@@ -1,26 +1,56 @@
 import { dirname } from 'path'
 import { types as t, NodePath } from '@babel/core'
 import { invariant } from '@gqless/utils'
-import { findModule } from '../utils'
-import { FileAnalysis } from './Cache'
+import { findModule, evaluate, evalAsString, evalProperty } from '../utils'
+import { Analysis } from './Analysis'
+import { FunctionAnalysis } from './FunctionAnalysis'
+import { PropAnalysis } from './PropAnalysis'
+import { ParamAnalysis } from './ParamAnalysis'
+
+const shouldAnalyze = (
+  filter: NodePath<t.Node>,
+  test: NodePath<t.Node>
+): boolean => {
+  if (filter.isObjectExpression()) {
+    const propToTest = evalAsString(test)
+    if (!propToTest) return true
+
+    for (const prop of filter.get('properties')) {
+      if (prop.isObjectProperty()) {
+        if (evalAsString(prop) === propToTest) return true
+      }
+    }
+
+    return false
+  }
+
+  // if (
+  //   filter.isNullLiteral() ||
+  //   (filter.isIdentifier() && filter.node.name === 'undefined')
+  // ) {
+  //   return false
+  // }
+
+  return true
+}
 
 const analyzeImport = (
-  analysis: FileAnalysis,
+  { file, cache }: Analysis,
   path: NodePath<
     t.ImportDefaultSpecifier | t.ImportSpecifier | t.ImportNamespaceSpecifier
   >,
   args: NodePath<t.Expression>[]
 ) => {
   const getExportName = (): string | void => {
-    if (t.isImportSpecifier(path.node)) {
+    if (path.isImportSpecifier()) {
       return path.node.imported.name
     }
-    if (t.isImportDefaultSpecifier(path.node)) {
+    if (path.isImportDefaultSpecifier()) {
       return 'default'
     }
-    if (t.isImportNamespaceSpecifier(path.node)) {
+    if (path.isImportNamespaceSpecifier()) {
       const [preloadPath] = args
-      invariant(t.isMemberExpression(preloadPath.node))
+      invariant(preloadPath.isMemberExpression())
       invariant(t.isIdentifier(preloadPath.node.property))
       return preloadPath.node.property.name
     }
@@ -29,51 +59,101 @@ const analyzeImport = (
   if (!exportName) return
 
   const modulePath = findModule(
-    dirname(analysis.path),
+    dirname(file.path),
     (<t.ImportDeclaration>path.parent).source.value
   )
 
-  const moduleAnalysis = analysis.cache.getPath(modulePath)
+  const moduleAnalysis = cache.getPath(modulePath)
   moduleAnalysis.getExport(exportName)
 }
 
 const analyzeVariable = (
-  analysis: FileAnalysis,
+  analysis: Analysis,
   path: NodePath<t.VariableDeclarator>,
   args: NodePath<t.Expression>[]
-) => {
+): Analysis | void => {
   const init = path.get('init')
 
-  const funcArgs = args.slice(1)
-  if (funcArgs.length) {
+  if (init.isFunctionExpression() || init.isArrowFunctionExpression()) {
+    return analyzeFunction(analysis, init, args)
   }
-  if (
-    t.isFunctionExpression(init.node) ||
-    t.isArrowFunctionExpression(init.node)
-  ) {
-    const funcBody = (init as NodePath<
-      t.FunctionExpression | t.ArrowFunctionExpression
-    >).get('body')
+}
 
-    if (t.isBlockStatement(funcBody.node)) {
-      const blockBody = (funcBody as NodePath<t.BlockStatement>).get('body')
+const analyzeMemberExpression = (
+  analysis: PropAnalysis | ParamAnalysis,
+  path: NodePath<t.MemberExpression>,
+  arg: NodePath<t.Expression>
+) => {
+  const property = evalAsString(path, evalProperty)
+  if (property === undefined) return
 
-      // console.log({ analysis, init, funcBody, blockBody, args })
-      return
+  let variables: any
+
+  if (path.parentPath.isCallExpression()) {
+    const [varsPath] = path.parentPath.get('arguments')
+    variables = evaluate(varsPath)
+  }
+
+  const propAnalysis = analysis.getProperty(property, variables)
+  analyzeProp(propAnalysis, path, arg)
+}
+
+const analyzeParam = (
+  analysis: PropAnalysis | ParamAnalysis,
+  path: NodePath<
+    t.Identifier | t.Pattern | t.RestElement | t.TSParameterProperty
+  >,
+  arg: NodePath<t.Expression>
+) => {
+  invariant(path.isIdentifier())
+  const binding = path.scope.getBinding(path.node.name)!
+
+  for (const refPath of binding.referencePaths) {
+    if (refPath.parentPath.isMemberExpression()) {
+      analyzeMemberExpression(analysis, refPath.parentPath, arg)
     }
   }
 }
 
+const analyzeProp = (
+  analysis: PropAnalysis | ParamAnalysis,
+  path: NodePath<t.MemberExpression>,
+  arg: NodePath<t.Expression>
+) => {
+  if (path.parentPath.isMemberExpression()) {
+    return analyzeMemberExpression(analysis, path.parentPath, arg)
+  }
+}
+
 const analyzeFunction = (
-  analysis: FileAnalysis,
-  path: NodePath<t.FunctionDeclaration>,
+  analysis: Analysis,
+  path: NodePath<
+    t.FunctionDeclaration | t.FunctionExpression | t.ArrowFunctionExpression
+  >,
   args: NodePath<t.Expression>[]
 ) => {
-  console.log({ analysis, path, args })
+  const funcAnalysis = analysis.getFunction(path)
+  const params = path.get('params')
+
+  args.slice(1).forEach((arg, i) => {
+    const param = params[i]
+    if (!param || !shouldAnalyze(arg, param)) return
+
+    analyzeParam(funcAnalysis.getParam(param), param, arg)
+  })
+
+  const funcBody = path.get('body')
+
+  if (funcBody.isBlockStatement()) {
+    const blockBody = funcBody.get('body')
+
+    console.log({ analysis, blockBody, args, params })
+  }
+  return funcAnalysis
 }
 
 export const analyze = (
-  analysis: FileAnalysis,
+  analysis: Analysis,
   path: NodePath<t.Node>,
   /**
    * Arguments specified to preload call
@@ -81,15 +161,15 @@ export const analyze = (
    */
   args: NodePath<t.Expression>[] = []
 ) => {
-  if (t.isImportDeclaration(path.parent)) {
+  if (path.parentPath.isImportDeclaration()) {
     return analyzeImport(analysis, path as any, args)
   }
 
-  if (t.isVariableDeclarator(path.node)) {
-    return analyzeVariable(analysis, path as any, args)
+  if (path.isVariableDeclarator()) {
+    return analyzeVariable(analysis, path, args)
   }
 
-  if (t.isFunctionDeclaration(path.node)) {
-    return analyzeFunction(analysis, path as any, args)
+  if (path.isFunctionDeclaration()) {
+    return analyzeFunction(analysis, path, args)
   }
 }

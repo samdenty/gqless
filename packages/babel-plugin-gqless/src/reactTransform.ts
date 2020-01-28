@@ -3,28 +3,25 @@ import { types as t, NodePath } from '@babel/core'
 export const reactTransform = (importName: string, callPath: NodePath) => {
   const varPath = callPath.parentPath
 
-  if (
-    !t.isCallExpression(callPath.node) ||
-    !t.isVariableDeclarator(varPath.node) ||
-    !t.isIdentifier(varPath.node.id)
-  )
-    return
+  if (!callPath.isCallExpression() || !varPath.isVariableDeclarator()) return
 
-  const varName = varPath.node.id.name
+  const varId = varPath.get('id')
+  if (!varId.isIdentifier()) return
+  const varName = varId.node.name
 
   switch (importName) {
     case 'graphql': {
-      addComponentName(callPath as any, varName)
+      addComponentName(callPath, varName)
       break
     }
 
     case 'useVariable': {
-      addVariableName(callPath as any, varName)
+      addVariableName(callPath, varName)
       break
     }
 
     case 'useFragment': {
-      addFragmentName(callPath as any, varName)
+      addFragmentName(callPath, varName)
       break
     }
   }
@@ -38,7 +35,7 @@ const addVariableName = (path: NodePath<t.CallExpression>, name: string) => {
   const nameLiteral = t.stringLiteral(name)
   const nullableOrName = argsPath[1]
 
-  if (!nullableOrName || !t.isStringLiteral(nullableOrName.node)) {
+  if (!nullableOrName || !nullableOrName.isStringLiteral()) {
     path.pushContainer('arguments', nameLiteral)
   }
 }
@@ -69,7 +66,7 @@ const addComponentName = (path: NodePath<t.CallExpression>, name: string) => {
 
   if (argsPath.length > 1) {
     const optionsPath = argsPath[1]
-    if (!t.isObjectExpression(optionsPath.node)) return
+    if (!optionsPath.isObjectExpression()) return
 
     for (const prop of optionsPath.node.properties) {
       if (!t.isObjectProperty(prop)) continue

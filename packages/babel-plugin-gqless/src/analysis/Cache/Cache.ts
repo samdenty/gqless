@@ -1,7 +1,7 @@
-import { FileAnalysis } from './FileAnalysis'
+import { FileAnalysis } from '..'
 
 export class Cache {
-  private files = new Map<string, FileAnalysis>()
+  public files = new Map<string, FileAnalysis>()
 
   constructor(public api: typeof import('@babel/core')) {}
 

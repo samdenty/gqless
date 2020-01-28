@@ -8,9 +8,16 @@ import { ScalarNode } from '../../ScalarNode'
 import { NodeContainer } from '../NodeContainer'
 import { FieldsNode } from './FieldsNode'
 import { Variable } from '../../../Variable'
-import { DataTrait, DataContext, getSelection, interceptAccessor } from '../../traits'
+import {
+  DataTrait,
+  DataContext,
+  getSelection,
+  interceptAccessor,
+} from '../../traits'
 
-export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContainer<TNode> implements DataTrait {
+export class FieldNode<TNode extends DataTrait = DataTrait>
+  extends NodeContainer<TNode>
+  implements DataTrait {
   // This is set inside FieldsNode
   public name: string = ''
 
@@ -18,7 +25,6 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
     super(node, nullable)
   }
 
-  @computed
   public get uncallable() {
     return !(
       this.args &&
@@ -71,7 +77,7 @@ export class FieldNode<TNode extends DataTrait  = DataTrait> extends NodeContain
       return this.ofNode.getData({
         selection,
         value: ctx.value?.get(selection.toString()),
-        extensions: [] // TODO
+        extensions: [], // TODO
       })
     }
 

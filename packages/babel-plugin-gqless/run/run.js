@@ -12,18 +12,22 @@ stdin.on('data', function(key) {
   main()
 })
 function main() {
-  console.clear()
-  Object.keys(require.cache).forEach(key => {
-    delete require.cache[key]
-  })
+  try {
+    console.clear()
+    Object.keys(require.cache).forEach(key => {
+      delete require.cache[key]
+    })
 
-  const glob = require('glob')
+    const glob = require('glob')
 
-  console.log(
-    glob
-      .sync('./demo/**.js')
-      .map(p => require('@babel/core').transformFileSync(p, {}).code)
-  )
+    console.log(
+      glob
+        .sync('./demo/**.js')
+        .map(p => require('@babel/core').transformFileSync(p, {}).code)
+    )
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 main()

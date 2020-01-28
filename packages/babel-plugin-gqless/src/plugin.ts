@@ -21,7 +21,7 @@ export const plugin = (api: typeof import('@babel/core')): PluginObj<State> => {
     inherits: jsxSyntax,
     pre() {
       const analysis = cache.getPath(this.filename)
-      analysis.file = this.file
+      analysis.ast = this.file.ast!
       this.analysis = analysis
     },
     visitor: {
