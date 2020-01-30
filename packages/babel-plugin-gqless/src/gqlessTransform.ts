@@ -46,6 +46,7 @@ const recursePreload = (analysis: FileAnalysis, callPath: NodePath) => {
   invariant(funcAnalysis instanceof FunctionAnalysis)
 
   console.log(
+    funcAnalysis,
     generate(
       emitPreloader(
         n => {

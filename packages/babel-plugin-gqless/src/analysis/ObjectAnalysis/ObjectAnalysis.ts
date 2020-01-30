@@ -2,10 +2,10 @@ import { types as t, NodePath } from '@babel/core'
 import { Analysis } from '../Analysis'
 import { ParamAnalysis } from '../ParamAnalysis'
 
-export class FunctionAnalysis extends Analysis {
+export class ObjectAnalysis extends Analysis {
   public params = new Map<number, ParamAnalysis>()
 
-  constructor(parent: Analysis, public func: NodePath<t.Function>) {
+  constructor(parent: Analysis, public func: NodePath<t.ObjectExpression>) {
     super(parent)
   }
 
@@ -18,7 +18,7 @@ export class FunctionAnalysis extends Analysis {
       if (i === path.key) return paramAnalysis
     }
 
-    const paramAnalysis = new ParamAnalysis(this, path)
+    const paramAnalysis = new ParamAnalysis(this as any, path)
     this.params.set(path.key as number, paramAnalysis)
     return paramAnalysis
   }

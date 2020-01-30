@@ -11,10 +11,7 @@ const shouldEmit = (
 
   if (preloadArg.isObjectExpression()) {
     for (const prop of preloadArg.get('properties')) {
-      if (
-        prop.isObjectProperty() &&
-        evalAsString(prop, evalProperty) === field
-      ) {
+      if (prop.isObjectProperty() && evalProperty(prop) === field) {
         return prop.get('value')
       }
     }
@@ -91,7 +88,7 @@ export const emitPreloader = (
     return path.scope.generateUidIdentifier(
       (t.isIdentifier(paramNode) && paramNode.name) ||
         (arg.isIdentifier() && arg.node.name) ||
-        `arg`
+        'arg'
     )
   })
   path.set('params', argIds as any)

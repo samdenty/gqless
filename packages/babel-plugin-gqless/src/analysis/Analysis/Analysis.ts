@@ -4,7 +4,6 @@ import { Cache, FileAnalysis, PropAnalysis, FunctionAnalysis } from '..'
 
 export class Analysis {
   public properties = new Set<PropAnalysis>()
-  public functions = new Set<FunctionAnalysis>()
 
   public file!: FileAnalysis
   public cache!: Cache
@@ -14,19 +13,6 @@ export class Analysis {
       this.file = parent.file
       this.cache = parent.cache
     }
-  }
-
-  public getFunction(
-    path: NodePath<
-      t.ArrowFunctionExpression | t.FunctionExpression | t.FunctionDeclaration
-    >
-  ) {
-    for (const funcAnalysis of this.functions) {
-      if (funcAnalysis.func === path) return funcAnalysis
-    }
-    const funcAnalysis = new FunctionAnalysis(this, path)
-    this.functions.add(funcAnalysis)
-    return funcAnalysis
   }
 
   public getProperty(property: string | 0, variables?: object) {

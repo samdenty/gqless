@@ -8,10 +8,11 @@ import TEST from 'react'
 function fn(a) {
   a.name
 }
-export const App = ({ users }) => {
-  // users['0']
+export const App = ({ users, ...props }) => {
+  users['0']
 
-  fn(users)
+  // test2.hmm.hmm2.hmm3(users)
+  test2.test(users)
 
   // props2.somethingElse
   // var user2 = props.user
@@ -21,7 +22,7 @@ export const App = ({ users }) => {
   // name.name2
   // user2.track({ a: 1, a: TEST })
 
-  // props.user.avatarUrl({ userId: props.user.id })
+  props.user.avatarUrl({ size: 100 + 50, userId: props.user.id })
 
   // return (
   //   <div>
@@ -36,12 +37,7 @@ export const App = ({ users }) => {
   test(query.me)
 }
 preload(App, { user, users })
-
-// function AppFunc(user) {
-//   user.name
-//   query.me
-//   test(query.me)
-// }
+// preload(test2.hmm, {})
 
 // preload(AppFunc, user)
 // preload(Test)

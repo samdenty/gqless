@@ -1,5 +1,6 @@
 import { types as t, NodePath } from '@babel/core'
 import { DynGlobal, DynImport } from './Dyn'
+import { Record } from './Record'
 
 /**
  * Serialize a JS object into babel AST.
@@ -21,15 +22,33 @@ export const serialize = (path: NodePath, data: any) => {
 
   if (data instanceof DynImport) {
     const program = path.findParent(p => p.isProgram()) as NodePath<t.Program>
-
     return insertImport(program, data)
   }
 
-  return t.objectExpression(
-    Object.entries(data).map(([key, value]) =>
-      t.objectProperty(t.identifier(key), serialize(path, value))
+  if (data instanceof Record) {
+    if (data.isArray()) {
+      return t.arrayExpression(
+        data.keys.map(k =>
+          k.valuePath.node === null ? null : serialize(path, k.value)
+        )
+      )
+    }
+
+    return t.objectExpression(
+      data.keys
+        .map(k => {
+          if (k.key === undefined) return
+          const isNum = !isNaN(+k.key)
+
+          return t.objectProperty(
+            isNum ? t.numericLiteral(+k.key) : t.identifier(String(k.key)),
+            serialize(path, k.value),
+            isNum
+          )
+        })
+        .filter(Boolean) as any
     )
-  )
+  }
 }
 
 const insertImport = (program: NodePath<t.Program>, imp: DynImport) => {

@@ -1,4 +1,3 @@
-import { dirname } from 'path'
 import { types as t, NodePath } from '@babel/core'
 import { invariant } from '@gqless/utils'
 import {
@@ -11,38 +10,23 @@ import {
 import { Analysis } from './Analysis'
 import { PropAnalysis } from './PropAnalysis'
 import { ParamAnalysis } from './ParamAnalysis'
+import { ImportSpecifier } from './FileAnalysis'
 
 const analyzeImport = (
-  { file, cache }: Analysis,
-  path: NodePath<
-    t.ImportDefaultSpecifier | t.ImportSpecifier | t.ImportNamespaceSpecifier
-  >,
+  { file }: Analysis,
+  path: NodePath<ImportSpecifier>,
   args: NodePath<t.Expression>[]
 ) => {
-  const getExportName = (): string | void => {
-    if (path.isImportSpecifier()) {
-      return path.node.imported.name
-    }
-    if (path.isImportDefaultSpecifier()) {
-      return 'default'
-    }
-    if (path.isImportNamespaceSpecifier()) {
-      const [preloadPath] = args
-      invariant(preloadPath.isMemberExpression())
-      invariant(t.isIdentifier(preloadPath.node.property))
-      return preloadPath.node.property.name
-    }
+  let analysis = file.getImport(path)
+  if (path.isImportNamespaceSpecifier()) {
+    const [memberPath] = args
+    invariant(memberPath.isMemberExpression())
+    const name = evalProperty(memberPath)
+    invariant(name)
+    analysis = analysis?.file.getExport(name)
   }
-  const exportName = getExportName()
-  if (!exportName) return
 
-  const modulePath = findModule(
-    dirname(file.path),
-    (<t.ImportDeclaration>path.parent).source.value
-  )
-
-  const moduleAnalysis = cache.getPath(modulePath)
-  moduleAnalysis.getExport(exportName)
+  return analysis
 }
 
 const analyzeVariable = (
@@ -70,7 +54,7 @@ const analyzeParam = (
       if (prop.isObjectProperty()) {
         const binding = path.scope.getBinding(objectPropValue(prop))!
 
-        const propName = evalAsString(prop, evalProperty)
+        const propName = evalProperty(prop)
         if (propName === undefined) return
 
         for (const refPath of binding.referencePaths) {
@@ -107,6 +91,12 @@ const analyzeProp = (
 ) => {
   if (path.parentPath.isCallExpression()) {
     const callPath = path.parentPath
+    const callee = callPath.get('callee')
+
+    const propAnalysis = analysis.file.get(path)
+
+    // callPath.scope.binding
+    // analyzeFunction(analysis,)
   }
 
   if (path.parentPath.isVariableDeclarator()) {
@@ -130,6 +120,8 @@ const analyzeProp = (
 
         // var { prop }
         if (prop.isObjectProperty()) {
+          // TODO: This is assumes an identifier, isn't true for
+          // var { prop: { asd }}
           const propName = objectPropValue(prop)
           const binding = path.scope.getBinding(propName)!
 
@@ -156,7 +148,7 @@ const analyzeProp = (
 
   if (path.parentPath.isMemberExpression()) {
     const memberPath = path.parentPath
-    const propName = evalAsString(memberPath, evalProperty)
+    const propName = evalProperty(memberPath)
     if (propName === undefined) return
 
     let variables: any
@@ -182,7 +174,7 @@ const analyzeFunction = (
   >,
   args: NodePath<t.Expression>[]
 ) => {
-  const funcAnalysis = analysis.getFunction(path)
+  const funcAnalysis = analysis.file.getFunction(path)
   const params = path.get('params')
 
   args.slice(1).forEach((arg, i) => {
@@ -191,6 +183,10 @@ const analyzeFunction = (
 
     analyzeParam(funcAnalysis.getParam(param), param)
   })
+
+  if (analysis !== analysis.file) {
+    console.log('add analysis to prev analysis')
+  }
 
   return funcAnalysis
 }

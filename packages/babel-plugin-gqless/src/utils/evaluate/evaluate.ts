@@ -1,5 +1,6 @@
 import { types as t, NodePath } from '@babel/core'
 import { DynGlobal, DynImport } from './Dyn'
+import { Record } from './Record'
 
 /**
  * Evaluate an expression
@@ -26,23 +27,34 @@ export const evaluate = (path: NodePath) => {
 
   // Objects
   if (path.isObjectExpression()) {
-    const obj = {}
+    let rec = new Record()
 
     for (const prop of path.get('properties')) {
       if (prop.isObjectProperty()) {
-        const propName = evalAsString(prop, evalProperty)
-        if (propName === undefined) continue
-
-        console.log(propName, prop.get('value'))
-        obj[propName] = evaluate(prop.get('value'))
+        const key = evalProperty(prop)
+        rec.set(key, prop.get('value'))
       }
 
       if (prop.isSpreadElement()) {
-        Object.assign(obj, evaluate(prop.get('argument')))
+        const result = prop.get('argument')
+
+        if (!(result instanceof Record)) continue
+        rec = new Record([...rec.keys, ...result.keys])
       }
     }
 
-    return obj
+    return rec
+  }
+
+  // Arrays
+  if (path.isArrayExpression()) {
+    let rec = new Record()
+
+    for (const elem of path.get('elements')) {
+      rec.set(elem.key, elem)
+    }
+
+    return rec
   }
 
   // Expressions
@@ -103,43 +115,55 @@ export const evaluate = (path: NodePath) => {
       return new DynGlobal(varName)
     }
 
-    console.log(binding.path)
     if (binding.path.isVariableDeclarator()) {
       const id = binding.path.get('id')
       const init = binding.path.get('init')
       if (init.node === null) return
 
-      const data = evaluate(init as NodePath)
+      const data = evaluate(init as NodePath) as unknown
 
       // var { } =
       if (id.isObjectPattern()) {
         for (const prop of id.get('properties')) {
           // var { ...rest } =
           if (prop.isRestElement()) {
-            const obj = { ...data }
+            if (data instanceof Record) {
+              const map = new Record(data.keys)
 
-            id.get('properties').forEach(prop => {
-              if (!prop.isObjectProperty()) return
-              const propName = evalAsString(prop)
-              if (propName === undefined) return
+              id.get('properties').forEach(prop => {
+                if (!prop.isObjectProperty()) return
+                const propName = evalAsString(prop)
+                if (propName === undefined) return
 
-              delete obj[propName]
-            })
+                for (const { key } of map.keys) {
+                  if (key === propName) {
+                    map.delete(key)
+                    break
+                  }
+                }
+              })
 
-            return obj
+              return map
+            }
+            return data
           }
 
           // var { prop } =
           if (prop.isObjectProperty()) {
             if (objectPropValue(prop) === varName) {
-              const propName = evalAsString(prop)
-              return propName !== undefined && data?.[propName]
+              if (!(data instanceof Record)) return
+              const key = evalProperty(prop)
+              if (key === undefined) return
+
+              return data.get(key)
             }
           }
         }
       }
 
-      return data
+      if (id.isIdentifier()) {
+        return data
+      }
     }
 
     if (binding.path.parentPath.isImportDeclaration()) {
@@ -164,7 +188,7 @@ export const evalProperty = (path: NodePath) => {
   // obj[prop]
   if (path.isMemberExpression()) {
     if (path.node.computed) {
-      return evaluate(path.get('property') as NodePath)
+      return evalAsString(path.get('property') as NodePath)
     }
 
     return (path.node.property as t.Identifier).name
@@ -173,29 +197,19 @@ export const evalProperty = (path: NodePath) => {
   // prop: value
   if (path.isObjectProperty()) {
     if (path.node.computed) {
-      return evaluate(path.get('key') as NodePath)
+      return evalAsString(path.get('key') as NodePath)
     }
 
     return (path.node.key as t.Identifier).name
   }
 
-  return evaluate
+  return evalAsString(path)
 }
 
-export const evalAsString = (
-  path: NodePath,
-  _evaluate = evaluate
-): string | void => {
-  const str = _evaluate(path)
+export const evalAsString = (path: NodePath): string | undefined => {
+  const str = evaluate(path)
   if (str !== undefined) return String(str)
-}
-
-export const evalAsNumber = (
-  path: NodePath,
-  _evaluate = evaluate
-): number | void => {
-  const str = _evaluate(path)
-  if (str !== undefined) return Number(str)
+  return
 }
 
 export const objectPropValue = (property: NodePath<t.ObjectProperty>) => {
