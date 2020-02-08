@@ -1,18 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`gqless test: test 1`] = `
+exports[`gqless inserts name for useFragment: inserts name for useFragment 1`] = `
+"
+import { useFragment } from '@gqless/react'
 
+const A = useFragment(null)
+const B = useFragment(null, 'User')
+const C = useFragment(null, 'User', 'Test')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useFragment } from '@gqless/react';
+const A = useFragment(null, undefined, \\"A\\");
+const B = useFragment(null, 'User', \\"B\\");
+const C = useFragment(null, 'User', 'Test');
+"
+`;
+
+exports[`gqless inserts name for useVariable: inserts name for useVariable 1`] = `
+"
+import { useVariable } from '@gqless/react'
+
+const A = useVariable('')
+const B = useVariable('', 'Test')
+
+const C = useVariable('', false)
+const D = useVariable('', false, 'Test')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { useVariable } from '@gqless/react';
+const A = useVariable('', \\"A\\");
+const B = useVariable('', 'Test');
+const C = useVariable('', false, \\"C\\");
+const D = useVariable('', false, 'Test');
+"
+`;
+
+exports[`gqless inserts name option for components: inserts name option for components 1`] = `
+"
 import { graphql } from '@gqless/react'
 
-export const Component = graphql(() => {
-  return <div>test</div>
-})
+export const A = graphql(null)
+export const B = graphql(null, { existing: true })
+export const C = graphql(null, { name: 'Test' })
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { graphql } from '@gqless/react';
-export const Component = graphql(() => {
-  return <div>test</div>;
+export const A = graphql(null, {
+  name: \\"A\\"
 });
-
+export const B = graphql(null, {
+  name: \\"B\\",
+  existing: true
+});
+export const C = graphql(null, {
+  name: 'Test'
+});
+"
 `;

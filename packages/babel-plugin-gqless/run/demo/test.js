@@ -5,6 +5,8 @@ import testDefault, { Test, test } from './test2'
 import * as test2 from './test2'
 import TEST from 'react'
 
+export const t = test2
+
 function fn(a) {
   a.name
 }
@@ -36,8 +38,8 @@ export const App = ({ users, ...props }) => {
   query.me
   test(query.me)
 }
-preload(App, { user, users })
-// preload(test2.hmm, {})
+// preload(App, { user, users })
+preload(test2.Test, { user, users })
 
 // preload(AppFunc, user)
 // preload(Test)

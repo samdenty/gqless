@@ -1,5 +1,5 @@
 import { invariant } from '@gqless/utils'
-import { deepJSONEqual, computed } from '../../../utils'
+import { deepJSONEqual } from '../../../utils'
 import { Arguments } from '../../Arguments'
 import { FieldAccessor } from '../../../Accessor'
 import { FieldSelection } from '../../../Selection'

@@ -1,6 +1,7 @@
 import { Selection, FieldSelection, Fragment } from '../../Selection'
 import { getAlias } from './getAlias'
-import { computed, uniquify } from '../../utils'
+import { computed } from '@gqless/utils'
+import { uniquify } from '../../utils'
 import { resolveAliases } from './resolveAliases'
 
 export class SelectionTree<TSelection extends Selection = Selection> {

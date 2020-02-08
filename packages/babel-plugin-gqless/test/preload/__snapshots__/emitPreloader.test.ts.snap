@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`resolves imports > import * as x 1`] = `
+_u => {
+  if (_u) {
+    _u.n;
+  }
+}
+`;
+
+exports[`resolves imports > import {x} 1`] = `
+_u => {
+  if (_u) {
+    _u.n;
+  }
+}
+`;
+
+exports[`resolves imports > import x 1`] = `
+_u => {
+  if (_u) {
+    _u.n;
+  }
+}
+`;
+
+exports[`supports destructuring 1`] = `
+_props => {
+  if (_props) {
+    const _user = _props.user;
+
+    if (_user) {
+      _user.name;
+    }
+  }
+}
+`;
+
+exports[`supports filtering 1`] = `() => {}`;
+
+exports[`supports filtering 2`] = `
+_user => {
+  if (_user) {
+    const _a = _user.a;
+
+    if (_a) {
+      _a.b;
+    }
+  }
+}
+`;
+
+exports[`supports filtering 3`] = `
+_user => {
+  if (_user) {
+    const _a = _user.a;
+
+    if (_a) {
+      _a.b;
+      _a.c;
+    }
+  }
+}
+`;
+
+exports[`works 1`] = `() => {}`;

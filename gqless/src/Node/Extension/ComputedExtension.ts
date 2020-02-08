@@ -1,7 +1,7 @@
 import { Extension } from './Extension'
 import { Accessor } from '../../Accessor'
 import { ComputableExtension } from './ComputableExtension'
-import { computed } from '../../utils'
+import { computed } from '@gqless/utils'
 import { ScalarNode } from '../ScalarNode'
 
 export class ComputedExtension extends Extension {

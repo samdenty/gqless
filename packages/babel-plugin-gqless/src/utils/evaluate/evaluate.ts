@@ -1,6 +1,7 @@
 import { types as t, NodePath } from '@babel/core'
 import { DynGlobal, DynImport } from './Dyn'
 import { Record } from './Record'
+import { resolveRefInPattern } from '../resolveRefInPattern'
 
 /**
  * Evaluate an expression
@@ -36,10 +37,11 @@ export const evaluate = (path: NodePath) => {
       }
 
       if (prop.isSpreadElement()) {
-        const result = prop.get('argument')
-
+        const result = evaluate(prop.get('argument'))
         if (!(result instanceof Record)) continue
-        rec = new Record([...rec.keys, ...result.keys])
+        result.keys.forEach(k => {
+          rec.set(k.key, k.valuePath)
+        })
       }
     }
 
@@ -51,7 +53,15 @@ export const evaluate = (path: NodePath) => {
     let rec = new Record()
 
     for (const elem of path.get('elements')) {
-      rec.set(elem.key, elem)
+      if (elem.isSpreadElement()) {
+        const result = evaluate(elem.get('argument'))
+        if (!(result instanceof Record)) continue
+        result.keys.forEach(k => {
+          rec.set(k.key, k.valuePath)
+        })
+      } else {
+        rec.set(elem.key, elem)
+      }
     }
 
     return rec
@@ -132,7 +142,7 @@ export const evaluate = (path: NodePath) => {
 
               id.get('properties').forEach(prop => {
                 if (!prop.isObjectProperty()) return
-                const propName = evalAsString(prop)
+                const propName = evalProperty(prop)
                 if (propName === undefined) return
 
                 for (const { key } of map.keys) {
@@ -155,7 +165,7 @@ export const evaluate = (path: NodePath) => {
               const key = evalProperty(prop)
               if (key === undefined) return
 
-              return data.get(key)
+              return data.get(key)?.value
             }
           }
         }

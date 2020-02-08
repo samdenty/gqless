@@ -1,10 +1,18 @@
-import { createEvent, invariant, createMemo } from '@gqless/utils'
+import { computed, createEvent, invariant, createMemo } from '@gqless/utils'
 
 import { Cache, Value, afterTransaction } from '../Cache'
-import { ObjectNode, Abstract, DataTrait, ComputableExtension, ComputedExtension, StaticExtension, DataContext } from '../Node'
+import {
+  ObjectNode,
+  Abstract,
+  DataTrait,
+  ComputableExtension,
+  ComputedExtension,
+  StaticExtension,
+  DataContext,
+} from '../Node'
 import { Scheduler, Query } from '../Scheduler'
 import { Selection, Fragment } from '../Selection'
-import { computed, Disposable, PathArray, arrayEqual } from '../utils'
+import { Disposable, PathArray, arrayEqual } from '../utils'
 import { onDataChange } from './utils'
 import { FragmentAccessor } from '.'
 import { accessorInterceptors } from '../Interceptor'
@@ -44,11 +52,15 @@ export abstract class Accessor<
   protected _value: Value | undefined
   protected _resolved = true
 
-  public onValueChange = createEvent<(value: Value | undefined, prevValue: Value | undefined) => void>()
+  public onValueChange = createEvent<
+    (value: Value | undefined, prevValue: Value | undefined) => void
+  >()
   // Equality check only
   public onDataChange = onDataChange(this)
   public onResolvedChange = createEvent<(resolved: boolean) => void>()
-  public onStatusChange = createEvent<(status: NetworkStatus, prevStatus: NetworkStatus) => void>()
+  public onStatusChange = createEvent<
+    (status: NetworkStatus, prevStatus: NetworkStatus) => void
+  >()
   public onInitializeExtensions = createEvent()
 
   constructor(
@@ -105,7 +117,7 @@ export abstract class Accessor<
       this.data = this.getData()
     }
 
-    accessorInterceptors.forEach((intercept) => intercept(this))
+    accessorInterceptors.forEach(intercept => intercept(this))
 
     return this._data
   }
@@ -166,7 +178,8 @@ export abstract class Accessor<
     if (!this.extensions.length) return
 
     // If already a fragment, key fragments should only be added on different types
-    const isTopLevel = !(this instanceof FragmentAccessor) || this.node !== this.parent.node
+    const isTopLevel =
+      !(this instanceof FragmentAccessor) || this.node !== this.parent.node
 
     if (isTopLevel) {
       // Add keyFragments
@@ -202,11 +215,13 @@ export abstract class Accessor<
       `can't update ${this.path} value without parent value`
     )
 
-    const valueless = new Set(this.children.filter(a => !(a.value)))
+    const valueless = new Set(this.children.filter(a => !a.value))
     this.parent.value.set(this.toString(), value)
 
     afterTransaction(() => {
-      const accessorWithoutValue = this.children.find(a => !a.value && !valueless.has(a))
+      const accessorWithoutValue = this.children.find(
+        a => !a.value && !valueless.has(a)
+      )
 
       // If a child accessor is missing a value, then
       // re-fetch it entirely
@@ -227,7 +242,11 @@ export abstract class Accessor<
   }
 
   public get<TChild extends TChildren | FragmentAccessor>(
-    find: ((child: TChildren | FragmentAccessor) => boolean) | Selection | string | number
+    find:
+      | ((child: TChildren | FragmentAccessor) => boolean)
+      | Selection
+      | string
+      | number
   ): TChild | undefined {
     if (typeof find === 'function') {
       return this.children.find(find) as any
@@ -251,7 +270,9 @@ export abstract class Accessor<
 
   @computed
   public get selectionPath(): Selection[] {
-    const basePath = this.parent ? this.parent.selectionPath : new PathArray<Selection>()
+    const basePath = this.parent
+      ? this.parent.selectionPath
+      : new PathArray<Selection>()
     const path =
       // Remove duplicated selections
       basePath[basePath.length - 1] === this.selection

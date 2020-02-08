@@ -1,8 +1,8 @@
-import generate from '@babel/generator'
 import { invariant } from '@gqless/utils'
-import { Scope, NodePath } from '@babel/traverse'
+import { NodePath } from '@babel/traverse'
+import generate from '@babel/generator'
 import { types as t } from '@babel/core'
-import { FileAnalysis, analyze, FunctionAnalysis } from './analysis'
+import { FileAnalysis, FunctionAnalysis } from './analysis'
 import { emitPreloader } from './preload'
 
 export const gqlessTransform = (
@@ -12,13 +12,15 @@ export const gqlessTransform = (
 ) => {
   switch (importName) {
     case 'preload': {
-      recursePreload(analysis, path)
+      scanPreload(analysis, path)
       break
     }
   }
 }
 
-const recursePreload = (analysis: FileAnalysis, callPath: NodePath) => {
+const scanPreload = (analysis: FileAnalysis, callPath: NodePath) => {
+  const program = callPath.findParent(p => p.isProgram()) as NodePath<t.Program>
+
   if (!callPath.isCallExpression()) return
   const args = callPath.get('arguments') as NodePath<t.Expression>[]
   args.forEach(a => invariant(a.isExpression()))
@@ -26,37 +28,19 @@ const recursePreload = (analysis: FileAnalysis, callPath: NodePath) => {
   // Get the function to preload
   const preloadPath = args[0]
   invariant(preloadPath)
-  const program = preloadPath.findParent(p => p.isProgram()) as NodePath<
-    t.Program
-  >
-
-  const getIdentifier = (path: NodePath): NodePath<t.Identifier> | void => {
-    if (path.isIdentifier()) return path
-    if (path.isMemberExpression()) return getIdentifier(path.get('object'))
-  }
-  const funcIdentifier = getIdentifier(preloadPath)
-
-  if (!funcIdentifier) return
-
-  // Get the definition of the function
-  const path = funcIdentifier.scope.getBinding(funcIdentifier.node.name)?.path
-  if (!path) return
-
-  const funcAnalysis = analyze(analysis, path, args)
+  const funcAnalysis = analysis.get(preloadPath)
   invariant(funcAnalysis instanceof FunctionAnalysis)
 
-  console.log(
-    funcAnalysis,
-    generate(
-      emitPreloader(
-        n => {
-          program.pushContainer('body', t.expressionStatement(n))
-          const body = program.get('body')
-          return body[body.length - 1].get('expression') as any
-        },
-        funcAnalysis,
-        args.slice(1)
-      )
-    ).code
+  // Scan the function
+  funcAnalysis.scan(...args.slice(1))
+
+  program.pushContainer(
+    'body',
+    t.expressionStatement(t.arrowFunctionExpression([], t.blockStatement([])))
   )
+  const programBody = program.get('body')
+  const outPath = programBody[programBody.length - 1].get('expression') as any
+  emitPreloader(outPath, funcAnalysis, args.slice(1))
+
+  console.log(funcAnalysis, generate(outPath.node).code)
 }
