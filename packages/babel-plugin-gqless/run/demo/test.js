@@ -7,19 +7,7 @@ import * as test2 from './test2'
 export const App = ({ users, ...props }) => {
   // users['0']
 
-  const {
-    a: { b },
-  } = { a: users.a }
-
-  b.c
-
-  // props2.somethingElse
-  // var user2 = props.user
-
-  // var { name } = props.user
-
-  // name.name2
-  // user2.track({ a: 1, a: TEST })
+  users.name({ size: 10 })
 
   // props.user.avatarUrl({ size: 100 + 50, userId: props.user.id })
 

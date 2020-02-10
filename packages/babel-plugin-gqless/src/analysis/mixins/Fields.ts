@@ -62,6 +62,10 @@ export class Fields {
     // )
 
     if (path.parentPath.isCallExpression()) {
+      if (!path.listKey) {
+        // Passed as field variables
+        return
+      }
       invariant(path.listKey === 'arguments')
 
       const callPath = path.parentPath
@@ -170,7 +174,6 @@ export class Fields {
         if (memberPath.parentPath.isCallExpression()) {
           const [varsPath] = memberPath.parentPath.get('arguments')
           variables = evaluate(varsPath)
-          console.log(variables)
         }
 
         this.getField(isNaN(+fieldName) ? fieldName : 0, variables).scanField(

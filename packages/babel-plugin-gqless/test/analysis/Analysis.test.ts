@@ -36,7 +36,7 @@ describe('resolves', () => {
   })
 
   describe('imports >', () => {
-    it('import {x}', () => {
+    test('import {x}', () => {
       const analysis = fileAnalysis({
         a: `
           import { f as b } from 'b'
@@ -50,7 +50,7 @@ describe('resolves', () => {
       expect(analysis.getExport('f')).toBeInstanceOf(FunctionAnalysis)
     })
 
-    it('import x', () => {
+    test('import x', () => {
       const analysis = fileAnalysis({
         a: `
           import f from 'b'
@@ -64,7 +64,7 @@ describe('resolves', () => {
       expect(analysis.getExport('b')).toBeInstanceOf(FunctionAnalysis)
     })
 
-    it('import * as x', () => {
+    test('import * as x', () => {
       const analysis = fileAnalysis({
         a: `
           import * as b from 'b'
@@ -80,7 +80,7 @@ describe('resolves', () => {
   })
 
   describe('re-exports >', () => {
-    it('export {x} from', () => {
+    test('export {x} from', () => {
       const analysis = fileAnalysis({
         a: `
           export { f as x } from 'b'
@@ -93,7 +93,7 @@ describe('resolves', () => {
       expect(analysis.getExport('x')).toBeInstanceOf(FunctionAnalysis)
     })
 
-    it('export * from', () => {
+    test('export * from', () => {
       const analysis = fileAnalysis({
         a: `
           export * from 'b'
@@ -106,7 +106,7 @@ describe('resolves', () => {
       expect(analysis.getExport('x')).toBeInstanceOf(FunctionAnalysis)
     })
 
-    it('export x from', () => {
+    test('export x from', () => {
       const analysis = fileAnalysis({
         a: `
           export x from 'b'
@@ -119,7 +119,7 @@ describe('resolves', () => {
       expect(analysis.getExport('x')).toBeInstanceOf(FunctionAnalysis)
     })
 
-    it('export * as x from', () => {
+    test('export * as x from', () => {
       const analysis = fileAnalysis({
         a: `
           export * as x from 'b'
@@ -135,7 +135,7 @@ describe('resolves', () => {
 })
 
 describe('evaluates values', () => {
-  it('with recursive de-structuring', () => {
+  test('with recursive de-structuring', () => {
     const analysis = fileAnalysis({
       a: `
         const { b } = { b: { a: () => {} } }
@@ -147,7 +147,7 @@ describe('evaluates values', () => {
     expect(analysis.getExport('a')).toBeInstanceOf(FunctionAnalysis)
   })
 
-  it('with object de-structuring', () => {
+  test('with object de-structuring', () => {
     const analysis = fileAnalysis({
       a: `
         const n = 'n'
@@ -160,7 +160,7 @@ describe('evaluates values', () => {
     expect(analysis.getExport('a')).toBeInstanceOf(FunctionAnalysis)
   })
 
-  it('with array de-structuring', () => {
+  test('with array de-structuring', () => {
     const analysis = fileAnalysis({
       a: `
         export const [, a] = [, () => {}]
@@ -172,7 +172,7 @@ describe('evaluates values', () => {
 })
 
 describe('scans', () => {
-  it('arg destructuring', () => {
+  test('arg destructuring', () => {
     const files = {
       a: `
         export default ({ user }) => {
@@ -182,6 +182,26 @@ describe('scans', () => {
     }
 
     expect(scan(files, 'props')).toMatchSnapshot()
+  })
+
+  test('field variables', () => {
+    const files = {
+      a: `
+        export default u => {
+          u.avatarUrl({ size: 100 })
+        }
+      `,
+    }
+
+    expect(scan(files, 'props')).toMatchInlineSnapshot(`
+      FunctionAnalysis (
+        0 -> {
+          avatarUrl({
+            "size": 100
+          }) {}
+        }
+      )
+    `)
   })
 
   describe('imports >', () => {
@@ -197,7 +217,7 @@ describe('scans', () => {
         'props'
       )
 
-    it('import x', () => {
+    test('import x', () => {
       expect(
         scanImp(`
           import x from 'b'
@@ -206,7 +226,7 @@ describe('scans', () => {
       ).toMatchSnapshot()
     })
 
-    it('import {x}', () => {
+    test('import {x}', () => {
       expect(
         scanImp(`
           import { b as _ } from 'b'
@@ -215,7 +235,7 @@ describe('scans', () => {
       ).toMatchSnapshot()
     })
 
-    it('import * as x', () => {
+    test('import * as x', () => {
       expect(
         scanImp(`
           import * as b from 'b'
@@ -225,31 +245,46 @@ describe('scans', () => {
     })
   })
 
-  it('var destructuring', () => {
-    const files = {
-      a: `
-        export default u => {
-          const { a: { b } } = { a: u.a }
-          b.c
-        }
-      `,
-    }
+  describe('variables', () => {
+    test('with destructuring', () => {
+      const files = {
+        a: `
+          export default u => {
+            const { a: { b, ...a }, ...o } = { a: u.a }
 
-    expect(scan(files, 'props')).toMatchInlineSnapshot(`
-      FunctionAnalysis (
-        0 -> {
-          a {
-            b {
-              c {}
-            }
+            o.a.b3
+            a.b2
+            b.c
           }
-        }
-      )
-    `)
+        `,
+      }
+
+      expect(scan(files, 'props')).toMatchSnapshot()
+    })
+
+    test('with spread', () => {
+      const files = {
+        a: `
+            export default u => {
+              const _u = { ...u }
+
+              _u.a
+            }
+          `,
+      }
+
+      // expect(scan(files, 'props')).toMatchInlineSnapshot(`
+      //   FunctionAnalysis (
+      //     0 -> {
+      //       a {}
+      //     }
+      //   )
+      // `)
+    })
   })
 
   describe('function calls', () => {
-    it('with object arguments', () => {
+    test('with object arguments', () => {
       const files = {
         a: `
           const a = ({ u }) => u.age
@@ -260,17 +295,10 @@ describe('scans', () => {
         `,
       }
 
-      expect(scan(files, 'props')).toMatchInlineSnapshot(`
-        FunctionAnalysis (
-          0 -> {
-            age {}
-            name {}
-          }
-        )
-      `)
+      expect(scan(files, 'props')).toMatchSnapshot()
     })
 
-    it('with multiple arguments', () => {
+    test('with multiple arguments', () => {
       const files = {
         a: `
           const a = (a, b, c) => {

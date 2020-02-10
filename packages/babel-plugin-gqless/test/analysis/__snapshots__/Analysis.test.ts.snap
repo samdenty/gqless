@@ -20,6 +20,15 @@ FunctionAnalysis (
 )
 `;
 
+exports[`scans function calls with object arguments 1`] = `
+FunctionAnalysis (
+  0 -> {
+    age {}
+    name {}
+  }
+)
+`;
+
 exports[`scans imports > import * as x 1`] = `
 FunctionAnalysis (
   0 -> {
@@ -40,6 +49,20 @@ exports[`scans imports > import x 1`] = `
 FunctionAnalysis (
   0 -> {
     n {}
+  }
+)
+`;
+
+exports[`scans variables with destructuring 1`] = `
+FunctionAnalysis (
+  0 -> {
+    a {
+      b {
+        c {}
+      }
+      b2 {}
+      b3 {}
+    }
   }
 )
 `;

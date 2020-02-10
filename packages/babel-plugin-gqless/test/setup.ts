@@ -38,7 +38,9 @@ expect.addSnapshotSerializer({
       .map(
         field =>
           `${field.name === 0 ? 'INDEX' : field.name}${
-            field.variables ? serialize(field.variables) : ''
+            field.variables
+              ? `(${serialize(field.variables).replace(/^Record /, '')})`
+              : ''
           } ${serialize(field)}`
       )
       .join('\n')
