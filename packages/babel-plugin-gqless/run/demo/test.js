@@ -7,9 +7,11 @@ import * as test2 from './test2'
 export const App = ({ users, ...props }) => {
   // users['0']
 
-  var { args2: args } = { args3: { users } }
+  const {
+    a: { b },
+  } = { a: users.a }
 
-  args
+  b.c
 
   // props2.somethingElse
   // var user2 = props.user

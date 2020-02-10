@@ -1,12 +1,7 @@
 import equal from 'fast-deep-equal'
 import { Analysis, FunctionAnalysis, FieldAnalysis } from '..'
 import { types as t, NodePath } from '@babel/core'
-import {
-  objectPropValue,
-  evalProperty,
-  evaluate,
-  resolveRefInPattern,
-} from '../../utils'
+import { objectPropValue, evalProperty, evaluate } from '../../utils'
 import { invariant } from '@gqless/utils'
 
 export class Fields {
@@ -113,17 +108,31 @@ export class Fields {
 
           // var { prop }
           if (prop.isObjectProperty()) {
-            console.log(prop, path, pathCtx.map(evalProperty))
             // TODO: This is assumes an identifier, isn't true for
-            // var { prop: { asd }}
-            const fieldName = objectPropValue(prop)
-            const binding = path.scope.getBinding(fieldName)!
+            // var { prop: { asd } }
+            const propValue = objectPropValue(prop)
+            console.log(prop)
+            const binding = path.scope.getBinding(propValue)!
 
-            for (const refPath of binding.referencePaths) {
-              // TODO: if (pathCtx.length)
-              // then all references need to access the each element in
-              // pathCtx, before we're back to a analysis reference
-              this.getField(fieldName).scanField(refPath, ...pathCtx)
+            // var { x } = { x: TRACKED }
+            if (pathCtx.length) {
+              const fieldName = evalProperty(prop)
+              if (fieldName === undefined) return
+
+              const [propPath, ...ctx] = pathCtx
+              const propName = evalProperty(propPath)
+              if (propName === undefined || fieldName !== propName) return
+
+              for (const refPath of binding.referencePaths) {
+                this.scanField(refPath, ...ctx)
+              }
+            }
+
+            // var { x } = TRACKED
+            else {
+              for (const refPath of binding.referencePaths) {
+                this.getField(propValue).scanField(refPath, ...pathCtx)
+              }
             }
           }
         }
@@ -144,19 +153,32 @@ export class Fields {
     else if (path.parentPath.isMemberExpression()) {
       const memberPath = path.parentPath
       const fieldName = evalProperty(memberPath)
+
       if (fieldName === undefined) return
 
-      let variables: any
+      // obj.x
+      if (pathCtx.length) {
+        const [propPath, ...ctx] = pathCtx
+        const propName = evalProperty(propPath)
+        if (propName === undefined || fieldName !== propName) return
 
-      if (memberPath.parentPath.isCallExpression()) {
-        const [varsPath] = memberPath.parentPath.get('arguments')
-        variables = evaluate(varsPath)
-        console.log(variables)
+        this.scanField(memberPath, ...ctx)
       }
 
-      this.getField(isNaN(+fieldName) ? fieldName : 0, variables).scanField(
-        memberPath
-      )
+      // TRACKED.x
+      else {
+        let variables: any
+
+        if (memberPath.parentPath.isCallExpression()) {
+          const [varsPath] = memberPath.parentPath.get('arguments')
+          variables = evaluate(varsPath)
+          console.log(variables)
+        }
+
+        this.getField(isNaN(+fieldName) ? fieldName : 0, variables).scanField(
+          memberPath
+        )
+      }
     }
 
     //

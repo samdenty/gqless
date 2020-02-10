@@ -225,14 +225,36 @@ describe('scans', () => {
     })
   })
 
+  it('var destructuring', () => {
+    const files = {
+      a: `
+        export default u => {
+          const { a: { b } } = { a: u.a }
+          b.c
+        }
+      `,
+    }
+
+    expect(scan(files, 'props')).toMatchInlineSnapshot(`
+      FunctionAnalysis (
+        0 -> {
+          a {
+            b {
+              c {}
+            }
+          }
+        }
+      )
+    `)
+  })
+
   describe('function calls', () => {
     it('with object arguments', () => {
       const files = {
         a: `
           const a = ({ u }) => u.age
           export default u => {
-            const { args } = { args: { u } }
-            a(args)
+            a({ u })
             u.name
           }
         `,
