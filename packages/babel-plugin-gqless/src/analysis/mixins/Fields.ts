@@ -1,11 +1,29 @@
 import equal from 'fast-deep-equal'
-import { FieldAnalysis } from '..'
-import { Analysis } from '..'
+import { Analysis, FunctionAnalysis, FieldAnalysis } from '..'
 import { types as t, NodePath } from '@babel/core'
 import { objectPropValue, evalProperty, evaluate } from '../../utils'
+import { invariant } from '@gqless/utils'
 
 export class Fields {
   public fields = new Set<FieldAnalysis>()
+
+  private lookup(
+    this: Analysis & Fields,
+    [path, ...paths]: NodePath<t.ObjectProperty>[]
+  ): Analysis & Fields {
+    if (!path) return this
+
+    const fieldName = evalProperty(path)
+    invariant(fieldName !== undefined)
+
+    return this.getField(fieldName).lookup(paths)
+  }
+
+  public merge(this: Analysis & Fields, other: Fields) {
+    other.fields.forEach(otherField => {
+      this.getField(otherField.name, otherField.variables).merge(otherField)
+    })
+  }
 
   public getField(
     this: Analysis & Fields,
@@ -28,18 +46,47 @@ export class Fields {
     return fieldAnalysis
   }
 
-  public scanField(this: Analysis & Fields, path: NodePath) {
+  public scanField(
+    this: Analysis & Fields,
+    path: NodePath,
+    ...pathCtx: NodePath<t.ObjectProperty>[]
+  ) {
+    // console.log(
+    //   `${this.file.path
+    //     .split('/')
+    //     .slice(9)
+    //     .join('/')}:${path.parentPath.node.loc?.start.line}:${path.parentPath
+    //     .node.loc?.start.column + 1}`,
+    //   path.parentPath.node,
+    //   this
+    // )
+
     if (path.parentPath.isCallExpression()) {
+      invariant(path.listKey === 'arguments')
+
       const callPath = path.parentPath
+      const args = callPath.get('arguments') as NodePath<
+        t.Expression | t.SpreadElement
+      >[]
       const callee = callPath.get('callee')
 
-      const propAnalysis = this.file.get(callee)
-      if (!propAnalysis) return
+      // Get the referenced function that's being called
+      const funcAnalysis = this.file.get(callee)
+      if (!funcAnalysis) return
+      invariant(funcAnalysis instanceof FunctionAnalysis)
+      // Perform a scan over it's params
+      funcAnalysis.scan(...args)
 
-      console.log({ propAnalysis })
+      // Find the analysis associated with arg, and merge
+      // into this analysis
+      const analysis = funcAnalysis.getParam(path.key as number).lookup(pathCtx)
+      this.merge(analysis)
+
+      return this.scanField(callPath)
     }
 
-    if (path.parentPath.isVariableDeclarator()) {
+    //
+    else if (path.parentPath.isVariableDeclarator()) {
       const id = path.parentPath.get('id')
       const init = path.parentPath.get('init')
       if (init.node === null) return
@@ -54,7 +101,7 @@ export class Fields {
             )!
 
             for (const refPath of binding.referencePaths) {
-              this.scanField(refPath)
+              this.scanField(refPath, ...pathCtx)
             }
           }
 
@@ -66,9 +113,7 @@ export class Fields {
             const binding = path.scope.getBinding(fieldName)!
 
             for (const refPath of binding.referencePaths) {
-              this.getField(isNaN(+fieldName) ? fieldName : 0).scanField(
-                refPath
-              )
+              this.getField(fieldName).scanField(refPath, ...pathCtx)
             }
           }
         }
@@ -80,12 +125,13 @@ export class Fields {
         if (!binding) return
 
         for (const refPath of binding.referencePaths) {
-          this.scanField(refPath)
+          this.scanField(refPath, ...pathCtx)
         }
       }
     }
 
-    if (path.parentPath.isMemberExpression()) {
+    //
+    else if (path.parentPath.isMemberExpression()) {
       const memberPath = path.parentPath
       const fieldName = evalProperty(memberPath)
       if (fieldName === undefined) return
@@ -101,6 +147,33 @@ export class Fields {
       this.getField(isNaN(+fieldName) ? fieldName : 0, variables).scanField(
         memberPath
       )
+    }
+
+    //
+    else if (path.parentPath.isObjectProperty()) {
+      const propPath = path.parentPath
+
+      // { x: TRACKED }
+      if (path.key === 'value') {
+        // We know the value of the Analysis is being used here - this
+
+        return this.scanField(propPath, propPath, ...pathCtx)
+      }
+
+      // { [TRACKED]: x }
+      else {
+        // todo
+      }
+    }
+
+    // Object / array literals
+    else if (
+      path.parentPath.isObjectExpression() ||
+      path.parentPath.isArrayExpression()
+    ) {
+      const dataExp = path.parentPath
+
+      return this.scanField(dataExp, ...pathCtx)
     }
   }
 }

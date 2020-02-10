@@ -22,7 +22,9 @@ const scanPreload = (analysis: FileAnalysis, callPath: NodePath) => {
   const program = callPath.findParent(p => p.isProgram()) as NodePath<t.Program>
 
   if (!callPath.isCallExpression()) return
-  const args = callPath.get('arguments') as NodePath<t.Expression>[]
+  const args = callPath.get('arguments') as NodePath<
+    t.Expression | t.SpreadElement
+  >[]
   args.forEach(a => invariant(a.isExpression()))
 
   // Get the function to preload

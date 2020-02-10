@@ -75,7 +75,7 @@ const analysisLoader = (
 export const emitPreloader = (
   outputPath: NodePath<t.ArrowFunctionExpression>,
   analysis: FunctionAnalysis,
-  args: NodePath<t.Expression>[]
+  args: NodePath<t.Expression | t.SpreadElement>[]
 ) => {
   const blockPath = outputPath.get('body')
 

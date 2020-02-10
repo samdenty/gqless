@@ -3,18 +3,13 @@ import * as React from 'react'
 import { query } from './client'
 import testDefault, { Test, test } from './test2'
 import * as test2 from './test2'
-import TEST from 'react'
 
-export const t = test2
-
-function fn(a) {
-  a.name
-}
 export const App = ({ users, ...props }) => {
   users['0']
 
+  var a = { users }
   // test2.hmm.hmm2.hmm3(users)
-  test2.test(users)
+  test2.test(a)
 
   // props2.somethingElse
   // var user2 = props.user
@@ -24,7 +19,7 @@ export const App = ({ users, ...props }) => {
   // name.name2
   // user2.track({ a: 1, a: TEST })
 
-  props.user.avatarUrl({ size: 100 + 50, userId: props.user.id })
+  // props.user.avatarUrl({ size: 100 + 50, userId: props.user.id })
 
   // return (
   //   <div>
@@ -39,9 +34,4 @@ export const App = ({ users, ...props }) => {
   test(query.me)
 }
 // preload(App, { user, users })
-preload(test2.Test, { user, users })
-
-// preload(AppFunc, user)
-// preload(Test)
-// preload(testDefault)
-// preload(test2.Test)
+preload(App, { user, users })

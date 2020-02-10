@@ -12,7 +12,6 @@ export const resolveRefInPattern = (
   value: NodePath,
   id: string
 ) => {
-  console.log(id)
   // var { } =
   if (pattern.isObjectPattern()) {
     for (const prop of pattern.get('properties')) {
@@ -30,7 +29,6 @@ export const resolveRefInPattern = (
         if (key === undefined) continue
 
         const rec = evaluate(value)
-        console.log({ rec, value })
         if (!(rec instanceof Record)) continue
         const propValue = rec.get(key)?.valuePath
         if (!propValue) continue
