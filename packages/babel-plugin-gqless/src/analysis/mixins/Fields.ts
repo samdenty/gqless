@@ -92,61 +92,59 @@ export class Fields {
       const init = path.parentPath.get('init')
       if (init.node === null) return
 
-      // var { }
-      if (id.isObjectPattern()) {
-        for (const prop of id.get('properties')) {
-          // var { ...rest }
-          if (prop.isRestElement()) {
-            const binding = path.scope.getBinding(
-              (prop.node.argument as t.Identifier).name
-            )!
+      const scanPattern = (
+        analysis: Analysis & Fields,
+        pattern: NodePath<t.LVal>,
+        ...pathCtx: NodePath<t.ObjectProperty>[]
+      ) => {
+        // var { }
+        if (pattern.isObjectPattern()) {
+          for (const prop of pattern.get('properties')) {
+            // var { ...rest }
+            if (prop.isRestElement()) {
+              const binding = path.scope.getBinding(
+                (prop.node.argument as t.Identifier).name
+              )!
 
-            for (const refPath of binding.referencePaths) {
-              this.scanField(refPath, ...pathCtx)
+              for (const refPath of binding.referencePaths) {
+                analysis.scanField(refPath, ...pathCtx)
+              }
             }
-          }
 
-          // var { prop }
-          if (prop.isObjectProperty()) {
-            // TODO: This is assumes an identifier, isn't true for
-            // var { prop: { asd } }
-            const propValue = objectPropValue(prop)
-            console.log(prop)
-            const binding = path.scope.getBinding(propValue)!
-
-            // var { x } = { x: TRACKED }
-            if (pathCtx.length) {
+            // var { prop }
+            if (prop.isObjectProperty()) {
               const fieldName = evalProperty(prop)
               if (fieldName === undefined) return
+              const value = prop.get('value') as NodePath<t.LVal>
 
-              const [propPath, ...ctx] = pathCtx
-              const propName = evalProperty(propPath)
-              if (propName === undefined || fieldName !== propName) return
-
-              for (const refPath of binding.referencePaths) {
-                this.scanField(refPath, ...ctx)
+              // var { x } = { x: TRACKED }
+              if (pathCtx.length) {
+                const [propPath, ...ctx] = pathCtx
+                const propName = evalProperty(propPath)
+                if (propName === undefined || fieldName !== propName) return
+                scanPattern(analysis, value, ...ctx)
               }
-            }
 
-            // var { x } = TRACKED
-            else {
-              for (const refPath of binding.referencePaths) {
-                this.getField(propValue).scanField(refPath, ...pathCtx)
+              // var { x } = TRACKED
+              else {
+                scanPattern(analysis.getField(fieldName), value)
               }
             }
           }
         }
-      }
 
-      // var x
-      if (id.isIdentifier()) {
-        const binding = id.scope.getBinding(id.node.name)
-        if (!binding) return
+        // var x
+        if (pattern.isIdentifier()) {
+          const binding = pattern.scope.getBinding(pattern.node.name)
+          if (!binding) return
 
-        for (const refPath of binding.referencePaths) {
-          this.scanField(refPath, ...pathCtx)
+          for (const refPath of binding.referencePaths) {
+            analysis.scanField(refPath, ...pathCtx)
+          }
         }
       }
+
+      scanPattern(this, id, ...pathCtx)
     }
 
     //
