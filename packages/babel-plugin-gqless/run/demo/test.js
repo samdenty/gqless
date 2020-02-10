@@ -5,11 +5,11 @@ import testDefault, { Test, test } from './test2'
 import * as test2 from './test2'
 
 export const App = ({ users, ...props }) => {
-  users['0']
+  // users['0']
 
-  var a = { users }
-  // test2.hmm.hmm2.hmm3(users)
-  test2.test(a)
+  var { args2: args } = { args3: { users } }
+
+  args
 
   // props2.somethingElse
   // var user2 = props.user

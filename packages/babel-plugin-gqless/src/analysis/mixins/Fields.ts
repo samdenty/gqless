@@ -1,7 +1,12 @@
 import equal from 'fast-deep-equal'
 import { Analysis, FunctionAnalysis, FieldAnalysis } from '..'
 import { types as t, NodePath } from '@babel/core'
-import { objectPropValue, evalProperty, evaluate } from '../../utils'
+import {
+  objectPropValue,
+  evalProperty,
+  evaluate,
+  resolveRefInPattern,
+} from '../../utils'
 import { invariant } from '@gqless/utils'
 
 export class Fields {
@@ -80,6 +85,7 @@ export class Fields {
       // Find the analysis associated with arg, and merge
       // into this analysis
       const analysis = funcAnalysis.getParam(path.key as number).lookup(pathCtx)
+
       this.merge(analysis)
 
       return this.scanField(callPath)
@@ -107,12 +113,16 @@ export class Fields {
 
           // var { prop }
           if (prop.isObjectProperty()) {
+            console.log(prop, path, pathCtx.map(evalProperty))
             // TODO: This is assumes an identifier, isn't true for
             // var { prop: { asd }}
             const fieldName = objectPropValue(prop)
             const binding = path.scope.getBinding(fieldName)!
 
             for (const refPath of binding.referencePaths) {
+              // TODO: if (pathCtx.length)
+              // then all references need to access the each element in
+              // pathCtx, before we're back to a analysis reference
               this.getField(fieldName).scanField(refPath, ...pathCtx)
             }
           }
@@ -153,16 +163,14 @@ export class Fields {
     else if (path.parentPath.isObjectProperty()) {
       const propPath = path.parentPath
 
-      // { x: TRACKED }
+      // x: TRACKED
       if (path.key === 'value') {
-        // We know the value of the Analysis is being used here - this
-
         return this.scanField(propPath, propPath, ...pathCtx)
       }
 
-      // { [TRACKED]: x }
+      // [TRACKED]: x
       else {
-        // todo
+        // TODO
       }
     }
 

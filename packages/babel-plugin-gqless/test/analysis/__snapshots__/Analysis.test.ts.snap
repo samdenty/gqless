@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`scans arg destructuring 1`] = `
+FunctionAnalysis (
+  0 -> {
+    user {
+      name {}
+    }
+  }
+)
+`;
+
+exports[`scans function calls with multiple arguments 1`] = `
+FunctionAnalysis (
+  0 -> {
+    a {}
+    b {}
+    name {}
+  }
+)
+`;
+
+exports[`scans imports > import * as x 1`] = `
+FunctionAnalysis (
+  0 -> {
+    n {}
+  }
+)
+`;
+
+exports[`scans imports > import {x} 1`] = `
+FunctionAnalysis (
+  0 -> {
+    n {}
+  }
+)
+`;
+
+exports[`scans imports > import x 1`] = `
+FunctionAnalysis (
+  0 -> {
+    n {}
+  }
+)
+`;

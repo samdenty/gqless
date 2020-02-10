@@ -1,10 +1,5 @@
-const b = a => {
-  a.asdassdsaddsadsa
-}
-
-export const test = ({ users }) => {
-  users.asdlsd
-  b(users)
+export const test = a => {
+  a.asdsda
 }
 
 export const Test = ({ users, ...props }) => {

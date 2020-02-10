@@ -8,6 +8,7 @@ import * as utils from '../src/utils'
 import { invariant } from '@gqless/utils'
 import * as _preload from '../src/preload'
 import * as _utils from '../src/utils'
+import { Fields } from '../src/analysis/mixins'
 
 type Files = Record<string, string>
 // @ts-ignore
@@ -30,6 +31,37 @@ expect.addSnapshotSerializer({
     )}\n}`,
 })
 
+expect.addSnapshotSerializer({
+  test: (val: any) => val instanceof Fields,
+  print: (analysis: Fields, serialize: any, indent: Function) => {
+    const body = Array.from(analysis.fields)
+      .map(
+        field =>
+          `${field.name === 0 ? 'INDEX' : field.name}${
+            field.variables ? serialize(field.variables) : ''
+          } ${serialize(field)}`
+      )
+      .join('\n')
+
+    return body ? `{\n${indent(body)}\n}` : `{}`
+  },
+})
+
+expect.addSnapshotSerializer({
+  test: (val: any) => val instanceof FunctionAnalysis,
+  print: (analysis: FunctionAnalysis, serialize: any, indent: Function) =>
+    `FunctionAnalysis (\n${indent(
+      Array.from(analysis.params)
+        .map(
+          ([key, param]) =>
+            `${key === null ? '...rest' : serialize(key)} -> ${serialize(
+              param
+            )}`
+        )
+        .join('\n')
+    )}\n)`,
+})
+
 /**
  * Mock a FileAnalysis
  * @returns The first key in the files object
@@ -47,6 +79,20 @@ export const fileAnalysis = (files: Files) => {
   }
 
   return cache.getPath(Object.keys(files)[0])
+}
+
+export const scan = (files: Files, ...args: string[]) => {
+  const funcAnalysis = fileAnalysis(files).getExport('default')
+  invariant(funcAnalysis instanceof FunctionAnalysis)
+
+  const pathArgs = args.map(arg => {
+    const path = new NodePath(undefined as any, undefined as any)
+    path.node = template.expression(arg)()
+    return path as any
+  })
+  funcAnalysis.scan(...pathArgs)
+
+  return funcAnalysis
 }
 
 /**
