@@ -241,7 +241,7 @@ describe('scans', () => {
       expect(scan(files, 'props')).toMatchInlineSnapshot(`
         FunctionAnalysis (
           0 -> {
-            args {}
+            age {}
             name {}
           }
         )
