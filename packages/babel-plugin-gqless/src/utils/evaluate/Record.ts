@@ -4,7 +4,7 @@ import { evaluate } from './evaluate'
 type Key = string | number
 
 export class Record {
-  constructor(public keys: RecordKey[] = []) {}
+  constructor(public isArray = false, public keys: RecordKey[] = []) {}
 
   public has(key: Key) {
     return this.keys.some(k => k.key === key)
@@ -37,10 +37,6 @@ export class Record {
         return
       }
     }
-  }
-
-  public isArray() {
-    return !this.keys.find(k => typeof k.key !== 'number')
   }
 }
 

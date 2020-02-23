@@ -3,7 +3,6 @@ import { Analysis } from './Analysis'
 import { ParamAnalysis } from './ParamAnalysis'
 import { Referable } from './mixins'
 import { Mix, Generic as g } from 'mix-classes'
-import { invariant } from '@gqless/utils'
 
 export interface FunctionAnalysis extends Referable<t.Function> {}
 
@@ -19,7 +18,7 @@ export class FunctionAnalysis extends Mix(Analysis, g(Referable)) {
 
     if (index >= params.length) {
       const lastParam = params[params.length - 1]
-      invariant(lastParam.isSpreadElement())
+      if (!lastParam.isSpreadElement()) return
 
       if (this.params.has(null)) {
         return this.params.get(null)!
@@ -56,7 +55,7 @@ export class FunctionAnalysis extends Mix(Analysis, g(Referable)) {
         if (!arg) break
       }
 
-      this.getParam(i).scan()
+      this.getParam(i)?.scan()
     }
 
     if (this.parent !== this.parent!.file) {

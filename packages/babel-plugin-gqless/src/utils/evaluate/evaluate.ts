@@ -28,7 +28,7 @@ export const evaluate = (path: NodePath) => {
 
   // Objects
   if (path.isObjectExpression()) {
-    let rec = new Record()
+    let rec = new Record(false)
 
     for (const prop of path.get('properties')) {
       if (prop.isObjectProperty()) {
@@ -50,7 +50,7 @@ export const evaluate = (path: NodePath) => {
 
   // Arrays
   if (path.isArrayExpression()) {
-    let rec = new Record()
+    let rec = new Record(true)
 
     for (const elem of path.get('elements')) {
       if (elem.isSpreadElement()) {
@@ -138,7 +138,7 @@ export const evaluate = (path: NodePath) => {
           // var { ...rest } =
           if (prop.isRestElement()) {
             if (data instanceof Record) {
-              const map = new Record(data.keys)
+              const map = new Record(data.isArray, data.keys)
 
               id.get('properties').forEach(prop => {
                 if (!prop.isObjectProperty()) return

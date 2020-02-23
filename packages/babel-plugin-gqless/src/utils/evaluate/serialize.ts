@@ -11,6 +11,7 @@ export const serialize = (path: NodePath, data: any) => {
   if (data === null) return t.nullLiteral()
   if (data === undefined) return t.identifier('undefined')
 
+  if (typeof data === 'boolean') return t.booleanLiteral(data)
   if (typeof data === 'number') return t.numericLiteral(data)
   if (typeof data === 'string') return t.stringLiteral(data)
 
@@ -26,7 +27,7 @@ export const serialize = (path: NodePath, data: any) => {
   }
 
   if (data instanceof Record) {
-    if (data.isArray()) {
+    if (data.isArray) {
       return t.arrayExpression(
         data.keys.map(k =>
           k.valuePath.node === null ? null : serialize(path, k.value)

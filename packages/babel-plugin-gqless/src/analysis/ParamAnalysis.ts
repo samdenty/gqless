@@ -15,42 +15,6 @@ export class ParamAnalysis extends Mix(Analysis, g(Referable), Fields) {
   }
 
   public scan() {
-    // function ({ })
-    if (this.path.isObjectPattern()) {
-      for (const prop of this.path.get('properties')) {
-        // function ({ arg })
-        if (prop.isObjectProperty()) {
-          const binding = this.path.scope.getBinding(objectPropValue(prop))!
-
-          const fieldName = evalProperty(prop)
-          if (fieldName === undefined) return
-
-          const fieldAnalysis = this.getField(fieldName)
-          for (const refPath of binding.referencePaths) {
-            fieldAnalysis.scanField(refPath)
-          }
-        }
-
-        // function ({ ...rest })
-        if (prop.isRestElement()) {
-          const binding = this.path.scope.getBinding(
-            (prop.node.argument as t.Identifier).name
-          )!
-
-          for (const refPath of binding.referencePaths) {
-            this.scanField(refPath)
-          }
-        }
-      }
-    }
-
-    // function (arg)
-    if (this.path.isIdentifier()) {
-      const binding = this.path.scope.getBinding(this.path.node.name)!
-
-      for (const refPath of binding.referencePaths) {
-        this.scanField(refPath)
-      }
-    }
+    this.scanPath(this.path)
   }
 }

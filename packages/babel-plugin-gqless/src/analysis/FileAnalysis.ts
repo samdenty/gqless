@@ -91,7 +91,7 @@ export class FileAnalysis extends Analysis {
   public getVariable(
     path: NodePath<t.VariableDeclaration | t.VariableDeclarator>,
     name: string
-  ) {
+  ): Analysis | void {
     if (path.isVariableDeclarator()) {
       const id = path.get('id')
       const init = path.get('init')
@@ -114,7 +114,7 @@ export class FileAnalysis extends Analysis {
   public getRef(
     path: NodePath<t.Identifier | t.MemberExpression>,
     ...ctx: NodePath<t.MemberExpression>[]
-  ) {
+  ): Analysis | void {
     if (path.isIdentifier()) {
       const binding = path.scope.getBinding(path.node.name)
       if (!binding) return
@@ -132,7 +132,7 @@ export class FileAnalysis extends Analysis {
     }
   }
 
-  public getExport(name: string) {
+  public getExport(name: string): Analysis | void {
     if (this.exports.has(name)) {
       return this.exports.get(name)
     }

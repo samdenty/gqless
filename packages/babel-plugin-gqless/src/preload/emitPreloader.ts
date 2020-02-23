@@ -40,33 +40,33 @@ const analysisLoader = (
       Array.from(analysis.fields)
         .map(field => {
           const fieldName = String(field.name)
-          const isIndex = field.name === 0
+          const isElement = field.name === 0
           const memberExp = t.memberExpression(
             id,
-            isIndex
+            isElement
               ? t.numericLiteral(field.name as number)
               : t.identifier(fieldName),
-            isIndex
+            isElement
           )
+          const exp = field.variables
+            ? t.callExpression(memberExp, [serialize(path, field.variables)])
+            : memberExp
+
           const memberArg = shouldEmit(arg, fieldName)
           if (memberArg === false) return []
 
           if (field.fields.size) {
-            const id = path.scope.generateUidIdentifier(fieldName)
+            const id = path.scope.generateUidIdentifier(
+              isElement ? 'elem' : fieldName
+            )
 
             return [
-              t.variableDeclaration('const', [
-                t.variableDeclarator(id, memberExp),
-              ]),
+              t.variableDeclaration('const', [t.variableDeclarator(id, exp)]),
               analysisLoader(field, path, memberArg, id),
             ]
           }
 
-          return t.expressionStatement(
-            field.variables
-              ? t.callExpression(memberExp, [serialize(path, field.variables)])
-              : memberExp
-          )
+          return t.expressionStatement(exp)
         })
         .flat()
     )

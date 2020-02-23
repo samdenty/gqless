@@ -4,24 +4,40 @@ import { query } from './client'
 import testDefault, { Test, test } from './test2'
 import * as test2 from './test2'
 
-export const App = ({ users, ...props }) => {
-  // users['0']
+export const App = ({ user }) => {
+  // const repos = user.repositories({
+  //   first: 100,
+  //   isFork: false,
+  //   privacy: 'PUBLIC',
+  //   affiliations: ['OWNER'],
+  //   orderBy: { field: 'STARGAZERS', direction: 'DESC' },
+  // }).edges
+  var obj = { a: user }
+  var obj2 = obj.a
+  const { repos } = obj.a
 
-  users.name({ size: 10 })
+  const repo = repos.find(a => a.asd === 1)
+  repo.name
+  // var fn = r => {
+  //   r.asd
+  // }
 
-  // props.user.avatarUrl({ size: 100 + 50, userId: props.user.id })
+  // for (const repo of repos.filter(a => a.name)) {
+  //   fn(repo)
+  // }
 
   // return (
-  //   <div>
-  //     {props.user.age}
-  //     {props.user.name}
-  //   </div>
+  //   <StyledUser>
+  //     <h2>{user.name}</h2>
+  //     <React.Suspense fallback="loading repos">
+  //       <Repos>
+  //         {repos.map(repo => {
+  //           return <Repo key={repo.node.nameWithOwner} repo={repo.node} />
+  //         })}
+  //       </Repos>
+  //     </React.Suspense>
+  //   </StyledUser>
   // )
-  // const [name, setName] = React.useState('bob')
-  // const { age2 } = { age2: 100 }
-  // const { age, ...rest } = { age: 100 + age2, a: 1, b: 2 }
-  query.me
-  test(query.me)
 }
-// preload(App, { user, users })
-preload(App, { user, users })
+
+preload(App, { user })
