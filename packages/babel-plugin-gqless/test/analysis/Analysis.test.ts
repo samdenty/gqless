@@ -317,4 +317,56 @@ describe('scans', () => {
       expect(scan(files, 'props')).toMatchSnapshot()
     })
   })
+
+  describe('array', () => {
+    test('methods', () => {
+      const files = {
+        a: `
+          export default u => {
+            u.filter(u => u.a).map(u => u.b)
+            u.forEach((u, i, _u) => {
+              _u.x
+              u.c
+            })
+            u.find(u => u.d).e
+          }
+        `,
+      }
+
+      expect(scan(files, 'props')).toMatchSnapshot()
+    })
+
+    test('for of', () => {
+      const files = {
+        a: `
+          export default u => {
+            for (const x of u) {
+              x.a
+            }
+
+            let y
+            for (y of u) {
+              y.b
+            }
+          }
+        `,
+      }
+
+      expect(scan(files, 'props')).toMatchSnapshot()
+    })
+
+    test('for loop', () => {
+      const files = {
+        a: `
+          export default u => {
+            for (let i = 0; i < u.length; i++) {
+              u[i].a
+            }
+          }
+        `,
+      }
+
+      expect(scan(files, 'props')).toMatchSnapshot()
+    })
+  })
 })

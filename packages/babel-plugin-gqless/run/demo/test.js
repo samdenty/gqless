@@ -12,32 +12,20 @@ export const App = ({ user }) => {
   //   affiliations: ['OWNER'],
   //   orderBy: { field: 'STARGAZERS', direction: 'DESC' },
   // }).edges
-  var obj = { a: user }
-  var obj2 = obj.a
-  const { repos } = obj.a
+  const { repos } = user
 
-  const repo = repos.find(a => a.asd === 1)
-  repo.name
-  // var fn = r => {
-  //   r.asd
-  // }
-
-  // for (const repo of repos.filter(a => a.name)) {
-  //   fn(repo)
-  // }
-
-  // return (
-  //   <StyledUser>
-  //     <h2>{user.name}</h2>
-  //     <React.Suspense fallback="loading repos">
-  //       <Repos>
-  //         {repos.map(repo => {
-  //           return <Repo key={repo.node.nameWithOwner} repo={repo.node} />
-  //         })}
-  //       </Repos>
-  //     </React.Suspense>
-  //   </StyledUser>
-  // )
+  return (
+    <StyledUser>
+      <h2>{user.name}</h2>
+      <React.Suspense fallback="loading repos">
+        <Repos>
+          {repos.map(repo => {
+            return <Repo key={repo.node.nameWithOwner} repo={repo.node} />
+          })}
+        </Repos>
+      </React.Suspense>
+    </StyledUser>
+  )
 }
 
 preload(App, { user })

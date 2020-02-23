@@ -18,7 +18,7 @@ export class FunctionAnalysis extends Mix(Analysis, g(Referable)) {
 
     if (index >= params.length) {
       const lastParam = params[params.length - 1]
-      if (!lastParam.isSpreadElement()) return
+      if (!lastParam?.isSpreadElement()) return
 
       if (this.params.has(null)) {
         return this.params.get(null)!

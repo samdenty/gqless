@@ -121,8 +121,12 @@ export class Fields {
     // )
     // console.log(path.parent)
 
-    //
-    if (path.isVariableDeclarator()) {
+    if (path.isJSXExpressionContainer()) {
+      console.log('YES', path)
+    }
+
+    // Variables
+    else if (path.isVariableDeclarator()) {
       this.scanPath(path.get('id'), ...pathCtx)
     }
 
@@ -185,6 +189,7 @@ export class Fields {
 
               const selfAnalysis = callbackAnalysis.getParam(argSelfIdx)
               if (selfAnalysis) {
+                selfAnalysis.scan()
                 this.merge(selfAnalysis)
               }
 
@@ -251,6 +256,9 @@ export class Fields {
       if (!binding) return
 
       for (const refPath of binding.referencePaths) {
+        // Prevent circular loops
+        if (refPath.key === 'left') continue
+
         this.scanParentPath(refPath, ...pathCtx)
       }
     }

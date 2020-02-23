@@ -10,6 +10,43 @@ FunctionAnalysis (
 )
 `;
 
+exports[`scans array for loop 1`] = `
+FunctionAnalysis (
+  0 -> {
+    length {}
+    INDEX {
+      a {}
+    }
+  }
+)
+`;
+
+exports[`scans array for of 1`] = `
+FunctionAnalysis (
+  0 -> {
+    INDEX {
+      a {}
+      b {}
+    }
+  }
+)
+`;
+
+exports[`scans array methods 1`] = `
+FunctionAnalysis (
+  0 -> {
+    INDEX {
+      a {}
+      b {}
+      c {}
+      d {}
+      e {}
+    }
+    x {}
+  }
+)
+`;
+
 exports[`scans function calls with multiple arguments 1`] = `
 FunctionAnalysis (
   0 -> {

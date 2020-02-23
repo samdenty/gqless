@@ -11,7 +11,15 @@ export const RETURNS_SELF = [
 
 export const RETURNS_ARRAY_ELEMENT = ['find']
 
-export const ARRAY_ITERATOR: Record<string, [number, number]> = {
+export const ARRAY_ITERATOR: Record<
+  string,
+  [
+    // element arg pos
+    number,
+    // array arg pos
+    number
+  ]
+> = {
   every: [0, 2],
   filter: [0, 2],
   find: [0, 2],
