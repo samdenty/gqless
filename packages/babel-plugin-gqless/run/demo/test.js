@@ -12,20 +12,21 @@ export const App = ({ user }) => {
   //   affiliations: ['OWNER'],
   //   orderBy: { field: 'STARGAZERS', direction: 'DESC' },
   // }).edges
-  const { repos } = user
+  // const { repos } = user
 
-  return (
-    <StyledUser>
-      <h2>{user.name}</h2>
-      <React.Suspense fallback="loading repos">
-        <Repos>
-          {repos.map(repo => {
-            return <Repo key={repo.node.nameWithOwner} repo={repo.node} />
-          })}
-        </Repos>
-      </React.Suspense>
-    </StyledUser>
-  )
+  return <Repo propName={user.name} />
+  // return (
+  //   <StyledUser>
+  //     <h2>{user.name}</h2>
+  //     <React.Suspense fallback="loading repos">
+  //       <Repos>
+  //         {repos.map(repo => {
+  //           return <Repo key={repo.node.nameWithOwner} repo={repo.node} />
+  //         })}
+  //       </Repos>
+  //     </React.Suspense>
+  //   </StyledUser>
+  // )
 }
 
 preload(App, { user })

@@ -1,0 +1,43 @@
+{
+  "license": "MIT",
+  "private": false,
+  "name": "@gqless/devtools",
+  "version": "0.0.1-alpha.27",
+  "main": "dist/index.js",
+  "source": "src/index.ts",
+  "module": "dist/react.esm.js",
+  "typings": "dist/index.d.ts",
+  "homepage": "https://gqless.netlify.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samdenty/gqless.git",
+    "directory": "packages/devtools"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "craco start",
+    "build": "craco build",
+    "eject": "craco eject"
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "@types/react-textarea-autosize": "^4.3.5",
+    "framer-motion": "^1.8.4",
+    "mobx": "^5.15.4",
+    "mobx-react": "^6.1.8",
+    "react-textarea-autosize": "^7.1.2"
+  },
+  "peerDependencies": {
+    "gqless": "*"
+  },
+  "devDependencies": {
+    "@craco/craco": "^5.6.3",
+    "@emotion/babel-preset-css-prop": "^10.0.27",
+    "node-sass": "^4.13.1",
+    "react-scripts": "^3.4.0"
+  },
+  "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
+}

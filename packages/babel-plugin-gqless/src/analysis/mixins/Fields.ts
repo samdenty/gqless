@@ -121,8 +121,33 @@ export class Fields {
     // )
     // console.log(path.parent)
 
+    // {TRACKED}
     if (path.isJSXExpressionContainer()) {
-      console.log('YES', path)
+      this.scanParentPath(path)
+    }
+
+    // {...x}
+    else if (path.isJSXSpreadAttribute()) {
+    }
+
+    // JSX children
+    else if (path.isJSXElement()) {
+      console.log(path)
+    }
+
+    // prop={TRACKED}
+    else if (path.isJSXAttribute()) {
+      const tag = path.parentPath
+      invariant(tag.isJSXOpeningElement())
+
+      const componentName = tag.node.name
+
+      const namePath = path.get('name')
+      invariant(namePath.isJSXIdentifier(), 'namespace not supported')
+      const propName = namePath.node.name
+
+      this.file.get()
+      console.log(componentName, propName)
     }
 
     // Variables
