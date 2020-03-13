@@ -1,8 +1,15 @@
 import { NodeContainer, FieldsNode, FieldNode } from '../abstract'
-import { ProxyExtension, GET_KEY, ArrayNodeExtension, INDEX, ObjectNodeExtension, REDIRECT } from './NodeExtension'
-import { computed, PathArray } from '../../utils'
+import {
+  ProxyExtension,
+  GET_KEY,
+  ArrayNodeExtension,
+  INDEX,
+  ObjectNodeExtension,
+  REDIRECT,
+} from './NodeExtension'
+import { PathArray } from '../../utils'
 import { UFragment, Fragment } from '../../Selection'
-import { createMemo, invariant } from '@gqless/utils'
+import { computed, createMemo, invariant } from '@gqless/utils'
 import { DataTrait } from '../traits'
 import { ArrayNode } from '../ArrayNode'
 import { createExtension } from './createExtension'
@@ -19,15 +26,12 @@ export abstract class Extension {
     public node: DataTrait,
     /** (optional) An object used to construct fragmentKey */
     private fragmentKeyedBy: any = parent ? undefined : node
-  ) {
-  }
+  ) {}
 
   @computed
   /** A unique key to share instances of a Fragment between extensions */
   protected get fragmentKey() {
-    return this.path
-      .map(ref => ref.fragmentKeyedBy)
-      .filter(Boolean)
+    return this.path.map(ref => ref.fragmentKeyedBy).filter(Boolean)
   }
 
   @computed
@@ -43,21 +47,18 @@ export abstract class Extension {
     // Fragments only work with InterfaceNode / ObjectNode
     if (!(node instanceof FieldsNode)) return
 
-    return memo.fragment(
-      () => {
-        const fragment = new Fragment(
-          node as UFragment,
-          `Keyed${this.fragmentKey.join('_')}`
-        )
+    return memo.fragment(() => {
+      const fragment = new Fragment(
+        node as UFragment,
+        `Keyed${this.fragmentKey.join('_')}`
+      )
 
-        // Initialize with selections
-        const data = node!.getData({ selection: fragment })
-        getKey(data)
+      // Initialize with selections
+      const data = node!.getData({ selection: fragment })
+      getKey(data)
 
-        return fragment
-      },
-      this.fragmentKey
-    )
+      return fragment
+    }, this.fragmentKey)
   }
 
   public get isKeyable() {
@@ -92,7 +93,7 @@ export abstract class Extension {
         },
         getByKey(key) {
           return entry.getByKey(key)
-        }
+        },
       }
     )
   }

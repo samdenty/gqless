@@ -15,3 +15,4 @@ build
 .env
 .envrc
 .changelog
+.history

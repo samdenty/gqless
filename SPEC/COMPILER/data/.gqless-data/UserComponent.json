@@ -1,0 +1,17 @@
+{
+  "UserComponent": {
+    "data": [
+      "query.me.name",
+      {
+        "file": "useFullName.json",
+        "export": "useFullName",
+        "args": ["0.user"]
+      },
+      {
+        "file": "DescriptionComponent.json",
+        "export": "DescriptionComponent",
+        "args": [{ "user": "0.user" }]
+      }
+    ]
+  }
+}

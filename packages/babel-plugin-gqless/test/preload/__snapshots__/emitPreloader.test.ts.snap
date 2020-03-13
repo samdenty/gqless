@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`supports filtering 1`] = `() => {}`;
+
+exports[`supports filtering 2`] = `
+_user => {
+  if (_user) {
+    const _a = _user.a;
+
+    if (_a) {
+      _a.b;
+    }
+  }
+}
+`;
+
+exports[`supports filtering 3`] = `
+_user => {
+  if (_user) {
+    const _a = _user.a;
+
+    if (_a) {
+      _a.b;
+      _a.c;
+    }
+  }
+}
+`;

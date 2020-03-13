@@ -1,3 +1,4 @@
+const glob = require('glob')
 const path = require('path')
 const fs = require('fs')
 const tsdx = require('tsdx/dist/createJestConfig')
@@ -22,7 +23,12 @@ module.exports = root => {
     },
     displayName: name,
     name: name,
-    snapshotSerializers: ['@internal/fixtures/snapshotSerializer.ts'],
+    snapshotSerializers: glob.sync(
+      path.join(
+        path.dirname(require.resolve('@internal/fixtures')),
+        'serializers/*.ts'
+      )
+    ),
     moduleNameMapper: {
       '@gqless/([^\\/]*)/(?:dist|src)(.*)$': path.resolve(
         __dirname,
@@ -32,6 +38,11 @@ module.exports = root => {
 
       'gqless/(?:dist|src)(.*)$': path.resolve(__dirname, './gqless/src$1'),
       gqless$: path.resolve(__dirname, './gqless/src'),
+
+      'babel-plugin-gqless$': path.resolve(
+        __dirname,
+        './packages/babel-plugin-gqless'
+      ),
     },
   }
 }

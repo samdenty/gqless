@@ -1,0 +1,18 @@
+{
+  "AppComponent": {
+    "variables": {
+      "limit": "10"
+    },
+    "data": [
+      {
+        "file": "UserComponent.json",
+        "export": "UserComponent",
+        "args": [
+          {
+            "user": "query.users({ limit: var.limit }).0"
+          }
+        ]
+      }
+    ]
+  }
+}

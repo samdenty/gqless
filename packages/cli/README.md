@@ -11,7 +11,9 @@ Create a typed gqless client from a graphql endpoint
 - [@gqless/cli](#gqlesscli)
 - [Usage](#usage)
 - [Commands](#commands)
-  <!-- tocstop -->
+  - [`gqless generate [OUTPUT_DIR]`](#gqless-generate-outputdir)
+  - [`gqless help [COMMAND]`](#gqless-help-command)
+    <!-- tocstop -->
 
 # Usage
 
@@ -35,8 +37,11 @@ USAGE
 
 <!-- commands -->
 
-- [`gqless generate [OUTPUT_DIR]`](#gqless-generate-output_dir)
-- [`gqless help [COMMAND]`](#gqless-help-command)
+- [@gqless/cli](#gqlesscli)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`gqless generate [OUTPUT_DIR]`](#gqless-generate-outputdir)
+  - [`gqless help [COMMAND]`](#gqless-help-command)
 
 ## `gqless generate [OUTPUT_DIR]`
 
