@@ -2,21 +2,12 @@
   "mode": "pre",
   "tag": "alpha",
   "initialVersions": {
-    "react-github": "0.0.1-alpha.23",
-    "react-hackernews": "0.0.1-alpha.23",
     "gqless": "0.0.1-alpha.23",
-    "gqless-example": "0.0.1-alpha.23",
-    "@internal/fixtures": "0.0.1-alpha.22",
-    "@internal/website": "0.0.1-alpha.22",
     "@gqless/cli": "0.0.1-alpha.23",
     "@gqless/logger": "0.0.1-alpha.23",
     "@gqless/react": "0.0.1-alpha.23",
-    "example": "0.0.1-alpha.22",
     "@gqless/schema": "0.0.1-alpha.23",
     "@gqless/utils": "0.0.1-alpha.23"
   },
-  "changesets": [
-    "itchy-trees-refuse",
-    "wild-cars-beam"
-  ]
+  "changesets": ["itchy-trees-refuse", "wild-cars-beam"]
 }
