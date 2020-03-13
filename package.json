@@ -11,9 +11,7 @@
   ],
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "version": "changeset version",
-    "publish": "changeset publish",
-    "release": "yarn build && yarn publish",
+    "release": "yarn build && changeset publish",
     "test": "jest",
     "build": "lerna run build --no-private",
     "build:changed": "yarn run build --since",
