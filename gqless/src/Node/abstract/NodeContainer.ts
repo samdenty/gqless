@@ -1,4 +1,4 @@
-import { computed } from '../../utils'
+import { computed } from '@gqless/utils'
 
 export class NodeContainer<TNode extends object> {
   constructor(public ofNode: TNode, public nullable = false) {}

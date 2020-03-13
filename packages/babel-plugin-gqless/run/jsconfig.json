@@ -1,0 +1,10 @@
+{
+  "extends": "../../../tsconfig.json",
+  "include": ["./demo/**/*"],
+  "compilerOptions": {
+    "paths": {
+      "asd/*": ["./demo/*"]
+    }
+  },
+  "references": [{ "path": "../../react" }, { "path": "../../../gqless" }]
+}

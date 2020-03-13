@@ -71,6 +71,9 @@
     "react-dom": "^0.0.0-experimental-f6b8d31a7",
     "tsconfig-paths": "^3.9.0",
     "tsdx": "0.11.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.8.2"
+  },
+  "resolutions": {
+    "@types/babel__traverse": "7.0.8"
   }
 }

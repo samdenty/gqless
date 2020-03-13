@@ -23,7 +23,7 @@
     "cosmiconfig": "^5.2.1",
     "got": "^9.6.0",
     "mkdirp": "^0.5.1",
-    "prettier": "^1.18.2",
+    "prettier": "^1.19.1",
     "tslib": "^1.10.0"
   },
   "peerDependencies": {
