@@ -12,34 +12,12 @@ import { INDEX, GET_KEY } from './Node'
 type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K
 }[keyof T]
-type UnionToIntersection<U> = (U extends any
-? (k: U) => void
-: never) extends (k: infer I) => void
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
   ? I
   : never
 type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N
-// TODO: array type-complexity broken in latest version
-// need to investigate ways to make this simpler
-// eg. If B is never/null, then short-circuit to A
-type Overwrite<
-  A,
-  B
-> = /*A extends (infer U)[]
-  ? U[] & // Special handling for arrays, to reduce type complexity
-      {
-        [K in Exclude<keyof A, keyof U[]> | keyof B]: K extends keyof B
-          ? B[K]
-          : K extends Exclude<keyof A, keyof U[]>
-          ? A[K]
-          : never
-      }
-  :*/ {
-  [K in keyof (A & B)]: K extends keyof B
-    ? B[K]
-    : K extends keyof A
-    ? A[K]
-    : never
-}
 
 enum Kind {
   scalar,
@@ -148,17 +126,16 @@ type FieldsData<
         : CustomExtensionData<TExtensions>[K]
     }
 
-type ArrayData<
-  TArray extends ValidType[],
-  TExtensions extends Tuple
-> = Overwrite<
-  {
-    [K in keyof TArray]: TArray[K] extends ValidType
-      ? TypeData<TArray[K], MapExtensionData<TExtensions, typeof INDEX>>
-      : TArray[K]
-  },
-  CustomExtensionData<TExtensions>
->
+type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> = {
+  [K in keyof TArray]: TArray[K] extends ValidType
+    ? TypeData<TArray[K], MapExtensionData<TExtensions, typeof INDEX>>
+    : TArray[K]
+} &
+  (CustomExtensionData<TExtensions> extends infer U
+    ? keyof U extends never
+      ? unknown
+      : { [K in keyof U]: U[K] }
+    : never)
 
 // Get the last extension from the extensions tuple
 type ScalarData<

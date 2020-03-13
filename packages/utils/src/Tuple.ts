@@ -6,7 +6,13 @@ type OmitNever<T> = Pick<
 type E<T, V, N> = V extends T ? V : N
 // prettier-ignore
 export type LastTupleIndex<T extends Tuple, K = keyof T> = E<K, 15,E<K, 13,E<K, 12,E<K, 11, E<K, 10, E<K, 9, E<K, 8, E<K, 7, E<K, 6, E<K, 5, E<K, 4, E<K, 3, E<K, 2, E<K, 1, E<K, 0, never>>>>>>>>>>>>>>>
-export type LastTupleValue<T extends Tuple> = T[LastTupleIndex<T>]
+export type LastTupleValue<T extends Tuple> = T[LastTupleIndex<
+  T
+>] extends infer U
+  ? U extends undefined
+    ? never
+    : U
+  : never
 
 export type LastTupleValueForKey<
   TExtensions extends Tuple,
