@@ -1,6 +1,6 @@
 {
   "license": "MIT",
-  "private": false,
+  "private": true,
   "name": "@gqless/devtools",
   "version": "0.0.1-alpha.27",
   "main": "dist/index.js",
