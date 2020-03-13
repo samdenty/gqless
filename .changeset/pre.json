@@ -7,7 +7,15 @@
     "@gqless/logger": "0.0.1-alpha.23",
     "@gqless/react": "0.0.1-alpha.23",
     "@gqless/schema": "0.0.1-alpha.23",
-    "@gqless/utils": "0.0.1-alpha.23"
+    "@gqless/utils": "0.0.1-alpha.23",
+    "react-github": "0.0.1-alpha.26",
+    "react-hackernews": "0.0.1-alpha.26",
+    "gqless-example": "0.0.1-alpha.26",
+    "@internal/fixtures": "0.0.1-alpha.22",
+    "@internal/website": "0.0.1-alpha.22",
+    "babel-plugin-gqless": "0.0.1-alpha.27",
+    "@gqless/devtools": "0.0.1-alpha.27",
+    "example": "0.0.1-alpha.22"
   },
-  "changesets": ["itchy-trees-refuse", "wild-cars-beam"]
+  "changesets": ["itchy-trees-refuse", "tame-cooks-film", "wild-cars-beam"]
 }

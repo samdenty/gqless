@@ -30,7 +30,7 @@
     "tslib": "^1.10.0"
   },
   "peerDependencies": {
-    "gqless": "*"
+    "gqless": "^0.0.1-alpha.26"
   },
   "devDependencies": {
     "@types/babel__core": "^7.1.3",

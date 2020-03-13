@@ -2,7 +2,7 @@
   "license": "MIT",
   "private": false,
   "name": "@gqless/schema",
-  "version": "0.0.1-alpha.27",
+  "version": "0.0.1-alpha.28",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/schema.esm.js",
@@ -26,10 +26,10 @@
     "tslib": "^1.11.1"
   },
   "peerDependencies": {
-    "gqless": "*"
+    "gqless": "^0.0.1-alpha.27"
   },
   "devDependencies": {
-    "gqless": "^0.0.1-alpha.26"
+    "gqless": "^0.0.1-alpha.27"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }

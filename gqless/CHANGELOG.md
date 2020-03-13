@@ -1,5 +1,11 @@
 # gqless
 
+## 0.0.1-alpha.27
+
+### Patch Changes
+
+- Release packages
+
 ## 0.0.1-alpha.26
 
 ### Patch Changes

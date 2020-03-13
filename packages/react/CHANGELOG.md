@@ -1,5 +1,13 @@
 # @gqless/react
 
+## 0.0.1-alpha.27
+
+### Patch Changes
+
+- Release packages
+- Updated dependencies [undefined]
+  - gqless@0.0.1-alpha.27
+
 ## 0.0.1-alpha.26
 
 ### Patch Changes
