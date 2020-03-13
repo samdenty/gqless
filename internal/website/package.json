@@ -8,11 +8,11 @@
     "build": "docusaurus build"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.32",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.32",
-    "@emotion/core": "^10.0.22",
-    "@emotion/styled": "^10.0.23",
-    "framer-motion": "^1.6.15",
-    "regenerator-runtime": "^0.13.3"
+    "@docusaurus/core": "^2.0.0-alpha.40",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.40",
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "framer-motion": "^1.9.1",
+    "regenerator-runtime": "^0.13.5"
   }
 }

@@ -1,5 +1,5 @@
 import { Command, flags } from '@oclif/command'
-import { get, post } from 'got'
+import got from 'got'
 import { QueryFetcher } from 'gqless'
 import * as path from 'path'
 import { generateSchema } from '../utils/generateSchema'
@@ -70,7 +70,7 @@ export default class Generate extends Command {
     const config = await this.createConfig()
 
     const fetchQuery: QueryFetcher = async (query, variables) => {
-      const response = await (config.usePost ? post : get)(
+      const response = await (config.usePost ? got.post : got.get)(
         config.url as string,
         {
           headers: {

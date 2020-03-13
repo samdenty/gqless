@@ -18,13 +18,13 @@
     "@endemolshinegroup/cosmiconfig-typescript-loader": "^1.0.1",
     "@gqless/schema": "^0.0.1-alpha.27",
     "@oclif/command": "^1.5.19",
-    "@oclif/config": "^1.13.3",
-    "@oclif/plugin-help": "^2.2.1",
-    "cosmiconfig": "^5.2.1",
-    "got": "^9.6.0",
-    "mkdirp": "^0.5.1",
-    "prettier": "^1.18.2",
-    "tslib": "^1.10.0"
+    "@oclif/config": "^1.14.0",
+    "@oclif/plugin-help": "^2.2.3",
+    "cosmiconfig": "^6.0.0",
+    "got": "^10.6.0",
+    "mkdirp": "^1.0.3",
+    "prettier": "^1.19.1",
+    "tslib": "^1.11.1"
   },
   "peerDependencies": {
     "gqless": "*"
@@ -32,11 +32,11 @@
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
     "@types/got": "^9.6.9",
-    "@types/mkdirp": "^0.5.2",
-    "@types/node": "^12.12.5",
-    "@types/prettier": "^1.18.3",
+    "@types/mkdirp": "^1.0.0",
+    "@types/node": "^13.9.1",
+    "@types/prettier": "^1.19.0",
     "gqless": "^0.0.1-alpha.26",
-    "ts-node": "^8.4.1"
+    "ts-node": "^8.6.2"
   },
   "engines": {
     "node": ">=8.0.0"
