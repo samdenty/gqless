@@ -1,14 +1,14 @@
-const cosmiconfig = require('cosmiconfig')
+import { cosmiconfig, defaultLoaders } from 'cosmiconfig'
 import TypeScriptLoader from '@endemolshinegroup/cosmiconfig-typescript-loader'
 import { resolve, parse } from 'path'
 import { invariant } from '@gqless/utils'
+import { Loaders } from 'cosmiconfig/dist/types'
 
 export interface Config {
   config?: string
   headers?: Record<string, string>
   url?: string
   outputDir?: string
-  usePost?: boolean
   comments?: boolean
   typescript?: boolean
 }
@@ -16,23 +16,20 @@ export interface Config {
 const MODULE_NAME = 'gqless'
 const defaultFileNames = [
   'package.json',
-  `.${MODULE_NAME}rc`,
+  `${MODULE_NAME}.config.json`,
+  `${MODULE_NAME}.config.yaml`,
+  `${MODULE_NAME}.config.yml`,
+  `${MODULE_NAME}.config.js`,
+  `${MODULE_NAME}.config.ts`,
+  // TODO deprecate
   `.${MODULE_NAME}rc.json`,
   `.${MODULE_NAME}rc.yaml`,
   `.${MODULE_NAME}rc.yml`,
-  `${MODULE_NAME}.config.js`,
-  `${MODULE_NAME}.config.ts`,
 ]
 
-const loaders = {
-  '.json': cosmiconfig.loadJson,
-  '.yaml': cosmiconfig.loadYaml,
-  '.yml': cosmiconfig.loadYaml,
-  '.js': cosmiconfig.loadJs,
-  '.ts': {
-    async: TypeScriptLoader,
-  },
-  noExt: cosmiconfig.loadYaml
+const loaders: Loaders = {
+  ...defaultLoaders,
+  '.ts': TypeScriptLoader,
 }
 
 export const getConfig = async (path?: string) => {

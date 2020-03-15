@@ -1,5 +1,17 @@
 # @gqless/cli
 
+## 0.0.1-alpha.30
+
+### Patch Changes
+
+- fix got
+
+## 0.0.1-alpha.29
+
+### Patch Changes
+
+- Fix cosmiconfig
+
 ## 0.0.1-alpha.28
 
 ### Patch Changes

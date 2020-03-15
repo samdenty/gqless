@@ -22,7 +22,7 @@ $ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@gqless/cli/0.0.1-alpha.27 linux-x64 node-v12.13.0
+@gqless/cli/0.0.1-alpha.29 linux-x64 node-v12.13.0
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND
@@ -56,14 +56,12 @@ OPTIONS
   --header=header      Additional header to send to server for introspectionQuery. May be used multiple times to add
                        multiple headers.
 
-  --usePost            use a POST request to retrieve the schema
-
 EXAMPLES
   $ gqless generate ./src/gqless -u https://example.com/graphql
   $ gqless generate -c gqless.config.ts
 ```
 
-_See code: [dist/commands/generate.js](https://github.com/samdenty/gqless/blob/v0.0.1-alpha.27/dist/commands/generate.js)_
+_See code: [dist/commands/generate.js](https://github.com/samdenty/gqless/blob/v0.0.1-alpha.29/dist/commands/generate.js)_
 
 ## `gqless help [COMMAND]`
 

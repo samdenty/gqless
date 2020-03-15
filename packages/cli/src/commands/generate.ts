@@ -58,10 +58,6 @@ export default class Generate extends Command {
       description: 'output typescript (instead of javascript)',
       default: true,
     }),
-
-    usePost: flags.boolean({
-      description: 'use a POST request to retrieve the schema',
-    }),
   }
 
   static args = [{ name: 'output_dir' }]
@@ -70,19 +66,14 @@ export default class Generate extends Command {
     const config = await this.createConfig()
 
     const fetchQuery: QueryFetcher = async (query, variables) => {
-      const response = await (config.usePost ? got.post : got.get)(
-        config.url as string,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            ...config.headers,
-          },
-          body: JSON.stringify({
-            query,
-            variables,
-          }),
-        }
-      )
+      const response = await got.post(config.url!, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...config.headers,
+        },
+        body: JSON.stringify({ query, variables }),
+      })
+
       return JSON.parse(response.body)
     }
 

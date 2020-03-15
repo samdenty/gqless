@@ -17,5 +17,12 @@
     "@gqless/devtools": "0.0.1-alpha.27",
     "example": "0.0.1-alpha.22"
   },
-  "changesets": ["itchy-trees-refuse", "tame-cooks-film", "wild-cars-beam"]
+  "changesets": [
+    "gold-baboons-kneel",
+    "grumpy-kiwis-lick",
+    "itchy-trees-refuse",
+    "many-boxes-fail",
+    "tame-cooks-film",
+    "wild-cars-beam"
+  ]
 }

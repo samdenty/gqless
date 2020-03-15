@@ -34,3 +34,5 @@ export const client = new Client<GraphQLHubAPI>(
 new Logger(client)
 
 export const query = client.query
+
+Object.assign(window, { client, query })

@@ -1,4 +1,12 @@
-export const Query = {}
+import { REDIRECT } from 'gqless'
+
+export const Query = {
+  item: {
+    [REDIRECT](args: any) {
+      console.log(args)
+    },
+  },
+}
 
 /**
  * Add a key to a type

@@ -1,0 +1,5 @@
+---
+'@gqless/utils': patch
+---
+
+publish

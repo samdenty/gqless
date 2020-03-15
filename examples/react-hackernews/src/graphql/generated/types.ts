@@ -266,29 +266,12 @@ type t_HackerNewsAPIV2 = FieldsType<
     /**
      * Fetches an object given its ID
      */
-    node: FieldsTypeArg<
-      { id: string },
-      | t_HackerNewsV2Story
-      | t_HackerNewsV2Job
-      | t_HackerNewsV2Poll
-      | t_HackerNewsV2Comment
-      | t_HackerNewsV2PollPart
-      | t_HackerNewsV2User
-      | null
-    >
+    node: FieldsTypeArg<{ id: string }, t_Node | null>
 
     /**
      * To ensure Node IDs are globally unique, GraphQLHub coerces IDs returned by the HN API. Use this field to get nodes via normal HN IDs
      */
-    nodeFromHnId: FieldsTypeArg<
-      { id: string; isUserId: boolean },
-      | t_HackerNewsV2Story
-      | t_HackerNewsV2Job
-      | t_HackerNewsV2Poll
-      | t_HackerNewsV2Comment
-      | t_HackerNewsV2PollPart
-      | t_HackerNewsV2User
-    >
+    nodeFromHnId: FieldsTypeArg<{ id: string; isUserId: boolean }, t_Node>
   },
   Extension<'HackerNewsAPIV2'>
 >
@@ -514,14 +497,7 @@ type t_NodeEdge = FieldsType<
     /**
      * The item at the end of the edge
      */
-    node:
-      | t_HackerNewsV2Story
-      | t_HackerNewsV2Job
-      | t_HackerNewsV2Poll
-      | t_HackerNewsV2Comment
-      | t_HackerNewsV2PollPart
-      | t_HackerNewsV2User
-      | null
+    node: t_Node | null
 
     /**
      * A cursor for use in pagination
@@ -600,14 +576,7 @@ type t_HackerNewsV2Comment = FieldsType<
     /**
      * The item's parent. For comments, either another comment or the relevant story. For pollopts, the relevant poll.
      */
-    parent:
-      | t_HackerNewsV2Story
-      | t_HackerNewsV2Job
-      | t_HackerNewsV2Poll
-      | t_HackerNewsV2Comment
-      | t_HackerNewsV2PollPart
-      | t_HackerNewsV2User
-      | null
+    parent: t_Node | null
 
     /**
      * The comment, story or poll text. HTML.
@@ -849,14 +818,7 @@ type t_HackerNewsV2PollPart = FieldsType<
     /**
      * The item's parent. For comments, either another comment or the relevant story. For pollopts, the relevant poll.
      */
-    parent:
-      | t_HackerNewsV2Story
-      | t_HackerNewsV2Job
-      | t_HackerNewsV2Poll
-      | t_HackerNewsV2Comment
-      | t_HackerNewsV2PollPart
-      | t_HackerNewsV2User
-      | null
+    parent: t_Node | null
 
     /**
      * if the item is deleted
@@ -1849,7 +1811,7 @@ type t___Schema = FieldsType<
     /**
      * A list of all types supported by this server.
      */
-    types: (t___Type)[]
+    types: t___Type[]
 
     /**
      * The type that query operations will be rooted at.
@@ -1869,7 +1831,7 @@ type t___Schema = FieldsType<
     /**
      * A list of all directives supported by this server.
      */
-    directives: (t___Directive)[]
+    directives: t___Directive[]
   },
   Extension<'__Schema'>
 >
@@ -1886,15 +1848,15 @@ type t___Type = FieldsType<
     description: t_String | null
     fields: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
-      (t___Field)[] | null
+      t___Field[] | null
     >
-    interfaces: (t___Type)[] | null
-    possibleTypes: (t___Type)[] | null
+    interfaces: t___Type[] | null
+    possibleTypes: t___Type[] | null
     enumValues: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
-      (t___EnumValue)[] | null
+      t___EnumValue[] | null
     >
-    inputFields: (t___InputValue)[] | null
+    inputFields: t___InputValue[] | null
     ofType: t___Type | null
   },
   Extension<'__Type'>
@@ -1924,7 +1886,7 @@ type t___Field = FieldsType<
     __typename: t_String<'__Field'>
     name: t_String
     description: t_String | null
-    args: (t___InputValue)[]
+    args: t___InputValue[]
     type: t___Type
     isDeprecated: t_Boolean
     deprecationReason: t_String | null
@@ -1975,7 +1937,7 @@ type t___Directive = FieldsType<
     __typename: t_String<'__Directive'>
     name: t_String
     description: t_String | null
-    args: (t___InputValue)[]
+    args: t___InputValue[]
     onOperation: t_Boolean
     onFragment: t_Boolean
     onField: t_Boolean
