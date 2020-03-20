@@ -20,6 +20,38 @@ Auto-generates GraphQL queries based on the data your application consumes.
 - [**Extensions**](#Extensions) - add custom properties and functions to types (similiar to [apollo-link-state](https://www.apollographql.com/docs/link/links/state/))
 - [**React integration**](#React) - uses suspense out the box, selectively updating components when data changes
 
+## How it works
+
+
+### React - JIT using proxies (STABLE)
+
+By wrapping a component in `graphql()`, gqless will perform an additional render of your entire application. All the GraphQL objects will be available, but the data on them won't.
+
+- Arrays will have a length of `1`
+- Scalars will return `null`
+
+Once this phase has completed, a GraphQL query will be generated. The component will suspend using React Suspense.
+
+After the query has been fetched, your application will re-render with the newly available data.
+
+### GQLess compiler (WIP)
+
+[packages/babel-plugin-gqless](https://github.com/samdenty/gqless/tree/master/packages/babel-plugin-gqless)
+
+This is a long-term project. It's job is to analyze your application's code, and extract the GraphQL data that you're using.
+
+It can currently analyze imports, function calls, array iteration etc.
+
+**Eventually this will replace the JIT, but there's still more work to do.**
+
+Static analysis of dynamic JS is a tough challenge. Relay solves this by introducing custom syntax - which makes it harder to use.
+
+gqless's compiler is going to use a combination of different methods to make your app statically analyzable (without new syntax):
+
+- Utilize the Typescript Compiler API - track Generics, auto-infer dynamic usage
+- `@types`/`.d.ts` alternative - allows people to define how to statically analzye a third-party library
+- Manual tagging - allows end-developers to manually define in-code how the static analysis works, using simple declaratives
+
 ## Example
 
 <!-- prettier-ignore -->
@@ -150,18 +182,6 @@ export const User = user => ({
 ```
 
 ---
-
-## How does it work?
-
-It works by creating an [ES6 Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) that follows the shape of your schema.
-
-When properties are accessed, it creates a [`Selection`](https://github.com/samdenty/gqless/tree/master/gqless/src/Selection) representing the path accessed, arguments and more.
-
-If the React component being rendered contains unfetched data, it'll be suspended (using React suspense).
-
-Every 50ms the [`Scheduler`](https://github.com/samdenty/gqless/tree/master/gqless/src/Scheduler) takes in all the selections, and converts them into GraphQL queries. Once fetched, the result is written into the cache.
-
-Finally the React components unsuspend, with the newly populated data available.
 
 ## Credits
 
