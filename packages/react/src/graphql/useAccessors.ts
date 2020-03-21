@@ -54,7 +54,7 @@ export const useAccessors = (stack: StackContext) => {
         // Locate accessors currently being fetched,
         // and add to Set
         if (interceptor.interceptedAccessors.has(accessor)) {
-          if (accessor.status !== NetworkStatus.idle) {
+          if (accessor.status === NetworkStatus.loading) {
             nonIdleAccessors.add(accessor)
           }
 
