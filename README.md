@@ -1,6 +1,5 @@
 # gqless [![Financial Contributors on Open Collective](https://opencollective.com/gqless/all/badge.svg?label=financial+contributors)](https://opencollective.com/gqless) [![](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
 
-
 ## in-beta, [click here to see progress](https://github.com/samdenty/gqless/projects/1)
 
 **NOTE: Mutations, Subscriptions are next to be added**
@@ -21,7 +20,6 @@ Auto-generates GraphQL queries based on the data your application consumes.
 - [**React integration**](#React) - uses suspense out the box, selectively updating components when data changes
 
 ## How it works
-
 
 ### React - JIT using proxies (STABLE)
 

@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "watch": "tsdx watch",
-    "build": "cp ../README.md .; tsdx build",
+    "build": "tsdx build",
     "test": "jest"
   },
   "dependencies": {
