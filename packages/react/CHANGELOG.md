@@ -1,5 +1,11 @@
 # @gqless/react
 
+## 0.0.1-alpha.28
+
+### Patch Changes
+
+- 6d08437: Fixed https://github.com/samdenty/gqless/issues/54
+
 ## 0.0.1-alpha.27
 
 ### Patch Changes
