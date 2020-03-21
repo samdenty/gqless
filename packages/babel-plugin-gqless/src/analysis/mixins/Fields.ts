@@ -146,7 +146,7 @@ export class Fields {
       invariant(namePath.isJSXIdentifier(), 'namespace not supported')
       const propName = namePath.node.name
 
-      this.file.get()
+      // this.file.get()
       console.log(componentName, propName)
     }
 

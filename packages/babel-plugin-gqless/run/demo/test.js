@@ -14,7 +14,8 @@ export const App = ({ user }) => {
   // }).edges
   // const { repos } = user
 
-  return <Repo propName={user.name} />
+  user.asd
+  // return <Repo propName={user.name} />
   // return (
   //   <StyledUser>
   //     <h2>{user.name}</h2>
