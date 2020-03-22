@@ -8,8 +8,8 @@
     "build": "docusaurus build"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.40",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.40",
+    "@docusaurus/core": "^2.0.0-alpha.48",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.48",
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
     "framer-motion": "^1.9.1",
