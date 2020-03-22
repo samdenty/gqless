@@ -32,5 +32,6 @@ module.exports = {
         items: [],
       },
     ],
+    CLI: ['cli/installation', 'cli/codegen'],
   },
 }
