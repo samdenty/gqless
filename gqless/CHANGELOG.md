@@ -1,5 +1,11 @@
 # gqless
 
+## 0.0.1-alpha.28
+
+### Patch Changes
+
+- 99750e2: New "resolved()" helper
+
 ## 0.0.1-alpha.27
 
 ### Patch Changes
