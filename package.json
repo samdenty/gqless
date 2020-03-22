@@ -18,7 +18,7 @@
     "docs": "yarn workspace @internal/website start",
     "docs:build": "yarn workspace @internal/website build"
   },
-  "homepage": "https://gqless.netlify.com",
+  "homepage": "https://gqless.dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/samdenty/gqless.git"

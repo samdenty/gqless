@@ -1,7 +1,7 @@
 module.exports = {
   title: 'gqless',
   tagline: `A GraphQL client without queries ✨`,
-  url: 'https://gqless.netlify.com',
+  url: 'https://gqless.dev',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
   organizationName: 'samdenty',

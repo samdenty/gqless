@@ -6,7 +6,7 @@
 
 Auto-generates GraphQL queries based on the data your application consumes.
 
-## [Documentation](https://gqless.netlify.com)
+## [Documentation](https://gqless.dev)
 
 [![Edit react-hackernews](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/samdenty/gqless/tree/master/examples/react-hackernews?fontsize=14&module=%2Fsrc%2Fcomponents%2FStory.tsx)
 
