@@ -18,6 +18,7 @@
     "example": "0.0.1-alpha.22"
   },
   "changesets": [
+    "giant-horses-complain",
     "gold-baboons-kneel",
     "grumpy-kiwis-lick",
     "itchy-trees-refuse",
