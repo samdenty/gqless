@@ -2,10 +2,14 @@ import { getAccessor, Poller } from 'gqless'
 import { useEffect, useMemo, useState } from 'react'
 import { useComponentContext } from './useComponentContext'
 
-export const usePoll = (data: any, interval: number, initialPoll = true) => {
+export const usePoll = (
+  data: any,
+  interval: number,
+  initiallyPolling = true
+) => {
   const accessor = getAccessor(data)
   const { stack } = useComponentContext()
-  const [isPolling, setIsPolling] = useState(initialPoll)
+  const [isPolling, setIsPolling] = useState(initiallyPolling)
 
   const poller = useMemo(() => new Poller(accessor, interval, stack.frames), [
     accessor,

@@ -40,9 +40,9 @@ export class Poller {
 
     // If we're still polling after we've fetched
     // the selection, then poll again
-    if (!this.polling) return
-
-    this.pollAfterInterval()
+    if (this.polling) {
+      this.pollAfterInterval()
+    }
   }
 
   private pollAfterInterval() {
@@ -56,7 +56,7 @@ export class Poller {
   public toggle(poll = !this.polling) {
     this.polling = poll
 
-    this.unstage && this.unstage()
+    this.unstage?.()
     clearTimeout(this.timer)
 
     if (!poll) return
