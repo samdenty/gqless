@@ -1,4 +1,4 @@
-# gqless [![Financial Contributors on Open Collective](https://opencollective.com/gqless/all/badge.svg?label=financial+contributors)](https://opencollective.com/gqless) [![](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
+# gqless [![Financial Contributors on Open Collective](https://opencollective.com/gqless/all/badge.svg?label=financial+contributors)](https://opencollective.com/gqless) [![Join the community on Spectrum](https://withspectrum.github.io/badge/badge.svg)](https://spectrum.chat/gqless) [![](https://img.shields.io/codecov/c/github/samdenty/gqless?token=268b25147b734032ae1a9ef9786844d5)](https://codecov.io/gh/samdenty/gqless)
 
 ## in-beta, [click here to see progress](https://github.com/samdenty/gqless/projects/1)
 
