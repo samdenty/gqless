@@ -74,7 +74,7 @@ export class ArrayNode<TNode> extends Mix(
         const arr = getValue(ctx)?.data as any[] | undefined
 
         if (prop === 'length') {
-          return arr?.length ?? 1
+          return arr?.length ?? 0
         }
 
         if (prop === 'toString') {
