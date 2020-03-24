@@ -8,8 +8,8 @@ module.exports = {
   projectName: 'gqless',
   themeConfig: {
     algolia: {
-      apiKey: '', //TODO
-      indexName: 'docs',
+      apiKey: 'c00e78ccfa93ead531ad80e4dd94b48b',
+      indexName: 'gqless',
       algoliaOptions: {},
     },
     navbar: {
