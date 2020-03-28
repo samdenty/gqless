@@ -15,7 +15,8 @@
     "@internal/website": "0.0.1-alpha.22",
     "babel-plugin-gqless": "0.0.1-alpha.27",
     "@gqless/devtools": "0.0.1-alpha.27",
-    "example": "0.0.1-alpha.22"
+    "example": "0.0.1-alpha.22",
+    "gqlhub": "1.0.0"
   },
   "changesets": [
     "giant-horses-complain",
@@ -23,6 +24,7 @@
     "grumpy-kiwis-lick",
     "itchy-trees-refuse",
     "many-boxes-fail",
+    "nasty-zebras-count",
     "smart-taxis-tan",
     "tame-cooks-film",
     "wild-cars-beam"

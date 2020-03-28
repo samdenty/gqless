@@ -1,5 +1,11 @@
 # @gqless/schema
 
+## 0.0.1-alpha.29
+
+### Patch Changes
+
+- ca62f66: Fix input object nullability
+
 ## 0.0.1-alpha.28
 
 ### Patch Changes
