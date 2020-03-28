@@ -1,9 +1,8 @@
-name: Validate
-
 on: [push, pull_request]
 
 jobs:
   build:
+    name: Build all packages
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,7 +19,7 @@ jobs:
           yarn
           yarn bootstrap
 
-      - name: Build all packages
+      - name: Build
         run: yarn build
 
       - name: Check bundlesize
@@ -29,6 +28,7 @@ jobs:
         run: yarn bundlesize
 
   test:
+    name: Test all packages
     runs-on: ubuntu-latest
 
     strategy:
@@ -47,7 +47,7 @@ jobs:
           yarn
           yarn bootstrap
 
-      - name: Test all packages
+      - name: Jest
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         run: |
