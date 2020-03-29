@@ -47,7 +47,7 @@ const Header = styled(motion.div)`
     text-transform: uppercase;
     background-clip: text;
     -webkit-background-clip: text;
-    letter-spacing: -0.05em;
+    -webkit-text-fill-color: rgba(0, 0, 0, 0);
     font-weight: 600;
     font-size: 64px;
   }
