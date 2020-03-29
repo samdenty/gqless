@@ -1,7 +1,44 @@
 :root {
   --ifm-font-family-base: Colfax;
-  --ifm-color-primary: #e00097;
+  --ifm-color-primary: rgb(211, 130, 245);
   --ifm-font-family-monospace: 'Operator Mono';
+  /* --ifm-code-background: ; */
+
+  --ifm-pre-background: rgb(237, 240, 255);
+}
+
+html[data-theme='dark'] {
+  --ifm-pre-background: rgb(25, 31, 73);
+  --ifm-background-color: #0a0f2e;
+  --ifm-background-surface-color: rgb(0, 5, 40);
+
+  --ifm-contents-border-color: rgb(24, 31, 79);
+  --ifm-navbar-search-input-background-color: rgb(109, 117, 178);
+  --ifm-menu-color-background-active: rgba(211, 130, 245, 0.12);
+
+  /* --ifm-color-emphasis-100: var(--ifm-color-gray-900);
+  --ifm-color-emphasis-200: var(--ifm-color-gray-800);
+  --ifm-color-emphasis-300: var(--ifm-color-gray-700);
+  --ifm-color-emphasis-400: var(--ifm-color-gray-600);
+  --ifm-color-emphasis-500: var(--ifm-color-gray-500);
+  --ifm-color-emphasis-600: var(--ifm-color-gray-400);
+  --ifm-color-emphasis-700: var(--ifm-color-gray-300);
+  --ifm-color-emphasis-800: var(--ifm-color-gray-200);
+  --ifm-color-emphasis-900: var(--ifm-color-gray-100); */
+  --ifm-hover-overlay: rgba(255, 255, 255, 0.05);
+  --ifm-menu-link-sublist-icon: url('data:image/svg+xml;utf8,<svg alt="Arrow" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.6)" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>');
+  --ifm-color-content-secondary: rgba(255, 255, 255, 1);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  background: linear-gradient(rgb(140, 152, 243), rgb(58, 80, 229));
+  background-clip: text;
+  -webkit-text-fill-color: rgba(0, 0, 0, 0);
 }
 
 button {
@@ -37,4 +74,12 @@ video {
   font-family: Colfax;
   font-weight: 600;
   src: url('/fonts/ColfaxWebBold.woff2') format('woff2');
+}
+
+.navbar .navbar__link {
+  white-space: nowrap;
+}
+
+.codeBlockLines__-_-node_modules-\@docusaurus-theme-classic-src-theme-CodeBlock- {
+  background-color: transparent !important;
 }

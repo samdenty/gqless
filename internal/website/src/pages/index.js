@@ -2,11 +2,11 @@ import 'regenerator-runtime/runtime'
 import Layout from '@theme/Layout'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import Link from '@docusaurus/Link'
-import useBaseUrl from '@docusaurus/useBaseUrl'
 import * as React from 'react'
 import { Feature, Arrow, Example, Overflow } from '../components'
 import styled from '@emotion/styled'
 import { motion, useAnimation } from 'framer-motion'
+import isInternalUrl from '@docusaurus/isInternalUrl'
 import CodeBlock from '@theme/CodeBlock'
 
 const Glare = styled.div`
@@ -40,10 +40,16 @@ const FeatureLink = styled(Link)`
 const Header = styled(motion.div)`
   color: #fff;
   flex-direction: column;
-  background: radial-gradient(#011627, #011220);
+  background: linear-gradient(rgb(0, 5, 40), rgb(28, 42, 139));
 
   .hero__title {
-    color: #e535ab;
+    background: linear-gradient(rgb(255, 87, 241), rgb(75, 0, 255));
+    text-transform: uppercase;
+    background-clip: text;
+    -webkit-background-clip: text;
+    letter-spacing: -0.05em;
+    font-weight: 600;
+    font-size: 64px;
   }
 `
 
@@ -72,15 +78,22 @@ const generatedQuery = `query App {
   }
 }`
 
-const GetStarted = styled(motion.span)`
-  display: inline-block;
+const Actions = styled(motion.div)`
+  display: flex;
+  justify-content: center;
+`
+
+const Action = styled(Link)`
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0.7rem;
 `
 
 const delay = t => new Promise(resolve => setTimeout(resolve, t))
 
 export default () => {
   const context = useDocusaurusContext()
-  const baseUrl = useBaseUrl() || ''
   const { siteConfig = {} } = context
 
   const info = useAnimation()
@@ -138,22 +151,23 @@ export default () => {
                 visible: { opacity: 1 },
               }}
             >
-              {siteConfig.tagline}
+              A GraphQL client, for rapid iteration.
             </motion.p>
           </Overflow>
-          <GetStarted
+          <Actions
             variants={{
               hidden: { opacity: 0, scale: 1.3 },
               visible: { opacity: 1, scale: 1 },
             }}
           >
-            <Link
-              className={'button button--secondary button--lg'}
-              to={baseUrl + 'docs/getting-started'}
+            <Action to="/introduction/getting-started">Get Started ›</Action>
+            <Action
+              to="/introduction/getting-started"
+              style={{ color: 'rgb(170, 170, 255)' }}
             >
-              Get Started
-            </Link>
-          </GetStarted>
+              Explore features ›
+            </Action>
+          </Actions>
         </Hero>
         <Examples>
           <Example title="Access GraphQL data" animate={app}>
@@ -178,9 +192,7 @@ export default () => {
               },
             }}
           >
-            <FeatureLink
-              to={baseUrl + 'docs/intro/features#invisible-data-fetching'}
-            >
+            <FeatureLink to="/intro/features#invisible-data-fetching">
               <Feature
                 title="Invisible data fetching"
                 imageUrl="img/graphql.svg"
@@ -188,18 +200,18 @@ export default () => {
                 Queries are generated at runtime, by using JS getters.
               </Feature>
             </FeatureLink>
-            <FeatureLink to={baseUrl + 'docs/intro/features#typescript'}>
+            <FeatureLink to="/intro/features#typescript">
               <Feature title="Strongly typed" imageUrl="img/typescript.png">
-                Built from the ground up to work with Typescript — no more
-                code generation
+                Built from the ground up to work with Typescript — no more code
+                generation
               </Feature>
             </FeatureLink>
-            <FeatureLink to={baseUrl + 'docs/react/basic-usage'}>
+            <FeatureLink to="react/basic-usage">
               <Feature title="React.js" imageUrl="img/react.svg">
                 React Suspense, hooks, automatic component updates and more.
               </Feature>
             </FeatureLink>
-            <FeatureLink to={baseUrl + 'docs/intro/features'}>
+            <FeatureLink to="intro/features">
               <Feature
                 title="Production ready"
                 imageUrl="img/production_ready.png"

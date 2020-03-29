@@ -1,16 +1,23 @@
 module.exports = {
   title: 'gqless',
-  tagline: `A GraphQL client without queries ✨`,
+  tagline: `A GraphQL client without queries`,
   url: 'https://gqless.dev',
   baseUrl: '/',
   favicon: 'img/favicon.ico',
   organizationName: 'samdenty',
   projectName: 'gqless',
   themeConfig: {
+    prism: {
+      theme: require('prism-react-renderer/themes/nightOwlLight'),
+      darkTheme: require('prism-react-renderer/themes/shadesOfPurple'),
+    },
     algolia: {
       apiKey: 'c00e78ccfa93ead531ad80e4dd94b48b',
       indexName: 'gqless',
       algoliaOptions: {},
+    },
+    googleAnalytics: {
+      trackingID: 'UA-85426772-7',
     },
     navbar: {
       title: 'gqless',
@@ -19,8 +26,23 @@ module.exports = {
       //   src: 'img/logo.svg',
       // },
       links: [
-        { to: 'docs/intro/what-and-why', label: 'Docs', position: 'left' },
-        { to: 'blog', label: 'Blog', position: 'left' },
+        {
+          label: 'Getting Started',
+          to: 'introduction/getting-started',
+          position: 'right',
+        },
+        {
+          label: 'API',
+          to: 'api/api-reference',
+          position: 'right',
+        },
+        {
+          label: 'FAQ',
+          to: 'faq',
+          position: 'right',
+        },
+
+        // { to: 'blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/samdenty/gqless',
           label: 'GitHub',
@@ -35,17 +57,42 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Getting started',
-              to: 'docs/intro/what-and-why',
+              label: 'Getting Started',
+              to: 'introduction/getting-started',
+            },
+            {
+              label: 'FAQ',
+              to: 'faq',
+            },
+            {
+              label: 'API Reference',
+              to: 'api/api-reference',
             },
           ],
         },
         {
-          title: 'Social',
+          title: 'Community',
           items: [
             {
-              label: 'Blog',
-              to: 'blog',
+              label: 'Twitter',
+              href: 'http://twitter.com/gqlessdev',
+            },
+            {
+              label: 'Spectrum',
+              href: 'https://spectrum.chat/gqless',
+            },
+          ],
+        },
+        {
+          title: 'More',
+          items: [
+            {
+              label: 'GitHub',
+              href: 'https://github.com/samdenty/gqless',
+            },
+            {
+              label: 'Open Collective',
+              href: 'https://opencollective.com/gqless',
             },
           ],
         },
@@ -54,7 +101,7 @@ module.exports = {
       //   alt: 'Facebook Open Source Logo',
       //   src: 'https://docusaurus.io/img/oss_logo.png',
       // },
-      copyright: `Copyright © ${new Date().getFullYear()} Sam Denty`,
+      copyright: `Copyright © ${new Date().getFullYear()} <a href="https://twitter.com/thesamdd" target="_blank">Sam Denty</a>`,
     },
   },
   presets: [
@@ -63,6 +110,7 @@ module.exports = {
       {
         docs: {
           path: '../../docs',
+          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
         },
         theme: {

@@ -1,7 +1,13 @@
 module.exports = {
   docs: {
-    Introduction: ['intro/what-and-why', 'intro/features', 'intro/faq'],
-    gqless: ['getting-started', 'extensions', 'matchers'],
+    Introduction: [
+      'introduction/getting-started',
+      'introduction/installation',
+      'introduction/what-and-why',
+      'introduction/features',
+    ],
+    FAQ: ['faq'],
+    gqless: ['extensions', 'matchers'],
     React: [
       'react/basic-usage',
       'react/polling',
@@ -9,7 +15,8 @@ module.exports = {
       'react/custom-queries',
       'react/interfaces-unions',
     ],
-    API: [
+    'API Reference': [
+      'api/api-reference',
       {
         type: 'category',
         label: 'gqless',
