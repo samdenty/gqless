@@ -31,6 +31,7 @@ module.exports = {
           label: 'Getting Started',
           to: 'introduction/getting-started',
           position: 'right',
+          activeBasePath: 'introduction',
         },
         {
           label: 'API',
