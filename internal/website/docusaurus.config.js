@@ -45,8 +45,16 @@ module.exports = {
         // { to: 'blog', label: 'Blog', position: 'left' },
         {
           href: 'https://github.com/samdenty/gqless',
-          label: 'GitHub',
           position: 'right',
+          dangerouslySetInnerHTML: {
+            __html: `
+            <img
+              class="github-star"
+              alt="Star on GitHub"
+              src="https://img.shields.io/github/stars/samdenty/gqless?style=social&label=Star"
+            />
+            `,
+          },
         },
       ],
     },

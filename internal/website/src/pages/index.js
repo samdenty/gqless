@@ -25,7 +25,7 @@ Features.defaultProps = {
 }
 
 const ResultArrow = styled(Arrow)`
-  color: #e535ab;
+  color: rgb(235, 185, 44);
   height: 3rem;
   align-self: center;
   margin-left: 3.5rem;
@@ -55,6 +55,7 @@ const Header = styled(motion.div)`
 
 const Hero = styled(motion.div)`
   margin-bottom: 4rem;
+  text-align: center;
 `
 
 const Examples = styled(motion.div)`

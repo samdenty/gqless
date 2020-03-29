@@ -83,3 +83,12 @@ video {
 .codeBlockLines__-_-node_modules-\@docusaurus-theme-classic-src-theme-CodeBlock- {
   background-color: transparent !important;
 }
+
+.github-star {
+  all: unset;
+  display: block;
+}
+
+html[data-theme='dark'] .github-star {
+  filter: invert(1) sepia(1) brightness(140%) hue-rotate(170deg);
+}
