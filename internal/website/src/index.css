@@ -15,19 +15,6 @@ html[data-theme='dark'] {
   --ifm-contents-border-color: rgb(24, 31, 79);
   --ifm-navbar-search-input-background-color: rgb(109, 117, 178);
   --ifm-menu-color-background-active: rgba(211, 130, 245, 0.12);
-
-  /* --ifm-color-emphasis-100: var(--ifm-color-gray-900);
-  --ifm-color-emphasis-200: var(--ifm-color-gray-800);
-  --ifm-color-emphasis-300: var(--ifm-color-gray-700);
-  --ifm-color-emphasis-400: var(--ifm-color-gray-600);
-  --ifm-color-emphasis-500: var(--ifm-color-gray-500);
-  --ifm-color-emphasis-600: var(--ifm-color-gray-400);
-  --ifm-color-emphasis-700: var(--ifm-color-gray-300);
-  --ifm-color-emphasis-800: var(--ifm-color-gray-200);
-  --ifm-color-emphasis-900: var(--ifm-color-gray-100); */
-  --ifm-hover-overlay: rgba(255, 255, 255, 0.05);
-  --ifm-menu-link-sublist-icon: url('data:image/svg+xml;utf8,<svg alt="Arrow" xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" viewBox="0 0 24 24"><path fill="rgba(255,255,255,0.6)" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>');
-  --ifm-color-content-secondary: rgba(255, 255, 255, 1);
 }
 
 h1,
@@ -84,13 +71,8 @@ video {
   font-weight: var(--ifm-font-weight-normal);
 }
 
-/* :not(.navbar-sidebar__items) > .menu > .menu__list > .menu__list-item {
-  margin-bottom: 1.5rem;
-} */
 :not(.navbar-sidebar__items) .menu__link--sublist {
   font-weight: var(--ifm-font-weight-semibold);
-  /* color: rgb(202, 151, 223);
-  font-size: 1.2rem; */
   letter-spacing: -0.03em;
 }
 
