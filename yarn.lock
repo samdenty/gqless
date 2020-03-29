@@ -14221,6 +14221,11 @@ npm-run-path@^4.0.0:
   dependencies:
     path-key "^3.0.0"
 
+npm-to-yarn@^1.0.0-0:
+  version "1.0.0-0"
+  resolved "https://registry.yarnpkg.com/npm-to-yarn/-/npm-to-yarn-1.0.0-0.tgz#c69c924e2623a9cb43c3c597c8b0988f3c883635"
+  integrity sha512-lw2TTfy/EBDNrIL16GbCjXIOXV468RwbELBEGhN/tFyVbhmo3aCHTn0EWD7ZKGVAkLFURJkcWa8I34v/IhoOaA==
+
 "npmlog@0 || 1 || 2 || 3 || 4", npmlog@^4.0.0, npmlog@^4.0.1, npmlog@^4.0.2, npmlog@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.1.2.tgz#08a7f2a8bf734604779a9efa4ad5cc717abb954b"

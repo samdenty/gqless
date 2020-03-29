@@ -80,6 +80,20 @@ video {
   white-space: nowrap;
 }
 
+.menu {
+  font-weight: var(--ifm-font-weight-normal);
+}
+
+/* :not(.navbar-sidebar__items) > .menu > .menu__list > .menu__list-item {
+  margin-bottom: 1.5rem;
+} */
+:not(.navbar-sidebar__items) .menu__link--sublist {
+  font-weight: var(--ifm-font-weight-semibold);
+  /* color: rgb(202, 151, 223);
+  font-size: 1.2rem; */
+  letter-spacing: -0.03em;
+}
+
 .codeBlockLines__-_-node_modules-\@docusaurus-theme-classic-src-theme-CodeBlock- {
   background-color: transparent !important;
 }
@@ -87,8 +101,33 @@ video {
 .github-star {
   all: unset;
   display: block;
+  min-width: 88px;
 }
 
 html[data-theme='dark'] .github-star {
   filter: invert(1) sepia(1) brightness(140%) hue-rotate(170deg);
+}
+
+@media (min-width: 997px) {
+  .sidebar__-_-node_modules-\@docusaurus-theme-classic-src-theme-DocSidebar-::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+  .sidebar__-_-node_modules-\@docusaurus-theme-classic-src-theme-DocSidebar-::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2) !important;
+  }
+
+  html[data-theme='dark']
+    .sidebar__-_-node_modules-\@docusaurus-theme-classic-src-theme-DocSidebar-::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .sidebar__-_-node_modules-\@docusaurus-theme-classic-src-theme-DocSidebar-::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.1) !important;
+  }
+
+  html[data-theme='dark']
+    .sidebar__-_-node_modules-\@docusaurus-theme-classic-src-theme-DocSidebar-::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+  }
 }

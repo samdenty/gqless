@@ -7,6 +7,7 @@ module.exports = {
   organizationName: 'samdenty',
   projectName: 'gqless',
   themeConfig: {
+    // sidebarCollapsible: false,
     prism: {
       theme: require('prism-react-renderer/themes/nightOwlLight'),
       darkTheme: require('prism-react-renderer/themes/shadesOfPurple'),
@@ -48,11 +49,11 @@ module.exports = {
           position: 'right',
           dangerouslySetInnerHTML: {
             __html: `
-            <img
-              class="github-star"
-              alt="Star on GitHub"
-              src="https://img.shields.io/github/stars/samdenty/gqless?style=social&label=Star"
-            />
+              <img
+                class="github-star"
+                alt="GitHub"
+                src="https://img.shields.io/github/stars/samdenty/gqless?style=social&label=Star"
+              />
             `,
           },
         },
@@ -118,8 +119,12 @@ module.exports = {
       {
         docs: {
           path: '../../docs',
-          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
+          routeBasePath: '/',
+          editUrl: 'https://github.com/samdenty/gqless/edit/master/docs/',
+          remarkPlugins: [require('./src/plugins/remark-yarn2npm')],
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
         },
         theme: {
           customCss: require.resolve('./src/index.css'),

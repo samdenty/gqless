@@ -3,75 +3,17 @@ id: installation
 title: Installation
 ---
 
-This guide will help you create a `gqless` client for a GraphQL endpoint.
+To install the runtime client, and the codegen CLI:
 
-## Installation
-
-> Important: If using Typescript, ensure version is 3.7.0+
-
-Install the following dependencies to your project:
-
-```bash
+```bash yarn2npm
 yarn add gqless
-yarn add @gqless/cli -D
-
-# or
-npm install gqless
-npm install @gqless/cli --save-dev
+yarn add @gqless/cli --dev
 ```
 
-## Codegen
+## Complementary Packages
 
-`gqless` requires information about your schema, which is generated using the CLI.
+Most likely, you'll also need the React bindings and the developer tools.
 
-Create a new file named `gqless.config.json` at the root of your project, with the following contents:
-
-> You can also use the `gqless` key in your package.json, or `gqless.config.{js,ts}`
-
-```json
-{
-  "url": "http://example.com/graphql",
-  "outputDir": "src/graphql"
-}
+```bash yarn2npm
+yarn add @gqless/react @gqless/logger
 ```
-
-Next add a `generate` script to your `package.json`:
-
-```json
-"scripts": {
-  "generate": "gqless generate"
-}
-```
-
-And then run the script to generate your schema:
-
-```bash
-yarn generate
-# or
-npm run generate
-```
-
-A folder will then be created with the following structure:
-
-```bash
-src/gqless
-├── extensions/ # All your extensions go in this folder
-├── generated/ # Ignore this folder
-├── client.ts # gqless client is exported from here
-└── index.ts
-```
-
-## Usage
-
-Ensure that the `fetchQuery` in `src/gqless/client.ts` is correct, modifying it if need be.
-
-You should then be able to use the client ✨
-
-```ts
-import { query } from './gqless'
-
-// for example
-query.me.name
-```
-
-See [Usage with React](/react/basic-usage)

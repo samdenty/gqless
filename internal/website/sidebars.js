@@ -3,11 +3,16 @@ module.exports = {
     Introduction: [
       'introduction/getting-started',
       'introduction/installation',
-      'introduction/what-and-why',
-      'introduction/features',
+      'introduction/motivation',
+      // 'introduction/features',
+    ],
+    'Fetching Data': [
+      'fetching-data/queries',
+      'fetching-data/local-state',
+      'fetching-data/fragments',
     ],
     FAQ: ['faq'],
-    gqless: ['extensions', 'matchers'],
+    // gqless: ['extensions', 'matchers'],
     React: [
       'react/basic-usage',
       'react/polling',
@@ -21,11 +26,11 @@ module.exports = {
         type: 'category',
         label: 'gqless',
         items: [
-          'api/gqless/Variable',
-          'api/gqless/Poller',
-          'api/gqless/update',
-          'api/gqless/matchUpdate',
-          'api/gqless/getAccessor',
+          'api/client/Variable',
+          'api/client/Poller',
+          'api/client/update',
+          'api/client/matchUpdate',
+          'api/client/getAccessor',
         ],
       },
       {
