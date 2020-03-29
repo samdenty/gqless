@@ -21,7 +21,7 @@ module.exports = {
       'react/interfaces-unions',
     ],
     'API Reference': [
-      'api/api-reference',
+      'api',
       {
         type: 'category',
         label: 'gqless',
