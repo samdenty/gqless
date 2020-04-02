@@ -21,6 +21,7 @@
     "@oclif/config": "^1.14.0",
     "@oclif/plugin-help": "^2.2.3",
     "cosmiconfig": "^6.0.0",
+    "globby": "^11.0.0",
     "got": "^10.6.0",
     "mkdirp": "^1.0.3",
     "prettier": "^1.19.1",
