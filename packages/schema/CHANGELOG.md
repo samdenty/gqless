@@ -1,5 +1,11 @@
 # @gqless/schema
 
+## 0.0.1-alpha.30
+
+### Patch Changes
+
+- 9fa1421: fix nullable type
+
 ## 0.0.1-alpha.29
 
 ### Patch Changes

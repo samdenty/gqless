@@ -1,5 +1,13 @@
 # @gqless/cli
 
+## 0.0.1-alpha.31
+
+### Patch Changes
+
+- 9fa1421: add globby to dependencies
+- Updated dependencies [9fa1421]
+  - @gqless/schema@0.0.1-alpha.30
+
 ## 0.0.1-alpha.30
 
 ### Patch Changes
