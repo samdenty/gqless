@@ -236,7 +236,7 @@ export class TypesFile extends File {
   }
 
   public generateType(type: Type, resolveType = this.typeReference): string {
-    const nullType = type.nullable ? '| undefined | null' : ''
+    const nullType = type.nullable ? ' | null' : ''
 
     switch (type.kind) {
       case 'OBJECT':
