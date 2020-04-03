@@ -39,7 +39,7 @@ type TypeExtension<TType extends ValidType> = TType extends Type
   ? IfAny<TType['extension'], never, ExtensionData<TType['extension']>>
   : never
 
-type ValidType = ValidType[] | Type | null
+type ValidType = ValidType[] | Type | undefined | null
 
 export type ScalarType<TData = any, TExtension = any> = Type<
   Kind.scalar,
