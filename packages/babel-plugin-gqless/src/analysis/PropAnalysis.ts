@@ -1,6 +1,6 @@
 import { types as t, NodePath } from '@babel/core'
 import { Analysis } from './Analysis'
-import { evalProperty } from '../utils'
+import { evalProperty } from '../evaluate'
 import { computed } from '@gqless/utils'
 import { Referable } from './mixins'
 import { Mix } from 'mix-classes'

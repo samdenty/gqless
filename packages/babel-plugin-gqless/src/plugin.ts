@@ -1,9 +1,9 @@
 import jsxSyntax from '@babel/plugin-syntax-jsx'
-import { types as t, PluginObj, BabelFileResult } from '@babel/core'
+import { types as t, PluginObj, BabelFileResult, NodePath } from '@babel/core'
 import { reactTransform } from './reactTransform'
-import { importReferences } from './utils'
 import { gqlessTransform } from './gqlessTransform'
 import { Cache, FileAnalysis } from './analysis'
+import { scanImports, ImportCallback } from './scan'
 
 export type State = {
   cwd: string
@@ -25,22 +25,20 @@ export const plugin = (api: typeof import('@babel/core')): PluginObj<State> => {
       this.analysis = analysis
     },
     visitor: {
-      ImportDeclaration(path, state) {
-        switch (path.node.source.value) {
-          case 'gqless': {
-            importReferences(path, (importName, path) => {
-              gqlessTransform(state.analysis, importName, path)
-            })
-            break
-          }
+      Program(path, state) {
+        scanImports(path, (source): ImportCallback | void => {
+          switch (source) {
+            case 'gqless':
+              return (importName, path) => {
+                gqlessTransform(state.analysis, importName, path)
+              }
 
-          case '@gqless/react': {
-            importReferences(path, (importName, path) => {
-              reactTransform(importName, path)
-            })
-            break
+            case '@gqless/react':
+              return (importName, path) => {
+                reactTransform(importName, path)
+              }
           }
-        }
+        })
       },
     },
   }

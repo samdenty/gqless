@@ -1,7 +1,7 @@
 import { types as t, NodePath } from '@babel/core'
 import { DynGlobal, DynImport } from './Dyn'
 import { Record } from './Record'
-import { resolveRefInPattern } from '../resolveRefInPattern'
+import { resolveRefInPattern } from './resolveRefInPattern'
 
 /**
  * Evaluate an expression
@@ -39,7 +39,7 @@ export const evaluate = (path: NodePath) => {
       if (prop.isSpreadElement()) {
         const result = evaluate(prop.get('argument'))
         if (!(result instanceof Record)) continue
-        result.keys.forEach(k => {
+        result.keys.forEach((k) => {
           rec.set(k.key, k.valuePath)
         })
       }
@@ -56,7 +56,7 @@ export const evaluate = (path: NodePath) => {
       if (elem.isSpreadElement()) {
         const result = evaluate(elem.get('argument'))
         if (!(result instanceof Record)) continue
-        result.keys.forEach(k => {
+        result.keys.forEach((k) => {
           rec.set(k.key, k.valuePath)
         })
       } else {
@@ -140,7 +140,7 @@ export const evaluate = (path: NodePath) => {
             if (data instanceof Record) {
               const map = new Record(data.isArray, data.keys)
 
-              id.get('properties').forEach(prop => {
+              id.get('properties').forEach((prop) => {
                 if (!prop.isObjectProperty()) return
                 const propName = evalProperty(prop)
                 if (propName === undefined) return

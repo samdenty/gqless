@@ -1,5 +1,6 @@
 import { types as t, NodePath } from '@babel/core'
-import { evalAsString, evaluate, evalProperty, Record } from './evaluate'
+import { evalAsString, evaluate, evalProperty } from './evaluate'
+import { Record } from './Record'
 
 /**
  * Resolves a variable's path, given a pattern and value

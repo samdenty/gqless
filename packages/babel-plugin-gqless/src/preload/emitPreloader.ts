@@ -1,6 +1,6 @@
 import { types as t, NodePath } from '@babel/core'
 import { FunctionAnalysis, ParamAnalysis, FieldAnalysis } from '../analysis'
-import { evalAsString, evalProperty, serialize } from '../utils'
+import { evalAsString, evalProperty, serialize } from '../evaluate'
 
 const shouldEmit = (
   preloadArg: NodePath | null,
@@ -38,7 +38,7 @@ const analysisLoader = (
     id,
     t.blockStatement(
       Array.from(analysis.fields)
-        .map(field => {
+        .map((field) => {
           const fieldName = String(field.name)
           const isElement = field.name === 0
           const memberExp = t.memberExpression(

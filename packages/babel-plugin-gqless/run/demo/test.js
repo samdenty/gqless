@@ -1,4 +1,4 @@
-import { preload } from 'gqless'
+const { preload } = require('gqless')
 import * as React from 'react'
 import { query } from './client'
 import testDefault, { Test, test } from './test2'

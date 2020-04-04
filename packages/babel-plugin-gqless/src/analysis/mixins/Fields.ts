@@ -2,13 +2,12 @@ import equal from 'fast-deep-equal'
 import { Analysis, FunctionAnalysis, FieldAnalysis } from '..'
 import { types as t, NodePath } from '@babel/core'
 import {
-  evalProperty,
-  evaluate,
-  Record,
   ARRAY_ITERATOR,
   RETURNS_ARRAY_ELEMENT,
   RETURNS_SELF,
 } from '../../utils'
+import { evalProperty, evaluate, Record } from '../../evaluate'
+import { scanPath, scanParentPath, ScanResult } from '../../scan'
 import { invariant } from '@gqless/utils'
 
 export class Fields {
@@ -27,7 +26,7 @@ export class Fields {
   }
 
   public merge(this: Analysis & Fields, other: Fields) {
-    other.fields.forEach(otherField => {
+    other.fields.forEach((otherField) => {
       this.getField(otherField.name, otherField.variables).merge(otherField)
     })
   }
@@ -53,125 +52,53 @@ export class Fields {
     return fieldAnalysis
   }
 
-  public scanParentPath(
-    this: Analysis & Fields,
-    path: NodePath,
-    ...pathCtx: NodePath<t.ObjectProperty>[]
-  ) {
-    if (path.parentPath.isCallExpression()) {
-      const callPath = path.parentPath
+  private scanHandler(this: Analysis & Fields, result: ScanResult) {
+    switch (result.kind) {
+      case 'CALL': {
+        const { callPath, path, pathCtx } = result
 
-      if (path.listKey === 'arguments') {
-        const args = callPath.get('arguments') as NodePath<
-          t.Expression | t.SpreadElement
-        >[]
-        const callee = callPath.get('callee')
-
-        // Get the referenced function that's being called
-        const funcAnalysis = this.file.get(callee)
-        if (!funcAnalysis) return
-        invariant(funcAnalysis instanceof FunctionAnalysis)
-        // Perform a scan over it's params
-        funcAnalysis.scan(...args)
-
-        // Find the analysis associated with arg, and merge
-        // into this analysis
-        const param = funcAnalysis.getParam(path.key as number)
-
-        if (param) {
-          const analysis = param.lookup(pathCtx)
-          this.merge(analysis)
+        if (path.listKey === 'arguments') {
+          const args = callPath.get('arguments') as NodePath<
+            t.Expression | t.SpreadElement
+          >[]
+          const callee = callPath.get('callee')
+          // Get the referenced function that's being called
+          const funcAnalysis = this.file.get(callee)
+          if (!funcAnalysis) break
+          invariant(funcAnalysis instanceof FunctionAnalysis)
+          // Perform a scan over it's params
+          funcAnalysis.scan(...args)
+          // Find the analysis associated with arg, and merge
+          // into this analysis
+          const param = funcAnalysis.getParam(path.key as number)
+          if (param) {
+            const analysis = param.lookup(pathCtx)
+            this.merge(analysis)
+          }
         }
+
+        this.scanParentPath(result.callPath)
+        break
       }
 
-      return this.scanParentPath(callPath)
-    }
+      case 'ITERATE': {
+        const { path, pathCtx } = result
+        const left = path.get('left')
+        const field = this.getField(0)
 
-    //
-    else if (path.parentPath.isObjectProperty()) {
-      const propPath = path.parentPath
-
-      // x: TRACKED
-      if (path.key === 'value') {
-        return this.scanParentPath(propPath, propPath, ...pathCtx)
+        if (left.isVariableDeclaration()) {
+          const declarations = left.get('declarations')
+          for (const declarator of declarations) {
+            field.scanPath(declarator, ...pathCtx)
+          }
+        } else {
+          field.scanPath(left, ...pathCtx)
+        }
+        break
       }
 
-      // [TRACKED]: x
-      else {
-        // TODO
-      }
-    } else {
-      return this.scanPath(path.parentPath, ...pathCtx)
-    }
-  }
-
-  public scanPath(
-    this: Analysis & Fields,
-    path: NodePath,
-    ...pathCtx: NodePath<t.ObjectProperty>[]
-  ) {
-    // console.log(
-    //   `${this.file.path
-    //     .split('/')
-    //     .slice(9)
-    //     .join('/')}:${path.parentPath.node.loc?.start.line}:${path.parentPath
-    //     .node.loc?.start.column + 1}`,
-    //   path.parentPath.node,
-    //   this
-    // )
-    // console.log(path.parent)
-
-    // {TRACKED}
-    if (path.isJSXExpressionContainer()) {
-      this.scanParentPath(path)
-    }
-
-    // {...x}
-    else if (path.isJSXSpreadAttribute()) {
-    }
-
-    // JSX children
-    else if (path.isJSXElement()) {
-      console.log(path)
-    }
-
-    // prop={TRACKED}
-    else if (path.isJSXAttribute()) {
-      const tag = path.parentPath
-      invariant(tag.isJSXOpeningElement())
-
-      const componentName = tag.node.name
-
-      const namePath = path.get('name')
-      invariant(namePath.isJSXIdentifier(), 'namespace not supported')
-      const propName = namePath.node.name
-
-      // this.file.get()
-      console.log(componentName, propName)
-    }
-
-    // Variables
-    else if (path.isVariableDeclarator()) {
-      this.scanPath(path.get('id'), ...pathCtx)
-    }
-
-    //
-    else if (path.isMemberExpression()) {
-      const fieldName = evalProperty(path)
-
-      if (fieldName === undefined) return
-
-      // obj.x
-      if (pathCtx.length) {
-        const [propPath, ...ctx] = pathCtx
-        const propName = evalProperty(propPath)
-        if (propName === undefined || fieldName !== propName) return
-
-        this.scanParentPath(path, ...ctx)
-      }
-
-      // TRACKED.x
-      else {
+      case 'PROPERTY_ACCESS': {
+        const { path, pathCtx, name } = result
         let variables: any
 
         if (path.parentPath.isCallExpression()) {
@@ -193,15 +120,15 @@ export class Fields {
           else {
             let validMethod = false
 
-            if (ARRAY_ITERATOR.hasOwnProperty(fieldName)) {
-              const [argElementIdx, argSelfIdx] = ARRAY_ITERATOR[fieldName]
+            if (ARRAY_ITERATOR.hasOwnProperty(name)) {
+              const [argElementIdx, argSelfIdx] = ARRAY_ITERATOR[name]
               const callbackPath = args[0]
-              invariant(callbackPath, `expected callback for '${fieldName}()'`)
+              invariant(callbackPath, `expected callback for '${name}()'`)
 
               const callbackAnalysis = this.file.get(callbackPath)
               invariant(
                 callbackAnalysis instanceof FunctionAnalysis,
-                `expected callback to be function for '${fieldName}`
+                `expected callback to be function for '${name}`
               )
 
               const indexAnalysis = this.getField(0)
@@ -221,86 +148,53 @@ export class Fields {
               validMethod = true
             }
 
-            if (RETURNS_ARRAY_ELEMENT.includes(fieldName)) {
+            if (RETURNS_ARRAY_ELEMENT.includes(name)) {
               this.getField(0).scanParentPath(path.parentPath, ...pathCtx)
               validMethod = true
-            } else if (RETURNS_SELF.includes(fieldName)) {
+            } else if (RETURNS_SELF.includes(name)) {
               this.scanParentPath(path.parentPath, ...pathCtx)
               validMethod = true
             }
 
-            if (validMethod) return
+            if (validMethod) break
           }
         }
 
-        this.getField(
-          isNaN(+fieldName) ? fieldName : 0,
-          variables
-        ).scanParentPath(path)
+        this.getField(isNaN(+name) ? name : 0, variables).scanParentPath(path)
+
+        break
       }
     }
+  }
 
-    // Object / array literals
-    else if (path.isObjectExpression() || path.isArrayExpression()) {
-      this.scanParentPath(path, ...pathCtx)
+  public scanParentPath(
+    this: Analysis & Fields,
+    path: NodePath,
+    ...pathCtx: NodePath<t.ObjectProperty>[]
+  ) {
+    for (const result of scanParentPath(path, ...pathCtx)) {
+      this.scanHandler(result)
     }
+  }
 
-    // var { }
-    else if (path.isObjectPattern()) {
-      for (const prop of path.get('properties')) {
-        // var { ...rest }
-        if (prop.isRestElement()) {
-          this.scanPath(prop.get('argument'), ...pathCtx)
-        }
+  public scanPath(
+    this: Analysis & Fields,
+    path: NodePath,
+    ...pathCtx: NodePath<t.ObjectProperty>[]
+  ) {
+    // console.log(
+    //   `${this.file.path
+    //     .split('/')
+    //     .slice(9)
+    //     .join('/')}:${path.parentPath.node.loc?.start.line}:${path.parentPath
+    //     .node.loc?.start.column + 1}`,
+    //   path.parentPath.node,
+    //   this
+    // )
+    // console.log(path.parent)
 
-        // var { prop }
-        else if (prop.isObjectProperty()) {
-          const fieldName = evalProperty(prop)
-          if (fieldName === undefined) return
-          const value = prop.get('value') as NodePath<t.LVal>
-
-          // var { x } = { x: TRACKED }
-          if (pathCtx.length) {
-            const [propPath, ...ctx] = pathCtx
-            const propName = evalProperty(propPath)
-            if (propName === undefined || fieldName !== propName) return
-            this.scanPath(value, ...ctx)
-          }
-
-          // var { x } = TRACKED
-          else {
-            this.getField(fieldName).scanPath(value)
-          }
-        }
-      }
-    }
-
-    // var x
-    else if (path.isIdentifier()) {
-      const binding = path.scope.getBinding(path.node.name)
-      if (!binding) return
-
-      for (const refPath of binding.referencePaths) {
-        // Prevent circular loops
-        if (refPath.key === 'left') continue
-
-        this.scanParentPath(refPath, ...pathCtx)
-      }
-    }
-
-    // For loops
-    else if (path.isForOfStatement()) {
-      const left = path.get('left')
-      const field = this.getField(0)
-
-      if (left.isVariableDeclaration()) {
-        const declarations = left.get('declarations')
-        for (const declarator of declarations) {
-          field.scanPath(declarator, ...pathCtx)
-        }
-      } else {
-        field.scanPath(left, ...pathCtx)
-      }
+    for (const result of scanPath(path, ...pathCtx)) {
+      this.scanHandler(result)
     }
   }
 }

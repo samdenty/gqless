@@ -6,8 +6,8 @@ import * as babel from '@babel/core'
 import { Cache, FunctionAnalysis } from '../src/analysis'
 import * as utils from '../src/utils'
 import { invariant } from '@gqless/utils'
-import * as _preload from '../src/preload'
-import * as _utils from '../src/utils'
+import { emitPreloader } from '../src/preload'
+import * as _evaluate from '../src/evaluate'
 import { Fields } from '../src/analysis/mixins'
 
 type Files = Record<string, string>
@@ -24,10 +24,12 @@ expect.addSnapshotSerializer({
 })
 
 expect.addSnapshotSerializer({
-  test: (val: any) => val instanceof _utils.Record,
-  print: (val: _utils.Record, serialize: any, indent: Function) =>
+  test: (val: any) => val instanceof _evaluate.Record,
+  print: (val: _evaluate.Record, serialize: any, indent: Function) =>
     `Record {\n${indent(
-      val.keys.map(k => `${serialize(k.key)}: ${serialize(k.value)}`).join('\n')
+      val.keys
+        .map((k) => `${serialize(k.key)}: ${serialize(k.value)}`)
+        .join('\n')
     )}\n}`,
 })
 
@@ -36,7 +38,7 @@ expect.addSnapshotSerializer({
   print: (analysis: Fields, serialize: any, indent: Function) => {
     const body = Array.from(analysis.fields)
       .map(
-        field =>
+        (field) =>
           `${field.name === 0 ? 'INDEX' : field.name}${
             field.variables
               ? `(${serialize(field.variables).replace(/^Record /, '')})`
@@ -71,7 +73,7 @@ expect.addSnapshotSerializer({
 export const fileAnalysis = (files: Files) => {
   const cache = new Cache(babel)
 
-  cache.transform = path => {
+  cache.transform = (path) => {
     const file = files[path]
     invariant(file !== undefined, 'invalid module')
     return babel.transformSync(file, {
@@ -87,7 +89,7 @@ export const scan = (files: Files, ...args: string[]) => {
   const funcAnalysis = fileAnalysis(files).getExport('default')
   invariant(funcAnalysis instanceof FunctionAnalysis)
 
-  const pathArgs = args.map(arg => {
+  const pathArgs = args.map((arg) => {
     const path = new NodePath(undefined as any, undefined as any)
     path.node = template.expression(arg)()
     return path as any
@@ -115,19 +117,19 @@ export const preload = (files: Files, ...args: string[]) => {
       ])
     ),
     {
-      ArrowFunctionExpression: path => {
+      ArrowFunctionExpression: (path) => {
         preloadFn = path
       },
     }
   )
 
-  const pathArgs = args.map(arg => {
+  const pathArgs = args.map((arg) => {
     const path = new NodePath(undefined as any, undefined as any)
     path.node = template.expression(arg)()
     return path as any
   })
   funcAnalysis.scan(...pathArgs)
-  _preload.emitPreloader(preloadFn, funcAnalysis, pathArgs)
+  emitPreloader(preloadFn, funcAnalysis, pathArgs)
   return preloadFn
 }
 
@@ -138,7 +140,7 @@ export const preload = (files: Files, ...args: string[]) => {
 export const evaluate = (source: string) => {
   let bodyPath!: NodePath[]
   babel.traverse(babel.parse(source, { parserOpts })!, {
-    Program: path => {
+    Program: (path) => {
       bodyPath = path.get('body')
     },
   })
@@ -147,5 +149,5 @@ export const evaluate = (source: string) => {
   invariant(expressionStatement.isExpressionStatement())
 
   const path = expressionStatement.get('expression')
-  return _utils.evaluate(path)
+  return _evaluate.evaluate(path)
 }

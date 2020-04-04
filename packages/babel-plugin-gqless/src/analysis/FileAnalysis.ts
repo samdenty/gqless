@@ -3,12 +3,8 @@ import { types as t, NodePath, BabelFileResult, traverse } from '@babel/core'
 import { Cache } from './Cache'
 import { FunctionAnalysis } from './FunctionAnalysis'
 import { Analysis } from './Analysis'
-import {
-  findModule,
-  evalAsString,
-  evalProperty,
-  resolveRefInPattern,
-} from '../utils'
+import { findModule } from '../utils'
+import { evalAsString, evalProperty, resolveRefInPattern } from '../evaluate'
 import { invariant } from '@gqless/utils'
 
 export type ImportSpecifier =
@@ -239,7 +235,7 @@ export class FileAnalysis extends Analysis {
   public get programPath() {
     if (!this._programPath) {
       traverse(this.ast, {
-        Program: path => {
+        Program: (path) => {
           this._programPath = path
         },
       })
