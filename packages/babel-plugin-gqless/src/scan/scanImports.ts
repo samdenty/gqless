@@ -33,14 +33,11 @@ export function scanImports(path: NodePath, importHandler: ImportHandler) {
       const importCallback = importHandler(path.node.source.value)
       if (!importCallback) return
 
-      for (const specifier of path.node.specifiers) {
-        if (t.isImportDefaultSpecifier(specifier)) continue
-        const binding = path.scope.getBinding(specifier.local.name)!
-
-        const isNamespace = t.isImportNamespaceSpecifier(specifier)
+      for (const specifier of path.get('specifiers')) {
+        const binding = path.scope.getBinding(specifier.node.local.name)!
 
         for (const { parentPath } of binding.referencePaths) {
-          if (isNamespace) {
+          if (specifier.isImportNamespaceSpecifier()) {
             for (const result of scanPath(parentPath)) {
               if (result.kind === 'PROPERTY_ACCESS') {
                 importCallback(result.name, result.path)
@@ -48,7 +45,9 @@ export function scanImports(path: NodePath, importHandler: ImportHandler) {
             }
           } else {
             importCallback(
-              (specifier as t.ImportSpecifier).imported.name,
+              specifier.isImportSpecifier()
+                ? specifier.node.imported.name
+                : 'default',
               parentPath
             )
           }

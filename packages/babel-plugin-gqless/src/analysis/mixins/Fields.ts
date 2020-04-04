@@ -7,7 +7,7 @@ import {
   RETURNS_SELF,
 } from '../../utils'
 import { evalProperty, evaluate, Record } from '../../evaluate'
-import { scanPath, scanParentPath, ScanResult } from '../../scan'
+import { scanPath, scanParentPath, ScanResult, PathCtx } from '../../scan'
 import { invariant } from '@gqless/utils'
 
 export class Fields {
@@ -170,7 +170,7 @@ export class Fields {
   public scanParentPath(
     this: Analysis & Fields,
     path: NodePath,
-    ...pathCtx: NodePath<t.ObjectProperty>[]
+    ...pathCtx: PathCtx
   ) {
     for (const result of scanParentPath(path, ...pathCtx)) {
       this.scanHandler(result)
@@ -180,7 +180,7 @@ export class Fields {
   public scanPath(
     this: Analysis & Fields,
     path: NodePath,
-    ...pathCtx: NodePath<t.ObjectProperty>[]
+    ...pathCtx: PathCtx
   ) {
     // console.log(
     //   `${this.file.path

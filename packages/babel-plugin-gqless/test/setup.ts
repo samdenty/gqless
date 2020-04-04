@@ -138,16 +138,21 @@ export const preload = (files: Files, ...args: string[]) => {
  * @returns The result of evaluating the last ExpressionStatement
  */
 export const evaluate = (source: string) => {
-  let bodyPath!: NodePath[]
-  babel.traverse(babel.parse(source, { parserOpts })!, {
-    Program: (path) => {
-      bodyPath = path.get('body')
-    },
-  })
+  const bodyPath = getProgram(source).get('body')
 
   const expressionStatement = bodyPath[bodyPath.length - 1]
   invariant(expressionStatement.isExpressionStatement())
 
   const path = expressionStatement.get('expression')
   return _evaluate.evaluate(path)
+}
+
+export const getProgram = (source: string) => {
+  let programPath: NodePath<t.Program>
+  babel.traverse(babel.parse(source, { parserOpts })!, {
+    Program: (path) => {
+      programPath = path
+    },
+  })
+  return programPath
 }

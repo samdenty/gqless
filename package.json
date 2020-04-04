@@ -62,11 +62,13 @@
     "codecov": "^3.6.5",
     "graphql-faker": "^2.0.0-rc.17",
     "husky": "^4.2.3",
+    "jest": "^25.2.7",
     "lerna": "^3.20.2",
     "parcel-bundler": "^1.12.4",
     "pretty-quick": "^2.0.1",
     "react": "^0.0.0-experimental-f6b8d31a7",
     "react-dom": "^0.0.0-experimental-f6b8d31a7",
+    "ts-jest": "^25.3.1",
     "tsconfig-paths": "^3.9.0",
     "tsdx": "^0.12.3",
     "typescript": "^3.8.3"

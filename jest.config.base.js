@@ -3,7 +3,7 @@ const path = require('path')
 const fs = require('fs')
 const tsdx = require('tsdx/dist/createJestConfig')
 
-module.exports = root => {
+module.exports = (root) => {
   let name
 
   const packageJsonPath = path.resolve(root, 'package.json')
@@ -13,8 +13,10 @@ module.exports = root => {
   }
 
   return {
-    ...tsdx.createJestConfig(undefined, root),
-
+    testMatch: ['<rootDir>/**/*.(spec|test).{ts,tsx}'],
+    transform: {
+      '^.+\\.(ts|tsx)$': 'ts-jest',
+    },
     globals: {
       __DEV__: true,
       'ts-jest': {
