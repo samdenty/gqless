@@ -1,5 +1,11 @@
 # gqless
 
+## 0.0.1-alpha.29
+
+### Patch Changes
+
+- ddf501c: Fix bug adding \_\_typename field selection for the fields of enum type
+
 ## 0.0.1-alpha.28
 
 ### Patch Changes
