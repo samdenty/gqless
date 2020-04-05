@@ -2,7 +2,7 @@ import { SelectionTree } from './SelectionTree'
 import { FieldSelection, Fragment } from '../Selection'
 import { Formatter } from './Formatter'
 import { buildArguments } from './buildArguments'
-import { ScalarNode, NodeContainer, ObjectNode } from '../Node'
+import { EnumNode, NodeContainer, ObjectNode, ScalarNode } from '../Node'
 import { Variables } from './buildVariable'
 
 export const buildSelections = (
@@ -15,7 +15,8 @@ export const buildSelections = (
       ? tree.selection.node.innerNode
       : tree.selection.node
 
-  if (innerNode instanceof ScalarNode) return ''
+  if (innerNode instanceof ScalarNode || innerNode instanceof EnumNode)
+    return ''
 
   const includeTypename =
     // When no selections or not on ObjectNode
