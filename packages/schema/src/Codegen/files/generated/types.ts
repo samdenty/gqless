@@ -6,6 +6,7 @@ import {
   Type,
   SchemaInterfaceType,
   SchemaFieldArgs,
+  SchemaEnumType,
 } from '../../../Schema'
 
 const TYPE_PREFIX = 't_'
@@ -98,6 +99,8 @@ export class TypesFile extends File {
       .filter(Boolean)
       .join('\n\n')
 
+    console.log(this.codegen.schema.types)
+
     return `
       ${super.generate()}
 
@@ -110,9 +113,21 @@ export class TypesFile extends File {
         : any
 
       ${body}
+      
+      ${Object.values(this.codegen.schema.types)
+        .filter(type => type.kind === 'ENUM')
+        .map(
+          type =>
+            `${this.generateComments(
+              this.schemaTypeComments(type)
+            )}export enum ${type.name} { \n
+            ${(type as SchemaEnumType).enumValues.map(k => `${k} = '${k}' \n`)}
+          }`
+        )
+        .join('\n')}
 
       ${Object.values(this.codegen.schema.types)
-        .filter(type => type.kind !== 'INPUT_OBJECT')
+        .filter(type => !['INPUT_OBJECT', 'ENUM'].includes(type.kind))
         .map(
           type =>
             `${this.generateComments(
@@ -236,7 +251,7 @@ export class TypesFile extends File {
   }
 
   public generateType(type: Type, resolveType = this.typeReference): string {
-    const nullType = type.nullable ? '| undefined | null' : ''
+    const nullType = type.nullable ? '| null' : ''
 
     switch (type.kind) {
       case 'OBJECT':
