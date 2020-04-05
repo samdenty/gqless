@@ -1946,77 +1946,6 @@ type t___Directive = FieldsType<
 >
 
 /**
- * @name ItemType
- * @type ENUM
- */
-export enum ItemType {
-  job = 'job',
-  story = 'story',
-  comment = 'comment',
-  poll = 'poll',
-  pollopt = 'pollopt',
-}
-
-/**
- * @name TimeInterval
- * @type ENUM
- */
-export enum TimeInterval {
-  hour = 'hour',
-  day = 'day',
-  week = 'week',
-  month = 'month',
-  year = 'year',
-  all = 'all',
-}
-
-/**
- * @name UserIdentifier
- * @type ENUM
- */
-export enum UserIdentifier {
-  id = 'id',
-  name = 'name',
-}
-
-/**
- * @name SearchReponse
- * @type ENUM
- */
-export enum SearchReponse {
-  mixed = 'mixed',
-  recent = 'recent',
-  popular = 'popular',
-}
-
-/**
- * @name GiphyRatingType
- * @type ENUM
- */
-export enum GiphyRatingType {
-  y = 'y',
-  g = 'g',
-  pg = 'pg',
-  pg13 = 'pg13',
-  r = 'r',
-}
-
-/**
- * @name __TypeKind
- * @type ENUM
- */
-export enum __TypeKind {
-  SCALAR = 'SCALAR',
-  OBJECT = 'OBJECT',
-  INTERFACE = 'INTERFACE',
-  UNION = 'UNION',
-  ENUM = 'ENUM',
-  INPUT_OBJECT = 'INPUT_OBJECT',
-  LIST = 'LIST',
-  NON_NULL = 'NON_NULL',
-}
-
-/**
  * @name GraphQLHubAPI
  * @type OBJECT
  */
@@ -2051,6 +1980,18 @@ export type HackerNewsItem = TypeData<t_HackerNewsItem>
  * @type SCALAR
  */
 export type Boolean = TypeData<t_Boolean>
+
+/**
+ * @name ItemType
+ * @type ENUM
+ */
+export enum ItemType {
+  job = 'job',
+  story = 'story',
+  comment = 'comment',
+  poll = 'poll',
+  pollopt = 'pollopt',
+}
 
 /**
  * @name HackerNewsUser
@@ -2187,6 +2128,19 @@ export type RedditUser = TypeData<t_RedditUser>
 export type RedditComment = TypeData<t_RedditComment>
 
 /**
+ * @name TimeInterval
+ * @type ENUM
+ */
+export enum TimeInterval {
+  hour = 'hour',
+  day = 'day',
+  week = 'week',
+  month = 'month',
+  year = 'year',
+  all = 'all',
+}
+
+/**
  * @name KeyValueAPI
  * @type OBJECT
  */
@@ -2283,6 +2237,15 @@ export type GithubBranch = TypeData<t_GithubBranch>
 export type TwitterAPI = TypeData<t_TwitterAPI>
 
 /**
+ * @name UserIdentifier
+ * @type ENUM
+ */
+export enum UserIdentifier {
+  id = 'id',
+  name = 'name',
+}
+
+/**
  * @name UserIdentity
  * @type SCALAR
  */
@@ -2305,6 +2268,16 @@ export type Tweet = TypeData<t_Tweet>
  * @type OBJECT
  */
 export type Retweet = TypeData<t_Retweet>
+
+/**
+ * @name SearchReponse
+ * @type ENUM
+ */
+export enum SearchReponse {
+  mixed = 'mixed',
+  recent = 'recent',
+  popular = 'popular',
+}
 
 /**
  * @name GiphyAPI
@@ -2447,6 +2420,18 @@ export type GiphyGIFImageDataOriginalStill = TypeData<
 export type GiphyGIFImageDataLooping = TypeData<t_GiphyGIFImageDataLooping>
 
 /**
+ * @name GiphyRatingType
+ * @type ENUM
+ */
+export enum GiphyRatingType {
+  y = 'y',
+  g = 'g',
+  pg = 'pg',
+  pg13 = 'pg13',
+  r = 'r',
+}
+
+/**
  * @name GraphQLHubMutationAPI
  * @type OBJECT
  */
@@ -2469,6 +2454,21 @@ export type __Schema = TypeData<t___Schema>
  * @type OBJECT
  */
 export type __Type = TypeData<t___Type>
+
+/**
+ * @name __TypeKind
+ * @type ENUM
+ */
+export enum __TypeKind {
+  SCALAR = 'SCALAR',
+  OBJECT = 'OBJECT',
+  INTERFACE = 'INTERFACE',
+  UNION = 'UNION',
+  ENUM = 'ENUM',
+  INPUT_OBJECT = 'INPUT_OBJECT',
+  LIST = 'LIST',
+  NON_NULL = 'NON_NULL',
+}
 
 /**
  * @name __Field
