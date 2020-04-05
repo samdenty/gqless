@@ -1,5 +1,4 @@
 ---
-'gqless': patch
 '@gqless/schema': patch
 ---
 
