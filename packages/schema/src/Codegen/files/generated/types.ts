@@ -111,28 +111,21 @@ export class TypesFile extends File {
         : any
 
       ${body}
-      
-      ${Object.values(this.codegen.schema.types)
-        .filter(type => type.kind === 'ENUM')
-        .map(
-          type =>
-            `${this.generateComments(
-              this.schemaTypeComments(type)
-            )}export enum ${type.name} { \n
-            ${(type as SchemaEnumType).enumValues.map(k => `${k} = '${k}' \n`)}
-          }`
-        )
-        .join('\n')}
 
       ${Object.values(this.codegen.schema.types)
-        .filter(type => !['INPUT_OBJECT', 'ENUM'].includes(type.kind))
-        .map(
-          type =>
-            `${this.generateComments(
-              this.schemaTypeComments(type)
-            )}export type ${type.name} = ${
-              this.names.TypeData
-            }<${this.typeReference(type.name)}>`
+        .filter(type => type.kind !== 'INPUT_OBJECT')
+        .map(type =>
+          type.kind === 'ENUM'
+            ? `${this.generateComments(
+                this.schemaTypeComments(type)
+              )}export enum ${type.name} { \n
+          ${(type as SchemaEnumType).enumValues.map(k => `${k} = '${k}' \n`)}
+          }`
+            : `${this.generateComments(
+                this.schemaTypeComments(type)
+              )}export type ${type.name} = ${
+                this.names.TypeData
+              }<${this.typeReference(type.name)}>`
         )
         .join('\n')}
     `
