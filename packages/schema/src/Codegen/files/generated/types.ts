@@ -99,8 +99,6 @@ export class TypesFile extends File {
       .filter(Boolean)
       .join('\n\n')
 
-    console.log(this.codegen.schema.types)
-
     return `
       ${super.generate()}
 
