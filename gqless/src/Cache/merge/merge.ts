@@ -1,5 +1,5 @@
 import { Value } from '../Value'
-import { ObjectNode, ScalarNode, ArrayNode, DataTrait, Extension, FieldNode, UFieldsNode, getAbstractImplementation } from '../../Node'
+import { EnumNode, ObjectNode, ScalarNode, ArrayNode, DataTrait, Extension, FieldNode, UFieldsNode, getAbstractImplementation } from '../../Node'
 import { createValue } from './createValue'
 import { Selection, Fragment } from '../../Selection'
 import { extensionsForKey } from './extensionsForKey'
@@ -20,7 +20,7 @@ const FIELD_NAME = /^([^(]+)\(?/
  * @returns mergeFiltered - merges the data omitted by selectionsFilter
  */
 export const merge = (cache: Cache, value: Value, data: any, extensions: Extension[] = [], ...selectionsFilter: Selection[]): Function | undefined => {
-  if (value.node instanceof ScalarNode) {
+  if (value.node instanceof ScalarNode || value.node instanceof EnumNode) {
     mergeScalar(value as any, data)
     return
   }
