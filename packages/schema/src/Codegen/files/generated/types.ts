@@ -227,12 +227,11 @@ export class TypesFile extends File {
   }
 
   public generateField(field: SchemaField, resolveType?: TypeResolver) {
-    const NULLABLE = field.type.nullable ? '?' : ''
     const fieldType = this.generateType(field.type, resolveType)
 
     if (field.args) this.import(CORE, this.names.FieldsTypeArg)
 
-    return `${this.generateFieldComments(field)}${field.name}${NULLABLE}: ${
+    return `${this.generateFieldComments(field)}${field.name}: ${
       field.args
         ? `${this.names.FieldsTypeArg}<${this.generateArgs(
             field.args
