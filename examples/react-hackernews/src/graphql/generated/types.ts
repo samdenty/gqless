@@ -22,14 +22,14 @@ type t_GraphQLHubAPI = FieldsType<
     /**
      * About GraphQLHub
      */
-    graphQLHub: t_String | null
-    hn: t_HackerNewsAPI | null
-    hn2: t_HackerNewsAPIV2 | null
-    reddit: t_RedditAPI | null
-    keyValue: t_KeyValueAPI | null
-    github: t_GithubAPI | null
-    twitter: t_TwitterAPI | null
-    giphy: t_GiphyAPI | null
+    graphQLHub?: t_String | null
+    hn?: t_HackerNewsAPI | null
+    hn2?: t_HackerNewsAPIV2 | null
+    reddit?: t_RedditAPI | null
+    keyValue?: t_KeyValueAPI | null
+    github?: t_GithubAPI | null
+    twitter?: t_TwitterAPI | null
+    giphy?: t_GiphyAPI | null
   },
   Extension<'GraphQLHubAPI'>
 >
@@ -47,13 +47,13 @@ type t_String<T extends string = string> = ScalarType<T, Extension<'String'>>
 type t_HackerNewsAPI = FieldsType<
   {
     __typename: t_String<'HackerNewsAPI'>
-    item: FieldsTypeArg<{ id: number }, t_HackerNewsItem | null>
-    user: FieldsTypeArg<{ id: string }, t_HackerNewsUser | null>
+    item?: FieldsTypeArg<{ id: number }, t_HackerNewsItem | null>
+    user?: FieldsTypeArg<{ id: string }, t_HackerNewsUser | null>
 
     /**
      * Up to 500 of the top stories
      */
-    topStories: FieldsTypeArg<
+    topStories?: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -61,7 +61,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Up to 500 of the newest stories
      */
-    newStories: FieldsTypeArg<
+    newStories?: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -69,7 +69,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Up to 200 of the Show HN stories
      */
-    showStories: FieldsTypeArg<
+    showStories?: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -77,7 +77,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Up to 200 of the Ask HN stories
      */
-    askStories: FieldsTypeArg<
+    askStories?: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -85,7 +85,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Up to 200 of the Job stores
      */
-    jobStories: FieldsTypeArg<
+    jobStories?: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -93,7 +93,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Return list of stories
      */
-    stories: FieldsTypeArg<
+    stories?: FieldsTypeArg<
       { limit?: number | null; offset?: number | null; storyType: string },
       (t_HackerNewsItem | null)[] | null
     >
@@ -123,7 +123,7 @@ type t_HackerNewsItem = FieldsType<
     /**
      * if the item is deleted
      */
-    deleted: t_Boolean | null
+    deleted?: t_Boolean | null
 
     /**
      * The type of item. One of "job", "story", "comment", "poll", or "pollopt".
@@ -148,32 +148,32 @@ type t_HackerNewsItem = FieldsType<
     /**
      * The comment, story or poll text. HTML.
      */
-    text: t_String | null
+    text?: t_String | null
 
     /**
      * if the item is dead
      */
-    dead: t_Boolean | null
+    dead?: t_Boolean | null
 
     /**
      * The URL of the story.
      */
-    url: t_String | null
+    url?: t_String | null
 
     /**
      * The story's score, or the votes for a pollopt.
      */
-    score: t_Int | null
+    score?: t_Int | null
 
     /**
      * The title of the story, poll or job.
      */
-    title: t_String | null
+    title?: t_String | null
 
     /**
      * The item's comments, in ranked display order.
      */
-    kids: FieldsTypeArg<
+    kids?: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -181,17 +181,17 @@ type t_HackerNewsItem = FieldsType<
     /**
      * The item's parent. For comments, either another comment or the relevant story. For pollopts, the relevant poll.
      */
-    parent: t_HackerNewsItem | null
+    parent?: t_HackerNewsItem | null
 
     /**
      * A list of related pollopts, in display order.
      */
-    parts: (t_HackerNewsItem | null)[] | null
+    parts?: (t_HackerNewsItem | null)[] | null
 
     /**
      * In the case of stories or polls, the total comment count.
      */
-    descendants: t_Int | null
+    descendants?: t_Int | null
   },
   Extension<'HackerNewsItem'>
 >
@@ -242,12 +242,12 @@ type t_HackerNewsUser = FieldsType<
     /**
      * The user's optional self-description. HTML.
      */
-    about: t_String | null
+    about?: t_String | null
 
     /**
      * List of the user's stories, polls and comments.
      */
-    submitted: FieldsTypeArg<
+    submitted?: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -266,7 +266,7 @@ type t_HackerNewsAPIV2 = FieldsType<
     /**
      * Fetches an object given its ID
      */
-    node: FieldsTypeArg<{ id: string }, t_Node | null>
+    node?: FieldsTypeArg<{ id: string }, t_Node | null>
 
     /**
      * To ensure Node IDs are globally unique, GraphQLHub coerces IDs returned by the HN API. Use this field to get nodes via normal HN IDs
@@ -321,12 +321,12 @@ type t_HackerNewsV2Story = FieldsType<
     /**
      * In the case of stories or polls, the total comment count.
      */
-    descendants: t_Int | null
+    descendants?: t_Int | null
 
     /**
      * The story's score, or the votes for a pollopt.
      */
-    score: t_Int | null
+    score?: t_Int | null
 
     /**
      * Creation date of the item, in Unix Time.
@@ -341,22 +341,22 @@ type t_HackerNewsV2Story = FieldsType<
     /**
      * The title of the story, poll or job.
      */
-    title: t_String | null
+    title?: t_String | null
 
     /**
      * The URL of the story.
      */
-    url: t_String | null
+    url?: t_String | null
 
     /**
      * The comment, story or poll text. HTML.
      */
-    text: t_String | null
+    text?: t_String | null
 
     /**
      * The item's comments, in ranked display order.
      */
-    kids: FieldsTypeArg<
+    kids?: FieldsTypeArg<
       {
         after?: string | null
         first?: number | null
@@ -369,12 +369,12 @@ type t_HackerNewsV2Story = FieldsType<
     /**
      * if the item is deleted
      */
-    deleted: t_Boolean | null
+    deleted?: t_Boolean | null
 
     /**
      * if the item is dead
      */
-    dead: t_Boolean | null
+    dead?: t_Boolean | null
   },
   Extension<'HackerNewsV2Story'>
 >
@@ -401,27 +401,27 @@ type t_HackerNewsV2User = FieldsType<
     /**
      * Delay in minutes between a comment's creation and its visibility to other users.
      */
-    delay: t_Int | null
+    delay?: t_Int | null
 
     /**
      * Creation date of the user, in Unix Time.
      */
-    created: t_Int | null
+    created?: t_Int | null
 
     /**
      * Creation date of the user, in ISO8601
      */
-    createdISO: t_String | null
+    createdISO?: t_String | null
 
     /**
      * The user's optional self-description. HTML.
      */
-    about: t_String | null
+    about?: t_String | null
 
     /**
      * List of the user's stories, polls and comments.
      */
-    submitted: FieldsTypeArg<
+    submitted?: FieldsTypeArg<
       {
         after?: string | null
         first?: number | null
@@ -450,7 +450,7 @@ type t_NodeConnection = FieldsType<
     /**
      * Information to aid in pagination.
      */
-    edges: (t_NodeEdge | null)[] | null
+    edges?: (t_NodeEdge | null)[] | null
   },
   Extension<'NodeConnection'>
 >
@@ -476,12 +476,12 @@ type t_PageInfo = FieldsType<
     /**
      * When paginating backwards, the cursor to continue.
      */
-    startCursor: t_String | null
+    startCursor?: t_String | null
 
     /**
      * When paginating forwards, the cursor to continue.
      */
-    endCursor: t_String | null
+    endCursor?: t_String | null
   },
   Extension<'PageInfo'>
 >
@@ -497,7 +497,7 @@ type t_NodeEdge = FieldsType<
     /**
      * The item at the end of the edge
      */
-    node: t_Node | null
+    node?: t_Node | null
 
     /**
      * A cursor for use in pagination
@@ -523,7 +523,7 @@ type t_HackerNewsV2CommentConnection = FieldsType<
     /**
      * Information to aid in pagination.
      */
-    edges: (t_HackerNewsV2CommentEdge | null)[] | null
+    edges?: (t_HackerNewsV2CommentEdge | null)[] | null
   },
   Extension<'HackerNewsV2CommentConnection'>
 >
@@ -539,7 +539,7 @@ type t_HackerNewsV2CommentEdge = FieldsType<
     /**
      * The item at the end of the edge
      */
-    node: t_HackerNewsV2Comment | null
+    node?: t_HackerNewsV2Comment | null
 
     /**
      * A cursor for use in pagination
@@ -576,12 +576,12 @@ type t_HackerNewsV2Comment = FieldsType<
     /**
      * The item's parent. For comments, either another comment or the relevant story. For pollopts, the relevant poll.
      */
-    parent: t_Node | null
+    parent?: t_Node | null
 
     /**
      * The comment, story or poll text. HTML.
      */
-    text: t_String | null
+    text?: t_String | null
 
     /**
      * Creation date of the item, in Unix Time.
@@ -596,7 +596,7 @@ type t_HackerNewsV2Comment = FieldsType<
     /**
      * The item's comments, in ranked display order.
      */
-    kids: FieldsTypeArg<
+    kids?: FieldsTypeArg<
       {
         after?: string | null
         first?: number | null
@@ -609,12 +609,12 @@ type t_HackerNewsV2Comment = FieldsType<
     /**
      * if the item is deleted
      */
-    deleted: t_Boolean | null
+    deleted?: t_Boolean | null
 
     /**
      * if the item is dead
      */
-    dead: t_Boolean | null
+    dead?: t_Boolean | null
   },
   Extension<'HackerNewsV2Comment'>
 >
@@ -646,12 +646,12 @@ type t_HackerNewsV2Job = FieldsType<
     /**
      * The story's score, or the votes for a pollopt.
      */
-    score: t_Int | null
+    score?: t_Int | null
 
     /**
      * The comment, story or poll text. HTML.
      */
-    text: t_String | null
+    text?: t_String | null
 
     /**
      * Creation date of the item, in Unix Time.
@@ -666,22 +666,22 @@ type t_HackerNewsV2Job = FieldsType<
     /**
      * The title of the story, poll or job.
      */
-    title: t_String | null
+    title?: t_String | null
 
     /**
      * The URL of the story.
      */
-    url: t_String | null
+    url?: t_String | null
 
     /**
      * if the item is deleted
      */
-    deleted: t_Boolean | null
+    deleted?: t_Boolean | null
 
     /**
      * if the item is dead
      */
-    dead: t_Boolean | null
+    dead?: t_Boolean | null
   },
   Extension<'HackerNewsV2Job'>
 >
@@ -713,12 +713,12 @@ type t_HackerNewsV2Poll = FieldsType<
     /**
      * In the case of stories or polls, the total comment count.
      */
-    descendants: t_Int | null
+    descendants?: t_Int | null
 
     /**
      * The story's score, or the votes for a pollopt.
      */
-    score: t_Int | null
+    score?: t_Int | null
 
     /**
      * Creation date of the item, in Unix Time.
@@ -733,17 +733,17 @@ type t_HackerNewsV2Poll = FieldsType<
     /**
      * The title of the story, poll or job.
      */
-    title: t_String | null
+    title?: t_String | null
 
     /**
      * The comment, story or poll text. HTML.
      */
-    text: t_String | null
+    text?: t_String | null
 
     /**
      * The item's comments, in ranked display order.
      */
-    kids: FieldsTypeArg<
+    kids?: FieldsTypeArg<
       {
         after?: string | null
         first?: number | null
@@ -756,17 +756,17 @@ type t_HackerNewsV2Poll = FieldsType<
     /**
      * if the item is deleted
      */
-    deleted: t_Boolean | null
+    deleted?: t_Boolean | null
 
     /**
      * if the item is dead
      */
-    dead: t_Boolean | null
+    dead?: t_Boolean | null
 
     /**
      * A list of related pollopts, in display order.
      */
-    parts: (t_HackerNewsV2PollPart | null)[] | null
+    parts?: (t_HackerNewsV2PollPart | null)[] | null
   },
   Extension<'HackerNewsV2Poll'>
 >
@@ -798,7 +798,7 @@ type t_HackerNewsV2PollPart = FieldsType<
     /**
      * The story's score, or the votes for a pollopt.
      */
-    score: t_Int | null
+    score?: t_Int | null
 
     /**
      * Creation date of the item, in Unix Time.
@@ -813,17 +813,17 @@ type t_HackerNewsV2PollPart = FieldsType<
     /**
      * The comment, story or poll text. HTML.
      */
-    text: t_String | null
+    text?: t_String | null
 
     /**
      * The item's parent. For comments, either another comment or the relevant story. For pollopts, the relevant poll.
      */
-    parent: t_Node | null
+    parent?: t_Node | null
 
     /**
      * if the item is deleted
      */
-    deleted: t_Boolean | null
+    deleted?: t_Boolean | null
   },
   Extension<'HackerNewsV2PollPart'>
 >
@@ -835,8 +835,8 @@ type t_HackerNewsV2PollPart = FieldsType<
 type t_RedditAPI = FieldsType<
   {
     __typename: t_String<'RedditAPI'>
-    subreddit: FieldsTypeArg<{ name: string }, t_RedditSubreddit | null>
-    user: FieldsTypeArg<{ username: string }, t_RedditUser | null>
+    subreddit?: FieldsTypeArg<{ name: string }, t_RedditSubreddit | null>
+    user?: FieldsTypeArg<{ username: string }, t_RedditUser | null>
   },
   Extension<'RedditAPI'>
 >
@@ -1099,7 +1099,7 @@ type t_TimeInterval = EnumType<
 type t_KeyValueAPI = FieldsType<
   {
     __typename: t_String<'KeyValueAPI'>
-    getValue: FieldsTypeArg<{ id: string }, t_KeyValueItem | null>
+    getValue?: FieldsTypeArg<{ id: string }, t_KeyValueItem | null>
   },
   Extension<'KeyValueAPI'>
 >
@@ -1120,7 +1120,7 @@ type t_KeyValueItem = FieldsType<
     /**
      * The item's value.
      */
-    value: t_String | null
+    value?: t_String | null
   },
   Extension<'KeyValueItem'>
 >
@@ -1132,8 +1132,8 @@ type t_KeyValueItem = FieldsType<
 type t_GithubAPI = FieldsType<
   {
     __typename: t_String<'GithubAPI'>
-    user: FieldsTypeArg<{ username: string }, t_GithubUser | null>
-    repo: FieldsTypeArg<
+    user?: FieldsTypeArg<{ username: string }, t_GithubUser | null>
+    repo?: FieldsTypeArg<
       { name: string; ownerUsername: string },
       t_GithubRepo | null
     >
@@ -1148,11 +1148,11 @@ type t_GithubAPI = FieldsType<
 type t_GithubUser = FieldsType<
   {
     __typename: t_String<'GithubUser'>
-    login: t_String | null
-    id: t_Int | null
-    company: t_String | null
-    avatar_url: t_String | null
-    repos: (t_GithubRepo | null)[] | null
+    login?: t_String | null
+    id?: t_Int | null
+    company?: t_String | null
+    avatar_url?: t_String | null
+    repos?: (t_GithubRepo | null)[] | null
   },
   Extension<'GithubUser'>
 >
@@ -1164,21 +1164,21 @@ type t_GithubUser = FieldsType<
 type t_GithubRepo = FieldsType<
   {
     __typename: t_String<'GithubRepo'>
-    id: t_Int | null
-    name: t_String | null
-    commits: FieldsTypeArg<
+    id?: t_Int | null
+    name?: t_String | null
+    commits?: FieldsTypeArg<
       { limit?: number | null },
       (t_GithubCommit | null)[] | null
     >
-    issues: FieldsTypeArg<
+    issues?: FieldsTypeArg<
       { limit?: number | null },
       (t_GithubIssue | null)[] | null
     >
-    branches: FieldsTypeArg<
+    branches?: FieldsTypeArg<
       { limit?: number | null },
       (t_GithubBranch | null)[] | null
     >
-    owner: t_GithubUser | null
+    owner?: t_GithubUser | null
   },
   Extension<'GithubRepo'>
 >
@@ -1190,12 +1190,12 @@ type t_GithubRepo = FieldsType<
 type t_GithubCommit = FieldsType<
   {
     __typename: t_String<'GithubCommit'>
-    sha: t_String | null
-    author: t_UserOrCommitAuthor | null
-    message: t_String | null
-    date: t_String | null
-    status: (t_GithubStatus | null)[] | null
-    tree: t_GithubTree | null
+    sha?: t_String | null
+    author?: t_UserOrCommitAuthor | null
+    message?: t_String | null
+    date?: t_String | null
+    status?: (t_GithubStatus | null)[] | null
+    tree?: t_GithubTree | null
   },
   Extension<'GithubCommit'>
 >
@@ -1213,8 +1213,8 @@ type t_UserOrCommitAuthor = t_GithubCommitAuthor | t_GithubUser
 type t_GithubCommitAuthor = FieldsType<
   {
     __typename: t_String<'GithubCommitAuthor'>
-    email: t_String | null
-    name: t_String | null
+    email?: t_String | null
+    name?: t_String | null
   },
   Extension<'GithubCommitAuthor'>
 >
@@ -1226,11 +1226,11 @@ type t_GithubCommitAuthor = FieldsType<
 type t_GithubStatus = FieldsType<
   {
     __typename: t_String<'GithubStatus'>
-    state: t_String | null
-    description: t_String | null
-    target_url: t_String | null
-    context: t_String | null
-    updated_at: t_String | null
+    state?: t_String | null
+    description?: t_String | null
+    target_url?: t_String | null
+    context?: t_String | null
+    updated_at?: t_String | null
   },
   Extension<'GithubStatus'>
 >
@@ -1242,7 +1242,7 @@ type t_GithubStatus = FieldsType<
 type t_GithubTree = FieldsType<
   {
     __typename: t_String<'GithubTree'>
-    entries: (t_GithubTreeEntry | null)[] | null
+    entries?: (t_GithubTreeEntry | null)[] | null
   },
   Extension<'GithubTree'>
 >
@@ -1254,8 +1254,8 @@ type t_GithubTree = FieldsType<
 type t_GithubTreeEntry = FieldsType<
   {
     __typename: t_String<'GithubTreeEntry'>
-    path: t_String | null
-    last_commit: t_GithubCommit | null
+    path?: t_String | null
+    last_commit?: t_GithubCommit | null
   },
   Extension<'GithubTreeEntry'>
 >
@@ -1267,16 +1267,16 @@ type t_GithubTreeEntry = FieldsType<
 type t_GithubIssue = FieldsType<
   {
     __typename: t_String<'GithubIssue'>
-    id: t_Int | null
-    state: t_String | null
-    title: t_String | null
-    body: t_String | null
-    user: t_GithubUser | null
-    assignee: t_GithubUser | null
-    closed_by: t_GithubUser | null
-    labels: (t_GithubIssueLabelType | null)[] | null
-    commentCount: t_Int | null
-    comments: (t_GithubIssueCommentType | null)[] | null
+    id?: t_Int | null
+    state?: t_String | null
+    title?: t_String | null
+    body?: t_String | null
+    user?: t_GithubUser | null
+    assignee?: t_GithubUser | null
+    closed_by?: t_GithubUser | null
+    labels?: (t_GithubIssueLabelType | null)[] | null
+    commentCount?: t_Int | null
+    comments?: (t_GithubIssueCommentType | null)[] | null
   },
   Extension<'GithubIssue'>
 >
@@ -1288,9 +1288,9 @@ type t_GithubIssue = FieldsType<
 type t_GithubIssueLabelType = FieldsType<
   {
     __typename: t_String<'GithubIssueLabelType'>
-    url: t_String | null
-    name: t_String | null
-    color: t_String | null
+    url?: t_String | null
+    name?: t_String | null
+    color?: t_String | null
   },
   Extension<'GithubIssueLabelType'>
 >
@@ -1302,9 +1302,9 @@ type t_GithubIssueLabelType = FieldsType<
 type t_GithubIssueCommentType = FieldsType<
   {
     __typename: t_String<'GithubIssueCommentType'>
-    id: t_Int | null
-    body: t_String | null
-    user: t_GithubUser | null
+    id?: t_Int | null
+    body?: t_String | null
+    user?: t_GithubUser | null
   },
   Extension<'GithubIssueCommentType'>
 >
@@ -1316,8 +1316,8 @@ type t_GithubIssueCommentType = FieldsType<
 type t_GithubBranch = FieldsType<
   {
     __typename: t_String<'GithubBranch'>
-    name: t_String | null
-    lastCommit: t_GithubCommit | null
+    name?: t_String | null
+    lastCommit?: t_GithubCommit | null
   },
   Extension<'GithubBranch'>
 >
@@ -1329,16 +1329,16 @@ type t_GithubBranch = FieldsType<
 type t_TwitterAPI = FieldsType<
   {
     __typename: t_String<'TwitterAPI'>
-    user: FieldsTypeArg<
+    user?: FieldsTypeArg<
       { identifier: UserIdentifier; identity: any },
       t_TwitterUser | null
     >
-    tweet: FieldsTypeArg<{ id: string }, t_Tweet | null>
+    tweet?: FieldsTypeArg<{ id: string }, t_Tweet | null>
 
     /**
      * Returns a collection of relevant Tweets matching a specified query.
      */
-    search: FieldsTypeArg<
+    search?: FieldsTypeArg<
       { q: string; count?: number | null; result_type?: SearchReponse | null },
       (t_Tweet | null)[] | null
     >
@@ -1368,20 +1368,20 @@ type t_UserIdentity<T extends any = any> = ScalarType<
 type t_TwitterUser = FieldsType<
   {
     __typename: t_String<'TwitterUser'>
-    created_at: t_String | null
-    description: t_String | null
-    id: t_ID | null
-    screen_name: t_String | null
-    name: t_String | null
-    profile_image_url: t_String | null
-    url: t_String | null
-    tweets_count: t_Int | null
-    followers_count: t_Int | null
+    created_at?: t_String | null
+    description?: t_String | null
+    id?: t_ID | null
+    screen_name?: t_String | null
+    name?: t_String | null
+    profile_image_url?: t_String | null
+    url?: t_String | null
+    tweets_count?: t_Int | null
+    followers_count?: t_Int | null
 
     /**
      * Get a list of tweets for current user
      */
-    tweets: FieldsTypeArg<{ limit?: number | null }, (t_Tweet | null)[] | null>
+    tweets?: FieldsTypeArg<{ limit?: number | null }, (t_Tweet | null)[] | null>
   },
   Extension<'TwitterUser'>
 >
@@ -1393,16 +1393,16 @@ type t_TwitterUser = FieldsType<
 type t_Tweet = FieldsType<
   {
     __typename: t_String<'Tweet'>
-    id: t_ID | null
-    created_at: t_String | null
-    text: t_String | null
-    retweet_count: t_Int | null
-    user: t_TwitterUser | null
+    id?: t_ID | null
+    created_at?: t_String | null
+    text?: t_String | null
+    retweet_count?: t_Int | null
+    user?: t_TwitterUser | null
 
     /**
      * Get a list of retweets
      */
-    retweets: FieldsTypeArg<
+    retweets?: FieldsTypeArg<
       { limit?: number | null },
       (t_Retweet | null)[] | null
     >
@@ -1417,13 +1417,13 @@ type t_Tweet = FieldsType<
 type t_Retweet = FieldsType<
   {
     __typename: t_String<'Retweet'>
-    id: t_ID | null
-    created_at: t_String | null
-    in_reply_to_tweet_id: t_String | null
-    in_reply_to_user_id: t_Int | null
-    in_reply_to_screen_name: t_String | null
-    retweeted_status: t_Tweet | null
-    user: t_TwitterUser | null
+    id?: t_ID | null
+    created_at?: t_String | null
+    in_reply_to_tweet_id?: t_String | null
+    in_reply_to_user_id?: t_Int | null
+    in_reply_to_screen_name?: t_String | null
+    retweeted_status?: t_Tweet | null
+    user?: t_TwitterUser | null
   },
   Extension<'Retweet'>
 >
@@ -1441,8 +1441,8 @@ type t_SearchReponse = EnumType<'mixed' | 'recent' | 'popular'>
 type t_GiphyAPI = FieldsType<
   {
     __typename: t_String<'GiphyAPI'>
-    gif: FieldsTypeArg<{ id: string }, t_GiphyGIFData | null>
-    search: FieldsTypeArg<
+    gif?: FieldsTypeArg<{ id: string }, t_GiphyGIFData | null>
+    search?: FieldsTypeArg<
       {
         query: string
         limit?: number | null
@@ -1451,7 +1451,7 @@ type t_GiphyAPI = FieldsType<
       },
       (t_GiphyGIFData | null)[] | null
     >
-    random: FieldsTypeArg<
+    random?: FieldsTypeArg<
       { tag?: string | null; rating?: GiphyRatingType | null },
       t_GiphyGIFData | null
     >
@@ -1484,22 +1484,22 @@ type t_GiphyGIFData = FieldsType<
 type t_GiphyGIFImages = FieldsType<
   {
     __typename: t_String<'GiphyGIFImages'>
-    fixed_height: t_GiphyGIFImageDataFixedHeight | null
-    fixed_height_still: t_GiphyGIFImageDataFixedHeightStill | null
-    fixed_height_downsampled: t_GiphyGIFImageDataFixedHeightDownsample | null
-    fixed_width: t_GiphyGIFImageDataFixedWidth | null
-    fixed_width_still: t_GiphyGIFImageDataFixedWidthStill | null
-    fixed_width_downsampled: t_GiphyGIFImageDataFixedWidthDownsample | null
-    fixed_height_small: t_GiphyGIFImageDataFixedHeightSmall | null
-    fixed_height_small_still: t_GiphyGIFImageDataFixedHeightSmallStill | null
-    fixed_width_small: t_GiphyGIFImageDataFixedWidthSmall | null
-    fixed_width_small_still: t_GiphyGIFImageDataFixedWidthSmallStill | null
-    downsized: t_GiphyGIFImageDataDownsized | null
-    downsized_still: t_GiphyGIFImageDataDownsizedStill | null
-    downsized_large: t_GiphyGIFImageDataDownsizedLarge | null
-    original: t_GiphyGIFImageDataOriginal | null
-    original_still: t_GiphyGIFImageDataOriginalStill | null
-    looping: t_GiphyGIFImageDataLooping | null
+    fixed_height?: t_GiphyGIFImageDataFixedHeight | null
+    fixed_height_still?: t_GiphyGIFImageDataFixedHeightStill | null
+    fixed_height_downsampled?: t_GiphyGIFImageDataFixedHeightDownsample | null
+    fixed_width?: t_GiphyGIFImageDataFixedWidth | null
+    fixed_width_still?: t_GiphyGIFImageDataFixedWidthStill | null
+    fixed_width_downsampled?: t_GiphyGIFImageDataFixedWidthDownsample | null
+    fixed_height_small?: t_GiphyGIFImageDataFixedHeightSmall | null
+    fixed_height_small_still?: t_GiphyGIFImageDataFixedHeightSmallStill | null
+    fixed_width_small?: t_GiphyGIFImageDataFixedWidthSmall | null
+    fixed_width_small_still?: t_GiphyGIFImageDataFixedWidthSmallStill | null
+    downsized?: t_GiphyGIFImageDataDownsized | null
+    downsized_still?: t_GiphyGIFImageDataDownsizedStill | null
+    downsized_large?: t_GiphyGIFImageDataDownsizedLarge | null
+    original?: t_GiphyGIFImageDataOriginal | null
+    original_still?: t_GiphyGIFImageDataOriginalStill | null
+    looping?: t_GiphyGIFImageDataLooping | null
   },
   Extension<'GiphyGIFImages'>
 >
@@ -1769,7 +1769,7 @@ type t_GiphyRatingType = EnumType<'y' | 'g' | 'pg' | 'pg13' | 'r'>
 type t_GraphQLHubMutationAPI = FieldsType<
   {
     __typename: t_String<'GraphQLHubMutationAPI'>
-    keyValue_setValue: FieldsTypeArg<
+    keyValue_setValue?: FieldsTypeArg<
       { input: SetValueForKeyInput },
       t_SetValueForKeyPayload | null
     >
@@ -1794,7 +1794,7 @@ export type SetValueForKeyInput = {
 type t_SetValueForKeyPayload = FieldsType<
   {
     __typename: t_String<'SetValueForKeyPayload'>
-    item: t_KeyValueItem | null
+    item?: t_KeyValueItem | null
     clientMutationId: t_String
   },
   Extension<'SetValueForKeyPayload'>
@@ -1821,12 +1821,12 @@ type t___Schema = FieldsType<
     /**
      * If this server supports mutation, the type that mutation operations will be rooted at.
      */
-    mutationType: t___Type | null
+    mutationType?: t___Type | null
 
     /**
      * If this server support subscription, the type that subscription operations will be rooted at.
      */
-    subscriptionType: t___Type | null
+    subscriptionType?: t___Type | null
 
     /**
      * A list of all directives supported by this server.
@@ -1844,20 +1844,20 @@ type t___Type = FieldsType<
   {
     __typename: t_String<'__Type'>
     kind: t___TypeKind
-    name: t_String | null
-    description: t_String | null
-    fields: FieldsTypeArg<
+    name?: t_String | null
+    description?: t_String | null
+    fields?: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
       t___Field[] | null
     >
-    interfaces: t___Type[] | null
-    possibleTypes: t___Type[] | null
-    enumValues: FieldsTypeArg<
+    interfaces?: t___Type[] | null
+    possibleTypes?: t___Type[] | null
+    enumValues?: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
       t___EnumValue[] | null
     >
-    inputFields: t___InputValue[] | null
-    ofType: t___Type | null
+    inputFields?: t___InputValue[] | null
+    ofType?: t___Type | null
   },
   Extension<'__Type'>
 >
@@ -1885,11 +1885,11 @@ type t___Field = FieldsType<
   {
     __typename: t_String<'__Field'>
     name: t_String
-    description: t_String | null
+    description?: t_String | null
     args: t___InputValue[]
     type: t___Type
     isDeprecated: t_Boolean
-    deprecationReason: t_String | null
+    deprecationReason?: t_String | null
   },
   Extension<'__Field'>
 >
@@ -1902,13 +1902,13 @@ type t___InputValue = FieldsType<
   {
     __typename: t_String<'__InputValue'>
     name: t_String
-    description: t_String | null
+    description?: t_String | null
     type: t___Type
 
     /**
      * A GraphQL-formatted string representing the default value for this input value.
      */
-    defaultValue: t_String | null
+    defaultValue?: t_String | null
   },
   Extension<'__InputValue'>
 >
@@ -1921,9 +1921,9 @@ type t___EnumValue = FieldsType<
   {
     __typename: t_String<'__EnumValue'>
     name: t_String
-    description: t_String | null
+    description?: t_String | null
     isDeprecated: t_Boolean
-    deprecationReason: t_String | null
+    deprecationReason?: t_String | null
   },
   Extension<'__EnumValue'>
 >
@@ -1936,7 +1936,7 @@ type t___Directive = FieldsType<
   {
     __typename: t_String<'__Directive'>
     name: t_String
-    description: t_String | null
+    description?: t_String | null
     args: t___InputValue[]
     onOperation: t_Boolean
     onFragment: t_Boolean
@@ -1985,7 +1985,13 @@ export type Boolean = TypeData<t_Boolean>
  * @name ItemType
  * @type ENUM
  */
-export type ItemType = TypeData<t_ItemType>
+export enum ItemType {
+  job = 'job',
+  story = 'story',
+  comment = 'comment',
+  poll = 'poll',
+  pollopt = 'pollopt',
+}
 
 /**
  * @name HackerNewsUser
@@ -2125,7 +2131,14 @@ export type RedditComment = TypeData<t_RedditComment>
  * @name TimeInterval
  * @type ENUM
  */
-export type TimeInterval = TypeData<t_TimeInterval>
+export enum TimeInterval {
+  hour = 'hour',
+  day = 'day',
+  week = 'week',
+  month = 'month',
+  year = 'year',
+  all = 'all',
+}
 
 /**
  * @name KeyValueAPI
@@ -2227,7 +2240,10 @@ export type TwitterAPI = TypeData<t_TwitterAPI>
  * @name UserIdentifier
  * @type ENUM
  */
-export type UserIdentifier = TypeData<t_UserIdentifier>
+export enum UserIdentifier {
+  id = 'id',
+  name = 'name',
+}
 
 /**
  * @name UserIdentity
@@ -2257,7 +2273,11 @@ export type Retweet = TypeData<t_Retweet>
  * @name SearchReponse
  * @type ENUM
  */
-export type SearchReponse = TypeData<t_SearchReponse>
+export enum SearchReponse {
+  mixed = 'mixed',
+  recent = 'recent',
+  popular = 'popular',
+}
 
 /**
  * @name GiphyAPI
@@ -2403,7 +2423,13 @@ export type GiphyGIFImageDataLooping = TypeData<t_GiphyGIFImageDataLooping>
  * @name GiphyRatingType
  * @type ENUM
  */
-export type GiphyRatingType = TypeData<t_GiphyRatingType>
+export enum GiphyRatingType {
+  y = 'y',
+  g = 'g',
+  pg = 'pg',
+  pg13 = 'pg13',
+  r = 'r',
+}
 
 /**
  * @name GraphQLHubMutationAPI
@@ -2433,7 +2459,16 @@ export type __Type = TypeData<t___Type>
  * @name __TypeKind
  * @type ENUM
  */
-export type __TypeKind = TypeData<t___TypeKind>
+export enum __TypeKind {
+  SCALAR = 'SCALAR',
+  OBJECT = 'OBJECT',
+  INTERFACE = 'INTERFACE',
+  UNION = 'UNION',
+  ENUM = 'ENUM',
+  INPUT_OBJECT = 'INPUT_OBJECT',
+  LIST = 'LIST',
+  NON_NULL = 'NON_NULL',
+}
 
 /**
  * @name __Field
