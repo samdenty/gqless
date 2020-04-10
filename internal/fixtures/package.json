@@ -1,5 +1,5 @@
 {
-  "license": "MIT",
+  "license": "GNU GPLv3",
   "name": "@internal/fixtures",
   "version": "0.0.1-alpha.22",
   "private": true,

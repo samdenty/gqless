@@ -5,6 +5,7 @@ import { types as t } from '@babel/core'
 import { FileAnalysis, FunctionAnalysis } from './analysis'
 import { scanParentPath } from './scan'
 import { emitPreloader } from './preload'
+import { evaluate } from './evaluator'
 
 export const gqlessTransform = (
   analysis: FileAnalysis,
@@ -29,6 +30,12 @@ const scanPreload = (analysis: FileAnalysis, path: NodePath) => {
       t.Expression | t.SpreadElement
     >[]
     args.forEach((a) => invariant(a.isExpression()))
+
+    // evaluate(args[1])
+    // console.log(analysis.get(args[1]))
+    const r = evaluate(args[1])
+    console.log(r, r.value)
+    return
 
     // Get the function to preload
     const funcToPreload = args[0]

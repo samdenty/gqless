@@ -1,6 +1,6 @@
 const { preload } = require('gqless')
+const { query } = require('./client')
 import * as React from 'react'
-import { query } from './client'
 import testDefault, { Test, test } from './test2'
 import * as test2 from './test2'
 
@@ -30,4 +30,5 @@ export const App = ({ user }) => {
   // )
 }
 
-preload(App, { user })
+// preload(App, '' == {})
+preload(App, (a) => ({ a }))

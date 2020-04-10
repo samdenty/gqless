@@ -57,10 +57,6 @@ export class FileAnalysis extends Analysis {
       return this.getVariable(path, opts.varName)
     }
 
-    if (path.parentPath.isImportDeclaration()) {
-      return this.getImport(path as NodePath<ImportSpecifier>)
-    }
-
     return
   }
 
@@ -93,6 +89,7 @@ export class FileAnalysis extends Analysis {
       const init = path.get('init')
       if (init.node === null) return
 
+      // console.log(this.get(init))
       const value = resolveRefInPattern(id, init as NodePath, name)
       if (!value) return
 

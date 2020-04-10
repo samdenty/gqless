@@ -1,5 +1,5 @@
 {
-  "license": "MIT",
+  "license": "GNU GPLv3",
   "private": true,
   "workspaces": [
     "internal/*",
