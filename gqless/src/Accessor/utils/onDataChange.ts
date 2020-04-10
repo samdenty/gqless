@@ -1,5 +1,5 @@
 import { Accessor } from '../Accessor'
-import { ScalarNode } from '../../Node'
+import { EnumNode, ScalarNode } from '../../Node'
 import { createEvent } from '@gqless/utils'
 import { Value } from '../../Cache'
 
@@ -23,7 +23,8 @@ export const onDataChange = (accessor: Accessor) => {
       if (
         prevData !== undefined ||
         newData === null ||
-        accessor.node instanceof ScalarNode
+        accessor.node instanceof ScalarNode ||
+        accessor.node instanceof EnumNode
       ) {
         onDataChange.emit(prevData)
       }
