@@ -1,9 +1,13 @@
 import { V } from './values'
+import { GlobalContext } from './GlobalContext'
 
 export class Context {
   private values = new Map<string, V>()
+  public globalContext: GlobalContext
 
-  constructor(public parent?: Context) {}
+  constructor(public parent: Context | undefined) {
+    this.globalContext = parent?.globalContext!
+  }
 
   public define(name: string, value: V) {
     this.values.set(name, value)
@@ -22,7 +26,7 @@ export class Context {
     return this.parent?.has(name)
   }
 
-  public get(name: string) {
+  public get(name: string): V<any> | undefined {
     if (this.values.has(name)) {
       return this.values.get(name)
     }

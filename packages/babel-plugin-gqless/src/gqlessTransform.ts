@@ -34,7 +34,7 @@ const scanPreload = (analysis: FileAnalysis, path: NodePath) => {
     // evaluate(args[1])
     // console.log(analysis.get(args[1]))
     const r = evaluate(args[1])
-    console.log(r, r.value)
+    console.log(r)
     return
 
     // Get the function to preload
