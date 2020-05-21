@@ -1,21 +1,25 @@
-import { File, CORE } from '../../File'
-import { Codegen } from '../../Codegen'
 import {
-  SchemaType,
-  SchemaField,
-  Type,
-  SchemaInterfaceType,
-  SchemaFieldArgs,
   SchemaEnumType,
+  SchemaField,
+  SchemaFieldArgs,
+  SchemaType,
+  Type,
 } from '../../../Schema'
+import { Codegen } from '../../Codegen'
+import { CORE, File } from '../../File'
 
 const TYPE_PREFIX = 't_'
 
 type TypeResolver = (name: string) => string
 
 export class TypesFile extends File {
-  constructor(private codegen: Codegen) {
-    super('generated/types')
+  constructor(
+    private codegen: Codegen,
+    private typeName: string,
+    private types: SchemaType[],
+    private otherTypes: { [key: string]: SchemaType[] }
+  ) {
+    super(`generated/${typeName}`)
   }
 
   private createUniqueNames<TName extends string>(
@@ -26,31 +30,30 @@ export class TypesFile extends File {
     const namesObj = {} as Record<TName, string>
 
     const uniqueName = (desiredName: string): string => {
-      if (reservedNames.includes(desiredName))
+      if (reservedNames.includes(desiredName)) {
         return uniqueName(makeUnique(desiredName))
-
+      }
       return desiredName
     }
 
     for (const name of names) {
       const chosenName = uniqueName(name)
       reservedNames.push(chosenName)
-
       namesObj[name] = chosenName
     }
 
     return namesObj
   }
 
+  private didImportStringType = false
+
   private typeNames = this.createUniqueNames(
     Object.keys(this.codegen.schema.types),
     Object.keys(this.codegen.schema.types),
-    name => {
-      return `${TYPE_PREFIX}${name}`
-    }
+    (name) => `${TYPE_PREFIX}${name}`
   )
 
-  private names = this.createUniqueNames(
+  public names = this.createUniqueNames(
     [
       ...Object.keys(this.codegen.schema.types),
       ...Object.values(this.typeNames),
@@ -64,24 +67,22 @@ export class TypesFile extends File {
       'TypeData',
       'extensions',
     ],
-    name => `gqless_${name}`
+    (name) => `gqless_${name}`
   )
 
   private typeReference = (name: string): string => {
     const schemaType = this.codegen.getSchemaType(name)
-
-    if (schemaType.kind === 'INPUT_OBJECT') return name
-
+    if (schemaType.kind === 'INPUT_OBJECT') {
+      return name
+    }
     return this.typeNames[name]
   }
 
   private typeValue = (name: string) => {
     const type = this.codegen.getSchemaType(name)
-
     if (type.kind === 'SCALAR') {
       return this.defaultScalarType(type)
     }
-
     return type.name
   }
 
@@ -89,37 +90,33 @@ export class TypesFile extends File {
     this.import(CORE, this.names.TypeData)
     this.importAll('../extensions', this.names.extensions)
 
-    const body = Object.values(this.codegen.schema.types)
-      .map(type => {
+    // import extensionsTypes
+    this.import('./extensionsTypes', this.names.Extension)
+
+    const body = Object.values(this.types)
+      .map((type) => {
         const definition = this.generateSchemaType(type)
         if (!definition) return
-
         return this.generateComments(this.schemaTypeComments(type)) + definition
       })
       .filter(Boolean)
       .join('\n\n')
 
+    this.addAllUsedImports()
+
     return `
       ${super.generate()}
 
-      type ${
-        this.names.Extension
-      }<TName extends string> = TName extends keyof typeof ${
-      this.names.extensions
-    }
-        ? typeof ${this.names.extensions}[TName]
-        : any
-
       ${body}
 
-      ${Object.values(this.codegen.schema.types)
-        .filter(type => type.kind !== 'INPUT_OBJECT')
-        .map(type =>
+      ${Object.values(this.types)
+        .filter((type) => type.kind !== 'INPUT_OBJECT')
+        .map((type) =>
           type.kind === 'ENUM'
             ? `${this.generateComments(
                 this.schemaTypeComments(type)
               )}export enum ${type.name} { \n
-          ${(type as SchemaEnumType).enumValues.map(k => `${k} = '${k}' \n`)}
+          ${(type as SchemaEnumType).enumValues.map((k) => `${k} = '${k}' \n`)}
           }`
             : `${this.generateComments(
                 this.schemaTypeComments(type)
@@ -129,6 +126,78 @@ export class TypesFile extends File {
         )
         .join('\n')}
     `
+  }
+
+  private addAllUsedImports() {
+    const getAllValidImportedNames = (type: SchemaType) => {
+      let names: string[] = []
+      for (const key in type) {
+        if (key === 'kind') continue
+        if (key === 'name') {
+          if (!('kind' in type)) continue
+          try {
+            const otherName = this.typeReference(type.name)
+            const isDefinedInThisFile = this.types.find(
+              (x) => this.typeReference(x.name) === otherName
+            )
+            if (isDefinedInThisFile) {
+              continue
+            }
+            const outType = this.typeValue(type.name)
+            // this is broken, but i'm confused on behavior and this fixes it
+            const final =
+              type.kind === 'ENUM'
+                ? type.name
+                : type.name == outType
+                ? otherName
+                : type.kind === 'SCALAR'
+                ? otherName
+                : type.name
+            if (final) {
+              // this.log('adding', final)
+              names.push(final)
+            }
+            continue
+          } catch (err) {
+            continue
+          }
+        }
+        const val = (type as any)[key]
+        if (Array.isArray(val)) {
+          continue
+        }
+        names = [...names, ...getAllValidImportedNames((type as any)[key])]
+      }
+      return names
+    }
+
+    const foundImports = this.types
+      .map((type) => getAllValidImportedNames(type))
+      .flat()
+    if (this.didImportStringType) {
+      foundImports.push(this.typeReference('String'))
+    }
+    const validImports = [...new Set(foundImports)]
+
+    const importsByFile = validImports.reduce((acc, importName) => {
+      for (const key in this.otherTypes) {
+        if (
+          this.otherTypes[key].some(
+            (x) =>
+              this.typeNames[x.name] === importName || x.name === importName
+          )
+        ) {
+          acc[key] = acc[key] || []
+          acc[key].push(importName)
+        }
+      }
+      return acc
+    }, {} as any)
+
+    // add imports
+    for (const filename in importsByFile) {
+      this.import(`./${filename}`, importsByFile[filename])
+    }
   }
 
   private schemaTypeComments(type: SchemaType) {
@@ -179,20 +248,22 @@ export class TypesFile extends File {
 
       case 'UNION':
       case 'INTERFACE':
-        return `type ${this.typeReference(
+        return `export type ${this.typeReference(
           type.name
         )} = ${type.possibleTypes
-          .map(name => this.typeReference(name))
+          .map((name) => this.typeReference(name))
           .join(' | ')}`
 
       case 'OBJECT': {
         this.import(CORE, this.names.FieldsType)
-
-        return `type ${this.typeReference(type.name)} = ${
+        this.didImportStringType = true
+        return `export type ${this.typeReference(type.name)} = ${
           this.names.FieldsType
         }<{\n${[
           `__typename: ${this.typeReference('String')}<'${type.name}'>`,
-          ...Object.values(type.fields).map(field => this.generateField(field)),
+          ...Object.values(type.fields).map((field) =>
+            this.generateField(field)
+          ),
         ].join('\n')}\n}, ${this.names.Extension}<'${type.name}'>>`
       }
 
@@ -200,15 +271,15 @@ export class TypesFile extends File {
         return `export type ${this.typeReference(type.name)} = {${Object.values(
           type.inputFields
         )
-          .map(field => this.generateField(field, this.typeValue))
+          .map((field) => this.generateField(field, this.typeValue))
           .join('\n')}}`
 
       case 'ENUM': {
         this.import(CORE, this.names.EnumType)
 
-        return `type ${this.typeReference(type.name)} = ${
+        return `export type ${this.typeReference(type.name)} = ${
           this.names.EnumType
-        }<${type.enumValues.map(value => `'${value}'`).join(' | ')}>`
+        }<${type.enumValues.map((value) => `'${value}'`).join(' | ')}>`
       }
 
       default:
@@ -230,7 +301,9 @@ export class TypesFile extends File {
     const NULLABLE = field.type.nullable ? '?' : ''
     const fieldType = this.generateType(field.type, resolveType)
 
-    if (field.args) this.import(CORE, this.names.FieldsTypeArg)
+    if (field.args) {
+      this.import(CORE, this.names.FieldsTypeArg)
+    }
 
     return `${this.generateFieldComments(field)}${field.name}${NULLABLE}: ${
       field.args
@@ -287,7 +360,7 @@ export class TypesFile extends File {
 
     const type = this.defaultScalarType(scalar)
 
-    return `type ${this.typeReference(
+    return `export type ${this.typeReference(
       scalar.name
     )}<T extends ${type} = ${type}> = ${this.names.ScalarType}<T, ${
       this.names.Extension
