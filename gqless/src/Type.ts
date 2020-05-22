@@ -1,13 +1,14 @@
 import {
-  Tuple,
-  UnshiftTuple,
-  MapTupleByKey,
   LastTupleValue,
   LastTupleValueForKey,
+  MapTupleByKey,
+  Tuple,
   TupleKeys,
+  UnshiftTuple,
 } from '@gqless/utils'
+
+import { GET_KEY, INDEX } from './Node'
 import { Variable } from './Variable'
-import { INDEX, GET_KEY } from './Node'
 
 type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K
@@ -19,23 +20,25 @@ type UnionToIntersection<U> = (U extends any
   : never
 type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N
 
-enum Kind {
+export enum Kind {
   scalar,
   enum,
   fields,
 }
 
-type Type<TKind extends Kind = any, TData = any, TExtension = any> = {
+export type Type<TKind extends Kind = any, TData = any, TExtension = any> = {
   kind: TKind
   data: TData
   extension: TExtension
 }
 
-type ExtensionData<TExtension> = TExtension extends (...args: any[]) => infer U
+export type ExtensionData<TExtension> = TExtension extends (
+  ...args: any[]
+) => infer U
   ? U
   : TExtension
 
-type TypeExtension<TType extends ValidType> = TType extends Type
+export type TypeExtension<TType extends ValidType> = TType extends Type
   ? IfAny<TType['extension'], never, ExtensionData<TType['extension']>>
   : never
 
