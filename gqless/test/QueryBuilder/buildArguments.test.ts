@@ -71,5 +71,5 @@ it('uses node to output valid syntax', () => {
         }),
       }
     )
-  ).toMatchInlineSnapshot(`"a: \\"[{\\\\\\"a\\\\\\":100}]\\""`)
+  ).toMatchInlineSnapshot(`"a: [{a:100}]"`)
 })

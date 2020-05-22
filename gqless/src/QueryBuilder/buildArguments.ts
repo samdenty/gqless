@@ -1,14 +1,14 @@
-import { Formatter } from './Formatter'
-import { Variable } from '../Variable'
-import { buildVariable, ConnectedVariable } from './buildVariable'
 import {
   Arguments,
-  InputNode,
   ArrayNode,
   EnumNode,
+  InputNode,
   ScalarNode,
   UArguments,
 } from '../Node'
+import { Variable } from '../Variable'
+import { ConnectedVariable, buildVariable } from './buildVariable'
+import { Formatter } from './Formatter'
 
 interface ArgContext<TNode extends object = object> {
   node: TNode
@@ -50,17 +50,17 @@ export const buildArguments = (
       .join(SEPARATOR)
   }
 
-  const build = (arg: any, path: string[], context?: ArgContext<any>): string => {
+  const build = (
+    arg: any,
+    path: string[],
+    context?: ArgContext<any>
+  ): string => {
     if (options.variables && arg instanceof Variable) {
-      return buildVariable(
-        formatter,
-        arg,
-        {
-          ...info,
-          ...context as ArgContext<UArguments>,
-          path: [...((info && info.path) || []), ...path],
-        }
-      )
+      return buildVariable(formatter, arg, {
+        ...info,
+        ...(context as ArgContext<UArguments>),
+        path: [...((info && info.path) || []), ...path],
+      })
     }
 
     if (arg && typeof arg.toJSON === 'function') arg = arg.toJSON()
@@ -83,16 +83,17 @@ export const buildArguments = (
     if (context?.node instanceof ScalarNode) {
       // Object / Array passed as scalar
       // serialize as a JSON-string
-      return JSON.stringify(JSON.stringify(arg))
+      // using the replace so we handle JSONB fields (avoid converting to serialized JSON string)
+      return JSON.stringify(arg).replace(/"([^"]+)":/g, '$1:')
     }
 
     if (Array.isArray(arg)) {
       let indexContext: ArgContext | undefined
       if (context) {
-        const arrayNode = (context.node as ArrayNode)
+        const arrayNode = context.node as ArrayNode
         indexContext = {
           node: arrayNode.ofNode,
-          nullable: arrayNode.nullable
+          nullable: arrayNode.nullable,
         }
       }
 
