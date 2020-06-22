@@ -29,6 +29,34 @@ $ gqless generate ./src/gqless -u https://example.com/graphql
 $ gqless generate -c gqless.config.ts
 ```
 
+## Config File Options
+
+| Option                      | Type      | Default |
+| --------------------------- | --------- | ------- |
+| <nobr>`url`</nobr>          | `string`  |         |
+| <nobr>`outputDir`</nobr>    | `string`  |         |
+| <nobr>`typescript`</nobr>   | `boolean` | `true`  |
+| <nobr>`comments`</nobr>     | `boolean` | `true`  |
+| <nobr>`headers`</nobr>      | `object`  |         |
+
+## Example:
+```typescript
+// gqless.config.ts
+import { programaticallyGenerateJwt } from './somewhere-else';
+
+// Generate your jwt here or hardcode it if your endpoint requires authorization
+const jwt = programaticallyGenerateJwt();
+
+export default {
+  url: 'https://example.com/graphql',
+  outputDir: 'src/graphql',
+  // Note that it's `headers` here instead of `header`
+  headers: { Authorization: `Bearer ${jwt}` },
+  typescript: true,
+  comments: false,
+};
+```
+
 ## Format output code
 
 CLI code generator comes with built in support for formatting code using [Prettier](https://prettier.io/). The config search will start at the output directory and will continue up the directories tree.
