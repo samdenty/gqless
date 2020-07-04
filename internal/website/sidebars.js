@@ -1,7 +1,18 @@
 module.exports = {
   docs: {
-    Introduction: ['intro/what-and-why', 'intro/features', 'intro/faq'],
-    gqless: ['getting-started', 'extensions', 'matchers'],
+    Introduction: [
+      'introduction/getting-started',
+      'introduction/installation',
+      'introduction/motivation',
+      // 'introduction/features',
+    ],
+    'Fetching Data': [
+      'fetching-data/queries',
+      'fetching-data/local-state',
+      'fetching-data/fragments',
+    ],
+    FAQ: ['faq'],
+    // gqless: ['extensions', 'matchers'],
     React: [
       'react/basic-usage',
       'react/polling',
@@ -9,16 +20,17 @@ module.exports = {
       'react/custom-queries',
       'react/interfaces-unions',
     ],
-    API: [
+    'API Reference': [
+      'api',
       {
         type: 'category',
         label: 'gqless',
         items: [
-          'api/gqless/Variable',
-          'api/gqless/Poller',
-          'api/gqless/update',
-          'api/gqless/matchUpdate',
-          'api/gqless/getAccessor',
+          'api/client/Variable',
+          'api/client/Poller',
+          'api/client/update',
+          'api/client/matchUpdate',
+          'api/client/getAccessor',
         ],
       },
       {

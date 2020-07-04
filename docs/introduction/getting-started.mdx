@@ -7,17 +7,11 @@ This guide will help you create a `gqless` client for a GraphQL endpoint.
 
 ## Installation
 
-> Important: If using Typescript, ensure version is 3.7.0+
-
 Install the following dependencies to your project:
 
-```bash
+```bash yarn2npm
 yarn add gqless
-yarn add @gqless/cli -D
-
-# or
-npm install gqless
-npm install @gqless/cli --save-dev
+yarn add @gqless/cli --dev
 ```
 
 ## Codegen
@@ -45,10 +39,8 @@ Next add a `generate` script to your `package.json`:
 
 And then run the script to generate your schema:
 
-```bash
+```bash yarn2npm
 yarn generate
-# or
-npm run generate
 ```
 
 A folder will then be created with the following structure:
@@ -74,4 +66,4 @@ import { query } from './gqless'
 query.me.name
 ```
 
-See [Usage with React](/docs/react/basic-usage)
+See [Usage with React](/react/basic-usage)

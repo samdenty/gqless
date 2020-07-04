@@ -1,13 +1,11 @@
-name: Release
-
 on:
   push:
     branches:
       - master
 
 jobs:
-  release:
-    name: Release
+  npm:
+    name: Publish to NPM
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo

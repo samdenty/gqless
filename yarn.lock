@@ -10055,10 +10055,10 @@ framer-motion@^1.8.4:
   optionalDependencies:
     "@emotion/is-prop-valid" "^0.8.2"
 
-framer-motion@^1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-1.9.1.tgz#dc7cd963eedc0dcf92b27d0ef7fc22be5227452a"
-  integrity sha512-13vSUxdh8CP2pIQicOBF9RJaLlCj4mh0w6mSqbIoXtRatWMC7V9nKJvHauvaUEj9+xirT6hTML5YHn0DN3IGRg==
+framer-motion@^2.0.0-beta.31:
+  version "2.0.0-beta.31"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-2.0.0-beta.31.tgz#e34b3f60812293568f67bd3d48e1f429f731b376"
+  integrity sha512-+ZTyAM/t9RBhvq4/OyDQ2+gPmwQKS5J0EzpWQoUs6d+R8SacmNqsj1w+ivuThBekVuZ782H8XdXqsJTmLQNPkw==
   dependencies:
     "@popmotion/easing" "^1.0.2"
     "@popmotion/popcorn" "^0.4.2"
@@ -14960,6 +14960,11 @@ npm-run-path@^4.0.0:
   integrity sha512-8eyAOAH+bYXFPSnNnKr3J+yoybe8O87Is5rtAQ8qRczJz1ajcsjg8l2oZqP+Ppx15Ii3S1vUTjQN2h4YO2tWWQ==
   dependencies:
     path-key "^3.0.0"
+
+npm-to-yarn@^1.0.0-0:
+  version "1.0.0-0"
+  resolved "https://registry.yarnpkg.com/npm-to-yarn/-/npm-to-yarn-1.0.0-0.tgz#c69c924e2623a9cb43c3c597c8b0988f3c883635"
+  integrity sha512-lw2TTfy/EBDNrIL16GbCjXIOXV468RwbELBEGhN/tFyVbhmo3aCHTn0EWD7ZKGVAkLFURJkcWa8I34v/IhoOaA==
 
 "npmlog@0 || 1 || 2 || 3 || 4", npmlog@^4.0.0, npmlog@^4.0.1, npmlog@^4.0.2, npmlog@^4.1.2:
   version "4.1.2"
