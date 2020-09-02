@@ -232,12 +232,12 @@ export class TypesFile extends File {
 
     if (field.args) this.import(CORE, this.names.FieldsTypeArg)
 
-    return `${this.generateFieldComments(field)}${field.name}${NULLABLE}: ${
+    return `${this.generateFieldComments(field)}${field.name} ${
       field.args
-        ? `${this.names.FieldsTypeArg}<${this.generateArgs(
+        ? `: ${this.names.FieldsTypeArg}<${this.generateArgs(
             field.args
           )}, ${fieldType}>`
-        : fieldType
+        : `${NULLABLE}: ${fieldType}`
     }`
   }
 

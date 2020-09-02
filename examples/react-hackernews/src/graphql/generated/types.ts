@@ -47,13 +47,13 @@ type t_String<T extends string = string> = ScalarType<T, Extension<'String'>>
 type t_HackerNewsAPI = FieldsType<
   {
     __typename: t_String<'HackerNewsAPI'>
-    item?: FieldsTypeArg<{ id: number }, t_HackerNewsItem | null>
-    user?: FieldsTypeArg<{ id: string }, t_HackerNewsUser | null>
+    item: FieldsTypeArg<{ id: number }, t_HackerNewsItem | null>
+    user: FieldsTypeArg<{ id: string }, t_HackerNewsUser | null>
 
     /**
      * Up to 500 of the top stories
      */
-    topStories?: FieldsTypeArg<
+    topStories: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -61,7 +61,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Up to 500 of the newest stories
      */
-    newStories?: FieldsTypeArg<
+    newStories: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -69,7 +69,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Up to 200 of the Show HN stories
      */
-    showStories?: FieldsTypeArg<
+    showStories: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -77,7 +77,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Up to 200 of the Ask HN stories
      */
-    askStories?: FieldsTypeArg<
+    askStories: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -85,7 +85,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Up to 200 of the Job stores
      */
-    jobStories?: FieldsTypeArg<
+    jobStories: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -93,7 +93,7 @@ type t_HackerNewsAPI = FieldsType<
     /**
      * Return list of stories
      */
-    stories?: FieldsTypeArg<
+    stories: FieldsTypeArg<
       { limit?: number | null; offset?: number | null; storyType: string },
       (t_HackerNewsItem | null)[] | null
     >
@@ -173,7 +173,7 @@ type t_HackerNewsItem = FieldsType<
     /**
      * The item's comments, in ranked display order.
      */
-    kids?: FieldsTypeArg<
+    kids: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -247,7 +247,7 @@ type t_HackerNewsUser = FieldsType<
     /**
      * List of the user's stories, polls and comments.
      */
-    submitted?: FieldsTypeArg<
+    submitted: FieldsTypeArg<
       { limit?: number | null; offset?: number | null },
       (t_HackerNewsItem | null)[] | null
     >
@@ -266,7 +266,7 @@ type t_HackerNewsAPIV2 = FieldsType<
     /**
      * Fetches an object given its ID
      */
-    node?: FieldsTypeArg<{ id: string }, t_Node | null>
+    node: FieldsTypeArg<{ id: string }, t_Node | null>
 
     /**
      * To ensure Node IDs are globally unique, GraphQLHub coerces IDs returned by the HN API. Use this field to get nodes via normal HN IDs
@@ -356,7 +356,7 @@ type t_HackerNewsV2Story = FieldsType<
     /**
      * The item's comments, in ranked display order.
      */
-    kids?: FieldsTypeArg<
+    kids: FieldsTypeArg<
       {
         after?: string | null
         first?: number | null
@@ -421,7 +421,7 @@ type t_HackerNewsV2User = FieldsType<
     /**
      * List of the user's stories, polls and comments.
      */
-    submitted?: FieldsTypeArg<
+    submitted: FieldsTypeArg<
       {
         after?: string | null
         first?: number | null
@@ -596,7 +596,7 @@ type t_HackerNewsV2Comment = FieldsType<
     /**
      * The item's comments, in ranked display order.
      */
-    kids?: FieldsTypeArg<
+    kids: FieldsTypeArg<
       {
         after?: string | null
         first?: number | null
@@ -743,7 +743,7 @@ type t_HackerNewsV2Poll = FieldsType<
     /**
      * The item's comments, in ranked display order.
      */
-    kids?: FieldsTypeArg<
+    kids: FieldsTypeArg<
       {
         after?: string | null
         first?: number | null
@@ -835,8 +835,8 @@ type t_HackerNewsV2PollPart = FieldsType<
 type t_RedditAPI = FieldsType<
   {
     __typename: t_String<'RedditAPI'>
-    subreddit?: FieldsTypeArg<{ name: string }, t_RedditSubreddit | null>
-    user?: FieldsTypeArg<{ username: string }, t_RedditUser | null>
+    subreddit: FieldsTypeArg<{ name: string }, t_RedditSubreddit | null>
+    user: FieldsTypeArg<{ username: string }, t_RedditUser | null>
   },
   Extension<'RedditAPI'>
 >
@@ -1099,7 +1099,7 @@ type t_TimeInterval = EnumType<
 type t_KeyValueAPI = FieldsType<
   {
     __typename: t_String<'KeyValueAPI'>
-    getValue?: FieldsTypeArg<{ id: string }, t_KeyValueItem | null>
+    getValue: FieldsTypeArg<{ id: string }, t_KeyValueItem | null>
   },
   Extension<'KeyValueAPI'>
 >
@@ -1132,8 +1132,8 @@ type t_KeyValueItem = FieldsType<
 type t_GithubAPI = FieldsType<
   {
     __typename: t_String<'GithubAPI'>
-    user?: FieldsTypeArg<{ username: string }, t_GithubUser | null>
-    repo?: FieldsTypeArg<
+    user: FieldsTypeArg<{ username: string }, t_GithubUser | null>
+    repo: FieldsTypeArg<
       { name: string; ownerUsername: string },
       t_GithubRepo | null
     >
@@ -1166,15 +1166,15 @@ type t_GithubRepo = FieldsType<
     __typename: t_String<'GithubRepo'>
     id?: t_Int | null
     name?: t_String | null
-    commits?: FieldsTypeArg<
+    commits: FieldsTypeArg<
       { limit?: number | null },
       (t_GithubCommit | null)[] | null
     >
-    issues?: FieldsTypeArg<
+    issues: FieldsTypeArg<
       { limit?: number | null },
       (t_GithubIssue | null)[] | null
     >
-    branches?: FieldsTypeArg<
+    branches: FieldsTypeArg<
       { limit?: number | null },
       (t_GithubBranch | null)[] | null
     >
@@ -1329,16 +1329,16 @@ type t_GithubBranch = FieldsType<
 type t_TwitterAPI = FieldsType<
   {
     __typename: t_String<'TwitterAPI'>
-    user?: FieldsTypeArg<
+    user: FieldsTypeArg<
       { identifier: UserIdentifier; identity: any },
       t_TwitterUser | null
     >
-    tweet?: FieldsTypeArg<{ id: string }, t_Tweet | null>
+    tweet: FieldsTypeArg<{ id: string }, t_Tweet | null>
 
     /**
      * Returns a collection of relevant Tweets matching a specified query.
      */
-    search?: FieldsTypeArg<
+    search: FieldsTypeArg<
       { q: string; count?: number | null; result_type?: SearchReponse | null },
       (t_Tweet | null)[] | null
     >
@@ -1381,7 +1381,7 @@ type t_TwitterUser = FieldsType<
     /**
      * Get a list of tweets for current user
      */
-    tweets?: FieldsTypeArg<{ limit?: number | null }, (t_Tweet | null)[] | null>
+    tweets: FieldsTypeArg<{ limit?: number | null }, (t_Tweet | null)[] | null>
   },
   Extension<'TwitterUser'>
 >
@@ -1402,7 +1402,7 @@ type t_Tweet = FieldsType<
     /**
      * Get a list of retweets
      */
-    retweets?: FieldsTypeArg<
+    retweets: FieldsTypeArg<
       { limit?: number | null },
       (t_Retweet | null)[] | null
     >
@@ -1441,8 +1441,8 @@ type t_SearchReponse = EnumType<'mixed' | 'recent' | 'popular'>
 type t_GiphyAPI = FieldsType<
   {
     __typename: t_String<'GiphyAPI'>
-    gif?: FieldsTypeArg<{ id: string }, t_GiphyGIFData | null>
-    search?: FieldsTypeArg<
+    gif: FieldsTypeArg<{ id: string }, t_GiphyGIFData | null>
+    search: FieldsTypeArg<
       {
         query: string
         limit?: number | null
@@ -1451,7 +1451,7 @@ type t_GiphyAPI = FieldsType<
       },
       (t_GiphyGIFData | null)[] | null
     >
-    random?: FieldsTypeArg<
+    random: FieldsTypeArg<
       { tag?: string | null; rating?: GiphyRatingType | null },
       t_GiphyGIFData | null
     >
@@ -1769,7 +1769,7 @@ type t_GiphyRatingType = EnumType<'y' | 'g' | 'pg' | 'pg13' | 'r'>
 type t_GraphQLHubMutationAPI = FieldsType<
   {
     __typename: t_String<'GraphQLHubMutationAPI'>
-    keyValue_setValue?: FieldsTypeArg<
+    keyValue_setValue: FieldsTypeArg<
       { input: SetValueForKeyInput },
       t_SetValueForKeyPayload | null
     >
@@ -1846,13 +1846,13 @@ type t___Type = FieldsType<
     kind: t___TypeKind
     name?: t_String | null
     description?: t_String | null
-    fields?: FieldsTypeArg<
+    fields: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
       t___Field[] | null
     >
     interfaces?: t___Type[] | null
     possibleTypes?: t___Type[] | null
-    enumValues?: FieldsTypeArg<
+    enumValues: FieldsTypeArg<
       { includeDeprecated?: boolean | null },
       t___EnumValue[] | null
     >
