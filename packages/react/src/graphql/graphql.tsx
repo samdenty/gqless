@@ -21,7 +21,7 @@ export interface IGraphQLOptions {
 export const graphql = <Props extends any>(
   component: (props: Props) => any,
   {
-    name = (component as any)?.displayName,
+    name = (component as any)?.displayName || (component as any)?.name,
     allowInheritance = null,
     seperateRequest = false,
   }: IGraphQLOptions = {}
@@ -30,6 +30,8 @@ export const graphql = <Props extends any>(
   const state: any[] = []
 
   const GraphQLComponent = (props: Props) => {
+    let returnValue: any
+
     const parentVariant = React.useContext(VariantContext)
     const parentStack = React.useContext(StackContext)
 
@@ -77,7 +79,7 @@ export const graphql = <Props extends any>(
       startResolving()
       startIntercepting()
 
-      var returnValue = component(props)
+      returnValue = component(props)
     } catch (e) {
       throw e
     } finally {
@@ -142,7 +144,7 @@ export const graphql = <Props extends any>(
     return returnValue
   }
 
-  GraphQLComponent.displayName = name
+  GraphQLComponent.displayName = `GraphQLComponent(${name || 'Component'})`
   GraphQLComponent.query = query
 
   return GraphQLComponent
