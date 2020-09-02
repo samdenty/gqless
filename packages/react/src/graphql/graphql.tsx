@@ -29,7 +29,7 @@ export const graphql = <Props extends any>(
   const query = new Query(name, false)
   const state: any[] = []
 
-  const GraphQLComponent = (props: Props) => {
+  const WithGraphQL = (props: Props) => {
     let returnValue: any
 
     const parentVariant = React.useContext(VariantContext)
@@ -104,7 +104,7 @@ export const graphql = <Props extends any>(
             key={i}
             value={[...parentVariant, ...variant]}
           >
-            <GraphQLComponent {...props} />
+            <WithGraphQL {...props} />
           </VariantContext.Provider>
         ))
     }
@@ -144,8 +144,8 @@ export const graphql = <Props extends any>(
     return returnValue
   }
 
-  GraphQLComponent.displayName = `GraphQLComponent(${name || 'Component'})`
-  GraphQLComponent.query = query
+  WithGraphQL.displayName = `GraphQLComponent(${name || 'Component'})`
+  WithGraphQL.query = query
 
-  return GraphQLComponent
+  return WithGraphQL
 }
