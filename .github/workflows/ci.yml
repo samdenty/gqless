@@ -26,7 +26,6 @@ jobs:
         env:
           BUNDLESIZE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn bundlesize
-
   test:
     name: Test all packages
     runs-on: ubuntu-latest
@@ -47,15 +46,15 @@ jobs:
           yarn
           yarn bootstrap
 
-      - name: Jest
-        env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
-        run: |
-          yarn test --coverage
-
-      - name: Upload to codecov
-        continue-on-error: true
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-        run: |
-          yarn codecov
+#      - name: Jest
+#        env:
+#          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+#        run: |
+#          yarn test --coverage
+#
+#      - name: Upload to codecov
+#        continue-on-error: true
+#        env:
+#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+#        run: |
+#          yarn codecov
