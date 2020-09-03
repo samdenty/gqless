@@ -2,7 +2,7 @@
   "license": "GNU GPLv3",
   "private": false,
   "name": "@gqless/schema",
-  "version": "0.0.1-alpha.31",
+  "version": "0.1.0-alpha.32",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/schema.esm.js",
@@ -13,9 +13,7 @@
     "url": "https://github.com/samdenty/gqless.git",
     "directory": "packages/schema"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "watch": "tsdx watch",
     "build": "tsdx build",

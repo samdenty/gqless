@@ -1,5 +1,11 @@
 # @gqless/react
 
+## 0.0.1-alpha.30
+
+### Patch Changes
+
+- 2195893: Changes some stuff to allow for easier debugging.
+
 ## 0.0.1-alpha.28
 
 ### Patch Changes

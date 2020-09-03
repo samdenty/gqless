@@ -1,5 +1,11 @@
 # @gqless/schema
 
+## 0.1.0-alpha.32
+
+### Minor Changes
+
+- 2195893: Change how fields are marked as nullable
+
 ## 0.0.1-alpha.31
 
 ### Patch Changes

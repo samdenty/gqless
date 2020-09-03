@@ -2,7 +2,7 @@
   "license": "GNU GPLv3",
   "name": "gqless-example",
   "private": true,
-  "version": "0.0.1-alpha.26",
+  "version": "0.0.1-alpha.27",
   "main": "index.js",
   "scripts": {
     "start": "graphql-faker & parcel index.html",
@@ -10,8 +10,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "@gqless/react": "^0.0.1-alpha.26",
-    "@gqless/schema": "^0.0.1-alpha.26",
+    "@gqless/react": "^0.0.1-alpha.30",
+    "@gqless/schema": "^0.1.0-alpha.32",
     "flatted": "^2.0.1",
     "ts-morph": "^7.0.0"
   },
