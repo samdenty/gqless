@@ -1,5 +1,12 @@
 # @gqless/cli
 
+## 0.0.1-alpha.32
+
+### Patch Changes
+
+- Updated dependencies [2195893]
+  - @gqless/schema@0.1.0-alpha.32
+
 ## 0.0.1-alpha.31
 
 ### Patch Changes
