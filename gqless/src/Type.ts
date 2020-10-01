@@ -1,165 +1,132 @@
-import {
-  Tuple,
-  UnshiftTuple,
-  MapTupleByKey,
-  LastTupleValue,
-  LastTupleValueForKey,
-  TupleKeys,
-} from '@gqless/utils'
 import { Variable } from './Variable'
-import { INDEX, GET_KEY } from './Node'
 
-type RequiredKeys<T> = {
-  [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K
-}[keyof T]
-type UnionToIntersection<U> = (U extends any
-? (k: U) => void
-: never) extends (k: infer I) => void
-  ? I
+type TypeName = string
+type TypeNameWithArguments<
+  TName extends TypeName = TypeName,
+  TArgs extends InputFields = InputFields
+> = readonly [TName, TArgs]
+
+type Union<PossibleTypes extends TypeName = TypeName> = readonly PossibleTypes[]
+
+type Interface<Implementations extends TypeName = TypeName> = readonly [
+  Fields,
+  ...Implementations[]
+]
+interface InputFields {
+  [K: string]: TypeName
+}
+
+type Field = TypeName | TypeNameWithArguments
+interface Fields {
+  [K: string]: Field
+}
+
+type Enum<TValue extends string = string,TAliases extends number | string = string | number> = 'enum' | Record<TValue, TAliases>
+
+type Type = Fields | Union | Interface | Enum
+interface Schema {
+  [K: string]: Type
+}
+
+
+type EvaluateType<T> = T extends Function
+  ? T
+  : 0 extends 1 & T
+  ? T
+  : T extends infer U
+  ? { [K in keyof U]: U[K] }
   : never
-type IfAny<T, Y, N> = 0 extends 1 & T ? Y : N
 
-enum Kind {
-  scalar,
-  enum,
-  fields,
-}
+type IfArgsRequired<TFields extends Fields, Y, N> = {
+  [K in keyof TFields]: TFields[K] extends `${string}!` ? true : never
+}[keyof TFields] extends never
+  ? N
+  : Y
 
-type Type<TKind extends Kind = any, TData = any, TExtension = any> = {
-  kind: TKind
-  data: TData
-  extension: TExtension
-}
+type NullableKeys<T> = { [K in keyof T]: null extends T[K] ? K : never }[keyof T];
+type NullableOptional<T> = Pick<T, Exclude<keyof T, NullableKeys<T>>> & Partial<Pick<T, NullableKeys<T>>>;
 
-type ExtensionData<TExtension> = TExtension extends (...args: any[]) => infer U
-  ? U
-  : TExtension
-
-type TypeExtension<TType extends ValidType> = TType extends Type
-  ? IfAny<TType['extension'], never, ExtensionData<TType['extension']>>
-  : never
-
-type ValidType = ValidType[] | Type | undefined | null
-
-export type ScalarType<TData = any, TExtension = any> = Type<
-  Kind.scalar,
-  TData,
-  TExtension
->
-
-export type EnumType<TData = any, TExtension = any> = Type<
-  Kind.enum,
-  TData,
-  TExtension
->
-
-type FieldsRecord = Record<string, ValidType | FieldsTypeArg>
-export type FieldsType<
-  TData extends FieldsRecord = any,
-  TExtension = any
-> = Type<Kind.fields, TData, TExtension>
-
-type ArgsRecord = Record<string, any>
-export type FieldsTypeArg<
-  TArgs extends ArgsRecord = any,
-  TType extends ValidType = any
-> = {
-  ofType: TType
-  args: TArgs
-}
-
-type WithVariables<TArgs extends ArgsRecord> = TArgs extends object
+type WithVariables<T> = T extends object
   ? {
-      [K in keyof TArgs]:
-        | WithVariables<TArgs[K]>
-        | Variable<WithVariables<Exclude<TArgs[K], undefined>>>
+      [K in keyof T]:
+        | WithVariables<T[K]>
+        | Variable<WithVariables<Exclude<T[K], undefined>>>
     }
-  : TArgs
+  : T
 
-type ArgsFn<
-  TArgs extends ArgsRecord,
-  TType extends ValidType,
-  TExtension
-> = RequiredKeys<TArgs> extends never
-  ? ((args?: TArgs) => TypeData<TType, TExtension>) &
-      (TType extends ScalarType | EnumType
-        ? unknown
-        : TypeData<TType, TExtension>)
-  : (args: TArgs) => TypeData<TType, TExtension>
+type InputData<
+  TSchema extends Schema,
+  TName extends string
+> = TName extends `${infer TName}!` ? NonNullable<InputData<TSchema,TName>>: (TSchema[TName] extends InputFields
+  ? InputFieldsData<TSchema, TSchema[TName]>
+  : TSchema[TName] extends Enum<infer TValue, infer TAliases> ?
+  'a' extends (TValue & 'a') ? string: TValue|TAliases
+  : ScalarData<TName>) | null
 
-// Map extensions by key and get extension data for each
-type MapExtensionData<T extends Tuple, Key extends TupleKeys<T>> = {
-  [K in keyof MapTupleByKey<T, Key>]: ExtensionData<MapTupleByKey<T, Key>[K]>
-}
+type InputFieldsData<
+  TSchema extends Schema,
+  TField extends InputFields
+> = WithVariables<NullableOptional<
+  {
+    -readonly [K in keyof TField]: InputData<TSchema, TField[K]>
+  }
+>>
 
-// Add new properties from extension
-type CustomExtensionData<
-  TExtensions extends Tuple
-> = keyof TExtensions extends never
-  ? {}
-  : UnionToIntersection<TExtensions[keyof TExtensions]> extends infer U
-  ? Omit<
+type FieldData<TSchema extends Schema, TName extends Field> = EvaluateType<
+  TName extends TypeNameWithArguments<infer TName, infer TArgs>
+    ? IfArgsRequired<
+        TArgs,
+        (args: InputFieldsData<TSchema, TArgs>) => TypeData<TSchema, TName>,
+        (args?: InputFieldsData<TSchema, TArgs>) => TypeData<TSchema, TName>
+      >
+    : TName extends TypeName
+    ? TypeData<TSchema, TName>
+    : never
+>
+
+type FieldsData<
+  TSchema extends Schema,
+  TName extends string
+> = TSchema[TName] extends Fields
+  ? EvaluateType<
       {
-        [K in keyof U]: U[K] extends never
-          ? LastTupleValueForKey<TExtensions, K>
-          : U[K]
-      },
-      typeof INDEX | typeof GET_KEY
+        readonly __typename: TName
+      } & {
+        -readonly [K in keyof TSchema[TName]]: FieldData<
+          TSchema,
+          TSchema[TName][K]
+        >
+      }
     >
   : never
 
-type FieldsData<
-  TFields extends FieldsType,
-  TExtensions extends Tuple
-> = keyof TFields['data'] extends never
-  ? CustomExtensionData<TExtensions>
-  : {
-      [K in keyof (TFields['data'] &
-        CustomExtensionData<TExtensions>)]: K extends keyof TFields['data']
-        ? TFields['data'][K] extends FieldsTypeArg<infer TArgs, infer TType>
-          ? ArgsFn<
-              WithVariables<TArgs>,
-              TType,
-              MapExtensionData<TExtensions, K>
-            >
-          : TypeData<TFields['data'][K], MapExtensionData<TExtensions, K>>
-        : CustomExtensionData<TExtensions>[K]
-    }
-
-type ArrayData<TArray extends ValidType[], TExtensions extends Tuple> = {
-  [K in keyof TArray]: TArray[K] extends ValidType
-    ? TypeData<TArray[K], MapExtensionData<TExtensions, typeof INDEX>>
-    : TArray[K]
-} &
-  (CustomExtensionData<TExtensions> extends infer U
-    ? keyof U extends never
-      ? unknown
-      : { [K in keyof U]: U[K] }
-    : never)
-
-// Get the last extension from the extensions tuple
-type ScalarData<
-  TScalar extends ScalarType | EnumType,
-  TExtensions extends Tuple
-> = LastTupleValue<TExtensions> extends never
-  ? TScalar['data']
-  : LastTupleValue<TExtensions>
-
-// Unshift the primary extension for a type to the extensions tuple
-type UnshiftExtension<
-  TExtensions,
-  TType extends ValidType
-> = keyof TypeExtension<TType> extends never
-  ? TExtensions
-  : UnshiftTuple<TExtensions, TypeExtension<TType>>
+type ScalarData<TName extends string> = TName extends 'String' | 'ID'
+  ? string
+  : TName extends 'Float' | 'Int'
+  ? number
+  : TName extends 'Boolean'
+  ? boolean
+  : any
 
 export type TypeData<
-  TType extends ValidType,
-  TExtensions extends Tuple = {}
-> = TType extends Array<any>
-  ? ArrayData<TType, UnshiftExtension<TExtensions, TType>>
-  : TType extends ScalarType | EnumType
-  ? ScalarData<TType, UnshiftExtension<TExtensions, TType>>
-  : TType extends FieldsType
-  ? FieldsData<TType, UnshiftExtension<TExtensions, TType>>
-  : null
+  TSchema extends Schema,
+  TName extends string
+> = TName extends `${infer TName}!`
+  ? NonNullable<TypeData<TSchema, TName>>
+  :
+      | (TName extends `[${infer TName}]`
+          ? TypeData<TSchema, TName>[]
+          : TName extends keyof TSchema
+          ? TSchema[TName] extends (Interface<infer TName> | Union<infer TName>)
+            ? TypeData<TSchema, TName>
+            : TSchema[TName] extends Fields
+            ? FieldsData<TSchema, TName>
+            : TSchema[TName] extends Enum<infer TValue>
+            ? TValue
+            : never
+          : ScalarData<TName>)
+      | null
+
+export function createSchema<T extends Schema>(schema: T) {
+  return schema
+}

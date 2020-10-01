@@ -88,7 +88,7 @@ export const introspectionToSchema = (introspection: any) => {
           }
         : type.kind === 'INPUT_OBJECT'
         ? {
-            inputFields: getInputObjectFields(type.inputFields),
+            fields: getInputObjectFields(type.inputFields),
           }
         : type.kind === 'ENUM'
         ? { enumValues: getEnumValues(type.enumValues) }

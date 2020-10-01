@@ -16,4 +16,5 @@ build
 .envrc
 .changelog
 .history
+.yarn
 /.idea/

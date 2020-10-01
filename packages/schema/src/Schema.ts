@@ -48,7 +48,7 @@ export type SchemaUnionType = BaseSchemaType<UnionKind> & {
 
 export type SchemaInputFields = Record<string, SchemaInputField>
 export type SchemaInputType = BaseSchemaType<InputObjectKind> & {
-  inputFields: SchemaInputFields
+  fields: SchemaInputFields
 }
 
 export type SchemaType =

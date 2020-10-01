@@ -1,4 +1,3 @@
-import * as generated from './generated'
 import { File } from '../File'
 
 export class IndexFile extends File {
@@ -10,7 +9,7 @@ export class IndexFile extends File {
     return `
       ${super.generate()}
 
-      export * from './generated'
+      export * from './schema'
       export * from './client'
     `
   }
@@ -18,5 +17,4 @@ export class IndexFile extends File {
 
 export * from './extensions'
 export * from './client'
-
-export { generated }
+export * from './schema'
