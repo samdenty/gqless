@@ -1,11 +1,11 @@
 import { RootAccessor, Accessor } from './Accessor'
 import { Cache } from './Cache'
-import { ObjectNode } from './Node'
 import { Plugins } from './Plugin'
 import { Scheduler } from './Scheduler'
 import { Selection } from './Selection'
 import { Disposable } from './utils'
 import { buildQuery, Formatter } from './QueryBuilder'
+import { Schema, TypeData } from './schema'
 
 export type QueryResponse<Data = any> = { data: Data; errors: any }
 
@@ -18,8 +18,10 @@ export type ClientOptions = {
   prettifyQueries?: boolean
 }
 
-// @ts-ignore
-export class Client<TData = any> extends Disposable {
+export class Client<
+  TSchema extends Schema,
+  TQueryType extends keyof Schema & string
+> extends Disposable {
   public plugins = new Plugins()
   public formatter: Formatter
 
@@ -32,10 +34,11 @@ export class Client<TData = any> extends Disposable {
   public selection = new Selection(this.node)
   public accessor = new RootAccessor(this.selection, this.scheduler, this.cache)
 
-  public query = this.accessor.data as TData
+  public query = this.accessor.data as TypeData<TSchema, `${TQueryType}`>
 
   constructor(
-    protected node: ObjectNode,
+    public schema: TSchema,
+    public queryType: TQueryType,
     protected fetchQuery: QueryFetcher,
     { prettifyQueries }: ClientOptions = {}
   ) {

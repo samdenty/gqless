@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "composite": true,
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -15,5 +16,6 @@
     "noEmit": true,
     "jsx": "preserve"
   },
+  "references": [{ "path": "../../gqless" }],
   "include": ["src"]
 }
