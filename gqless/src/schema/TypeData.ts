@@ -78,9 +78,9 @@ type FieldData<
       (
         args: InputFieldsData<TSchema, Cache, Args>
       ) => TypeData<TSchema, Name, Cache>,
-      (
+      TypeData<TSchema, Name, Cache> & ((
         args?: InputFieldsData<TSchema, Cache, Args>
-      ) => TypeData<TSchema, Name, Cache>
+      ) => TypeData<TSchema, Name, Cache>)
     >
   : Name extends TypeName
   ? TypeData<TSchema, Name, Cache>

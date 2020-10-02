@@ -1,7 +1,3 @@
-;(window as any).__DEV__ = process.env.NODE_ENV === 'development'
-
-import '@babel/polyfill'
-
 import { Logger } from '@gqless/logger'
 import { parse, stringify } from 'flatted'
 import {

@@ -1,6 +1,8 @@
 import { Client, QueryFetcher } from 'gqless'
-import { schema, Query } from './generated'
+import { schema, Query } from './schema'
 import { Logger } from '@gqless/logger'
+
+console.log(schema)
 
 const endpoint = `http://${location.hostname}:9002/graphql`
 
@@ -26,7 +28,7 @@ export const fetchQuery: QueryFetcher = async (query, variables) => {
   return json
 }
 
-export const client = new Client<Query>(schema.Query, fetchQuery)
+export const client = new Client<Query>(schema, fetchQuery)
 
 new Logger(client)
 

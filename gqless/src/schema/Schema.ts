@@ -27,6 +27,12 @@ export type Enum<
 > = 'enum' | Record<TValue, TAliases>
 
 export type Type = Fields | Union | Interface | Enum
-export interface Schema {
-  [K: string]: Type
+export type Schema<
+  QueryType extends string = string,
+  MutationType extends string = string
+> = {
+  $query: QueryType
+  $mutation?: MutationType
+} & {
+  [K: string]: Type | string
 }

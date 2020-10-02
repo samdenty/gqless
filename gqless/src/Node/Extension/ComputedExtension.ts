@@ -10,6 +10,7 @@ export class ComputedExtension extends Extension {
   }
 
   @computed
+  // @ts-ignore
   public get data(): any {
     const data =
       this.accessor.node instanceof ScalarNode

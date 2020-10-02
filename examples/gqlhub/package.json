@@ -20,6 +20,6 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "generate": "../../packages/cli/bin/run-dev generate"
+    "generate": "gqless generate"
   }
 }

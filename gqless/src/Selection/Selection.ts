@@ -1,6 +1,7 @@
 import { createEvent, invariant } from '@gqless/utils'
+import { DataTrait } from '../Node'
 
-export class Selection {
+export class Selection<TNode extends DataTrait = DataTrait> {
   // Selections that should be fetched with all queries
   public keySelections = new Set<Selection>()
   public selections = new Set<Selection>()
@@ -14,7 +15,7 @@ export class Selection {
    */
   public onUnselect = createEvent<(selection: Selection) => void>()
 
-  constructor(public type: string) {}
+  constructor(public node: TNode) {}
 
   public add(selection: Selection, isKeySelection = false) {
     invariant(selection !== this, `Circular selections are not permitted!`)
@@ -63,6 +64,6 @@ export class Selection {
   }
 
   public toString() {
-    return this.type
+    return String(this.node)
   }
 }

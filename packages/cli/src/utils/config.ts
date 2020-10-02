@@ -1,5 +1,5 @@
 import { cosmiconfig, defaultLoaders } from 'cosmiconfig'
-import TypeScriptLoader from '@endemolshinegroup/cosmiconfig-typescript-loader'
+import TypeScriptCompileError from '@endemolshinegroup/cosmiconfig-typescript-loader/dist/Errors/TypeScriptCompileError'
 import { resolve, parse } from 'path'
 import { invariant } from '@gqless/utils'
 import { Loaders } from 'cosmiconfig/dist/types'
@@ -29,7 +29,17 @@ const defaultFileNames = [
 
 const loaders: Loaders = {
   ...defaultLoaders,
-  '.ts': TypeScriptLoader,
+  '.ts': async (filePath: string) => {
+    try {
+      require('ts-node/register/transpile-only')
+      const result = require(filePath)
+
+      return result.default ?? result
+    } catch (error) {
+      // Replace with logger class OR throw a more specific error
+      throw TypeScriptCompileError.fromError(error)
+    }
+  },
 }
 
 export const getConfig = async (path?: string) => {

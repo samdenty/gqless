@@ -18,14 +18,14 @@ export interface IGraphQLOptions {
   allowInheritance?: boolean | null
 }
 
-export const graphql = <Props extends any>(
+export function graphql<Props>(
   component: (props: Props) => any,
   {
     name = (component as any)?.displayName || (component as any)?.name,
     allowInheritance = null,
     seperateRequest = false,
   }: IGraphQLOptions = {}
-) => {
+) {
   const query = new Query(name, false)
   const state: any[] = []
 

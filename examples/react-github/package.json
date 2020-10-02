@@ -19,7 +19,7 @@
     "@gqless/cli": "^0.0.1-alpha.26"
   },
   "scripts": {
-    "generate": "../../packages/cli/bin/run-dev generate",
+    "generate": "gqless generate",
     "start": "parcel index.html --open",
     "build": "parcel build index.html"
   }

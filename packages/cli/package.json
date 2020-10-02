@@ -57,7 +57,6 @@
     ]
   },
   "scripts": {
-    "dev": "./bin/run-dev",
     "build": "rm -rf dist; tsc && oclif-dev readme"
   },
   "types": "dist/index.d.ts",

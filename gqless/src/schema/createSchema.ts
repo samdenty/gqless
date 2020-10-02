@@ -60,14 +60,7 @@ type ParseSchema<S extends string> = string extends S
 export function createSchema<T extends Schema | string>(
   schema: T
 ): T extends string ? EvaluateType<ParseSchema<T>> : T {
-  invariant(typeof schema === 'string')
+  invariant(typeof schema !== 'string')
 
   return schema as any
 }
-
-const test = createSchema(`
-type A {
-  a: String
-  b: Int
-}
-`)

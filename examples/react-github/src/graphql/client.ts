@@ -2,7 +2,7 @@ import * as utils from '@gqless/utils'
 import * as gqless from 'gqless'
 import { Logger } from '@gqless/logger'
 import { Client, QueryFetcher } from 'gqless'
-import { schema } from './schema'
+import { schema, Query } from './schema'
 import { parse, stringify } from 'flatted'
 
 const endpoint = `https://api.github.com/graphql?access_token=${process.env.GITHUB_TOKEN}`
@@ -26,7 +26,7 @@ const fetchQuery: QueryFetcher = async (query, variables) => {
   return json
 }
 
-export const client = new Client(schema, 'Query', fetchQuery)
+export const client = new Client<Query>(schema, fetchQuery)
 
 if (__DEV__) {
   new Logger(client)

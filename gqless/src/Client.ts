@@ -18,10 +18,7 @@ export type ClientOptions = {
   prettifyQueries?: boolean
 }
 
-export class Client<
-  TSchema extends Schema,
-  TQueryType extends keyof Schema & string
-> extends Disposable {
+export class Client<TData = any> extends Disposable {
   public plugins = new Plugins()
   public formatter: Formatter
 
@@ -29,16 +26,15 @@ export class Client<
     (accessors, name) => this.fetchAccessors(accessors, name)!,
     this.plugins
   )
-  public cache = new Cache(this.node)
+  public cache = new Cache((this as any).node)
 
-  public selection = new Selection(this.node)
+  public selection = new Selection((this as any).node)
   public accessor = new RootAccessor(this.selection, this.scheduler, this.cache)
 
-  public query = this.accessor.data as TypeData<TSchema, `${TQueryType}`>
+  public query = this.accessor.data as TData
 
   constructor(
-    public schema: TSchema,
-    public queryType: TQueryType,
+    public schema: Schema,
     protected fetchQuery: QueryFetcher,
     { prettifyQueries }: ClientOptions = {}
   ) {

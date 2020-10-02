@@ -5,19 +5,22 @@
   "version": "0.0.1-alpha.27",
   "main": "index.js",
   "scripts": {
-    "start": "graphql-faker & parcel index.html",
-    "generate": "../../packages/cli/bin/run-dev generate",
-    "build": "parcel build index.html"
+    "start": "graphql-faker & cd scripts; TS_NODE_TRANSPILE_ONLY=true webpack-dev-server",
+    "generate": "gqless generate"
   },
   "dependencies": {
     "@gqless/react": "^0.0.1-alpha.30",
     "@gqless/schema": "^0.1.0-alpha.32",
     "flatted": "^2.0.1",
+    "fork-ts-checker-webpack-plugin": "^5.2.0",
+    "ts-loader": "^8.0.4",
     "ts-morph": "^7.0.0"
   },
   "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb",
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "typescript": "^4.1.0-beta"
+    "@microsoft/webpack-project-references-alias": "^1.1.1",
+    "@types/html-webpack-plugin": "^3.2.3",
+    "html-webpack-plugin": "^4.5.0",
+    "webpackbar": "^4.0.0"
   }
 }

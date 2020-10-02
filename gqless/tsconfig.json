@@ -3,9 +3,7 @@
   "include": ["src"],
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "dist",
-    // https://github.com/parcel-bundler/parcel/issues/2856
-    "downlevelIteration": true
+    "outDir": "dist"
   },
   "references": [{ "path": "../packages/utils" }]
 }

@@ -22,10 +22,5 @@
     "moduleResolution": "node",
     "jsx": "react",
     "esModuleInterop": true
-  },
-  "references": [
-    {
-      "path": "gqless"
-    }
-  ]
+  }
 }

@@ -20,7 +20,7 @@ export function Preview<T extends any>({
         <span>
           <span style={{ opacity: 0.7 }}>
             {isFragment && isFragment(element) ? <span>...</span> : null}
-            {element.toString().replace(/\(.+$/, `(…)`)}
+            {String(element).replace(/\(.+$/, `(…)`)}
           </span>
 
           {i !== elements.length - 1 && <span>, </span>}
