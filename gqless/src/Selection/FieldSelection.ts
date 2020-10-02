@@ -5,9 +5,7 @@ import { Selection } from './Selection'
 
 const argsFormatter = new Formatter({ prettify: false, variables: false })
 
-export class FieldSelection<
-  TNode extends DataTrait = DataTrait
-> extends Selection<TNode> {
+export class FieldSelection extends Selection {
   constructor(
     public field: FieldNode<TNode>,
     public readonly args?: Record<string, any>

@@ -14,7 +14,9 @@
     "directory": "gqless"
   },
   "typings": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "watch": "tsdx watch",
     "build": "tsdx build",

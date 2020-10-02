@@ -1,6 +1,6 @@
 {
   "license": "GNU GPLv3",
-  "name": "gqless-example",
+  "name": "gqless-playground",
   "private": true,
   "version": "0.0.1-alpha.27",
   "main": "index.js",
@@ -17,6 +17,7 @@
   },
   "gitHead": "a6601a3f9703830b097595b2eab2ed357f529feb",
   "devDependencies": {
-    "@babel/core": "^7.9.0"
+    "@babel/core": "^7.9.0",
+    "typescript": "^4.1.0-beta"
   }
 }
