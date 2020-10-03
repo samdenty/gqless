@@ -6,6 +6,7 @@ import { Selection } from './Selection'
 import { Disposable } from './utils'
 import { buildQuery, Formatter } from './QueryBuilder'
 import { Schema, TypeData } from './schema'
+import { Types } from './Type'
 
 export type QueryResponse<Data = any> = { data: Data; errors: any }
 
@@ -22,13 +23,14 @@ export class Client<TData = any> extends Disposable {
   public plugins = new Plugins()
   public formatter: Formatter
 
+  public types = new Types(this.schema)
   public scheduler = new Scheduler(
     (accessors, name) => this.fetchAccessors(accessors, name)!,
     this.plugins
   )
-  public cache = new Cache((this as any).node)
+  public cache = new Cache(this.types.queryType)
 
-  public selection = new Selection((this as any).node)
+  public selection = new Selection(this.types.queryType)
   public accessor = new RootAccessor(this.selection, this.scheduler, this.cache)
 
   public query = this.accessor.data as TData

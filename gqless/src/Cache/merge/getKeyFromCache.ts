@@ -1,18 +1,22 @@
 import { Value } from '../Value'
 import { keyIsValid, Extension } from '../../Node'
-import { NodeEntry } from '../NodeEntry'
+import { TypeEntry } from '../TypeEntry'
 import { Cache } from '../Cache'
 
-export const getKeyFromCache = (cache: Cache, value: Value, extensions: Extension[]) => {
-  const node = value.node
+export const getKeyFromCache = (
+  cache: Cache,
+  value: Value,
+  extensions: Extension[]
+) => {
+  const type = value.type
 
-  let entry = cache.entries.get(node)
+  let entry = cache.entries.get(type)
 
   // Iterate through extensions and call GET_KEY
   // if the key exists in the cache, then return it
   // else create a new cache entry
   let preferedKey: unknown
-  let result: { key: any, value: Value } | undefined
+  let result: { key: any; value: Value } | undefined
   for (const extension of extensions) {
     if (!extension.isKeyable) continue
 
@@ -36,8 +40,8 @@ export const getKeyFromCache = (cache: Cache, value: Value, extensions: Extensio
   if (!keyIsValid(preferedKey) || !value) return
 
   if (!entry) {
-    entry = new NodeEntry(node)
-    cache.entries.set(node, entry)
+    entry = new TypeEntry(type)
+    cache.entries.set(type, entry)
   }
 
   // add a new key to cache

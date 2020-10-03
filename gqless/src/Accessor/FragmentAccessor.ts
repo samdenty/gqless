@@ -3,15 +3,12 @@ import { Accessor } from './Accessor'
 import { syncValue } from './utils'
 import { DataContext } from '../Node'
 
-export class FragmentAccessor<
-  TFragment extends Fragment = Fragment,
-  TChildren extends Accessor = Accessor
-> extends Accessor<TFragment, TChildren> {
+export class FragmentAccessor extends Accessor<Fragment> {
   protected _resolved =
     this.parent!.resolved &&
     (!this.parent!.value || this.parent!.value.node === this.selection.node)
 
-  constructor(public parent: Accessor, fragment: TFragment) {
+  constructor(public parent: Accessor, fragment: Fragment) {
     super(parent, fragment)
 
     if (fragment.node !== parent.node) {

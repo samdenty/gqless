@@ -4,9 +4,9 @@ import { Selection } from '../../Selection'
 import { Value } from '../../Cache'
 import { accessorInterceptors } from '../../Interceptor'
 
-export type DataContext<TNode extends DataTrait = DataTrait> = {
-  accessor?: Accessor<Selection<TNode>>
-  selection?: Selection<TNode>
+export type DataContext = {
+  accessor?: Accessor
+  selection?: Selection
   extensions?: Extension[]
   value?: Value
 }

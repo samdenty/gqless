@@ -32,12 +32,11 @@ const KEYED_REFETCH = new Query('KeyedRefetch')
 const memoized = createMemo()
 
 export abstract class Accessor<
-  TSelection extends Selection = Selection,
-  TChildren extends Accessor<Selection, any> = Accessor<Selection, any>
+  TSelection extends Selection = Selection
 > extends Disposable {
   // Ordered by most important -> least
   public extensions: (StaticExtension | ComputedExtension)[] = []
-  public children: TChildren[] = []
+  public children: Accessor[] = []
 
   public scheduler: Scheduler = this.parent
     ? (this.parent as any).scheduler
@@ -66,7 +65,7 @@ export abstract class Accessor<
   constructor(
     public readonly parent: Accessor | undefined,
     public readonly selection: TSelection,
-    public readonly node = selection.node
+    public readonly type = selection.type
   ) {
     super()
 
@@ -241,13 +240,9 @@ export abstract class Accessor<
     this.cache.merge(this, data)
   }
 
-  public get<TChild extends TChildren | FragmentAccessor>(
-    find:
-      | ((child: TChildren | FragmentAccessor) => boolean)
-      | Selection
-      | string
-      | number
-  ): TChild | undefined {
+  public get(
+    find: ((child: Accessor) => boolean) | Selection | string | number
+  ): Accessor | undefined {
     if (typeof find === 'function') {
       return this.children.find(find) as any
     }

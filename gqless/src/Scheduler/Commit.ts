@@ -17,10 +17,7 @@ export class Commit extends Disposable {
   constructor(
     private plugins: Plugins,
     private stack: Query[],
-    private fetchAccessors: (
-      accessors: Accessor<any>[],
-      queryName?: string
-    ) => any
+    private fetchAccessors: (accessors: Accessor[], queryName?: string) => any
   ) {
     super()
   }

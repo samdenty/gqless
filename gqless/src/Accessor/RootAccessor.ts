@@ -4,12 +4,9 @@ import { Scheduler } from '../Scheduler'
 import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
 
-export class RootAccessor<
-  TSelection extends Selection<ObjectNode> = Selection<ObjectNode>,
-  TChildren extends Accessor = Accessor
-> extends Accessor<TSelection, TChildren> {
+export class RootAccessor extends Accessor {
   constructor(
-    selection: TSelection,
+    selection: Selection,
     public scheduler: Scheduler,
     public cache: Cache = new Cache(selection.node)
   ) {

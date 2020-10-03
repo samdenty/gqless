@@ -8,13 +8,10 @@ import {
   DataContext,
 } from '../Node'
 
-export class FieldAccessor<
-  TFieldSelection extends FieldSelection<any> = FieldSelection<any>,
-  TChildren extends Accessor = Accessor
-> extends Accessor<TFieldSelection, TChildren> {
+export class FieldAccessor extends Accessor<FieldSelection> {
   protected _resolved = this.parent.resolved
 
-  constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
+  constructor(public parent: Accessor, fieldSelection: FieldSelection) {
     super(parent, fieldSelection)
 
     this.parent.onResolvedChange(resolved => (this.resolved = resolved))

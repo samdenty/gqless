@@ -3,18 +3,19 @@ import { Value } from './Value'
 import { deepReference, createPath } from './utils'
 import { merge } from './merge'
 import { ObjectNode, DataTrait } from '../Node'
-import { NodeEntry } from './NodeEntry'
+import { TypeEntry } from './TypeEntry'
 import { Disposable } from '../utils'
 import { createEvent } from '@gqless/utils'
 import { Transaction } from './Transaction'
+import { Type } from '../Type'
 
 export class Cache extends Disposable {
   public references!: ReturnType<typeof deepReference>
-  public entries = new Map<DataTrait, NodeEntry>()
+  public entries = new Map<Type, TypeEntry>()
 
   public onRootValueChange = createEvent<(rootValue: Value) => void>()
 
-  constructor(node: ObjectNode) {
+  constructor(type: Type) {
     super()
 
     this.onRootValueChange(() => {
@@ -23,9 +24,9 @@ export class Cache extends Disposable {
       this.references = deepReference(this.rootValue)
 
       const addToEntries = (value: Value) => {
-        if (!this.entries.has(value.node))
-          this.entries.set(value.node, new NodeEntry(value.node))
-        const graphNode = this.entries.get(value.node)!
+        if (!this.entries.has(value.type))
+          this.entries.set(value.type, new TypeEntry(value.type))
+        const graphNode = this.entries.get(value.type)!
 
         if (graphNode.instances.has(value)) return
 
@@ -35,14 +36,14 @@ export class Cache extends Disposable {
       addToEntries(this.rootValue)
       this.references.onReference(addToEntries)
       this.references.onUnreference(value => {
-        if (!this.entries.has(value.node)) return
-        const graphNode = this.entries.get(value.node)!
+        if (!this.entries.has(value.type)) return
+        const graphNode = this.entries.get(value.type)!
 
         graphNode.instances.delete(value)
       })
     })
 
-    this.rootValue = new Value(node)
+    this.rootValue = new Value(type)
   }
 
   private _rootValue!: Value
@@ -69,7 +70,7 @@ export class Cache extends Disposable {
     const types: any = {}
 
     this.entries.forEach(nodeEntry => {
-      types[nodeEntry.node.toString()] =
+      types[nodeEntry.type.toString()] =
         deep === true ? nodeEntry.toJSON() : nodeEntry
     })
 

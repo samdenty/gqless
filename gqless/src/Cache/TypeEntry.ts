@@ -1,22 +1,23 @@
 import { Value } from './Value'
-import { Matchable, keyIsEqual, DataTrait } from '../Node'
+import { Matchable, keyIsEqual } from '../Node'
 import { invariant } from '@gqless/utils'
 import stringify from 'json-stable-stringify'
+import { Type } from '../Type'
 
-export class NodeEntry {
+export class TypeEntry {
   public instances = new Set<Value>()
   public keys = new Map<any, Value>()
 
-  constructor(public node: DataTrait) {}
+  constructor(public type: Type) {}
 
   public match(data: any) {
     invariant(
-      this.node instanceof Matchable,
-      `${this.node} does not support pattern matching`
+      this.type instanceof Matchable,
+      `${this.type} does not support pattern matching`
     )
 
     for (const value of this.instances) {
-      const exactValue = this.node.match(value, data)
+      const exactValue = this.type.match(value, data)
       if (exactValue)
         return {
           value,

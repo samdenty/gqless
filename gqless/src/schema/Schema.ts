@@ -26,7 +26,7 @@ export type Enum<
   TAliases extends number | string = string | number
 > = 'enum' | Record<TValue, TAliases>
 
-export type Type = Fields | Union | Interface | Enum
+type Type = Fields | Union | Interface | Enum
 export type Schema<
   QueryType extends string = string,
   MutationType extends string = string

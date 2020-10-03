@@ -44,8 +44,8 @@ async function bootstrap() {
       usePoll(query.users, 1000)
       return (
         <div>
-          {query.users.map(u => {
-            return <div key={u.id}>{u.name}</div>
+          {query.users.map(user => {
+            return <div key={user.id}>{user.name}</div>
           })}
         </div>
       )

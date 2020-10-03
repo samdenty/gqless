@@ -9,13 +9,10 @@ import { Selection } from '../Selection'
 import { Accessor } from './Accessor'
 import { syncValue } from './utils'
 
-export class IndexAccessor<
-  TSelectionArray extends Selection<ArrayNode<any>> = Selection<ArrayNode<any>>,
-  TChildren extends Accessor = Accessor
-> extends Accessor<TSelectionArray, TChildren> {
+export class IndexAccessor extends Accessor {
   protected _resolved = this.parent.resolved
 
-  constructor(public parent: Accessor<TSelectionArray>, public index: number) {
+  constructor(public parent: Accessor, public index: number) {
     super(
       parent,
       parent.selection,

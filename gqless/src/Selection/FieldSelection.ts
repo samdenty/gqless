@@ -1,18 +1,18 @@
 import { buildArguments, Formatter } from '../QueryBuilder'
-
-import { FieldNode, DataTrait } from '../Node'
 import { Selection } from './Selection'
+import { InputFields } from '../schema'
+import { Type } from '../Type'
 
 const argsFormatter = new Formatter({ prettify: false, variables: false })
 
-export class FieldSelection<
-  TNode extends DataTrait = DataTrait
-> extends Selection<TNode> {
+export class FieldSelection extends Selection {
   constructor(
-    public field: FieldNode<TNode>,
+    public name: string,
+    type: Type,
+    public argsType?: InputFields,
     public readonly args?: Record<string, any>
   ) {
-    super(field.ofNode)
+    super(type)
   }
 
   public toString() {
@@ -22,6 +22,6 @@ export class FieldSelection<
         })})`
       : ''
 
-    return this.field.name + args
+    return this.name + args
   }
 }
