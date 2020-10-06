@@ -1,3 +1,6 @@
+import { ListType, ObjectType, SchemaType } from '../Schema'
+import _ from 'lodash'
+
 export const CORE = 'gqless'
 export const UTILS = '@gqless/utils'
 
@@ -42,5 +45,46 @@ export abstract class File {
     ]
       .filter(Boolean)
       .join('\n')
+  }
+
+  protected generateComments(comments: string[]) {
+    if (comments.length) {
+      const text = comments.join('\n* ').replace(/\*\//gm, '*\u200B/')
+      return (
+        `\n` + `/**${comments.length > 1 ? `\n * ${text}\n` : ` ${text}`} */\n`
+      )
+    }
+
+    return ''
+  }
+
+  protected generateTypeComments(type: SchemaType, includeName?: boolean) {
+    const comments: string[] = [`@kind ${_.upperFirst(_.camelCase(type.kind))}`]
+
+    if (includeName) {
+      comments.unshift(`@typename ${type.name}`)
+    }
+
+    if (type.kind === 'OBJECT' && type.interfaces.length) {
+      comments.push(`@implements ${type.interfaces.join(', ')}`)
+    }
+
+    return this.generateComments(comments)
+  }
+
+  protected generateRef(
+    type: ListType | { name: string; nullable?: boolean },
+    quote = true
+  ): string {
+    let value: string
+    if ('kind' in type && type.kind === 'LIST') {
+      value = `[${this.generateRef(type.ofType, false)}]${
+        type.nullable ? '' : '!'
+      }`
+    } else {
+      value = `${(type as ObjectType).name}${type.nullable ? '' : '!'}`
+    }
+
+    return quote ? JSON.stringify(value) : value
   }
 }

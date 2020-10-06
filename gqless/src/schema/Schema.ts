@@ -1,22 +1,21 @@
-export type TypeName = string
 export type TypeNameWithArguments<
-  name extends TypeName = TypeName,
-  args extends InputFields = InputFields
-> = readonly [name, args]
+  Name extends string = string,
+  Args extends InputFields = InputFields
+> = readonly [Name, Args]
 
 export type Union<
-  PossibleTypes extends TypeName = TypeName
+  PossibleTypes extends string = string
 > = readonly PossibleTypes[]
 
-export type Interface<Implementations extends TypeName = TypeName> = readonly [
+export type Interface<Implementations extends string = string> = readonly [
   Fields,
   ...Implementations[]
 ]
 export interface InputFields {
-  [K: string]: TypeName
+  [K: string]: string
 }
 
-export type Field = TypeName | TypeNameWithArguments
+export type Field = string | TypeNameWithArguments
 export interface Fields {
   [K: string]: Field
 }

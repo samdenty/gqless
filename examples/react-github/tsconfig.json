@@ -14,6 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "outDir": "dist",
+    "rootDir": "src",
     "jsx": "preserve"
   },
   "references": [{ "path": "../../gqless" }],
