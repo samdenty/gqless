@@ -1,6 +1,11 @@
 import { getAccessor, NetworkStatus, Accessor } from '../Accessor'
 import { Interceptor } from '../Interceptor'
 
+interface ResolvedOptions {
+  waitForUpdate?: boolean
+  refetch?: boolean
+}
+
 /**
  * Waits for an accessor / function to be fully resolved,
  * and returns the final value
@@ -19,10 +24,10 @@ import { Interceptor } from '../Interceptor'
  */
 export function resolved<T>(
   data: T,
-  waitForUpdate = false
+  options: ResolvedOptions
 ): Promise<T extends (...args: any[]) => infer U ? U : T> {
   const isResolved = (accessor: Accessor) =>
-    waitForUpdate
+    options.waitForUpdate || false
       ? accessor.status === NetworkStatus.idle
       : accessor.status !== NetworkStatus.loading
 
