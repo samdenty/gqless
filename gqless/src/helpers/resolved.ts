@@ -34,14 +34,17 @@ export function resolved<T>(
   let accessor: Accessor
   try {
     accessor = getAccessor(data)
+    accessor.scheduler.commit.stage(accessor)
   } catch (e) {
     if (typeof data !== 'function') throw e
 
     const interceptor = new Interceptor()
     const nonIdleAccessors = new Set<Accessor>()
 
-    interceptor.onAccessor(accessor => {
-      nonIdleAccessors.add(accessor)
+    interceptor.onAccessor(acc => {
+      if (nonIdleAccessors.has(acc)) return
+      nonIdleAccessors.add(acc)
+      acc.scheduler.commit.stage(acc)
     })
 
     interceptor.start()
