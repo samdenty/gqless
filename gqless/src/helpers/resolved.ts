@@ -35,8 +35,8 @@ export function resolved<T>(
   try {
     accessor = getAccessor(data)
     accessor.scheduler.commit.stage(accessor)
-  } catch (e) {
-    if (typeof data !== 'function') throw e
+  } catch (err) {
+    if (typeof data !== 'function') throw err
 
     const interceptor = new Interceptor()
     const nonIdleAccessors = new Set<Accessor>()
@@ -55,17 +55,17 @@ export function resolved<T>(
     }
 
     return new Promise((resolve, reject) => {
-      nonIdleAccessors.forEach(accessor => {
-        if (isResolved(accessor)) {
-          nonIdleAccessors.delete(accessor)
+      nonIdleAccessors.forEach(acc => {
+        if (isResolved(acc)) {
+          nonIdleAccessors.delete(acc)
           return
         }
 
-        const dispose = accessor.onStatusChange(() => {
-          if (!isResolved(accessor)) return
+        const dispose = acc.onStatusChange(() => {
+          if (!isResolved(acc)) return
           dispose()
 
-          nonIdleAccessors.delete(accessor)
+          nonIdleAccessors.delete(acc)
           if (nonIdleAccessors.size) return
 
           try {
