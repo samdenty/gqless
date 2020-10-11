@@ -24,17 +24,17 @@ interface ResolvedOptions {
  */
 export function resolved<T>(
   data: T,
-  options: ResolvedOptions
+  options?: ResolvedOptions
 ): Promise<T extends (...args: any[]) => infer U ? U : T> {
   const isResolved = (accessor: Accessor) =>
-    options.waitForUpdate || false
+    options?.waitForUpdate || false
       ? accessor.status === NetworkStatus.idle
       : accessor.status !== NetworkStatus.loading
 
   let accessor: Accessor
   try {
     accessor = getAccessor(data)
-    accessor.scheduler.commit.stage(accessor)
+    if (options?.refetch) accessor.scheduler.commit.stage(accessor)
   } catch (err) {
     if (typeof data !== 'function') throw err
 
@@ -44,7 +44,7 @@ export function resolved<T>(
     interceptor.onAccessor(acc => {
       if (nonIdleAccessors.has(acc)) return
       nonIdleAccessors.add(acc)
-      acc.scheduler.commit.stage(acc)
+      if (options?.refetch) acc.scheduler.commit.stage(acc)
     })
 
     interceptor.start()
