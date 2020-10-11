@@ -31,8 +31,9 @@ export function resolved<T>(
       ? accessor.status === NetworkStatus.idle
       : accessor.status !== NetworkStatus.loading
 
+  let accessor: Accessor
   try {
-    var accessor = getAccessor(data)
+    accessor = getAccessor(data)
   } catch (e) {
     if (typeof data !== 'function') throw e
 
