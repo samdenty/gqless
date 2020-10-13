@@ -1,17 +1,17 @@
 {
   "private": true,
   "name": "gqlhub",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "description": "A GitHub clone using gqless",
   "main": "index.js",
   "author": "Sam Denty <sam@samdenty.dev>",
   "license": "GNU GPLv3",
   "dependencies": {
-    "@gqless/logger": "^0.0.1-alpha.27",
-    "@gqless/react": "^0.0.1-alpha.28",
+    "@gqless/logger": "^1.0.0-alpha.28",
+    "@gqless/react": "^1.0.0-alpha.31",
     "@types/react": "16.9.23",
     "@types/react-dom": "16.9.5",
-    "gqless": "^0.0.1-alpha.28",
+    "gqless": "^1.0.0-alpha.31",
     "next": "^9.3.1",
     "react": "^0.0.0-experimental-f6b8d31a7",
     "react-dom": "^0.0.0-experimental-f6b8d31a7"

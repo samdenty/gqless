@@ -1,5 +1,11 @@
 # gqless
 
+## 1.0.0-alpha.31
+
+### Minor Changes
+
+- 15562f4: Adds refetch option to resolved
+
 ## 0.0.1-alpha.29
 
 ### Patch Changes
