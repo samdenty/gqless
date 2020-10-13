@@ -1,6 +1,11 @@
 import { getAccessor, NetworkStatus, Accessor } from '../Accessor'
 import { Interceptor } from '../Interceptor'
 
+interface ResolvedOptions {
+  waitForUpdate?: boolean
+  refetch?: boolean
+}
+
 /**
  * Waits for an accessor / function to be fully resolved,
  * and returns the final value
@@ -19,23 +24,27 @@ import { Interceptor } from '../Interceptor'
  */
 export function resolved<T>(
   data: T,
-  waitForUpdate = false
+  options?: ResolvedOptions
 ): Promise<T extends (...args: any[]) => infer U ? U : T> {
   const isResolved = (accessor: Accessor) =>
-    waitForUpdate
+    options?.waitForUpdate || false
       ? accessor.status === NetworkStatus.idle
       : accessor.status !== NetworkStatus.loading
 
+  let accessor: Accessor
   try {
-    var accessor = getAccessor(data)
-  } catch (e) {
-    if (typeof data !== 'function') throw e
+    accessor = getAccessor(data)
+    if (options?.refetch) accessor.scheduler.commit.stage(accessor)
+  } catch (err) {
+    if (typeof data !== 'function') throw err
 
     const interceptor = new Interceptor()
     const nonIdleAccessors = new Set<Accessor>()
 
-    interceptor.onAccessor(accessor => {
-      nonIdleAccessors.add(accessor)
+    interceptor.onAccessor(acc => {
+      if (nonIdleAccessors.has(acc)) return
+      nonIdleAccessors.add(acc)
+      if (options?.refetch) acc.scheduler.commit.stage(acc)
     })
 
     interceptor.start()
@@ -46,17 +55,17 @@ export function resolved<T>(
     }
 
     return new Promise((resolve, reject) => {
-      nonIdleAccessors.forEach(accessor => {
-        if (isResolved(accessor)) {
-          nonIdleAccessors.delete(accessor)
+      nonIdleAccessors.forEach(acc => {
+        if (isResolved(acc)) {
+          nonIdleAccessors.delete(acc)
           return
         }
 
-        const dispose = accessor.onStatusChange(() => {
-          if (!isResolved(accessor)) return
+        const dispose = acc.onStatusChange(() => {
+          if (!isResolved(acc)) return
           dispose()
 
-          nonIdleAccessors.delete(accessor)
+          nonIdleAccessors.delete(acc)
           if (nonIdleAccessors.size) return
 
           try {
