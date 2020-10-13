@@ -2,7 +2,7 @@
   "license": "GNU GPLv3",
   "private": false,
   "name": "@gqless/logger",
-  "version": "0.0.1-alpha.27",
+  "version": "1.0.0-alpha.28",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/logger.esm.js",
@@ -13,9 +13,7 @@
     "url": "https://github.com/samdenty/gqless.git",
     "directory": "packages/logger"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "watch": "tsdx watch",
     "build": "tsdx build",
@@ -27,10 +25,10 @@
     "tslib": "^1.11.1"
   },
   "peerDependencies": {
-    "gqless": "^0.0.1-alpha.27"
+    "gqless": "^1.0.0-alpha.31"
   },
   "devDependencies": {
-    "gqless": "^0.0.1-alpha.27"
+    "gqless": "^1.0.0-alpha.31"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }

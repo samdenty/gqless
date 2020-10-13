@@ -1,5 +1,12 @@
 # @gqless/react
 
+## 1.0.0-alpha.31
+
+### Patch Changes
+
+- Updated dependencies [15562f4]
+  - gqless@1.0.0-alpha.31
+
 ## 0.0.1-alpha.30
 
 ### Patch Changes

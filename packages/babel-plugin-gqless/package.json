@@ -2,7 +2,7 @@
   "license": "GNU GPLv3",
   "private": true,
   "name": "babel-plugin-gqless",
-  "version": "0.0.1-alpha.27",
+  "version": "1.0.0-alpha.28",
   "main": "dist/index.js",
   "source": "src/index.ts",
   "module": "dist/babel-plugin-gqless.esm.js",
@@ -13,9 +13,7 @@
     "url": "https://github.com/samdenty/gqless.git",
     "directory": "packages/babel-plugin-gqless"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "watch": "tsdx watch",
     "build": "tsdx build",
@@ -31,12 +29,12 @@
     "tslib": "^1.10.0"
   },
   "peerDependencies": {
-    "gqless": "^0.0.1-alpha.26"
+    "gqless": "^1.0.0-alpha.31"
   },
   "devDependencies": {
     "@types/babel__core": "^7.1.3",
     "babel-plugin-tester": "^7.0.3",
-    "gqless": "^0.0.1-alpha.26"
+    "gqless": "^1.0.0-alpha.31"
   },
   "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
 }
