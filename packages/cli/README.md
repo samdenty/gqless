@@ -22,7 +22,7 @@ $ npm install -g @gqless/cli
 $ gqless COMMAND
 running command...
 $ gqless (-v|--version|version)
-@gqless/cli/0.0.1-alpha.31 win32-x64 node-v12.13.0
+@gqless/cli/1.0.0-alpha.33 darwin-x64 node-v12.16.1
 $ gqless --help [COMMAND]
 USAGE
   $ gqless COMMAND
@@ -61,6 +61,8 @@ EXAMPLES
   $ gqless generate -c gqless.config.ts
 ```
 
+_See code: [dist/commands/generate.js](https://github.com/samdenty/gqless/blob/v1.0.0-alpha.33/dist/commands/generate.js)_
+
 ## `gqless help [COMMAND]`
 
 display help for gqless
@@ -76,6 +78,6 @@ OPTIONS
   --all  see all commands in CLI
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src\commands\help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.3/src/commands/help.ts)_
 
 <!-- commandsstop -->

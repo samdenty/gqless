@@ -20,8 +20,8 @@ describe('emits correctly', () => {
     value1 = new Value(schema.Object)
     value2 = new Value(schema.Object)
 
-    events.onReference(onReference)
-    events.onUnreference(onUnreference)
+    events.onReference.listen(onReference)
+    events.onUnreference.listen(onUnreference)
   })
 
   test('for root values', () => {

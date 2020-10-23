@@ -1,18 +1,19 @@
 export const createEvent = <TCallback extends (...args: any[]) => any>() => {
-  const listeners = new Set<TCallback>()
+  return new Event()
+}
 
-  const event = (callback: TCallback) => {
-    listeners.add(callback)
+export class Event<TCallback extends (...args: any[]) => any> {
+  listeners = new Set<TCallback>()
 
-    return () => event.off(callback)
+  listen(callback: TCallback) {
+    this.listeners.add(callback)
+    return () => this.off(callback)
   }
 
-  event.filter = (
-    filter: (...parameters: Parameters<TCallback>) => boolean
-  ) => {
+  filter(filter: (...parameters: Parameters<TCallback>) => boolean) {
     const filteredEvent = createEvent<TCallback>()
 
-    event(((...args: Parameters<TCallback>) => {
+    this.listen(((...args: Parameters<TCallback>) => {
       const shouldEmit = filter(...args)
       if (!shouldEmit) return
 
@@ -21,26 +22,23 @@ export const createEvent = <TCallback extends (...args: any[]) => any>() => {
     return filteredEvent
   }
 
-  // Called once, then disposed
-  event.then = (callback: TCallback) => {
+  then(callback: TCallback) {
     const listener = ((...args: any[]) => {
-      event.off(listener)
+      this.off(listener)
 
       return callback(...args)
     }) as TCallback
 
-    return event(listener)
+    return this.listen(listener)
   }
 
-  event.off = (callback: TCallback) => {
-    listeners.delete(callback)
+  off(callback: TCallback) {
+    this.listeners.delete(callback)
   }
 
-  event.emit = (...args: Parameters<TCallback>) => {
-    for (const emit of Array.from(listeners)) {
+  emit = (...args: Parameters<TCallback>) => {
+    for (const emit of Array.from(this.listeners)) {
       emit(...args)
     }
   }
-
-  return event
 }

@@ -17,7 +17,7 @@ export class FieldAccessor<
   constructor(public parent: Accessor, fieldSelection: TFieldSelection) {
     super(parent, fieldSelection)
 
-    this.parent.onResolvedChange(resolved => (this.resolved = resolved))
+    this.parent.onResolvedChange.listen(resolved => (this.resolved = resolved))
     syncValue(this, this.toString())
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)

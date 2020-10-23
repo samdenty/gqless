@@ -44,7 +44,6 @@ export class InterfaceNode<TImplementation>
     // @ts-ignore typescript limitation of mix-classes
     const data = super.getData(ctx)
     if (!data) return data
-
     return new Proxy(data, {
       get: (_, prop: any) => {
         const fragment = ctx.accessor?.fragmentToResolve

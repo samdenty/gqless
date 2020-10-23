@@ -17,7 +17,7 @@ export class RootAccessor<
     this.value = cache.rootValue
 
     this.addDisposer(
-      cache.onRootValueChange(() => (this.value = cache.rootValue))
+      cache.onRootValueChange.listen(() => (this.value = cache.rootValue))
     )
 
     this.loadExtensions()

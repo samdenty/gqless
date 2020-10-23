@@ -27,12 +27,12 @@ export class IndexAccessor<
 
     // Sync from parent status
     this.addDisposer(
-      this.parent.onStatusChange(status => {
+      this.parent.onStatusChange.listen(status => {
         this.status = status
       })
     )
 
-    this.parent.onResolvedChange(resolved => (this.resolved = resolved))
+    this.parent.onResolvedChange.listen(resolved => (this.resolved = resolved))
     syncValue(this, this.toString())
     this.loadExtensions()
     this.scheduler.commit.stageUntilValue(this)

@@ -41,7 +41,7 @@ export function resolved<T>(
     const interceptor = new Interceptor()
     const nonIdleAccessors = new Set<Accessor>()
 
-    interceptor.onAccessor(acc => {
+    interceptor.onAccessor.listen(acc => {
       if (nonIdleAccessors.has(acc)) return
       nonIdleAccessors.add(acc)
       if (options?.refetch) acc.scheduler.commit.stage(acc)
@@ -61,7 +61,7 @@ export function resolved<T>(
           return
         }
 
-        const dispose = acc.onStatusChange(() => {
+        const dispose = acc.onStatusChange.listen(() => {
           if (!isResolved(acc)) return
           dispose()
 
@@ -89,7 +89,7 @@ export function resolved<T>(
 
   return new Promise<any>(resolve => {
     // TODO: Support for promise reject
-    accessor.onStatusChange(() => {
+    accessor.onStatusChange.listen(() => {
       if (isResolved(accessor)) resolve(accessor.data)
     })
   })

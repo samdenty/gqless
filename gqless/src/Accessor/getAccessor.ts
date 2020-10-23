@@ -7,7 +7,7 @@ let lastAccessor: Accessor | null
 let timer: number
 
 const interceptor = new Interceptor()
-interceptor.onAccessor(accessor => {
+interceptor.onAccessor.listen(accessor => {
   lastAccessor = accessor
 
   clearTimeout(timer)

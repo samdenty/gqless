@@ -27,8 +27,8 @@ export class Selection<TNode extends DataTrait = DataTrait> {
     this.onSelect.emit(selection)
 
     // Forward events
-    selection.onSelect(this.onSelect.emit)
-    selection.onUnselect(this.onUnselect.emit)
+    selection.onSelect.listen(this.onSelect.emit)
+    selection.onUnselect.listen(this.onUnselect.emit)
   }
 
   public get<TSelection extends Selection>(

@@ -23,6 +23,9 @@ export const getAbstractImplementation = (node: object, typename: string) => {
 
 export class Abstract<TNode extends ObjectNode = ObjectNode>
   implements DataTrait {
+  private abstractProxy: any
+  protected abstractCtx: any
+
   constructor(public implementations: TNode[]) {}
 
   public getData(ctx: DataContext) {
@@ -49,7 +52,7 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
     return new Proxy(
       {},
       {
-        get(_, prop: any) {
+        get: (_, prop: any) => {
           const fragment = ctx.accessor?.fragmentToResolve
           if (fragment) return fragment.data?.[prop]
 
@@ -67,7 +70,7 @@ export class Abstract<TNode extends ObjectNode = ObjectNode>
           }
         },
 
-        set(_, prop: any, value: any) {
+        set: (_, prop: any, value: any) => {
           const fragment = ctx.accessor?.fragmentToResolve
           if (fragment) {
             const { data } = fragment

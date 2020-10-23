@@ -33,10 +33,10 @@ export const useAccessors = (stack: StackContext) => {
           accessor,
           // Make component update when data changes
           [
-            accessor.onDataChange(() => {
+            accessor.onDataChange.listen(() => {
               forceUpdate()
             }),
-            accessor.onStatusChange((newValue, prevValue) => {
+            accessor.onStatusChange.listen((newValue, prevValue) => {
               const prevIdle = prevValue === NetworkStatus.idle
               const active = newValue !== NetworkStatus.idle
 

@@ -15,7 +15,7 @@ export class FragmentAccessor<
     super(parent, fragment)
 
     if (fragment.node !== parent.node) {
-      this.parent.onValueChange(value => {
+      this.parent.onValueChange.listen(value => {
         this.resolved =
           this.parent.resolved && (!value || value.node === fragment.node)
       })

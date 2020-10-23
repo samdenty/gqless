@@ -10,17 +10,19 @@ import {
 } from './abstract'
 import { ScalarNode } from './ScalarNode'
 import { Value } from '../Cache'
-import { ComputableExtension, StaticExtension, createExtension } from './Extension'
+import {
+  ComputableExtension,
+  StaticExtension,
+  createExtension,
+} from './Extension'
 import { DataTrait, DataContext, getValue, getExtensions } from './traits'
 
 export type IObjectNodeOptions = IFieldsNodeOptions
 
 const TYPENAME_NODE = new ScalarNode()
 
-export class ObjectNode extends Mix(
-  FieldsNode,
-  Matchable
-) implements DataTrait {
+export class ObjectNode extends Mix(FieldsNode, Matchable)
+  implements DataTrait {
   public extension?: ComputableExtension | StaticExtension
 
   constructor(fields: UFieldsNodeRecord, options: IObjectNodeOptions) {
@@ -106,7 +108,8 @@ export class ObjectNode extends Mix(
           const selection = field.getSelection(ctx)
 
           const fieldAccessor =
-            ctx.accessor.get(selection) || new FieldAccessor(ctx.accessor, selection)
+            ctx.accessor.get(selection) ||
+            new FieldAccessor(ctx.accessor, selection)
 
           fieldAccessor.setData(value)
 

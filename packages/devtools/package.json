@@ -13,10 +13,13 @@
     "url": "https://github.com/samdenty/gqless.git",
     "directory": "packages/devtools"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "start": "craco start",
     "build": "craco build",
+    "watch": "true",
     "eject": "craco eject"
   },
   "dependencies": {

@@ -48,7 +48,7 @@ export const deepReference = (rootValue: Value) => {
     watcherDisposers.add(
       // When the parent value references a new value
       // recursively watch it
-      parentValue.onReference(handleReference)
+      parentValue.onReference.listen(handleReference)
     )
 
     return () => watcherDisposers.forEach(dispose => dispose())

@@ -77,9 +77,9 @@ export abstract class Accessor<
         // On un-select, dispose of self
         // used when you do `query.users()`, and an argumentless
         // selection is created before the function call
-        parent.selection.onUnselect.filter(s => s === selection)(() =>
-          this.dispose()
-        )
+        parent.selection.onUnselect
+          .filter(s => s === selection)
+          .listen(() => this.dispose())
       )
     }
 
@@ -87,11 +87,11 @@ export abstract class Accessor<
     // - data changes (from null -> object)
     // - parent extensions change
     this.addDisposer(
-      this.onDataChange(() => {
+      this.onDataChange.listen(() => {
         this.data = undefined
         this.loadExtensions()
       }),
-      parent?.onInitializeExtensions(() => {
+      parent?.onInitializeExtensions.listen(() => {
         this.loadExtensions()
       })
     )

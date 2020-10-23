@@ -14,6 +14,7 @@
     "release": "yarn build && changeset publish",
     "test": "jest",
     "build": "lerna run build --no-private",
+    "watch": "lerna run watch --no-private",
     "build:changed": "yarn run build --since",
     "docs": "yarn workspace @internal/website start",
     "docs:build": "yarn workspace @internal/website build"

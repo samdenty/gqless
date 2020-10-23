@@ -17,7 +17,7 @@ export class Cache extends Disposable {
   constructor(node: ObjectNode) {
     super()
 
-    this.onRootValueChange(() => {
+    this.onRootValueChange.listen(() => {
       if (this.references) this.references.dispose()
 
       this.references = deepReference(this.rootValue)
@@ -33,8 +33,8 @@ export class Cache extends Disposable {
       }
 
       addToEntries(this.rootValue)
-      this.references.onReference(addToEntries)
-      this.references.onUnreference(value => {
+      this.references.onReference.listen(addToEntries)
+      this.references.onUnreference.listen(value => {
         if (!this.entries.has(value.node)) return
         const graphNode = this.entries.get(value.node)!
 

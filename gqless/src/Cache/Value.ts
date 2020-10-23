@@ -22,7 +22,7 @@ export class Value<TNode extends DataTrait = DataTrait> {
     data: UValueData = node instanceof ArrayNode ? [] : {}
   ) {
     this.data = data
-    this.onSet((key, value) => {
+    this.onSet.listen((key, value) => {
       if (!this.references.has(value)) this.references.set(value, new Set())
 
       const referencedKeys = this.references.get(value)!
@@ -88,7 +88,6 @@ export class Value<TNode extends DataTrait = DataTrait> {
     key = String(key)
     const prevValue = (this.data as any)?.[key]
     if (prevValue === value) return
-
     ;(this.data as any)[key] = value
     this.onSet.emit(key, value)
   }
@@ -106,7 +105,7 @@ export class Value<TNode extends DataTrait = DataTrait> {
       if (!this.data) return null
 
       const obj: any = {
-        __typename: this.node.name
+        __typename: this.node.name,
       }
 
       Object.entries(this.data).forEach(([key, value]) => {

@@ -2,24 +2,25 @@ import { Generic, Mix } from 'mix-classes'
 
 import { IndexAccessor } from '../Accessor'
 import { ACCESSOR } from '../Accessor'
-import {
-  NodeContainer,
-  Matchable,
-} from './abstract'
+import { NodeContainer, Matchable } from './abstract'
 import { Value } from '../Cache'
 import { ArrayNodeExtension } from './Extension'
 import { createMemo } from '@gqless/utils'
-import { DataTrait, DataContext, getValue, getExtensions, interceptAccessor } from './traits'
+import {
+  DataTrait,
+  DataContext,
+  getValue,
+  getExtensions,
+  interceptAccessor,
+} from './traits'
 
 export interface ArrayNode<TNode extends object = object>
   extends NodeContainer<TNode> {}
 
 const memo = createMemo()
 
-export class ArrayNode<TNode> extends Mix(
-  Generic(NodeContainer),
-  Matchable
-) implements DataTrait {
+export class ArrayNode<TNode> extends Mix(Generic(NodeContainer), Matchable)
+  implements DataTrait {
   constructor(ofNode: TNode, nullable?: boolean) {
     // memoize instances of ArrayNode
     const existingNode = memo<ArrayNode<TNode>>([ofNode, nullable])
@@ -63,9 +64,7 @@ export class ArrayNode<TNode> extends Mix(
     return
   }
 
-  public getData(
-    ctx: DataContext<ArrayNode<TNode>>
-  ) {
+  public getData(ctx: DataContext<ArrayNode<TNode>>) {
     interceptAccessor(ctx)
 
     const proxy: any[] = new Proxy([] as any[], {
@@ -96,17 +95,18 @@ export class ArrayNode<TNode> extends Mix(
               return accessor.data
             }
 
-            return (this.ofNode as any as DataTrait).getData({
+            return ((this.ofNode as any) as DataTrait).getData({
               value: ctx.value?.get(index),
               selection: ctx.selection,
-              extensions: [] // todo
+              extensions: [], // todo
             })
           }
         }
 
         // fallback to extensions
         for (const extension of getExtensions(ctx)) {
-          if (prop in extension.data) return (extension.data as ArrayNodeExtension)[prop]
+          if (prop in extension.data)
+            return (extension.data as ArrayNodeExtension)[prop]
         }
 
         const arrayProperty = target[prop]

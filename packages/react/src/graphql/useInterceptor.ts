@@ -14,7 +14,8 @@ export const useInterceptor = (stack: StackContext) => {
   const schedulers = new Set<Scheduler>()
   const interceptedAccessors = new Set<Accessor>()
 
-  interceptor.onAccessor(accessor => {
+  // @ts-ignore
+  interceptor.onAccessor.listen(accessor => {
     interceptedAccessors.add(accessor)
 
     if (schedulers.has(accessor.scheduler)) return

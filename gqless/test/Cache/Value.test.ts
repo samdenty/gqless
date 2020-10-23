@@ -10,7 +10,7 @@ describe('emits onChange', () => {
   let onChange: any
   beforeEach(() => {
     onChange = jest.fn()
-    value.onChange(onChange)
+    value.onChange.listen(onChange)
   })
 
   test('on update', () => {
@@ -32,7 +32,7 @@ describe('emits onSet', () => {
   let onSet: any
   beforeEach(() => {
     onSet = jest.fn()
-    value.onSet(onSet)
+    value.onSet.listen(onSet)
   })
 
   test('on set', () => {
@@ -59,8 +59,8 @@ describe('emits onSet', () => {
 test('handles references', () => {
   const onReference = jest.fn()
   const onUnreference = jest.fn()
-  value.onReference(onReference)
-  value.onUnreference(onUnreference)
+  value.onReference.listen(onReference)
+  value.onUnreference.listen(onUnreference)
 
   const object = new Value(schema.Object)
 
