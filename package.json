@@ -71,7 +71,7 @@
     "react-dom": "^0.0.0-experimental-f6b8d31a7",
     "ts-jest": "^25.3.1",
     "tsconfig-paths": "^3.9.0",
-    "tsdx": "^0.12.3",
+    "tsdx": "^0.14.1",
     "typescript": "^3.8.3"
   },
   "version": "0.0.0"

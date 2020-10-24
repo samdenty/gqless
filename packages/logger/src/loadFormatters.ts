@@ -1,9 +1,11 @@
 import * as formatters from './formatters'
 
-if (!(window as any).devtoolsFormatters)
-  (window as any).devtoolsFormatters = []
+if (typeof window !== 'undefined') {
+  if (!(window as any).devtoolsFormatters)
+    (window as any).devtoolsFormatters = []
 
-  // Inject
-;(window as any).devtoolsFormatters.push(
-  ...Object.values(formatters).filter(f => typeof f === 'object')
-)
+    // Inject
+  ;(window as any).devtoolsFormatters.push(
+    ...Object.values(formatters).filter(f => typeof f === 'object')
+  )
+}
