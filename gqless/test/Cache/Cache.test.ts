@@ -1,4 +1,4 @@
-import { Cache, Value, merge, StaticExtension, GET_KEY } from 'gqless'
+import { Cache, Value, merge, StaticExtension, GET_KEY } from '../../src'
 import { schema } from '@internal/fixtures'
 
 let cache: Cache

@@ -1,4 +1,3 @@
-// @ts-ignore
 import { seed } from 'faker'
 import { parse, buildASTSchema, execute } from 'graphql'
 import * as fs from 'fs'
