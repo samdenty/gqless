@@ -16,7 +16,7 @@ Check [API Reference](/react/api/interfaces/usequery)
 
 - **Composability**
 - Advanced '[stale-while-revalidate](https://web.dev/stale-while-revalidate/)' behavior, allowing you to set **_any_** value to re-trigger re-validation.
-- Extra `gqlessState` in the returned value, which is extra valuable for `Non-Suspense` usage.
+- Extra `$state` in the returned value, which is extra valuable for `Non-Suspense` usage.
 
 ### Suspense Example
 
@@ -57,7 +57,7 @@ See [Non-Suspense usage](/react/suspense#non-suspense-usage) for more details
 import { useQuery } from '../gqless';
 
 function Example() {
-  const { helloWorld, gqlessState } = useQuery({
+  const { helloWorld, $state } = useQuery({
     // boolean | undefined
     suspense: false,
 
@@ -69,7 +69,7 @@ function Example() {
     onError(error) {},
   });
 
-  if (gqlessState.isLoading) {
+  if ($state.isLoading) {
     return <p>Loading...</p>;
   }
 

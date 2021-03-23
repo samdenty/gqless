@@ -5,7 +5,7 @@ let nRender = 0;
 let nCommitedRender = 0;
 
 export default function UseQueryPage() {
-  const { time, gqlessState } = useQuery({
+  const { time, $state } = useQuery({
     suspense: true,
   });
 
@@ -13,7 +13,7 @@ export default function UseQueryPage() {
     console.log('Commited render:', ++nCommitedRender);
   });
 
-  if (gqlessState.isLoading) {
+  if ($state.isLoading) {
     console.log('IS LOADING!');
     return (
       <p>

@@ -6,23 +6,23 @@ test('Basic Non-Suspense', async () => {
   const { useQuery } = await createReactTestClient();
 
   const { result, waitFor } = renderHook(() => {
-    const { hello, gqlessState } = useQuery({
+    const { hello, $state } = useQuery({
       suspense: false,
     });
 
     return {
       hello,
-      gqlessState,
+      $state,
     };
   });
 
   expect(result.current.hello).toBe(undefined);
 
-  await waitFor(() => result.current.gqlessState.isLoading === true);
+  await waitFor(() => result.current.$state.isLoading === true);
 
   expect(result.current.hello).toBe(undefined);
 
-  await waitFor(() => result.current.gqlessState.isLoading === false);
+  await waitFor(() => result.current.$state.isLoading === false);
 
   expect(result.current.hello).toBe('hello world');
 });

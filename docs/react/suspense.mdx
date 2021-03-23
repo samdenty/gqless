@@ -37,15 +37,15 @@ Most of the hooks/functions offer some way of using it flawlessly without `Suspe
 
 But in the main design of `gqless`, using [useQuery](/react/query#usequery) and/or [graphql HOC](/react/query#graphql-hoc) it's a little bit different.
 
-First of all, **We suggest NOT using the `graphql HOC`** for `Non-Suspense usage`, instead, do [useQuery](/react/query#usequery), mainly because it returns an extra reserved `gqlessState` object, in which you can check easily if the data you requested is being fetched for the first time:
+First of all, **We suggest NOT using the `graphql HOC`** for `Non-Suspense usage`, instead, do [useQuery](/react/query#usequery), mainly because it returns an extra reserved `$state` object, in which you can check easily if the data you requested is being fetched for the first time:
 
 ```tsx
 function Example() {
-  const { helloWorld, gqlessState } = useQuery({
+  const { helloWorld, $state } = useQuery({
     suspense: false,
   });
 
-  if (gqlessState.isLoading) return <p>Loading...</p>;
+  if ($state.isLoading) return <p>Loading...</p>;
 
   return <p>{helloWorld}</p>;
 }

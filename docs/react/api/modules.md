@@ -98,7 +98,7 @@ Defined in: [ssr/ssr.ts:25](https://github.com/gqless/gqless/blob/master/package
 
 ### UseQueryReturnValue
 
-Ƭ **UseQueryReturnValue**<GeneratedSchema\>: GeneratedSchema[*query*] & { `gqlessState`: [_UseQueryState_](interfaces/usequerystate.md) }
+Ƭ **UseQueryReturnValue**<GeneratedSchema\>: GeneratedSchema[*query*] & { `$state`: [_UseQueryState_](interfaces/usequerystate.md) }
 
 #### Type parameters:
 

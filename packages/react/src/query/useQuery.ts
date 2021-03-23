@@ -24,7 +24,7 @@ export interface UseQueryState {
 export type UseQueryReturnValue<
   GeneratedSchema extends { query: object }
 > = GeneratedSchema['query'] & {
-  gqlessState: UseQueryState;
+  $state: UseQueryState;
 };
 export interface UseQuery<GeneratedSchema extends { query: object }> {
   (options?: UseQueryOptions): UseQueryReturnValue<GeneratedSchema>;
@@ -50,7 +50,7 @@ export function createUseQuery<
     staleWhileRevalidate = defaultStaleWhileRevalidate,
     onError,
   }: UseQueryOptions = {}): UseQueryReturnValue<GeneratedSchema> {
-    const [gqlessState] = useState<UseQueryState>(() => {
+    const [$state] = useState<UseQueryState>(() => {
       return {
         isLoading: true,
       };
@@ -70,11 +70,11 @@ export function createUseQuery<
     useIsomorphicLayoutEffect(unsubscribe);
 
     if (fetchingPromise) {
-      gqlessState.isLoading = true;
+      $state.isLoading = true;
 
       if (suspense) throw fetchingPromise;
     } else {
-      gqlessState.isLoading = false;
+      $state.isLoading = false;
     }
 
     return useMemo<UseQueryReturnValue<GeneratedSchema>>(() => {
@@ -87,7 +87,7 @@ export function createUseQuery<
             return acum;
           },
           {
-            gqlessState,
+            $state,
           }
         ),
         {
@@ -95,13 +95,13 @@ export function createUseQuery<
             return Reflect.set(clientQuery, key, value);
           },
           get(_t, key) {
-            if (key === 'gqlessState') return gqlessState;
+            if (key === '$state') return $state;
 
             return Reflect.get(clientQuery, key);
           },
         }
       );
-    }, [gqlessState]);
+    }, [$state]);
   };
 
   return useQuery;
