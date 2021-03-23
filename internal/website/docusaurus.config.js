@@ -19,14 +19,14 @@ module.exports = {
         //@ts-ignore
         require('prism-react-renderer/themes/shadesOfPurple'),
     },
-    algolia: {
-      apiKey: 'c00e78ccfa93ead531ad80e4dd94b48b',
-      indexName: 'gqless',
-      algoliaOptions: {},
-    },
-    googleAnalytics: {
-      trackingID: 'UA-85426772-7',
-    },
+    // algolia: {
+    //   apiKey: 'c00e78ccfa93ead531ad80e4dd94b48b',
+    //   indexName: 'gqless',
+    //   algoliaOptions: {},
+    // },
+    // googleAnalytics: {
+    //   trackingID: 'UA-85426772-7',
+    // },
     navbar: {
       title: null,
       logo: {
