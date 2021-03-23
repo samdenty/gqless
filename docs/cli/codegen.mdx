@@ -3,32 +3,115 @@ id: codegen
 title: Codegen
 ---
 
-Creates a typed gqless client from a graphql endpoint.
+Given it's [configuration](/cli/config), creates a typed gqless client from a graphql endpoint/schema.
 
 ## Command
 
 ```shell
-$ gqless generate [OUTPUT_DIR]
-```
-
-## Options
-
-| Option                      | Alias | Type      | Default | Description                                                                                                           |
-| --------------------------- | ----- | --------- | ------- | --------------------------------------------------------------------------------------------------------------------- |
-| <nobr>`--config`</nobr>     | `-c`  | `string`  |         | Path to your gqless config file.                                                                                      |
-| <nobr>`--help`</nobr>       | `-h`  |           |         | Show CLI help.                                                                                                        |
-| <nobr>`--typescript`</nobr> | `-t`  | `boolean` | `true`  | Output TypeScript (instead of JavaScript).                                                                            |
-| <nobr>`--url`</nobr>        | `-u`  | `string`  |         | URL to the GraphQL endpoint.                                                                                          |
-| <nobr>`--comments`</nobr>   |       | `boolean` | `true`  | Output comments to type definitions (useful for IDE intellisense).                                                    |
-| <nobr>`--header`</nobr>     |       | `string`  |         | Additional header to send to server for `introspectionQuery`.<br/>May be used multiple times to add multiple headers. |
-
-## Examples
-
-```shell
-$ gqless generate ./src/gqless -u https://example.com/graphql
-$ gqless generate -c gqless.config.ts
+npx @gqless/cli generate
 ```
 
 ## Format output code
 
-CLI code generator comes with built in support for formatting code using [Prettier](https://prettier.io/). The config search will start at the output directory and will continue up the directories tree.
+The CLI code generator comes with built in support for formatting code using [Prettier](https://prettier.io/). The config search will start at the output directory and will continue up the directories tree.
+
+## Default client generated code
+
+By default with `react` & `subscriptions` turned on, the generated client files should look like this:
+
+```ts
+import { createReactClient } from '@gqless/react';
+import { createSubscriptionsClient } from '@gqless/subscriptions';
+import { createClient, QueryFetcher } from 'gqless';
+import {
+  GeneratedSchema,
+  generatedSchema,
+  scalarsEnumsHash,
+  SchemaObjectTypes,
+  SchemaObjectTypesNames,
+} from './schema.generated';
+
+const queryFetcher: QueryFetcher = async function (query, variables) {
+  // Modify "/api/graphql" if needed
+  const response = await fetch('/api/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables,
+    }),
+    mode: 'cors',
+  });
+
+  const json = await response.json();
+
+  return json;
+};
+
+const subscriptionsClient =
+  typeof window !== 'undefined'
+    ? createSubscriptionsClient({
+        wsEndpoint: () => {
+          // Modify if needed
+          const url = new URL('/api/graphql', window.location.href);
+          url.protocol = url.protocol.replace('http', 'ws');
+          return url.href;
+        },
+      })
+    : undefined;
+
+export const client = createClient<
+  GeneratedSchema,
+  SchemaObjectTypesNames,
+  SchemaObjectTypes
+>({
+  schema: generatedSchema,
+  scalarsEnumsHash,
+  queryFetcher,
+  subscriptionsClient,
+});
+
+export const {
+  query,
+  mutation,
+  mutate,
+  subscription,
+  resolved,
+  refetch,
+} = client;
+
+export const {
+  graphql,
+  useQuery,
+  useTransactionQuery,
+  useLazyQuery,
+  useMutation,
+  useRefetch,
+  useMetaState,
+  prepareReactRender,
+  useHydrateCache,
+  prepareQuery,
+  useSubscription,
+} = createReactClient<GeneratedSchema>(client, {
+  defaults: {
+    // Set this flag as "true" if your usage involves React Suspense
+    // Keep in mind that you can overwrite it in a per-hook basis
+    suspense: false,
+
+    // Set this flag based on your needs
+    staleWhileRevalidate: false,
+  },
+});
+
+export * from './schema.generated';
+```
+
+You can modify this file safely, and each client has configurations you can set.
+
+- See [Core client configuration](/core/config)
+
+- See [React configuration](/react/config)
+
+- See [Subscriptions configuration](/core/subscriptions)

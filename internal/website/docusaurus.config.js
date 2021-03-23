@@ -3,14 +3,21 @@ module.exports = {
   tagline: `A GraphQL client without queries`,
   url: 'https://gqless.dev',
   baseUrl: '/',
-  favicon: 'img/favicon.ico',
-  organizationName: 'samdenty',
+  favicon: '/favicon.ico',
+  organizationName: 'gqless',
   projectName: 'gqless',
   themeConfig: {
-    // sidebarCollapsible: false,
+    sidebarCollapsible: true,
+    colorMode: {
+      respectPrefersColorScheme: true,
+    },
     prism: {
-      theme: require('prism-react-renderer/themes/nightOwlLight'),
-      darkTheme: require('prism-react-renderer/themes/shadesOfPurple'),
+      theme:
+        //@ts-ignore
+        require('prism-react-renderer/themes/nightOwlLight'),
+      darkTheme:
+        //@ts-ignore
+        require('prism-react-renderer/themes/shadesOfPurple'),
     },
     algolia: {
       apiKey: 'c00e78ccfa93ead531ad80e4dd94b48b',
@@ -21,12 +28,12 @@ module.exports = {
       trackingID: 'UA-85426772-7',
     },
     navbar: {
-      title: 'gqless',
-      // logo: {
-      //   alt: 'gqless Logo',
-      //   src: 'img/logo.svg',
-      // },
-      links: [
+      title: null,
+      logo: {
+        alt: 'gqless Logo',
+        src: '/img/logo-sm.svg',
+      },
+      items: [
         {
           label: 'Getting Started',
           to: 'introduction/getting-started',
@@ -34,8 +41,8 @@ module.exports = {
           activeBasePath: 'introduction',
         },
         {
-          label: 'API',
-          to: 'api',
+          label: 'React',
+          to: 'react/basic-usage',
           position: 'right',
         },
         {
@@ -46,14 +53,14 @@ module.exports = {
 
         // { to: 'blog', label: 'Blog', position: 'left' },
         {
-          href: 'https://github.com/samdenty/gqless',
+          href: 'https://github.com/gqless/gqless',
           position: 'right',
           dangerouslySetInnerHTML: {
             __html: `
               <img
                 class="github-star"
                 alt="GitHub"
-                src="https://img.shields.io/github/stars/samdenty/gqless?style=social&label=Star"
+                src="https://img.shields.io/github/stars/gqless/gqless?style=social&label=Star"
               />
             `,
           },
@@ -71,12 +78,13 @@ module.exports = {
               to: 'introduction/getting-started',
             },
             {
-              label: 'FAQ',
-              to: 'faq',
+              label: 'React',
+              to: 'react/basic-usage',
+              position: 'right',
             },
             {
-              label: 'API Reference',
-              to: 'api',
+              label: 'FAQ',
+              to: 'faq',
             },
           ],
         },
@@ -98,7 +106,7 @@ module.exports = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/samdenty/gqless',
+              href: 'https://github.com/gqless/gqless',
             },
             {
               label: 'Open Collective',
@@ -107,11 +115,7 @@ module.exports = {
           ],
         },
       ],
-      // logo: {
-      //   alt: 'Facebook Open Source Logo',
-      //   src: 'https://docusaurus.io/img/oss_logo.png',
-      // },
-      copyright: `Copyright © ${new Date().getFullYear()} <a href="https://twitter.com/thesamdd" target="_blank">Sam Denty</a>`,
+      copyright: `Copyright © ${new Date().getFullYear()}`,
     },
   },
   presets: [
@@ -122,15 +126,52 @@ module.exports = {
           path: '../../docs',
           sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: '/',
-          editUrl: 'https://github.com/samdenty/gqless/edit/master/docs/',
+          editUrl:
+            'https://github.com/gqless/new_gqless/edit/master/docs/master',
           remarkPlugins: [require('./src/plugins/remark-yarn2npm')],
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
         },
         theme: {
-          customCss: require.resolve('./src/index.css'),
+          customCss: require.resolve('./src/style.css'),
         },
       },
     ],
   ],
-}
+  plugins: process.env.SKIP_TYPEDOC
+    ? [require.resolve('./fix-typedoc-plugin.js')]
+    : [
+        [
+          'docusaurus-plugin-typedoc',
+          {
+            id: 'core',
+            entryPoints: ['../../packages/gqless/src/index.ts'],
+            tsconfig: '../../packages/gqless/tsconfig.json',
+            docsRoot: '../../docs',
+            out: 'core/api',
+            sidebar: {
+              sidebarFile: 'sidebars/core.js',
+              fullNames: true,
+            },
+            allReflectionsHaveOwnDocument: false,
+          },
+        ],
+        [
+          'docusaurus-plugin-typedoc',
+          {
+            id: 'react',
+            entryPoints: ['../../packages/react/src/index.tsx'],
+            tsconfig: '../../packages/react/tsconfig.json',
+            docsRoot: '../../docs',
+            out: 'react/api',
+            sidebar: {
+              sidebarFile: 'sidebars/react.js',
+              fullNames: true,
+            },
+            allReflectionsHaveOwnDocument: false,
+          },
+        ],
+        require.resolve('./fix-typedoc-plugin.js'),
+      ],
+  stylesheets: ['/fonts.css'],
+};

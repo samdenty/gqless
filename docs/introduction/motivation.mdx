@@ -12,22 +12,26 @@ gqless is a fundamentally new approach to a GraphQL client. It makes using your 
 #### Your app
 
 ```jsx
-const App = graphql(() => (
-  <div>
-    Hello {query.me.name}!
-    {query.users({ limit: 10 }).map(user => (
-      <User key={user.id} user={user} />
-    ))}
-  </div>
-))
+const App = () => {
+  const { me, users } = useQuery();
+  return (
+    <div>
+      Hello {me.name}!
+      {users({ limit: 10 }).map((user) => (
+        <User key={user.id || 0} user={user} />
+      ))}
+    </div>
+  );
+};
 ```
 
 #### Generated query
 
-<!--prettier-ignore -->
 ```graphql
-query App {
-  me { name }
+query {
+  me {
+    name
+  }
   users(limit: 10) {
     id
     name
@@ -37,11 +41,9 @@ query App {
 
 ## Why
 
-I wanted a GraphQL client that lets you _forget you're using GraphQL_.
+We wanted a GraphQL client that lets you _forget you're using GraphQL_.
 
 I also wanted to tackle some issues shared across all existing GraphQL clients:
-
-- **Double declaration of queries**. [babel-blade](https://github.com/sw-yx/babel-blade) uses static analysis to partially solve this, but JS is dynamic by nature
 
 - **Slow Typescript DX**. Typescript should speed up your workflow, not slow it down
 
@@ -75,25 +77,23 @@ Typically you'd then run a type generator to create types for each query (change
 
 Finally you'd do the task you set out to do - updating the components,
 
-```jsx
-const UserProfile = ({ id }) => {
+```tsx
+const UserProfile = ({ id }: { id: string }) => {
   const { data } = useQuery(USER_PROFILE, {
     variables: { id, avatarSize: 100 },
-  })
+  });
 
-  return <img src={data.user.avatarUrl} />
-}
+  return <img src={data.user.avatarUrl} />;
+};
 ```
 
 ### Using gqless
 
 Just update the UI, and the queries generated at runtime will reflect your changes.
 
-```jsx
-import { graphql } from '@gqless/react'
-import { query } from './gqless'
-
-const UserProfile = graphql(({ user }) => {
-  return <img src={user.avatarUrl({ size: 100 })} />
-})
+```tsx
+import { User } from './gqless';
+const UserProfile = ({ user }: { user: User }) => {
+  return <img src={user.avatarUrl({ size: 100 })} />;
+};
 ```

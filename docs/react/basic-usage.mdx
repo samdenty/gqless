@@ -1,16 +1,19 @@
 ---
 id: basic-usage
-title: Basic usage
+title: React Basic Usage
+sidebar_label: Basic usage
 ---
-
-> #### Prerequisites
->
-> Make sure you've completed [Getting Started](/getting-started) first, `./gqless` refers to the folder created there
 
 Using GraphQL data within React components is straightforward.
 
 - Updates components when data changes
-- Suspends components whilst data is being fetched
+- _(When enabled)_ Suspends components while data is being fetched
+
+> #### Prerequisites
+>
+> Make sure you've completed [Getting Started](/introduction/getting-started) first
+>
+> `"../gqless"` refers to the generated client file/directory
 
 ## Installation
 
@@ -22,51 +25,351 @@ yarn add @gqless/react
 
 ## Usage
 
-> NOTE: Class components aren't supported
+In your previously generated client, you should have something like this:
 
-First, wrap components that are going to use GraphQL data inside `graphql()`:
+> You can remove some hooks / functions that you are not planning to use
 
-```jsx
-import { graphql } from '@gqless/react'
+> For more information about the configuration of the client [check here](/react/config).
 
-const Component = graphql(() => <div />)
+```ts
+export const {
+  graphql,
+  useQuery,
+  useTransactionQuery,
+  useLazyQuery,
+  useRefetch,
+  prepareQuery,
+
+  useMutation,
+
+  useSubscription,
+
+  useMetaState,
+
+  prepareReactRender,
+  useHydrateCache,
+} = createReactClient<GeneratedSchema>(client, {
+  defaults: {
+    // Set this flag as "true" if your usage involves React Suspense
+    // Keep in mind that you can overwrite it in a per-hook basis
+    suspense: false,
+
+    // Set this flag based on your needs
+    staleWhileRevalidate: false,
+  },
+});
 ```
 
-Next, ensure the component is within a Suspense fallback. [See here for more](https://medium.com/@rossbulat/react-lazy-suspense-and-concorrent-react-breakdown-with-examples-2758de98cb1c)
+:::caution
+We recommend you reading the [**caveats**](/react/caveats) of React Usage
+:::
 
-```jsx
-import { Suspense } from 'react'
+We can take a quick look at all those functions:
 
-// For example, wrap the App component
-const App = () => (
-  <Suspense fallback={<span>loading...</span>}>
-    <Component />
-  </Suspense>
-)
-```
+### Query related
 
-Now simply use data inside the component:
+For more information [check here](/react/basic-usage).
 
-```jsx
-import { query } from './gqless'
+- [**useQuery**](/react/query#usequery) | Main hook that uses all the main design of `gqless`.
 
-const Component = graphql(() => <div>{query.hello}</div>)
-```
+```tsx
+import { useQuery } from '../gqless';
 
-## Examples
+export function Example() {
+  const { helloWorld } = useQuery();
 
-Updating the cache when a button is pressed:
-
-```jsx
-import { query } from './gqless'
-import { graphql } from '@gqless/react'
-
-const App = graphql(() => {
   return (
-    <>
-      <button onClick={() => (query.hello = 'Updates')}></button>
-      {query.hello}
-    </>
-  )
-})
+    <div>
+      <p>{helloWorld}</p>
+    </div>
+  );
+}
+```
+
+- [**graphql**](/react/query#graphql-hoc) | HOC [_(Higher-Order Component)_](https://reactjs.org/docs/higher-order-components.html) designed specially for [Suspense usage](/react/suspense).
+
+```tsx
+import { graphql, query } from '../gqless';
+
+export const Example = graphql(
+  function Example() {
+    return (
+      <div>
+        <p>{query.helloWorld}</p>
+      </div>
+    );
+  },
+  {
+    suspense: {
+      fallback: 'Loading...',
+    },
+  }
+);
+```
+
+- [**useTransactionQuery**](/react/query#usetransactionquery) | Alternative to `graphql` and `useQuery` that works via pre-defined functions, which allows for extra features that are not available in the previously mentioned functions, like for example, scoped queries, **polling**, conditional skipping.
+
+```tsx
+import { useTransactionQuery } from '../gqless';
+
+export function Example() {
+  const { data, isLoading } = useTransactionQuery((query) => {
+    return query.helloWorld;
+  });
+
+  return (
+    <div>
+      <p>{isLoading ? 'Loading...' : data}</p>
+    </div>
+  );
+}
+```
+
+- [**useLazyQuery**](/react/query#uselazyquery) | Queries meant to be called in response of events, like button clicks.
+
+```tsx
+import { useLazyQuery } from '../gqless';
+
+export function Example() {
+  const [getHelloWorld, { isLoading, isCalled, data }] = useLazyQuery(
+    (query) => {
+      return query.helloWorld;
+    }
+  );
+
+  if (isCalled) {
+    return <p>{isLoading ? 'Loading...' : data}</p>;
+  }
+  return <button onClick={() => getHelloWorld()}>Get Hello World</button>;
+}
+```
+
+- [**useRefetch**](/react/query#userefetch) | Refetch giving specific parts of the schema or via functions.
+
+```tsx
+import { useRefetch, useQuery } from '../gqless';
+
+function Example() {
+  const refetch = useRefetch();
+  const query = useQuery();
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          refetch(() => query.helloWorld);
+        }}
+      >
+        Refetch
+      </button>
+      <p>{query.helloWorld}</p>
+    </div>
+  );
+}
+```
+
+- [**prepareQuery**](/react/query#preparequery) | Prepare queries on **module-level**, allowing for the famous **Render as you fetch** pattern, **re-using** the callbacks in [_useTransactionQuery_](/react/query#usetransactionquery) & [_useLazyQuery_](/react/query#uselazyquery), **composition**, **prefetching**, _and more_.
+
+```tsx
+import { useState } from 'react';
+import { prepareQuery } from '../gqless';
+
+const { preload, refetch, usePrepared } = prepareQuery((query) => {
+  return query.helloWorld;
+});
+
+function Example() {
+  const { data } = usePrepared();
+
+  return <p>{data}</p>;
+}
+
+function Container() {
+  const [show, setShow] = useState(false);
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          if (show) {
+            refetch();
+          } else {
+            preload();
+          }
+        }}
+      >
+        {show ? 'Refetch' : 'Show Example'}
+      </button>
+
+      {show && <Example />}
+    </div>
+  );
+}
+```
+
+### Mutation related
+
+For more information [check here](/react/mutations).
+
+- [**useMutation**](/react/mutations#usemutation) | Hook designed to be used for [GraphQL Mutations](https://graphql.org/graphql-js/mutations-and-input-types/).
+
+```tsx
+import { useState } from 'react';
+import { useMutation } from '../gqless';
+
+export function LoginComponent() {
+  const [login, { isLoading, data }] = useMutation(
+    (mutation, args: { email: string; password: string }) => {
+      const { user, error } = mutation.login({ args });
+
+      if (user) {
+        return {
+          name: user.name,
+        };
+      }
+
+      return {
+        error,
+      };
+    }
+  );
+
+  const [formData, setFormData] = useState(() => ({ email: '', password: '' }));
+
+  return (
+    <form>
+      <label>Email</label>
+      <input
+        value={formData.email}
+        onChange={(ev) => {
+          setFormData({
+            ...formData,
+            email: ev.target.value,
+          });
+        }}
+      />
+
+      <label>Password</label>
+      <input
+        value={formData.password}
+        onChange={(ev) => {
+          setFormData({
+            ...formData,
+            password: ev.target.value,
+          });
+        }}
+      />
+
+      <button
+        type="submit"
+        disabled={isLoading}
+        onClick={(ev) => {
+          ev.preventDefault();
+          login({ args: formData }).catch(console.error);
+        }}
+      >
+        Login
+      </button>
+
+      {data?.error ? <p>Error: {data.error}</p> : null}
+    </form>
+  );
+}
+```
+
+### Subscription related
+
+For more information [check here](/react/subscriptions).
+
+- [**useSubscription**](/react/subscriptions#usesubscription) | Hook designed to be used for [GraphQL Subscriptions](https://github.com/graphql/graphql-spec/blob/main/rfcs/Subscriptions.md).
+
+```tsx
+import { useSubscription } from '../gqless';
+
+export function Example() {
+  const { newNotification } = useSubscription();
+
+  if (newNotification) {
+    return (
+      <p>
+        New Notification: <b>{newNotification}</b>
+      </p>
+    );
+  }
+  return <p>Waiting for new notifications...</p>;
+}
+```
+
+### Meta related
+
+For more information [check here](/react/meta).
+
+- [**useMetaState**](/react/meta#usemetastate) | Hook designed to inspect the React Client state, like error handling and fetching state.
+
+```tsx
+import { useMetaState } from '../gqless';
+export function Example() {
+  const { isFetching, errors } = useMetaState({
+    onError({ newError, isLastTry }) {
+      if (isLastTry) {
+        console.error(newError);
+      }
+    },
+  });
+
+  return (
+    <div>
+      {isFetching && <p>Fetching...</p>}
+      {errors && (
+        <>
+          <p>Errors!</p>
+          <ul>
+            {errors.map((error, key) => {
+              return <li key={key}>{error.message}</li>;
+            })}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+### SSR related
+
+For more information [check here](/react/ssr).
+
+> Examples made for **[Next.js SSR Data Fetching](https://nextjs.org/docs/basic-features/data-fetching)**
+
+- [**prepareReactRender**](/react/ssr#preparereactrender) - Function designed to be used before the React Render is being made, for example, in places like [getStaticProps](https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation) or [getServerSideProps](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering) of [Next.js](https://nextjs.org/).
+- [**useHydrateCache**](/react/ssr#usehydratecache) - Function designed to be placed at the very top of the hydrated component.
+
+```tsx
+import { PropsWithServerCache } from '@gqless/react';
+import { GetStaticProps } from 'next';
+import { prepareReactRender, useHydrateCache, useQuery } from '../gqless';
+
+export default function ExamplePage({ cacheSnapshot }: PropsWithServerCache) {
+  useHydrateCache({
+    cacheSnapshot,
+
+    // If it should refetch everything after the component is mounted
+    // By default 'shouldRefetch' is `false`
+    shouldRefetch: false,
+  });
+
+  const { helloWorld } = useQuery();
+
+  return <p>{helloWorld}</p>;
+}
+
+export const getStaticProps: GetStaticProps = async (_ctx) => {
+  const { cacheSnapshot } = await prepareReactRender(<ExamplePage />);
+
+  return {
+    props: {
+      cacheSnapshot,
+    },
+  };
+};
 ```

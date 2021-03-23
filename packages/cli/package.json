@@ -1,65 +1,73 @@
 {
-  "license": "GNU GPLv3",
-  "private": false,
   "name": "@gqless/cli",
-  "description": "Codegen for gqless",
-  "version": "1.0.0-alpha.33",
-  "author": "Sam Denty",
+  "version": "2.0.0",
+  "license": "MIT",
+  "author": "PabloSz",
+  "main": "dist/index.js",
+  "module": "dist/gqless-cli.esm.js",
+  "typings": "dist/index.d.ts",
   "bin": {
-    "gqless": "./bin/run"
-  },
-  "homepage": "https://gqless.dev",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/samdenty/gqless.git",
-    "directory": "packages/cli"
-  },
-  "dependencies": {
-    "@endemolshinegroup/cosmiconfig-typescript-loader": "^1.0.1",
-    "@gqless/schema": "^1.0.0-alpha.33",
-    "@oclif/command": "^1.5.19",
-    "@oclif/config": "^1.14.0",
-    "@oclif/plugin-help": "^2.2.3",
-    "cosmiconfig": "^6.0.0",
-    "globby": "^11.0.0",
-    "got": "^10.6.0",
-    "mkdirp": "^1.0.3",
-    "prettier": "^1.19.1",
-    "tslib": "^1.11.1"
-  },
-  "peerDependencies": {
-    "gqless": "^1.0.0-alpha.31"
-  },
-  "devDependencies": {
-    "@oclif/dev-cli": "^1.22.2",
-    "@types/got": "^9.6.9",
-    "@types/mkdirp": "^1.0.0",
-    "@types/node": "^13.9.1",
-    "@types/prettier": "^1.19.0",
-    "gqless": "^1.0.0-alpha.31",
-    "ts-node": "^8.6.2"
-  },
-  "engines": {
-    "node": ">=8.0.0"
+    "gqless": "bin/gqless.js",
+    "@gqless/cli": "bin/gqless.js"
   },
   "files": [
-    "/bin",
-    "/dist",
-    "/npm-shrinkwrap.json",
-    "/oclif.manifest.json"
+    "dist",
+    "src"
   ],
-  "main": "dist/index.js",
-  "oclif": {
-    "commands": "./dist/commands",
-    "bin": "gqless",
-    "plugins": [
-      "@oclif/plugin-help"
-    ]
-  },
   "scripts": {
-    "dev": "./bin/run-dev",
-    "build": "rm -rf dist; tsc && oclif-dev readme"
+    "analyze": "size-limit --why",
+    "build": "build gqless-cli",
+    "prepare": "build gqless-cli",
+    "postpublish": "gh-release",
+    "size": "size-limit",
+    "start": "watch gqless-cli",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:watch-coverage": "rimraf coverage && mkdirp coverage/lcov-report && concurrently --raw \"jest --watchAll\" \"serve -l 8787 coverage/lcov-report\" \"wait-on tcp:8787 coverage/lcov-report/index.html && open-cli http://localhost:8787\""
   },
-  "types": "dist/index.d.ts",
-  "gitHead": "7c27436fcea8e672f07233010401417ea7c59760"
+  "dependencies": {
+    "@graphql-codegen/core": "^1.17.9",
+    "@graphql-codegen/typescript": "^1.21.1",
+    "@graphql-tools/delegate": "^7.0.10",
+    "@graphql-tools/utils": "^7.6.0",
+    "@graphql-tools/wrap": "^7.0.5",
+    "commander": "^7.2.0",
+    "cosmiconfig": "^7.0.0",
+    "cross-fetch": "^3.1.2",
+    "graphql": "^15.5.0",
+    "mkdirp": "^1.0.4",
+    "prettier": "^2.2.1",
+    "runtypes": "^5.1.0"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.10.1",
+    "@types/mkdirp": "^1.0.1",
+    "build-utils": "workspace:*",
+    "gqless": "workspace:^2.0.0",
+    "open-cli": "^6.0.1",
+    "rimraf": "^3.0.2",
+    "serve": "^11.3.2",
+    "size-limit": "^4.10.1",
+    "test-utils": "workspace:^0.1.0",
+    "tmp-promise": "^3.0.2",
+    "tslib": "^2.1.0",
+    "typescript": "^4.2.3",
+    "wait-on": "^5.3.0"
+  },
+  "peerDependencies": {
+    "gqless": "workspace:^2.0.0"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "size-limit": [
+    {
+      "path": "dist/gqless-cli.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/gqless-cli.esm.js",
+      "limit": "10 KB"
+    }
+  ]
 }

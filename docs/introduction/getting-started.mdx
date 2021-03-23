@@ -3,33 +3,59 @@ id: getting-started
 title: Getting started
 ---
 
-This guide will help you create a `gqless` client for a GraphQL endpoint.
-
 ## Installation
 
 Install the following dependencies to your project:
 
 ```bash yarn2npm
 yarn add gqless
-yarn add @gqless/cli --dev
+yarn add -D @gqless/cli
 ```
 
 ## Codegen
 
-`gqless` requires information about your schema, which is generated using the CLI.
+`gqless` requires information about your schema, which is generated using the **CLI**.
 
-Create a new file named `gqless.config.json` at the root of your project, with the following contents:
+You can start executing:
 
-> You can also use the `gqless` key in your package.json, or `gqless.config.{js,ts}`
-
-```json
-{
-  "url": "http://example.com/graphql",
-  "outputDir": "src/graphql"
-}
+```bash
+npx gqless generate
 ```
 
-Next add a `generate` script to your `package.json`:
+It will create a new configuration file named `gqless.config.cjs` at the root of your project, it will look like this:
+
+> You can also use the `gqless` key in your `package.json`, or use the name `gqless.config.js`
+
+```js
+/**
+ * @type {import("@gqless/cli").GqlessConfig}
+ */
+const config = {
+  endpoint: '/api/graphql',
+  enumsAsStrings: false,
+  react: true,
+  scalars: { DateTime: 'string' },
+  preImport: '',
+  introspection: {
+    endpoint: 'SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE',
+    headers: {},
+  },
+  destination: './src/gqless/index.ts',
+  subscriptions: false,
+};
+
+module.exports = config;
+```
+
+You can then modify the configuration based on your needs, at least changing `introspection.endpoint`.
+
+> If you leave enabled **"react"** and/or **"subscriptions"**, you will also need to install these libraries:
+>
+> ```bash yarn2npm
+> yarn add @gqless/react @gqless/subscriptions
+> ```
+
+Next, you can add a `generate` script to your `package.json`:
 
 ```json
 "scripts": {
@@ -43,27 +69,30 @@ And then run the script to generate your schema:
 yarn generate
 ```
 
-A folder will then be created with the following structure:
+The gqless client will be created in your specified `destination`, which by default is `src/gqless/index.ts`, following the structure:
 
 ```bash
 src/gqless
-├── extensions/ # All your extensions go in this folder
-├── generated/ # Ignore this folder
-├── client.ts # gqless client is exported from here
-└── index.ts
+├── schema.generated.ts # Generated schema, you shouldn't modify it manually
+└── index.ts # gqless client is exported from here, you can safely modify it based on your needs
 ```
 
 ## Usage
 
-Ensure that the `fetchQuery` in `src/gqless/client.ts` is correct, modifying it if need be.
+Ensure that the `queryFetcher` in `src/gqless/index.ts` is correct.
 
 You should then be able to use the client ✨
 
 ```ts
-import { query } from './gqless'
+import { query } from './gqless';
 
 // for example
-query.me.name
+query.me.name;
 ```
 
-See [Usage with React](/react/basic-usage)
+---
+
+## Related
+
+- See [Usage with React](/react/basic-usage)
+- See [Usage outside of React](/core/basic-usage)

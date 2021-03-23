@@ -1,7 +1,10 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@1.0.0/schema.json",
+  "$schema": "https://unpkg.com/@changesets/config@1.5.0/schema.json",
   "changelog": "@changesets/cli/changelog",
   "commit": false,
-  "linked": [["gqless", "@gqless/react"]],
-  "access": "public"
+  "linked": [],
+  "access": "public",
+  "baseBranch": "master",
+  "updateInternalDependencies": "patch",
+  "ignore": ["mercurius-example", "react-example", "website"]
 }

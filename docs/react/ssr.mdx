@@ -1,0 +1,77 @@
+---
+id: ssr
+title: React Server-Side Rendering
+sidebar_label: Server-Side Rendering
+---
+
+## Helpers
+
+These functions are meant to be used together, in different steps of your application.
+
+### prepareReactRender
+
+Function designed to be used before the React Render is being made, for example, in places like [getStaticProps](https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation) or [getServerSideProps](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering) of [Next.js](https://nextjs.org/)
+
+Internally it uses [react-ssr-prepass](https://github.com/FormidableLabs/react-ssr-prepass)
+
+### useHydrateCache
+
+Function designed to be placed at the very top of the hydrated component
+
+### Example
+
+Made with **[Next.js SSR Data Fetching](https://nextjs.org/docs/basic-features/data-fetching)** in mind.
+
+> It's exactly the same usage for `getServerSideProps`
+
+> If you are using `staleWhileRevalidate` in your application, **You should always set 'shouldRefetch' as false**, since that feature will always do the refetch anyways.
+
+```tsx
+import { PropsWithServerCache } from '@gqless/react';
+import { GetStaticProps } from 'next';
+import { prepareReactRender, useHydrateCache, useQuery } from '../gqless';
+
+type PageProps = PropsWithServerCache<{
+  name: string;
+}>;
+
+export default function ExamplePage({ cacheSnapshot, name }: PageProps) {
+  useHydrateCache({
+    cacheSnapshot,
+
+    // If it should refetch everything after the component is mounted
+    // By default 'shouldRefetch' is `false` (You can change it in the 'defaults' option)
+    shouldRefetch: false,
+  });
+
+  const { hello } = useQuery();
+
+  return (
+    <div>
+      <p>
+        {hello({
+          name,
+        })}
+      </p>
+    </div>
+  );
+}
+
+export const getStaticProps: GetStaticProps<PageProps> = async (_ctx) => {
+  const name = 'John';
+  const { cacheSnapshot } = await prepareReactRender(
+    <ExamplePage name={name} />
+  );
+
+  return {
+    props: {
+      cacheSnapshot,
+      name,
+    },
+  };
+};
+```
+
+## Using Suspense
+
+Please check [Suspense in SSR](/react/suspense#suspense-in-ssr)

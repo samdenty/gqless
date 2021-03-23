@@ -1,6 +1,0 @@
-{
-  "packages": ["packages/*", "examples/*", "gqless", "internal/*"],
-  "npmClient": "yarn",
-  "useWorkspaces": true,
-  "version": "0.0.1-alpha.26"
-}

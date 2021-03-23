@@ -1,0 +1,54 @@
+---
+id: meta
+title: React Meta
+sidebar_label: Meta
+---
+
+## useMetaState
+
+Hook designed to inspect the React Client state, like error handling and fetching state
+
+### Features:
+
+- Notify start fetching
+- Notify fetching complete
+- Notify on error
+- Notify on retry attempt
+- Filter selections you want to inspect in the specific hook
+- Returns current errors and fetching state
+
+### Example
+
+```tsx
+import { useMetaState } from '../gqless';
+
+function Inspector() {
+  const { isFetching, errors } = useMetaState({
+    onStartFetching() {},
+    onDoneFetching() {},
+    onError({ newError, selections, isLastTry }) {},
+    onRetry({ retryPromise, selections }) {},
+
+    // Optional, if it's not specified, inspects everything
+    filterSelections: [['query', 'helloWorld']],
+  });
+
+  return (
+    <div>
+      {isFetching && <p>Fetching...</p>}
+      {errors && (
+        <>
+          <p>Errors!</p>
+          <ul>
+            {errors.map((error, key) => {
+              return <li key={key}>{error.message}</li>;
+            })}
+          </ul>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+Check [API Reference](/react/api/interfaces/usemetastate)

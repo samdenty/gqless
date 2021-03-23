@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic deep query with unions: basic query 1`] = `"query{a{b{c{d{...on val1{b a{f}}...on val2{a{f}}}}}}}"`;
+
+exports[`basic mutation args: basic mutation with args 1`] = `"mutation($a1:Int!$b2:String!){gqlessAlias_1:a(a:$a1 b:$b2)}"`;
+
+exports[`basic query args: basic query args 1`] = `"query($a1:Int!$b2:String!){gqlessAlias_1:a(a:$a1 b:$b2){a_b a_c}d}"`;
+
+exports[`basic query: basic query 1`] = `"query{a b}"`;

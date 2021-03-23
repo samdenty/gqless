@@ -1,0 +1,486 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`selectFields named fields array values - depth 1 1`] = `
+Object {
+  "sons": Array [
+    Object {
+      "__typename": "Human",
+      "dogs": Array [
+        null,
+      ],
+      "father": null,
+      "id": "1",
+      "name": "default",
+      "nullFather": null,
+      "sons": Array [
+        null,
+      ],
+    },
+    Object {
+      "__typename": "Human",
+      "dogs": Array [
+        null,
+      ],
+      "father": null,
+      "id": "1",
+      "name": "default",
+      "nullFather": null,
+      "sons": Array [
+        null,
+      ],
+    },
+  ],
+}
+`;
+
+exports[`selectFields named fields array values - depth 2 1`] = `
+Object {
+  "sons": Array [
+    Object {
+      "__typename": "Human",
+      "dogs": Array [
+        Object {
+          "__typename": "Dog",
+          "id": "1",
+          "name": "a",
+          "owner": null,
+        },
+        Object {
+          "__typename": "Dog",
+          "id": "2",
+          "name": "b",
+          "owner": null,
+        },
+      ],
+      "father": Object {
+        "__typename": "Human",
+        "dogs": Array [
+          null,
+          null,
+        ],
+        "father": null,
+        "id": "1",
+        "name": "default",
+        "nullFather": null,
+        "sons": Array [
+          null,
+          null,
+        ],
+      },
+      "id": "1",
+      "name": "default",
+      "nullFather": null,
+      "sons": Array [
+        Object {
+          "__typename": "Human",
+          "dogs": Array [
+            null,
+            null,
+          ],
+          "father": null,
+          "id": "1",
+          "name": "default",
+          "nullFather": null,
+          "sons": Array [
+            null,
+            null,
+          ],
+        },
+        Object {
+          "__typename": "Human",
+          "dogs": Array [
+            null,
+            null,
+          ],
+          "father": null,
+          "id": "1",
+          "name": "default",
+          "nullFather": null,
+          "sons": Array [
+            null,
+            null,
+          ],
+        },
+      ],
+    },
+    Object {
+      "__typename": "Human",
+      "dogs": Array [
+        Object {
+          "__typename": "Dog",
+          "id": "1",
+          "name": "a",
+          "owner": null,
+        },
+        Object {
+          "__typename": "Dog",
+          "id": "2",
+          "name": "b",
+          "owner": null,
+        },
+      ],
+      "father": Object {
+        "__typename": "Human",
+        "dogs": Array [
+          null,
+          null,
+        ],
+        "father": null,
+        "id": "1",
+        "name": "default",
+        "nullFather": null,
+        "sons": Array [
+          null,
+          null,
+        ],
+      },
+      "id": "1",
+      "name": "default",
+      "nullFather": null,
+      "sons": Array [
+        Object {
+          "__typename": "Human",
+          "dogs": Array [
+            null,
+            null,
+          ],
+          "father": null,
+          "id": "1",
+          "name": "default",
+          "nullFather": null,
+          "sons": Array [
+            null,
+            null,
+          ],
+        },
+        Object {
+          "__typename": "Human",
+          "dogs": Array [
+            null,
+            null,
+          ],
+          "father": null,
+          "id": "1",
+          "name": "default",
+          "nullFather": null,
+          "sons": Array [
+            null,
+            null,
+          ],
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`selectFields named fields object values - depth 1 1`] = `
+Object {
+  "father": Object {
+    "__typename": "Human",
+    "dogs": Array [
+      null,
+    ],
+    "father": null,
+    "id": "1",
+    "name": "default",
+    "nullFather": null,
+    "sons": Array [
+      null,
+    ],
+  },
+}
+`;
+
+exports[`selectFields named fields object values - depth 2 1`] = `
+Object {
+  "father": Object {
+    "__typename": "Human",
+    "dogs": Array [
+      Object {
+        "__typename": "Dog",
+        "id": "1",
+        "name": "a",
+        "owner": null,
+      },
+      Object {
+        "__typename": "Dog",
+        "id": "2",
+        "name": "b",
+        "owner": null,
+      },
+    ],
+    "father": Object {
+      "__typename": "Human",
+      "dogs": Array [
+        null,
+        null,
+      ],
+      "father": null,
+      "id": "1",
+      "name": "default",
+      "nullFather": null,
+      "sons": Array [
+        null,
+        null,
+      ],
+    },
+    "id": "1",
+    "name": "default",
+    "nullFather": null,
+    "sons": Array [
+      Object {
+        "__typename": "Human",
+        "dogs": Array [
+          null,
+          null,
+        ],
+        "father": null,
+        "id": "1",
+        "name": "default",
+        "nullFather": null,
+        "sons": Array [
+          null,
+          null,
+        ],
+      },
+      Object {
+        "__typename": "Human",
+        "dogs": Array [
+          null,
+          null,
+        ],
+        "father": null,
+        "id": "1",
+        "name": "default",
+        "nullFather": null,
+        "sons": Array [
+          null,
+          null,
+        ],
+      },
+    ],
+  },
+}
+`;
+
+exports[`selectFields named no recursive 1`] = `
+Object {
+  "father": Object {
+    "name": "default",
+  },
+  "name": "bar",
+}
+`;
+
+exports[`selectFields named recursive - array 1`] = `
+Array [
+  Object {
+    "name": "default",
+  },
+  Object {
+    "name": "default",
+  },
+]
+`;
+
+exports[`selectFields named recursive, depth 1 1`] = `
+Object {
+  "father": Object {
+    "__typename": "Human",
+    "dogs": Array [
+      null,
+    ],
+    "father": null,
+    "id": "2",
+    "name": "default",
+    "nullFather": null,
+    "sons": Array [
+      null,
+    ],
+  },
+}
+`;
+
+exports[`selectFields named recursive, depth 2 1`] = `
+Object {
+  "father": Object {
+    "__typename": "Human",
+    "dogs": Array [
+      Object {
+        "__typename": "Dog",
+        "id": "1",
+        "name": "a",
+        "owner": null,
+      },
+      Object {
+        "__typename": "Dog",
+        "id": "2",
+        "name": "b",
+        "owner": null,
+      },
+    ],
+    "father": Object {
+      "__typename": "Human",
+      "dogs": Array [
+        null,
+        null,
+      ],
+      "father": null,
+      "id": "2",
+      "name": "default",
+      "nullFather": null,
+      "sons": Array [
+        null,
+        null,
+      ],
+    },
+    "id": "2",
+    "name": "default",
+    "nullFather": null,
+    "sons": Array [
+      Object {
+        "__typename": "Human",
+        "dogs": Array [
+          null,
+          null,
+        ],
+        "father": null,
+        "id": "2",
+        "name": "default",
+        "nullFather": null,
+        "sons": Array [
+          null,
+          null,
+        ],
+      },
+      Object {
+        "__typename": "Human",
+        "dogs": Array [
+          null,
+          null,
+        ],
+        "father": null,
+        "id": "2",
+        "name": "default",
+        "nullFather": null,
+        "sons": Array [
+          null,
+          null,
+        ],
+      },
+    ],
+  },
+}
+`;
+
+exports[`selectFields recursive * - array 1`] = `
+Array [
+  Object {
+    "__typename": "Human",
+    "dogs": Array [
+      null,
+    ],
+    "father": null,
+    "id": "1",
+    "name": "default",
+    "nullFather": null,
+    "sons": Array [
+      null,
+    ],
+  },
+  Object {
+    "__typename": "Human",
+    "dogs": Array [
+      null,
+    ],
+    "father": null,
+    "id": "1",
+    "name": "default",
+    "nullFather": null,
+    "sons": Array [
+      null,
+    ],
+  },
+]
+`;
+
+exports[`selectFields recursive *, depth 1 1`] = `
+Object {
+  "__typename": "Human",
+  "dogs": Array [
+    null,
+  ],
+  "father": null,
+  "id": "1",
+  "name": "foo",
+  "nullFather": null,
+  "sons": Array [
+    null,
+  ],
+}
+`;
+
+exports[`selectFields recursive *, depth 2 1`] = `
+Object {
+  "__typename": "Human",
+  "dogs": Array [
+    Object {
+      "__typename": "Dog",
+      "id": "1",
+      "name": "a",
+      "owner": null,
+    },
+    Object {
+      "__typename": "Dog",
+      "id": "2",
+      "name": "b",
+      "owner": null,
+    },
+  ],
+  "father": Object {
+    "__typename": "Human",
+    "dogs": Array [
+      null,
+    ],
+    "father": null,
+    "id": "2",
+    "name": "default",
+    "nullFather": null,
+    "sons": Array [
+      null,
+    ],
+  },
+  "id": "1",
+  "name": "foo",
+  "nullFather": null,
+  "sons": Array [
+    Object {
+      "__typename": "Human",
+      "dogs": Array [
+        null,
+      ],
+      "father": null,
+      "id": "2",
+      "name": "default",
+      "nullFather": null,
+      "sons": Array [
+        null,
+      ],
+    },
+    Object {
+      "__typename": "Human",
+      "dogs": Array [
+        null,
+      ],
+      "father": null,
+      "id": "2",
+      "name": "default",
+      "nullFather": null,
+      "sons": Array [
+        null,
+      ],
+    },
+  ],
+}
+`;

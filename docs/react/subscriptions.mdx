@@ -1,0 +1,36 @@
+---
+id: subscriptions
+title: React Subscriptions
+sidebar_label: Subscriptions
+---
+
+## useSubscription
+
+Hook designed to be used for [GraphQL Subscriptions](https://github.com/graphql/graphql-spec/blob/main/rfcs/Subscriptions.md).
+
+For more configuration of Subscriptions [check here](/core/subscriptions).
+
+### Features:
+
+- Subscribe on-demand
+- Automatic unsubscribe on component unmount
+- Automatic updates on cache changes
+
+### Example
+
+```tsx
+import { useSubscription } from '../gqless';
+
+export function Example() {
+  const { newNotification } = useSubscription();
+
+  if (newNotification) {
+    return (
+      <p>
+        New Notification: <b>{newNotification}</b>
+      </p>
+    );
+  }
+  return <p>Waiting for new notifications...</p>;
+}
+```

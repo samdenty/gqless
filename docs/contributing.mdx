@@ -1,0 +1,73 @@
+---
+id: contributing
+title: Contributing instructions
+sidebar_label: Instructions
+---
+
+## Codesandbox
+
+You can test and play with `gqless` using [This codesandbox](https://codesandbox.io/s/gqless-in-nextjs-example-g2mib?file=/src/pages/NoSSR.tsx).
+
+<iframe
+  src="https://codesandbox.io/embed/gqless-in-nextjs-example-g2mib?fontsize=14&hidenavigation=1&module=%2Fsrc%2Fpages%2FNoSSR.tsx&theme=dark"
+  style={{
+    width: '100%',
+    height: '500px',
+    border: 0,
+    borderRadius: '4px',
+    overflow: 'hidden',
+  }}
+  title="gqless in Next.js example"
+  allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+  sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+/>
+
+And if you find a bug, reproducing it there would be very helpful.
+
+It uses [**Next.js**](https://nextjs.org/) for the frontend
+and [Fastify](https://www.fastify.io/) + [mercurius](https://mercurius.dev/) for the GraphQL API
+
+## Cloning / Forking Repo
+
+This project uses [pnpm](https://pnpm.js.org/) with it's workspaces support.
+
+To contribute just make sure you have it installed:
+
+```shell
+npm install -g pnpm
+```
+
+And inside the cloned/forked repo, simply call:
+
+> To install packages and build everything
+
+```shell
+pnpm i
+```
+
+> To test everything
+
+```shell
+pnpm test -w
+```
+
+<br />
+<br />
+
+In the repository you will have some specific folders:
+
+- **docs**
+
+  Documentation
+
+- **examples**
+
+  Examples usually used for "Real world" testing
+
+- **internal**
+
+  Internal packages like this website, build utilities, and testing utilities.
+
+- **packages**
+
+  Official packages of `gqless`

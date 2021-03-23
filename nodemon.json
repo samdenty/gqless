@@ -1,0 +1,7 @@
+{
+  "$schema": "http://json.schemastore.org/nodemon",
+  "watch": ["packages/**/*", "./package.json"],
+  "ext": "ts",
+  "exec": "pnpm dev:nodemon",
+  "ignore": ["**/node_modules", "**/generated", "**/dist"]
+}

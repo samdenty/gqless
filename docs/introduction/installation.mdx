@@ -3,17 +3,33 @@ id: installation
 title: Installation
 ---
 
-To install the runtime client, and the codegen CLI:
+To install the runtime client and the codegen CLI:
 
 ```bash yarn2npm
 yarn add gqless
-yarn add @gqless/cli --dev
+yarn add -D @gqless/cli
 ```
 
-## Complementary Packages
+## Subscriptions support
 
-Most likely, you'll also need the React bindings and the developer tools.
+To add [subscriptions](https://github.com/graphql/graphql-spec/blob/main/rfcs/Subscriptions.md) support:
 
 ```bash yarn2npm
-yarn add @gqless/react @gqless/logger
+yarn add @gqless/subscriptions
+```
+
+## React bindings
+
+To use `gqless` with [React](https://reactjs.org/)
+
+```bash yarn2npm
+yarn add @gqless/react
+```
+
+## Development tools
+
+To improve development experience, you can add a logger:
+
+```bash yarn2npm
+yarn add @gqless/logger
 ```

@@ -1,77 +1,60 @@
 {
-  "license": "GNU GPLv3",
+  "name": "gqless_refactor",
   "private": true,
-  "workspaces": [
-    "internal/*",
-    "examples/*",
-    "packages/*",
-    "gqless",
-    "gqless/example",
-    "packages/*/example"
-  ],
+  "license": "MIT",
+  "type": "module",
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "release": "yarn build && changeset publish",
-    "test": "jest",
-    "build": "lerna run build --no-private",
-    "build:changed": "yarn run build --since",
-    "docs": "yarn workspace @internal/website start",
-    "docs:build": "yarn workspace @internal/website build"
+    "build": "pnpm build -r --stream",
+    "changeset": "changeset",
+    "ci:version": "changeset version && pnpm i --no-frozen-lockfile --lockfile-only --ignore-scripts",
+    "ci:release": "pnpm -r publish --access public --no-git-checks",
+    "clean": "rimraf packages/*/dist packages/*/coverage packages/*/.nyc_output packages/*/*.tsbuildinfo",
+    "dev": "pnpm clean && node dev.mjs",
+    "dev:mercurius": "pnpm -r exec --filter gqless -- tsc -m commonjs && concurrently \"pnpm -r --filter mercurius-example test:watch\" \"pnpm -r --filter gqless start\"",
+    "dev:nodemon": "pnpm prepare -r --no-bail && pnpm test -r --no-bail --no-sort --stream",
+    "dev:react": "node dev-react.mjs",
+    "dev:start": "pnpm start -r --no-bail --no-sort",
+    "dev:test": "pnpm test:watch -r --no-bail --no-sort --stream",
+    "publish:all": "changeset version && pnpm i && pnpm test && pnpm -r publish --access public",
+    "test": "jest --clearCache && pnpm test -r --no-sort --no-bail --stream"
   },
-  "homepage": "https://gqless.dev",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/samdenty/gqless.git"
-  },
-  "jest": {
-    "projects": [
-      "<rootDir>/packages/*/jest.config.js",
-      "<rootDir>/gqless/jest.config.js"
-    ],
-    "coverageDirectory": "<rootDir>/coverage/"
-  },
-  "bundlesize": [
-    {
-      "path": "./packages/utils/dist/*.cjs.production.min.js",
-      "maxSize": "1.5 kB"
-    },
-    {
-      "path": "./packages/react/dist/*.cjs.production.min.js",
-      "maxSize": "3 kB"
-    },
-    {
-      "path": "./gqless/dist/*.cjs.production.min.js",
-      "maxSize": "15 kB"
-    }
-  ],
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
   },
-  "devDependencies": {
-    "@babel/core": "^7.8.7",
-    "@babel/plugin-proposal-decorators": "^7.8.3",
-    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
-    "@babel/plugin-proposal-optional-chaining": "^7.8.3",
-    "@changesets/cli": "^2.6.1",
-    "@types/jest": "^25.1.4",
-    "@types/react": "^16.9.23",
-    "@types/react-dom": "^16.9.5",
-    "bundlesize": "^0.18.0",
-    "codecov": "^3.6.5",
-    "graphql-faker": "^2.0.0-rc.17",
-    "husky": "^4.2.3",
-    "jest": "^25.2.7",
-    "lerna": "^3.20.2",
-    "parcel-bundler": "^1.12.4",
-    "pretty-quick": "^2.0.1",
-    "react": "^0.0.0-experimental-f6b8d31a7",
-    "react-dom": "^0.0.0-experimental-f6b8d31a7",
-    "ts-jest": "^25.3.1",
-    "tsconfig-paths": "^3.9.0",
-    "tsdx": "^0.12.3",
-    "typescript": "^3.8.3"
+  "dependencies": {
+    "bufferutil": "^4.0.3",
+    "build-utils": "workspace:^1.0.0",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7",
+    "open": "^8.0.4",
+    "ts-jest": "^26.5.4",
+    "ts-node": "^9.1.1",
+    "tslib": "^2.1.0",
+    "tsup": "^4.8.19",
+    "typescript": "^4.2.3",
+    "utf-8-validate": "^5.0.4",
+    "wait-on": "^5.3.0"
   },
-  "version": "0.0.0"
+  "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.13.8",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.12",
+    "@changesets/cli": "^2.14.1",
+    "@types/node": "^14.14.35",
+    "concurrently": "^6.0.0",
+    "fkill": "^7.1.0",
+    "husky": "^4.3.8",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
+    "rimraf": "^3.0.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript": "^4.2.3",
+      "jest": "^26.6.3",
+      "ts-jest": "^26.4.4",
+      "prettier": "^2.2.1"
+    }
+  }
 }

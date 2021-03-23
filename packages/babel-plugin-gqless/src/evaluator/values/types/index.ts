@@ -1,7 +1,0 @@
-export * from './String'
-export * from './Function'
-export * from './Object'
-export * from './Boolean'
-export * from './Number'
-export * from './undefined'
-export * from './null'

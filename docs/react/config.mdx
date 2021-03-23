@@ -1,0 +1,34 @@
+---
+id: config
+title: React Configuration
+sidebar_label: Configuration
+---
+
+The React Client has some configurations you can set manually:
+
+```tsx
+createReactClient<GeneratedSchema>(client, {
+  defaults: {
+    // Here
+  },
+});
+```
+
+## Defaults
+
+In most functions available through the React Client you have some options you can set.
+
+The defaults value of some of them can be overriden here:
+
+| Name                     | Type                                                                         | Default Value              | Description                                                                                                                                                                 |
+| ------------------------ | ---------------------------------------------------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| suspense                 | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [graphql HOC](/react/query#graphql-hoc) and [useQuery](/react/query#usequery)                               |
+| lazyQuerySuspense        | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useLazyQuery](/react/query#uselazyquery)                                                                   |
+| transactionQuerySuspense | `boolean`                                                                    | inherited from ` suspense` | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useTransactionQuery](/react/query#usetransactionquery)                                                     |
+| mutationSuspense         | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useMutation](/react/mutations#useMutation)                                                                 |
+| preparedSuspense         | `boolean`                                                                    | inherited from ` suspense` | Enable/Disable '[React Suspense](/react/suspense)' behavior for [prepareQuery hooks](/react/query#preparequery)                                                             |
+| transactionFetchPolicy   | `"cache-and-network"` or `"cache-first"` or `"network-only"` or `"no-cache"` | `"cache-first"`            | '[fetchPolicy](/react/api-reference#fetch-policy)' of [useTransactionQuery](/react/query#usetransactionquery)                                                               |
+| lazyFetchPolicy          | `"cache-and-network"` or `"network-only"` or `"no-cache"`                    | `"network-only"`           | Partial '[fetchPolicy](/react/api-reference#fetch-policy)' of [useLazyQuery](/react/query#uselazyquery)                                                                     |
+| staleWhileRevalidate     | `boolean`                                                                    | `false`                    | Enable/Disable '[stale-while-revalidate](https://web.dev/stale-while-revalidate/)' behavior for [graphql HOC](/react/query#graphql-hoc) & [useQuery](/react/query#usequery) |
+| retry                    | [`RetryOptions`](/core/api-reference#retryoptions)                           | `true`                     | Retry on error behavior                                                                                                                                                     |
+| refetchAfterHydrate      | `boolean`                                                                    | `false`                    | Refetch **after** SSR Hydration                                                                                                                                             |

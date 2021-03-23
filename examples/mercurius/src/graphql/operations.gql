@@ -1,0 +1,37 @@
+query simpleString {
+  simpleString
+  union {
+    __typename
+    ... on A {
+      a
+    }
+    ... on B {
+      b
+    }
+    ... on C {
+      c
+    }
+  }
+}
+
+query arrayObjectArgs {
+  arrayObjectArgs(limit: 2) {
+    name
+    father {
+      name
+      father {
+        name
+      }
+    }
+  }
+}
+
+query multipleArgs {
+  a1: objectWithArgs(who: "hello") {
+    zxc: name
+    abc: name
+  }
+  a2: objectWithArgs(who: "hello2") {
+    name
+  }
+}

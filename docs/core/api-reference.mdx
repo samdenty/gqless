@@ -1,0 +1,23 @@
+---
+id: api-reference
+title: Core API Reference
+sidebar_label: API Reference
+---
+
+## RetryOptions
+
+By default `gqless` has a retry policy of `3` max retries, with a delay of a standard back-off delay `(attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)` ms.
+
+You can customize it this way:
+
+- `retry = false` to disable it.
+- `retry = 6` it will retry failing requests `6` times, with the standard back-off delay.
+- `retry = true` to use the default `3` max retries, with a delay of standard, a back-off delay.
+- `{ maxRetries: 6, retryDelay: 2000 }` for `6` max retries, with flat 2000ms of delay per retry.
+- `{ retryDelay: function customRetryDelay(attemptIndex) { ... } }` for `3` max retries with custom back-off delay, and so on...
+
+## Auto-generated
+
+You can check a more detailed API Reference made from the type definitions, auto-generated using [TypeDoc](https://typedoc.org/):
+
+[Check Here](/core/api/modules)
