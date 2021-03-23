@@ -1,6 +1,13 @@
 # gqless
 
+![gqless Logo](internal/website/static/img/logo.png)
+
 ## Visit [https://gqless.com](https://gqless.com)
+
+## Acknowledgements
+
+- Special thanks to Nate Wienert [(@natew)](https://github.com/natew) for sponsoring the remake for 'gqless' v2, helping in the debugging process and the great new logo.
+- Special thanks to Sam Denty [(@samdenty)](https://github.com/samdenty) for letting us keep moving the project forward, and of course, his original idea.
 
 ## Contributors
 
