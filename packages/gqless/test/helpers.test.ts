@@ -1,4 +1,4 @@
-import { getArrayFields, getFields, selectFields } from '../src';
+import { getArrayFields, getFields, selectFields, prepass } from '../src';
 import { createTestClient } from './utils';
 
 describe('selectFields', () => {
@@ -842,4 +842,165 @@ describe('prefetch', () => {
 
     expect(prefetch((query) => query.time)).toBe(result);
   });
+});
+
+test('prepass works', () => {
+  const proxy1 = new Proxy(
+    {
+      a: 123,
+      passed: false,
+    },
+    {
+      set(t, p, v) {
+        return Reflect.set(t, p, v);
+      },
+      get(t, p) {
+        if (p === 'a') {
+          t.passed = true;
+        }
+        return Reflect.get(t, p);
+      },
+    }
+  );
+
+  const proxy2 = new Proxy(
+    {
+      b: proxy1,
+      passed: false,
+    },
+    {
+      set(t, p, v) {
+        return Reflect.set(t, p, v);
+      },
+      get(t, p) {
+        if (p === 'b') {
+          t.passed = true;
+        }
+        return Reflect.get(t, p);
+      },
+    }
+  );
+
+  const arrayProxy = new Proxy(
+    Object.assign([null, proxy2], {
+      passed: false,
+    }),
+    {
+      set(t, p, v) {
+        return Reflect.set(t, p, v);
+      },
+      get(t, p) {
+        if (p === '1') {
+          t.passed = true;
+        }
+        return Reflect.get(t, p);
+      },
+    }
+  );
+
+  const expectedVariable = {
+    n: 999,
+  };
+
+  const proxyWithFn = new Proxy(
+    {
+      fnField(variable: unknown) {
+        expect(JSON.stringify(variable)).toBe(JSON.stringify(expectedVariable));
+        return arrayProxy;
+      },
+      passed: false,
+    },
+    {
+      set(t, p, v) {
+        return Reflect.set(t, p, v);
+      },
+      get(t, p) {
+        if (p === 'fnField') {
+          t.passed = true;
+        }
+
+        return Reflect.get(t, p);
+      },
+    }
+  );
+
+  expect(proxy1.passed).toBe(false);
+  expect(proxy2.passed).toBe(false);
+  expect(arrayProxy.passed).toBe(false);
+  expect(proxyWithFn.passed).toBe(false);
+
+  prepass(
+    proxyWithFn,
+    [
+      {
+        field: 'fnField',
+        variables: {
+          n: 999,
+        },
+      },
+      'b',
+      'a',
+      'z',
+    ],
+    'non.existent.field'
+  );
+
+  expect(proxy1.passed).toBe(true);
+  expect(proxy2.passed).toBe(true);
+  expect(arrayProxy.passed).toBe(true);
+  expect(proxyWithFn.passed).toBe(true);
+
+  const arr = [null, undefined];
+  const returnedArr = prepass(arr, 'helloWorld');
+  expect(arr).toBe(returnedArr);
+
+  expect(prepass(null)).toBe(null);
+
+  expect(prepass(undefined)).toBe(undefined);
+
+  const proxy3 = new Proxy(
+    {
+      c: 123,
+      passed: false,
+    },
+    {
+      set(t, p, v) {
+        return Reflect.set(t, p, v);
+      },
+      get(t, p) {
+        if (p === 'c') {
+          t.passed = true;
+        }
+        return Reflect.get(t, p);
+      },
+    }
+  );
+
+  const proxy4 = new Proxy(
+    {
+      a: {
+        b: proxy3,
+      },
+      passed: false,
+    },
+    {
+      set(t, p, v) {
+        return Reflect.set(t, p, v);
+      },
+      get(t, p) {
+        if (p === 'a') {
+          t.passed = true;
+        }
+        return Reflect.get(t, p);
+      },
+    }
+  );
+
+  expect(proxy3.passed).toBe(false);
+  expect(proxy4.passed).toBe(false);
+
+  expect(prepass(proxy4, 'a.b.c')).toBe(proxy4);
+
+  expect(proxy3.passed).toBe(true);
+  expect(proxy4.passed).toBe(true);
 });

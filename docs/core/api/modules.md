@@ -37,6 +37,7 @@ hide_title: true
 - [ParseSchemaTypeInfo](interfaces/parseschematypeinfo.md)
 - [Prefetch](interfaces/prefetch.md)
 - [PrepareRender](interfaces/preparerender.md)
+- [PrepassObjKey](interfaces/prepassobjkey.md)
 - [Refetch](interfaces/refetch.md)
 - [ResolveOptions](interfaces/resolveoptions.md)
 - [Resolved](interfaces/resolved.md)
@@ -357,6 +358,29 @@ Defined in: [packages/gqless/src/Helpers/getFields.ts:3](https://github.com/gqle
 **Returns:** [_ParseSchemaTypeInfo_](interfaces/parseschematypeinfo.md)
 
 Defined in: [packages/gqless/src/Schema/types.ts:37](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L37)
+
+---
+
+### prepass
+
+▸ **prepass**<T\>(`v`: T, ...`keys`: (_string_ \| (_string_ \| [_PrepassObjKey_](interfaces/prepassobjkey.md))[])[]): T
+
+#### Type parameters:
+
+| Name | Type                              |
+| :--- | :-------------------------------- |
+| `T`  | _undefined_ \| _null_ \| _object_ |
+
+#### Parameters:
+
+| Name      | Type                                                                           |
+| :-------- | :----------------------------------------------------------------------------- |
+| `v`       | T                                                                              |
+| `...keys` | (_string_ \| (_string_ \| [_PrepassObjKey_](interfaces/prepassobjkey.md))[])[] |
+
+**Returns:** T
+
+Defined in: [packages/gqless/src/Helpers/prepass.ts:12](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/prepass.ts#L12)
 
 ---
 

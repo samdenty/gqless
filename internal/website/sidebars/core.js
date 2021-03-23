@@ -34,6 +34,7 @@ module.exports = [
       'core/api/interfaces/parseschematypeinfo',
       'core/api/interfaces/prefetch',
       'core/api/interfaces/preparerender',
+      'core/api/interfaces/prepassobjkey',
       'core/api/interfaces/refetch',
       'core/api/interfaces/resolveoptions',
       'core/api/interfaces/resolved',

@@ -4,6 +4,46 @@ title: Core Helpers
 sidebar_label: Helpers
 ---
 
+## prepass
+
+A common pattern to do while using `gqless` is to just access manually some specified fields, so `gqless` can pick up your requirements faster.
+That allows preventing some possible cascading, or simply to make sure to get all the fields requested in the same query,
+specially while using conditionals on possible nulls in your GraphQL Schema.
+
+For that use case we offer a very useful function called `prepass`, in which you can give it an object or array, and given some paths you give it, it will traverse them,
+with some specific features:
+
+- You can specify the path with different syntaxes `"user.dog.name"`, `["user", "dog", "name"]` or `["user", { field: "pet", variables: { type: "dog" } }, "name"]`
+- You **don't** have to specify an array index, since if it finds an array, it pass-through the **first non-null** value of it
+- If you have a field with arguments that you want to access, you can also specify it's value and it will automatically call it's function with that value.
+
+The only **disadvantages** we see are basically:
+
+- If it finds a function, and you don't specify it's variables, it can't check if all variables are actually optional, and it call the function anyways, and that might result in a GraphQL error.
+- It doesn't have autocomplete 😔
+
+```ts
+import { prepass } from 'gqless';
+import { query } from '../gqless';
+
+prepass(
+  query.user,
+  'dog.name',
+  'address.country.name',
+  'address.country.location',
+  [
+    {
+      field: 'pet',
+      variables: {
+        type: 'dog',
+      },
+    },
+    'name',
+  ]
+  //...
+);
+```
+
 ## selectFields
 
 Given an object or an array of objects, create a new object/array with the specified fields.
