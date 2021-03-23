@@ -1,32 +1,27 @@
-# gqless
+<h1 align="center">
+  <a href="https://gqless.com">
+    <img src="internal/website/static/img/logo.png" height="150" alt="gqless">
+  </a>
+</h1>
 
-![gqless Logo](internal/website/static/img/logo.png)
+<h3 align="center">a GraphQL client built for rapid iteration.</h3>
 
-## Visit [https://gqless.com](https://gqless.com)
+<p align="center">
+    <a href="https://discord.gg/9DNNPedhbx"><img alt="discord" src="https://img.shields.io/badge/discord-gray?logo=discord" /></a>
+    <a href="https://twitter.com/gqlessdev"><img alt="twitter" src="https://img.shields.io/twitter/follow/gqlessdev?label=%40gqlessdev&style=flat&logo=twitter" /></a>
+</p>
 
-## Acknowledgements
+By [Sam Denty](https://github.com/samdenty), [Nate Wienert](https://github.com/natew), [Pablo Sáez](https://github.com/PabloSzx), et al.
 
-- Special thanks to Nate Wienert [(@natew)](https://github.com/natew) for sponsoring the remake for 'gqless' v2, helping in the debugging process and the great new logo.
-- Special thanks to Sam Denty [(@samdenty)](https://github.com/samdenty) for letting us keep moving the project forward, and of course, his original idea.
+## Get involved
 
-## Contributors
+Documentation, bug reports, pull requests, and all other contributions are welcome! See [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
-### Code Contributors
-
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
 <a href="https://github.com/samdenty/gqless/graphs/contributors"><img src="https://opencollective.com/gqless/contributors.svg?width=890&button=false" /></a>
 
-### Financial Contributors
-
-Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/gqless/contribute)]
-
-#### Individuals
+## [Sponsors](https://opencollective.com/gqless/contribute)
 
 <a href="https://opencollective.com/gqless"><img src="https://opencollective.com/gqless/individuals.svg?width=890"></a>
-
-#### Organizations
-
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/gqless/contribute)]
 
 <a href="https://opencollective.com/gqless/organization/0/website"><img src="https://opencollective.com/gqless/organization/0/avatar.svg"></a>
 <a href="https://opencollective.com/gqless/organization/1/website"><img src="https://opencollective.com/gqless/organization/1/avatar.svg"></a>
