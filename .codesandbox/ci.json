@@ -1,5 +1,0 @@
-{
-  "packages": ["gqless", "packages/react", "packages/logger", "packages/utils"],
-  "buildCommand": "build",
-  "sandboxes": ["/examples/react-hackernews"]
-}

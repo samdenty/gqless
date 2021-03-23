@@ -1,7 +1,0 @@
-{
-  "$schema": "https://unpkg.com/@changesets/config@1.0.0/schema.json",
-  "changelog": "@changesets/cli/changelog",
-  "commit": false,
-  "linked": [["gqless", "@gqless/react"]],
-  "access": "public"
-}
