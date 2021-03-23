@@ -1,8 +1,9 @@
 {
   "name": "@gqless/react",
   "version": "2.0.0",
+  "homepage": "https://gqless.com",
   "license": "MIT",
-  "author": "PabloSz",
+  "author": "PabloSz <pablosaez1995@gmail.com>",
   "main": "dist/index.js",
   "module": "dist/gqless-react.esm.js",
   "typings": "dist/index.d.ts",
@@ -25,7 +26,6 @@
     "react-ssr-prepass": "^1.4.0"
   },
   "devDependencies": {
-    "gqless": "workspace:^2.0.0",
     "@size-limit/preset-small-lib": "^4.10.1",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
@@ -36,6 +36,7 @@
     "@types/react-dom": "^17.0.2",
     "build-utils": "workspace:*",
     "get-port": "^5.1.1",
+    "gqless": "workspace:^2.0.0",
     "graphql": "^15.5.0",
     "jest": "^26.6.3",
     "react": "^17.0.1",

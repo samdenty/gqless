@@ -1,9 +1,10 @@
 {
   "name": "gqless",
   "version": "2.0.0",
-  "description": "",
+  "description": "gqless client without queries",
+  "homepage": "https://gqless.com",
   "license": "MIT",
-  "author": "PabloSz",
+  "author": "PabloSz <pablosaez1995@gmail.com>",
   "main": "dist/index.js",
   "module": "dist/gqless.esm.js",
   "typings": "dist/index.d.ts",

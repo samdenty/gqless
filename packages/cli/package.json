@@ -1,14 +1,15 @@
 {
   "name": "@gqless/cli",
   "version": "2.0.0",
+  "homepage": "https://gqless.com",
   "license": "MIT",
-  "author": "PabloSz",
+  "author": "PabloSz <pablosaez1995@gmail.com>",
   "main": "dist/index.js",
   "module": "dist/gqless-cli.esm.js",
   "typings": "dist/index.d.ts",
   "bin": {
-    "gqless": "bin/gqless.js",
-    "@gqless/cli": "bin/gqless.js"
+    "@gqless/cli": "bin/gqless.js",
+    "gqless": "bin/gqless.js"
   },
   "files": [
     "dist",

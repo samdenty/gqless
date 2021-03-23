@@ -1,8 +1,9 @@
 {
   "name": "@gqless/logger",
   "version": "2.0.0",
+  "homepage": "https://gqless.com",
   "license": "MIT",
-  "author": "PabloSz",
+  "author": "PabloSz <pablosaez1995@gmail.com>",
   "main": "dist/index.js",
   "module": "dist/gqless-logger.esm.js",
   "typings": "dist/index.d.ts",
@@ -25,10 +26,10 @@
     "serialize-error": "^8.0.1"
   },
   "devDependencies": {
-    "gqless": "workspace:^2.0.0",
     "@size-limit/preset-small-lib": "^4.10.1",
     "@types/prettier": "^2.2.3",
     "build-utils": "workspace:*",
+    "gqless": "workspace:^2.0.0",
     "jest": "^26.6.3",
     "rimraf": "^3.0.2",
     "size-limit": "^4.10.1",

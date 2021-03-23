@@ -1,6 +1,8 @@
 {
   "name": "@gqless/subscriptions",
   "version": "1.0.0",
+  "homepage": "https://gqless.com",
+  "author": "PabloSz <pablosaez1995@gmail.com>",
   "main": "dist/index.js",
   "module": "dist/gqless-subscriptions.esm.js",
   "types": "dist/index.d.ts",
@@ -16,9 +18,9 @@
     "ws": "^7.4.4"
   },
   "devDependencies": {
-    "gqless": "workspace:^2.0.0",
     "@types/ws": "^7.4.0",
     "build-utils": "workspace:*",
+    "gqless": "workspace:^2.0.0",
     "graphql": "^15.5.0",
     "test-utils": "workspace:^0.1.0",
     "tslib": "^2.1.0",
