@@ -118,7 +118,7 @@ function Subtitle() {
         visible: { opacity: 1 },
       }}
     >
-      A modern GraphQL client for rapid iteration.
+      a GraphQL client built for rapid iteration.
     </motion.p>
   );
 }
