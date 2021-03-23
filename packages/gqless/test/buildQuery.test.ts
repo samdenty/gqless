@@ -34,7 +34,7 @@ describe('basic', () => {
 
     expect(query.trim().startsWith('query{')).toBeTruthy();
 
-    expect(query).toMatchSnapshot('basic query');
+    expect(query).toMatchInlineSnapshot(`"query{a b}"`);
 
     expect(variables).toBe(undefined);
 
@@ -102,7 +102,9 @@ describe('basic', () => {
 
     expect(query.trim().startsWith('query{')).toBeTruthy();
 
-    expect(query).toMatchSnapshot('basic query');
+    expect(query).toMatchInlineSnapshot(
+      `"query{a{b{c{d{...on val1{b a{f}}...on val2{a{f}}}}}}}"`
+    );
 
     expect(variables).toBe(undefined);
 
@@ -162,7 +164,9 @@ describe('basic', () => {
 
     expect(query.trim().startsWith('query(')).toBeTruthy();
 
-    expect(query).toMatchSnapshot('basic query args');
+    expect(query).toMatchInlineSnapshot(
+      `"query($a1:Int!$b2:String!){gqlessAlias_1:a(a:$a1 b:$b2){a_b a_c}d}"`
+    );
 
     expect(() => {
       parse(query);
@@ -201,7 +205,9 @@ describe('basic', () => {
 
     expect(query.trim().startsWith('mutation(')).toBeTruthy();
 
-    expect(query).toMatchSnapshot('basic mutation with args');
+    expect(query).toMatchInlineSnapshot(
+      `"mutation($a1:Int!$b2:String!){gqlessAlias_1:a(a:$a1 b:$b2)}"`
+    );
 
     expect(() => {
       parse(query);

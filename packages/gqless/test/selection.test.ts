@@ -197,7 +197,24 @@ describe('selection builder', () => {
 
     const result = await buildAndFetchSelections([selection], 'query');
 
-    expect(result).toMatchSnapshot();
+    expect(result).toMatchInlineSnapshot(`
+      Object {
+        "species": Array [
+          Object {
+            "__typename": "Human",
+            "name": "default",
+          },
+          Object {
+            "__typename": "Dog",
+            "name": "a",
+          },
+          Object {
+            "__typename": "Dog",
+            "name": "b",
+          },
+        ],
+      }
+    `);
 
     expect({
       species: query.species.map(({ __typename, name }) => ({

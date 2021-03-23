@@ -6,6 +6,10 @@
   "main": "dist/index.js",
   "module": "dist/gqless-subscriptions.esm.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
     "build": "build gqless-subscriptions",
     "prepare": "build gqless-subscriptions",
