@@ -150,7 +150,7 @@ describe('setCache', () => {
       const name6 = humanQuery.name;
 
       expect(name6).toBe('aaa');
-    }, 60);
+    }, 1000);
 
     humanQuery.sons[0] = humanQuery;
 

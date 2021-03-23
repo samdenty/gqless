@@ -63,7 +63,74 @@ test('generates code and writes existing file', async () => {
         .startsWith(shouldBeIncluded)
     ).toBeTruthy();
 
-    expect(generatedContent).toMatchSnapshot('overwrite');
+    expect(generatedContent).toMatchInlineSnapshot(`
+      "/**
+       * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
+       */
+      // This should be included
+
+      import { ScalarsEnumsHash } from 'gqless';
+
+      export type Maybe<T> = T | null;
+      export type Exact<T extends { [key: string]: unknown }> = {
+        [K in keyof T]: T[K];
+      };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+        { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+        { [SubKey in K]: Maybe<T[SubKey]> };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export interface Scalars {
+        ID: string;
+        String: string;
+        Boolean: boolean;
+        Int: number;
+        Float: number;
+      }
+
+      export const scalarsEnumsHash: ScalarsEnumsHash = {
+        String: true,
+        Boolean: true,
+      };
+      export const generatedSchema = {
+        query: { __typename: { __type: 'String!' }, hello: { __type: 'String!' } },
+        mutation: {},
+        subscription: {},
+      } as const;
+
+      export interface Query {
+        __typename: 'Query' | undefined;
+        hello: ScalarsEnums['String'];
+      }
+
+      export interface Mutation {
+        __typename: 'Mutation' | undefined;
+      }
+
+      export interface Subscription {
+        __typename: 'Subscription' | undefined;
+      }
+
+      export interface SchemaObjectTypes {
+        Query: Query;
+        Mutation: Mutation;
+        Subscription: Subscription;
+      }
+      export type SchemaObjectTypesNames = 'Query' | 'Mutation' | 'Subscription';
+
+      export interface GeneratedSchema {
+        query: Query;
+        mutation: Mutation;
+        subscription: Subscription;
+      }
+
+      export type MakeNullable<T> = {
+        [K in keyof T]: T[K] | undefined;
+      };
+
+      export interface ScalarsEnums extends MakeNullable<Scalars> {}
+      "
+    `);
   } finally {
     await tempDir.cleanup();
   }
@@ -103,7 +170,74 @@ test('creates dir, generates code and writes new file', async () => {
         .startsWith(shouldBeIncluded)
     ).toBeTruthy();
 
-    expect(generatedContentSchema).toMatchSnapshot('new schema');
+    expect(generatedContentSchema).toMatchInlineSnapshot(`
+      "/**
+       * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
+       */
+      // This should be included
+
+      import { ScalarsEnumsHash } from 'gqless';
+
+      export type Maybe<T> = T | null;
+      export type Exact<T extends { [key: string]: unknown }> = {
+        [K in keyof T]: T[K];
+      };
+      export type MakeOptional<T, K extends keyof T> = Omit<T, K> &
+        { [SubKey in K]?: Maybe<T[SubKey]> };
+      export type MakeMaybe<T, K extends keyof T> = Omit<T, K> &
+        { [SubKey in K]: Maybe<T[SubKey]> };
+      /** All built-in and custom scalars, mapped to their actual values */
+      export interface Scalars {
+        ID: string;
+        String: string;
+        Boolean: boolean;
+        Int: number;
+        Float: number;
+      }
+
+      export const scalarsEnumsHash: ScalarsEnumsHash = {
+        String: true,
+        Boolean: true,
+      };
+      export const generatedSchema = {
+        query: { __typename: { __type: 'String!' }, hello: { __type: 'String!' } },
+        mutation: {},
+        subscription: {},
+      } as const;
+
+      export interface Query {
+        __typename: 'Query' | undefined;
+        hello: ScalarsEnums['String'];
+      }
+
+      export interface Mutation {
+        __typename: 'Mutation' | undefined;
+      }
+
+      export interface Subscription {
+        __typename: 'Subscription' | undefined;
+      }
+
+      export interface SchemaObjectTypes {
+        Query: Query;
+        Mutation: Mutation;
+        Subscription: Subscription;
+      }
+      export type SchemaObjectTypesNames = 'Query' | 'Mutation' | 'Subscription';
+
+      export interface GeneratedSchema {
+        query: Query;
+        mutation: Mutation;
+        subscription: Subscription;
+      }
+
+      export type MakeNullable<T> = {
+        [K in keyof T]: T[K] | undefined;
+      };
+
+      export interface ScalarsEnums extends MakeNullable<Scalars> {}
+      "
+    `);
 
     const generatedContentClient = await fs.promises.readFile(
       path.resolve(path.dirname(destinationPath), './file-to-generate.ts'),
@@ -112,7 +246,85 @@ test('creates dir, generates code and writes new file', async () => {
       }
     );
 
-    expect(generatedContentClient).toMatchSnapshot('new client');
+    expect(generatedContentClient).toMatchInlineSnapshot(`
+      "/**
+       * GQLESS: You can safely modify this file and Query Fetcher based on your needs
+       */
+
+      import { createReactClient } from '@gqless/react';
+
+      import { createClient, QueryFetcher } from gqless;
+      import {
+        GeneratedSchema,
+        generatedSchema,
+        scalarsEnumsHash,
+        SchemaObjectTypes,
+        SchemaObjectTypesNames,
+      } from './schema.generated';
+
+      const queryFetcher: QueryFetcher = async function (query, variables) {
+        // Modify \\"/api/graphql\\" if needed
+        const response = await fetch('/api/graphql', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query,
+            variables,
+          }),
+          mode: 'cors',
+        });
+
+        const json = await response.json();
+
+        return json;
+      };
+
+      export const client = createClient<
+        GeneratedSchema,
+        SchemaObjectTypesNames,
+        SchemaObjectTypes
+      >({
+        schema: generatedSchema,
+        scalarsEnumsHash,
+        queryFetcher,
+      });
+
+      export const {
+        query,
+        mutation,
+        mutate,
+        subscription,
+        resolved,
+        refetch,
+      } = client;
+
+      export const {
+        graphql,
+        useQuery,
+        useTransactionQuery,
+        useLazyQuery,
+        useRefetch,
+        useMutation,
+        useMetaState,
+        prepareReactRender,
+        useHydrateCache,
+        prepareQuery,
+      } = createReactClient<GeneratedSchema>(client, {
+        defaults: {
+          // Set this flag as \\"true\\" if your usage involves React Suspense
+          // Keep in mind that you can overwrite it in a per-hook basis
+          suspense: false,
+
+          // Set this flag based on your needs
+          staleWhileRevalidate: false,
+        },
+      });
+
+      export * from './schema.generated';
+      "
+    `);
   } finally {
     await tempDir.cleanup();
   }
