@@ -14,7 +14,7 @@ hide_title: true
 
 • **Float**: _number_
 
-Defined in: [packages/gqless/src/Schema/types.ts:19](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L19)
+Defined in: [packages/gqless/src/Schema/types.ts:19](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L19)
 
 ---
 
@@ -22,7 +22,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:19](https://github.com/gqless/n
 
 • **ID**: _string_
 
-Defined in: [packages/gqless/src/Schema/types.ts:20](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L20)
+Defined in: [packages/gqless/src/Schema/types.ts:20](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L20)
 
 ---
 
@@ -30,7 +30,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:20](https://github.com/gqless/n
 
 • **Int**: _number_
 
-Defined in: [packages/gqless/src/Schema/types.ts:18](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L18)
+Defined in: [packages/gqless/src/Schema/types.ts:18](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L18)
 
 ---
 
@@ -38,4 +38,4 @@ Defined in: [packages/gqless/src/Schema/types.ts:18](https://github.com/gqless/n
 
 • **String**: _string_
 
-Defined in: [packages/gqless/src/Schema/types.ts:17](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L17)
+Defined in: [packages/gqless/src/Schema/types.ts:17](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L17)

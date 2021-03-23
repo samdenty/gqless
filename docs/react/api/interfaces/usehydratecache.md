@@ -20,4 +20,4 @@ hide_title: true
 
 **Returns:** _void_
 
-Defined in: [ssr/ssr.ts:34](https://github.com/gqless/new_gqless/blob/master/packages/react/src/ssr/ssr.ts#L34)
+Defined in: [ssr/ssr.ts:34](https://github.com/gqless/gqless/blob/master/packages/react/src/ssr/ssr.ts#L34)

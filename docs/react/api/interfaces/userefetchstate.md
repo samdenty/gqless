@@ -22,7 +22,7 @@ hide_title: true
 
 Inherited from: void
 
-Defined in: [query/useRefetch.ts:20](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useRefetch.ts#L20)
+Defined in: [query/useRefetch.ts:20](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L20)
 
 ---
 
@@ -32,7 +32,7 @@ Defined in: [query/useRefetch.ts:20](https://github.com/gqless/new_gqless/blob/m
 
 Inherited from: void
 
-Defined in: [query/useRefetch.ts:19](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useRefetch.ts#L19)
+Defined in: [query/useRefetch.ts:19](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L19)
 
 ---
 
@@ -46,9 +46,9 @@ Defined in: [query/useRefetch.ts:19](https://github.com/gqless/new_gqless/blob/m
 
 **Returns:** _void_
 
-Defined in: [query/useRefetch.ts:67](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useRefetch.ts#L67)
+Defined in: [query/useRefetch.ts:67](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L67)
 
-Defined in: [query/useRefetch.ts:67](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useRefetch.ts#L67)
+Defined in: [query/useRefetch.ts:67](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L67)
 
 ---
 
@@ -62,6 +62,6 @@ Defined in: [query/useRefetch.ts:67](https://github.com/gqless/new_gqless/blob/m
 
 **Returns:** _void_
 
-Defined in: [query/useRefetch.ts:68](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useRefetch.ts#L68)
+Defined in: [query/useRefetch.ts:68](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L68)
 
-Defined in: [query/useRefetch.ts:68](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useRefetch.ts#L68)
+Defined in: [query/useRefetch.ts:68](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L68)

@@ -33,4 +33,4 @@ hide_title: true
 
 **Returns:** TData \| _Promise_<TData\> & { `schedulerPromise`: _Promise_<SchedulerPromiseValue\> }
 
-Defined in: [packages/gqless/src/Helpers/prefetch.ts:8](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/prefetch.ts#L8)
+Defined in: [packages/gqless/src/Helpers/prefetch.ts:8](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/prefetch.ts#L8)

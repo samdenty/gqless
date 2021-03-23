@@ -34,7 +34,7 @@ hide_title: true
 
 Overrides: void
 
-Defined in: [packages/gqless/src/Error/index.ts:5](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/index.ts#L5)
+Defined in: [packages/gqless/src/Error/index.ts:5](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/index.ts#L5)
 
 ## Properties
 
@@ -42,7 +42,7 @@ Defined in: [packages/gqless/src/Error/index.ts:5](https://github.com/gqless/new
 
 • `Optional` **graphQLErrors**: readonly _GraphQLError_[]
 
-Defined in: [packages/gqless/src/Error/index.ts:4](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/index.ts#L4)
+Defined in: [packages/gqless/src/Error/index.ts:4](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/index.ts#L4)
 
 ---
 
@@ -70,7 +70,7 @@ Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.
 
 • `Optional` **otherError**: _unknown_
 
-Defined in: [packages/gqless/src/Error/index.ts:5](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/index.ts#L5)
+Defined in: [packages/gqless/src/Error/index.ts:5](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/index.ts#L5)
 
 ---
 
@@ -135,7 +135,7 @@ Defined in: node_modules/.pnpm/@types/node@14.14.35/node_modules/@types/node/glo
 | `message`       | _string_                                 |
 | `otherError`    | _unknown_                                |
 
-Defined in: [packages/gqless/src/Error/index.ts:29](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/index.ts#L29)
+Defined in: [packages/gqless/src/Error/index.ts:29](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/index.ts#L29)
 
 ---
 
@@ -173,7 +173,7 @@ Defined in: node_modules/.pnpm/@types/node@14.14.35/node_modules/@types/node/glo
 
 **Returns:** [_gqlessError_](gqlesserror.md)
 
-Defined in: [packages/gqless/src/Error/index.ts:37](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/index.ts#L37)
+Defined in: [packages/gqless/src/Error/index.ts:37](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/index.ts#L37)
 
 ---
 
@@ -189,4 +189,4 @@ Defined in: [packages/gqless/src/Error/index.ts:37](https://github.com/gqless/ne
 
 **Returns:** [_gqlessError_](gqlesserror.md)
 
-Defined in: [packages/gqless/src/Error/index.ts:55](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/index.ts#L55)
+Defined in: [packages/gqless/src/Error/index.ts:55](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/index.ts#L55)

@@ -20,7 +20,7 @@ You shouldn't set it manually
 
 **`default`** 0
 
-Defined in: [packages/gqless/src/Error/retry.ts:43](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/retry.ts#L43)
+Defined in: [packages/gqless/src/Error/retry.ts:43](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L43)
 
 ---
 
@@ -42,9 +42,9 @@ Function to be executed on the last try
 
 **Returns:** _Promise_<void\>
 
-Defined in: [packages/gqless/src/Error/retry.ts:51](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/retry.ts#L51)
+Defined in: [packages/gqless/src/Error/retry.ts:51](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L51)
 
-Defined in: [packages/gqless/src/Error/retry.ts:51](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/retry.ts#L51)
+Defined in: [packages/gqless/src/Error/retry.ts:51](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L51)
 
 ---
 
@@ -66,6 +66,6 @@ Function to be executed on approved retry attempt
 
 **Returns:** _Promise_<void\>
 
-Defined in: [packages/gqless/src/Error/retry.ts:47](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/retry.ts#L47)
+Defined in: [packages/gqless/src/Error/retry.ts:47](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L47)
 
-Defined in: [packages/gqless/src/Error/retry.ts:47](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/retry.ts#L47)
+Defined in: [packages/gqless/src/Error/retry.ts:47](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L47)

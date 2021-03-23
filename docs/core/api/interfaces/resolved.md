@@ -27,4 +27,4 @@ hide_title: true
 
 **Returns:** _Promise_<T\>
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:152](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L152)
+Defined in: [packages/gqless/src/Client/resolvers.ts:152](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L152)

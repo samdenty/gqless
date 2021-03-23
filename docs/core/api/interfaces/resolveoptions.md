@@ -22,7 +22,7 @@ hide_title: true
 
 Ignore the client cache
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:26](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L26)
+Defined in: [packages/gqless/src/Client/resolvers.ts:26](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L26)
 
 ---
 
@@ -48,9 +48,9 @@ with the existing cache data.
 
 **Returns:** _boolean_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:34](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L34)
+Defined in: [packages/gqless/src/Client/resolvers.ts:34](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L34)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:34](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L34)
+Defined in: [packages/gqless/src/Client/resolvers.ts:34](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L34)
 
 ---
 
@@ -72,9 +72,9 @@ Get every selection intercepted in the specified function
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:38](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L38)
+Defined in: [packages/gqless/src/Client/resolvers.ts:38](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L38)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:38](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L38)
+Defined in: [packages/gqless/src/Client/resolvers.ts:38](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L38)
 
 ---
 
@@ -96,9 +96,9 @@ On subscription event listener
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:42](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L42)
+Defined in: [packages/gqless/src/Client/resolvers.ts:42](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L42)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:42](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L42)
+Defined in: [packages/gqless/src/Client/resolvers.ts:42](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L42)
 
 ---
 
@@ -108,7 +108,7 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:42](https://github.com/gqle
 
 Set to `true` to refetch the data requirements
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:22](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L22)
+Defined in: [packages/gqless/src/Client/resolvers.ts:22](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L22)
 
 ---
 
@@ -118,4 +118,4 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:22](https://github.com/gqle
 
 Retry strategy
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:67](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L67)
+Defined in: [packages/gqless/src/Client/resolvers.ts:67](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L67)

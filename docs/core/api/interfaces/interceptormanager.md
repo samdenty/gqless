@@ -26,9 +26,9 @@ hide_title: true
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:50](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L50)
+Defined in: [packages/gqless/src/Interceptor/index.ts:50](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L50)
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:50](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L50)
+Defined in: [packages/gqless/src/Interceptor/index.ts:50](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L50)
 
 ---
 
@@ -48,9 +48,9 @@ Defined in: [packages/gqless/src/Interceptor/index.ts:50](https://github.com/gql
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:51](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L51)
+Defined in: [packages/gqless/src/Interceptor/index.ts:51](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L51)
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:51](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L51)
+Defined in: [packages/gqless/src/Interceptor/index.ts:51](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L51)
 
 ---
 
@@ -70,9 +70,9 @@ Defined in: [packages/gqless/src/Interceptor/index.ts:51](https://github.com/gql
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:52](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L52)
+Defined in: [packages/gqless/src/Interceptor/index.ts:52](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L52)
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:52](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L52)
+Defined in: [packages/gqless/src/Interceptor/index.ts:52](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L52)
 
 ---
 
@@ -92,9 +92,9 @@ Defined in: [packages/gqless/src/Interceptor/index.ts:52](https://github.com/gql
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:53](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L53)
+Defined in: [packages/gqless/src/Interceptor/index.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L53)
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:53](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L53)
+Defined in: [packages/gqless/src/Interceptor/index.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L53)
 
 ---
 
@@ -108,9 +108,9 @@ Defined in: [packages/gqless/src/Interceptor/index.ts:53](https://github.com/gql
 
 **Returns:** _Interceptor_
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:48](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L48)
+Defined in: [packages/gqless/src/Interceptor/index.ts:48](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L48)
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:48](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L48)
+Defined in: [packages/gqless/src/Interceptor/index.ts:48](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L48)
 
 ---
 
@@ -118,7 +118,7 @@ Defined in: [packages/gqless/src/Interceptor/index.ts:48](https://github.com/gql
 
 • **globalInterceptor**: _Interceptor_
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:47](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L47)
+Defined in: [packages/gqless/src/Interceptor/index.ts:47](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L47)
 
 ---
 
@@ -126,7 +126,7 @@ Defined in: [packages/gqless/src/Interceptor/index.ts:47](https://github.com/gql
 
 • **interceptors**: _Set_<Interceptor\>
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:46](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L46)
+Defined in: [packages/gqless/src/Interceptor/index.ts:46](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L46)
 
 ---
 
@@ -146,9 +146,9 @@ Defined in: [packages/gqless/src/Interceptor/index.ts:46](https://github.com/gql
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:49](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L49)
+Defined in: [packages/gqless/src/Interceptor/index.ts:49](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L49)
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:49](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L49)
+Defined in: [packages/gqless/src/Interceptor/index.ts:49](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L49)
 
 ---
 
@@ -168,6 +168,6 @@ Defined in: [packages/gqless/src/Interceptor/index.ts:49](https://github.com/gql
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:54](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L54)
+Defined in: [packages/gqless/src/Interceptor/index.ts:54](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L54)
 
-Defined in: [packages/gqless/src/Interceptor/index.ts:54](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L54)
+Defined in: [packages/gqless/src/Interceptor/index.ts:54](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Interceptor/index.ts#L54)

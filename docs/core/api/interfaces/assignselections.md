@@ -28,4 +28,4 @@ hide_title: true
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Accessor/index.ts:132](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Accessor/index.ts#L132)
+Defined in: [packages/gqless/src/Accessor/index.ts:132](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Accessor/index.ts#L132)

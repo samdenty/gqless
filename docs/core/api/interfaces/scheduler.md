@@ -24,7 +24,7 @@ hide_title: true
 | `subscribeErrors` | (`fn`: ErrorSubscriptionFn) => () => _void_                                                                                                        |
 | `triggerError`    | (`newError`: [_gqlessError_](../classes/gqlesserror.md), `selections`: [_Selection_](../classes/selection.md)[], `isLastTry`: _boolean_) => _void_ |
 
-Defined in: [packages/gqless/src/Scheduler/index.ts:39](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L39)
+Defined in: [packages/gqless/src/Scheduler/index.ts:39](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L39)
 
 ---
 
@@ -32,7 +32,7 @@ Defined in: [packages/gqless/src/Scheduler/index.ts:39](https://github.com/gqles
 
 • **isFetching**: _boolean_
 
-Defined in: [packages/gqless/src/Scheduler/index.ts:53](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L53)
+Defined in: [packages/gqless/src/Scheduler/index.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L53)
 
 ---
 
@@ -40,7 +40,7 @@ Defined in: [packages/gqless/src/Scheduler/index.ts:53](https://github.com/gqles
 
 • **pendingSelectionsGroups**: _Set_<Set<[_Selection_](../classes/selection.md)\>\>
 
-Defined in: [packages/gqless/src/Scheduler/index.ts:54](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L54)
+Defined in: [packages/gqless/src/Scheduler/index.ts:54](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L54)
 
 ---
 
@@ -48,7 +48,7 @@ Defined in: [packages/gqless/src/Scheduler/index.ts:54](https://github.com/gqles
 
 • **pendingSelectionsGroupsPromises**: _Map_<Set<[_Selection_](../classes/selection.md)\>, Promise<SchedulerPromiseValue\>\>
 
-Defined in: [packages/gqless/src/Scheduler/index.ts:55](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L55)
+Defined in: [packages/gqless/src/Scheduler/index.ts:55](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L55)
 
 ---
 
@@ -56,7 +56,7 @@ Defined in: [packages/gqless/src/Scheduler/index.ts:55](https://github.com/gqles
 
 • **resolving**: _null_ \| _DeferredPromise_<SchedulerPromiseValue\>
 
-Defined in: [packages/gqless/src/Scheduler/index.ts:35](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L35)
+Defined in: [packages/gqless/src/Scheduler/index.ts:35](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L35)
 
 ---
 
@@ -76,6 +76,6 @@ Defined in: [packages/gqless/src/Scheduler/index.ts:35](https://github.com/gqles
 
 **Returns:** () => _void_
 
-Defined in: [packages/gqless/src/Scheduler/index.ts:36](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L36)
+Defined in: [packages/gqless/src/Scheduler/index.ts:36](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L36)
 
-Defined in: [packages/gqless/src/Scheduler/index.ts:36](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L36)
+Defined in: [packages/gqless/src/Scheduler/index.ts:36](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L36)

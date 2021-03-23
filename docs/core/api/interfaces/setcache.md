@@ -21,7 +21,7 @@ hide_title: true
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Accessor/index.ts:119](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Accessor/index.ts#L119)
+Defined in: [packages/gqless/src/Accessor/index.ts:119](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Accessor/index.ts#L119)
 
 ▸ **SetCache**<A\>(`accessor`: A, `data`: _undefined_ \| _null_ \| [_DeepPartial_](../modules.md#deeppartial)<A\>): _void_
 
@@ -40,7 +40,7 @@ Defined in: [packages/gqless/src/Accessor/index.ts:119](https://github.com/gqles
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Accessor/index.ts:120](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Accessor/index.ts#L120)
+Defined in: [packages/gqless/src/Accessor/index.ts:120](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Accessor/index.ts#L120)
 
 ▸ **SetCache**<B\>(`accessor`: B, `args`: _Parameters_<B\>[*0*], `data`: _undefined_ \| _null_ \| [_DeepPartial_](../modules.md#deeppartial)<ReturnType<B\>\>): _void_
 
@@ -60,4 +60,4 @@ Defined in: [packages/gqless/src/Accessor/index.ts:120](https://github.com/gqles
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Accessor/index.ts:124](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Accessor/index.ts#L124)
+Defined in: [packages/gqless/src/Accessor/index.ts:124](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Accessor/index.ts#L124)

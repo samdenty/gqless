@@ -35,4 +35,4 @@ hide_title: true
 
 **Returns:** readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fetchPolicy?`: [_LazyFetchPolicy_](../modules.md#lazyfetchpolicy) ; `fn?`: (`query`: GeneratedSchema[*query*], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseLazyQueryState_](uselazyquerystate.md)<TData\>]
 
-Defined in: [query/useLazyQuery.ts:86](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L86)
+Defined in: [query/useLazyQuery.ts:86](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L86)

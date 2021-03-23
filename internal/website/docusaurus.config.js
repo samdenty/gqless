@@ -126,8 +126,7 @@ module.exports = {
           path: '../../docs',
           sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: '/',
-          editUrl:
-            'https://github.com/gqless/new_gqless/edit/master/docs/master',
+          editUrl: 'https://github.com/gqless/gqless/edit/master/docs/master',
           remarkPlugins: [require('./src/plugins/remark-yarn2npm')],
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,

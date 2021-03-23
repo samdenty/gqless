@@ -57,7 +57,7 @@ hide_title: true
 
 Ƭ **BuildSelectionInput**: [_query_ \| _mutation_ \| _subscription_, ...BuildSelectionValue[]]
 
-Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:12](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Selection/SelectionBuilder.ts#L12)
+Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:12](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/SelectionBuilder.ts#L12)
 
 ---
 
@@ -65,7 +65,7 @@ Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:12](https://githu
 
 Ƭ **BuildSelectionValue**: _string_ \| _number_ \| [*string* \| *number*, object?]
 
-Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:8](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Selection/SelectionBuilder.ts#L8)
+Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:8](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/SelectionBuilder.ts#L8)
 
 ---
 
@@ -73,7 +73,7 @@ Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:8](https://github
 
 Ƭ **CacheType**: _Record_<string, unknown\>
 
-Defined in: [packages/gqless/src/Cache/dataCache.ts:8](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Cache/dataCache.ts#L8)
+Defined in: [packages/gqless/src/Cache/dataCache.ts:8](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/dataCache.ts#L8)
 
 ---
 
@@ -87,7 +87,7 @@ Defined in: [packages/gqless/src/Cache/dataCache.ts:8](https://github.com/gqless
 | :--- |
 | `T`  |
 
-Defined in: [packages/gqless/src/Schema/types.ts:64](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L64)
+Defined in: [packages/gqless/src/Schema/types.ts:64](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L64)
 
 ---
 
@@ -103,7 +103,7 @@ Remove all possible 'undefined' types in the first level.
 | :--- |
 | `T`  |
 
-Defined in: [packages/gqless/src/Helpers/casters.ts:19](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L19)
+Defined in: [packages/gqless/src/Helpers/casters.ts:19](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L19)
 
 ---
 
@@ -119,7 +119,7 @@ Remove all possible 'undefined' values recursively from an object
 | :--- |
 | `T`  |
 
-Defined in: [packages/gqless/src/Helpers/casters.ts:6](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L6)
+Defined in: [packages/gqless/src/Helpers/casters.ts:6](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L6)
 
 ---
 
@@ -133,7 +133,7 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:6](https://github.com/gqless
 | :--- |
 | `T`  |
 
-Defined in: [packages/gqless/src/Helpers/casters.ts:1](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L1)
+Defined in: [packages/gqless/src/Helpers/casters.ts:1](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L1)
 
 ---
 
@@ -154,7 +154,7 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:1](https://github.com/gqless
 
 **Returns:** _Promise_<ExecutionResult\> \| ExecutionResult
 
-Defined in: [packages/gqless/src/Schema/types.ts:25](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L25)
+Defined in: [packages/gqless/src/Schema/types.ts:25](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L25)
 
 ---
 
@@ -162,7 +162,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:25](https://github.com/gqless/n
 
 Ƭ **RetryOptions**: { `maxRetries?`: _number_ ; `retryDelay?`: _number_ \| (`attemptIndex`: _number_) => _number_ } \| _boolean_ \| _number_
 
-Defined in: [packages/gqless/src/Error/retry.ts:6](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/retry.ts#L6)
+Defined in: [packages/gqless/src/Error/retry.ts:6](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L6)
 
 ---
 
@@ -170,7 +170,7 @@ Defined in: [packages/gqless/src/Error/retry.ts:6](https://github.com/gqless/new
 
 Ƭ **ScalarsEnumsHash**: _Record_<string, _true_\>
 
-Defined in: [packages/gqless/src/Schema/types.ts:23](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L23)
+Defined in: [packages/gqless/src/Schema/types.ts:23](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L23)
 
 ---
 
@@ -191,7 +191,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:23](https://github.com/gqless/n
 | `type`?          | [_SelectionType_](enums/selectiontype.md) |
 | `unions`?        | _string_[]                                |
 
-Defined in: [packages/gqless/src/Selection/selection.ts:7](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Selection/selection.ts#L7)
+Defined in: [packages/gqless/src/Selection/selection.ts:7](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L7)
 
 ## Variables
 
@@ -199,7 +199,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:7](https://github.com/gq
 
 • `Const` **SchemaUnionsKey**: _typeof_ [_SchemaUnionsKey_](modules.md#schemaunionskey)
 
-Defined in: [packages/gqless/src/Schema/types.ts:8](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L8)
+Defined in: [packages/gqless/src/Schema/types.ts:8](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L8)
 
 ## Functions
 
@@ -223,7 +223,7 @@ Runtime no-op that removes all the undefined types in the first level
 
 **Returns:** [_NotSkeleton_](modules.md#notskeleton)<T\>
 
-Defined in: [packages/gqless/src/Helpers/casters.ts:37](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L37)
+Defined in: [packages/gqless/src/Helpers/casters.ts:37](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L37)
 
 ---
 
@@ -247,7 +247,7 @@ Runtime no-op that removes all the undefined types recursively
 
 **Returns:** [_NotSkeletonDeep_](modules.md#notskeletondeep)<T\>
 
-Defined in: [packages/gqless/src/Helpers/casters.ts:32](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L32)
+Defined in: [packages/gqless/src/Helpers/casters.ts:32](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L32)
 
 ---
 
@@ -274,7 +274,7 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:32](https://github.com/gqles
 
 **Returns:** [_GqlessClient_](interfaces/gqlessclient.md)<GeneratedSchema\>
 
-Defined in: [packages/gqless/src/Client/client.ts:186](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/client.ts#L186)
+Defined in: [packages/gqless/src/Client/client.ts:186](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L186)
 
 ---
 
@@ -291,7 +291,7 @@ Defined in: [packages/gqless/src/Client/client.ts:186](https://github.com/gqless
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Error/retry.ts:54](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Error/retry.ts#L54)
+Defined in: [packages/gqless/src/Error/retry.ts:54](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L54)
 
 ---
 
@@ -316,7 +316,7 @@ Defined in: [packages/gqless/src/Error/retry.ts:54](https://github.com/gqless/ne
 
 **Returns:** TArray
 
-Defined in: [packages/gqless/src/Helpers/getFields.ts:24](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/getFields.ts#L24)
+Defined in: [packages/gqless/src/Helpers/getFields.ts:24](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/getFields.ts#L24)
 
 ---
 
@@ -340,7 +340,7 @@ Defined in: [packages/gqless/src/Helpers/getFields.ts:24](https://github.com/gql
 
 **Returns:** TAccesorData
 
-Defined in: [packages/gqless/src/Helpers/getFields.ts:3](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/getFields.ts#L3)
+Defined in: [packages/gqless/src/Helpers/getFields.ts:3](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/getFields.ts#L3)
 
 ---
 
@@ -356,7 +356,7 @@ Defined in: [packages/gqless/src/Helpers/getFields.ts:3](https://github.com/gqle
 
 **Returns:** [_ParseSchemaTypeInfo_](interfaces/parseschematypeinfo.md)
 
-Defined in: [packages/gqless/src/Schema/types.ts:37](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L37)
+Defined in: [packages/gqless/src/Schema/types.ts:37](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L37)
 
 ---
 
@@ -380,4 +380,4 @@ Defined in: [packages/gqless/src/Schema/types.ts:37](https://github.com/gqless/n
 
 **Returns:** A
 
-Defined in: [packages/gqless/src/Helpers/selectFields.ts:4](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/selectFields.ts#L4)
+Defined in: [packages/gqless/src/Helpers/selectFields.ts:4](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/selectFields.ts#L4)

@@ -14,4 +14,4 @@ hide_title: true
 
 • **getSelection**: GetSelection
 
-Defined in: [packages/gqless/src/Selection/SelectionManager.ts:56](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Selection/SelectionManager.ts#L56)
+Defined in: [packages/gqless/src/Selection/SelectionManager.ts:56](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/SelectionManager.ts#L56)

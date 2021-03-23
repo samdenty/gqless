@@ -24,7 +24,7 @@ Cache snapshot, returned from `prepareReactRender`
 
 Overrides: void
 
-Defined in: [ssr/ssr.ts:12](https://github.com/gqless/new_gqless/blob/master/packages/react/src/ssr/ssr.ts#L12)
+Defined in: [ssr/ssr.ts:12](https://github.com/gqless/gqless/blob/master/packages/react/src/ssr/ssr.ts#L12)
 
 ---
 
@@ -39,4 +39,4 @@ false
 
 Overrides: void
 
-Defined in: [ssr/ssr.ts:19](https://github.com/gqless/new_gqless/blob/master/packages/react/src/ssr/ssr.ts#L19)
+Defined in: [ssr/ssr.ts:19](https://github.com/gqless/gqless/blob/master/packages/react/src/ssr/ssr.ts#L19)

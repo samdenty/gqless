@@ -48,7 +48,7 @@ hide_title: true
 
 Ƭ **FetchPolicy**: _cache-and-network_ \| _cache-first_ \| _network-only_ \| _no-cache_
 
-Defined in: [common.ts:143](https://github.com/gqless/new_gqless/blob/master/packages/react/src/common.ts#L143)
+Defined in: [common.ts:143](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L143)
 
 ---
 
@@ -56,7 +56,7 @@ Defined in: [common.ts:143](https://github.com/gqless/new_gqless/blob/master/pac
 
 Ƭ **LazyFetchPolicy**: _Exclude_<[_FetchPolicy_](modules.md#fetchpolicy), _cache-first_\>
 
-Defined in: [query/useLazyQuery.ts:13](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L13)
+Defined in: [query/useLazyQuery.ts:13](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L13)
 
 ---
 
@@ -76,7 +76,7 @@ Defined in: [query/useLazyQuery.ts:13](https://github.com/gqless/new_gqless/blob
 
 **Returns:** _void_
 
-Defined in: [common.ts:491](https://github.com/gqless/new_gqless/blob/master/packages/react/src/common.ts#L491)
+Defined in: [common.ts:491](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L491)
 
 ---
 
@@ -92,7 +92,7 @@ Props with `cacheSnapshot` that would be returned from `prepareReactRender`
 | :--- | :----------------------------------- | :------ |
 | `T`  | _Record_<string \| number, unknown\> | {}      |
 
-Defined in: [ssr/ssr.ts:25](https://github.com/gqless/new_gqless/blob/master/packages/react/src/ssr/ssr.ts#L25)
+Defined in: [ssr/ssr.ts:25](https://github.com/gqless/gqless/blob/master/packages/react/src/ssr/ssr.ts#L25)
 
 ---
 
@@ -107,7 +107,7 @@ Defined in: [ssr/ssr.ts:25](https://github.com/gqless/new_gqless/blob/master/pac
 | `GeneratedSchema`       | _object_ |
 | `GeneratedSchema.query` | _object_ |
 
-Defined in: [query/useQuery.ts:24](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useQuery.ts#L24)
+Defined in: [query/useQuery.ts:24](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L24)
 
 ---
 
@@ -122,7 +122,7 @@ Defined in: [query/useQuery.ts:24](https://github.com/gqless/new_gqless/blob/mas
 | `TData`      |
 | `TVariables` |
 
-Defined in: [query/useTransactionQuery.ts:105](https://github.com/gqless/new_gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L105)
+Defined in: [query/useTransactionQuery.ts:105](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L105)
 
 ## Functions
 
@@ -148,4 +148,4 @@ Defined in: [query/useTransactionQuery.ts:105](https://github.com/gqless/new_gql
 
 **Returns:** [_ReactClient_](interfaces/reactclient.md)<GeneratedSchema\>
 
-Defined in: [client.ts:154](https://github.com/gqless/new_gqless/blob/master/packages/react/src/client.ts#L154)
+Defined in: [client.ts:154](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L154)

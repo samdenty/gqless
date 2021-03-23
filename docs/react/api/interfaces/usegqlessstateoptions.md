@@ -14,7 +14,7 @@ hide_title: true
 
 • `Optional` **filterSelections**: BuildSelections
 
-Defined in: [meta/useMetaState.ts:27](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L27)
+Defined in: [meta/useMetaState.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L27)
 
 ---
 
@@ -28,9 +28,9 @@ Defined in: [meta/useMetaState.ts:27](https://github.com/gqless/new_gqless/blob/
 
 **Returns:** _void_
 
-Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L17)
+Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L17)
 
-Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L17)
+Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L17)
 
 ---
 
@@ -53,9 +53,9 @@ Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/new_gqless/blob/
 
 **Returns:** _void_
 
-Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L18)
+Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L18)
 
-Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L18)
+Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L18)
 
 ---
 
@@ -77,9 +77,9 @@ Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/new_gqless/blob/
 
 **Returns:** _void_
 
-Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L23)
+Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L23)
 
-Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L23)
+Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L23)
 
 ---
 
@@ -93,6 +93,6 @@ Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/new_gqless/blob/
 
 **Returns:** _void_
 
-Defined in: [meta/useMetaState.ts:16](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L16)
+Defined in: [meta/useMetaState.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L16)
 
-Defined in: [meta/useMetaState.ts:16](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L16)
+Defined in: [meta/useMetaState.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L16)

@@ -16,4 +16,4 @@ hide_title: true
 
 Default behaviour values
 
-Defined in: [client.ts:130](https://github.com/gqless/new_gqless/blob/master/packages/react/src/client.ts#L130)
+Defined in: [client.ts:130](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L130)

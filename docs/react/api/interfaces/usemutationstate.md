@@ -20,7 +20,7 @@ hide_title: true
 
 • **data**: _undefined_ \| TData
 
-Defined in: [mutation/useMutation.ts:30](https://github.com/gqless/new_gqless/blob/master/packages/react/src/mutation/useMutation.ts#L30)
+Defined in: [mutation/useMutation.ts:30](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L30)
 
 ---
 
@@ -28,7 +28,7 @@ Defined in: [mutation/useMutation.ts:30](https://github.com/gqless/new_gqless/bl
 
 • `Optional` **error**: _gqlessError_
 
-Defined in: [mutation/useMutation.ts:31](https://github.com/gqless/new_gqless/blob/master/packages/react/src/mutation/useMutation.ts#L31)
+Defined in: [mutation/useMutation.ts:31](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L31)
 
 ---
 
@@ -36,4 +36,4 @@ Defined in: [mutation/useMutation.ts:31](https://github.com/gqless/new_gqless/bl
 
 • **isLoading**: _boolean_
 
-Defined in: [mutation/useMutation.ts:32](https://github.com/gqless/new_gqless/blob/master/packages/react/src/mutation/useMutation.ts#L32)
+Defined in: [mutation/useMutation.ts:32](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L32)

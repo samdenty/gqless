@@ -26,4 +26,4 @@ hide_title: true
 
 **Returns:** _Promise_<T\>
 
-Defined in: [packages/gqless/src/Helpers/refetch.ts:8](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Helpers/refetch.ts#L8)
+Defined in: [packages/gqless/src/Helpers/refetch.ts:8](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/refetch.ts#L8)

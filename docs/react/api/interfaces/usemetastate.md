@@ -20,4 +20,4 @@ hide_title: true
 
 **Returns:** [_MetaState_](metastate.md)
 
-Defined in: [meta/useMetaState.ts:35](https://github.com/gqless/new_gqless/blob/master/packages/react/src/meta/useMetaState.ts#L35)
+Defined in: [meta/useMetaState.ts:35](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L35)

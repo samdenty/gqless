@@ -37,4 +37,4 @@ hide_title: true
 
 **Returns:** _Promise_<T\>
 
-Defined in: [packages/gqless/src/Client/client.ts:127](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Client/client.ts#L127)
+Defined in: [packages/gqless/src/Client/client.ts:127](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L127)

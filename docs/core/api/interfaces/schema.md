@@ -20,7 +20,7 @@ hide_title: true
 
 • `Optional` **[SchemaUnionsKey]**: _Record_<string, readonly _string_[]\>
 
-Defined in: [packages/gqless/src/Schema/types.ts:13](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L13)
+Defined in: [packages/gqless/src/Schema/types.ts:13](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L13)
 
 ---
 
@@ -28,7 +28,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:13](https://github.com/gqless/n
 
 • **mutation**: _Record_<string, [_Type_](type.md)\>
 
-Defined in: [packages/gqless/src/Schema/types.ts:11](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L11)
+Defined in: [packages/gqless/src/Schema/types.ts:11](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L11)
 
 ---
 
@@ -36,7 +36,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:11](https://github.com/gqless/n
 
 • **query**: _Record_<string, [_Type_](type.md)\>
 
-Defined in: [packages/gqless/src/Schema/types.ts:10](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L10)
+Defined in: [packages/gqless/src/Schema/types.ts:10](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L10)
 
 ---
 
@@ -44,4 +44,4 @@ Defined in: [packages/gqless/src/Schema/types.ts:10](https://github.com/gqless/n
 
 • **subscription**: _Record_<string, [_Type_](type.md)\>
 
-Defined in: [packages/gqless/src/Schema/types.ts:12](https://github.com/gqless/new_gqless/blob/master/packages/gqless/src/Schema/types.ts#L12)
+Defined in: [packages/gqless/src/Schema/types.ts:12](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L12)
