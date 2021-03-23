@@ -141,7 +141,7 @@ importers:
       '@emotion/styled': ^11.1.5
       '@gqless/cli': workspace:^2.0.1
       '@gqless/logger': workspace:^2.0.1
-      '@gqless/react': workspace:^2.0.1
+      '@gqless/react': workspace:^2.0.2
       '@gqless/subscriptions': workspace:^1.0.1
       '@types/faker': ^5.1.7
       '@types/lodash': ^4.14.168
