@@ -1,0 +1,353 @@
+---
+id: query
+title: React Queries
+sidebar_label: Query
+---
+
+## useQuery
+
+[React hook](https://reactjs.org/docs/hooks-intro.html) that uses the main design of `gqless`.
+
+This hook returns the core `query` object, and it will detect the usage of it, and **suspend** _(if enabled)_ when the data is being fetched for the first time, and update the component when any of the requested data changes.
+
+Check [API Reference](/react/api/interfaces/usequery)
+
+### Features
+
+- **Composability**
+- Advanced '[stale-while-revalidate](https://web.dev/stale-while-revalidate/)' behavior, allowing you to set **_any_** value to re-trigger re-validation.
+- Extra `gqlessState` in the returned value, which is extra valuable for `Non-Suspense` usage.
+
+### Suspense Example
+
+```tsx
+import { Suspense } from 'react';
+import { useQuery } from '../gqless';
+
+function Example() {
+  const { helloWorld } = useQuery({
+    // boolean | undefined
+    suspense: true,
+
+    // boolean | object | number | string | null
+    // If you put an object to trigger re-validation on-demand, it should be a `memoized` value from `useMemo`
+    staleWhileRevalidate: true,
+
+    // ((error: gqlessError) => void) | undefined
+    onError(error) {},
+  });
+
+  return <p>{helloWorld}</p>;
+}
+
+function Container() {
+  return (
+    <Suspense fallback="Loading...">
+      <Example />
+    </Suspense>
+  );
+}
+```
+
+### Non-Suspense Example
+
+See [Non-Suspense usage](/react/suspense#non-suspense-usage) for more details
+
+```tsx
+import { useQuery } from '../gqless';
+
+function Example() {
+  const { helloWorld, gqlessState } = useQuery({
+    // boolean | undefined
+    suspense: false,
+
+    // boolean | object | number | string | null
+    // If you put an object to trigger re-validation on-demand, it should be a `memoized` value from `useMemo`
+    staleWhileRevalidate: true,
+
+    // ((error: gqlessError) => void) | undefined
+    onError(error) {},
+  });
+
+  if (gqlessState.isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  return <p>{helloWorld}</p>;
+}
+```
+
+## graphql HOC
+
+The `graphql HOC` is a [Higher-Order Component](https://reactjs.org/docs/higher-order-components.html) alternative to [useQuery](#usequery), designed specially for [Suspense usage](/react/suspense).
+
+For this function it is expected to use the `query` object exported by the core client, and it will detect the usage of it, and **suspend** _(if enabled)_ when the data is being fetched for the first time, and update the component when any of the requested data changes.
+
+### Features
+
+- Specify `Suspense fallback` directly
+- Intercept the data requests faster than [useQuery](#usequery), allowing it to prevent an extra render.
+- Basic '[stale-while-revalidate](https://web.dev/stale-while-revalidate/)' behavior
+
+### Example
+
+```tsx
+import { Suspense } from 'react';
+import { graphql, query } from '../gqless';
+
+const Example = graphql(
+  function Example() {
+    return <p>{query.helloWorld}</p>;
+  },
+  {
+    // boolean | { fallback: NonNullable<ReactNode> | null } | undefined
+    suspense: true,
+
+    // ((error: gqlessError) => void) | undefined
+    onError(error) {},
+
+    // boolean | undefined
+    staleWhileRevalidate: true,
+  }
+);
+
+function Container() {
+  return (
+    <div>
+      <Suspense fallback="Loading...">
+        <Example />
+      </Suspense>
+    </div>
+  );
+}
+```
+
+Check [API Reference](/react/api/interfaces/graphqlhoc)
+
+## Difference between "useQuery" and "graphql"
+
+If you read both, you could see that both do similar stuff, but enable different things based on it's nature and React constraints.
+
+The [graphql HOC](#graphql-hoc) is targeted specially for **Suspense usage**, since it can intercept the data requests before the render phase and _Suspend_ right away, and also specify the fallback directly, but since it's a [`HOC`](https://reactjs.org/docs/higher-order-components.html), it's not as nice to use as hooks.
+
+On the other hand, [useQuery](#usequery) enables very nice composability, but it lacks the ability to intercept the Render Phase, which in practice it only means 1 extra render, which most of the time it doesn't matter.
+
+And it's important to note that for `Non-Suspense` usage we encourage to always use [useQuery](#usequery).
+
+## useTransactionQuery
+
+Alternative to `graphql` and `useQuery` that works via pre-defined functions, which allows for extra features that are not available in `useQuery` & `graphql HOC`.
+
+### Features
+
+- Polling
+- Conditional skipping
+- Automatic call on variable change
+- Lifecycle functions `onCompleted` & `onError`
+- Suspense support
+- [Fetch policy](/react/api-reference#fetch-policy) support
+
+### Example
+
+```tsx
+import { useTransactionQuery } from '../gqless';
+function Example() {
+  const { data, error, isLoading } = useTransactionQuery(
+    (query, args: string) => {
+      return query.hello({ name });
+    },
+    {
+      variables: 'John',
+      // By default is 'cache-first'
+      fetchPolicy: 'cache-and-network',
+      // Polling every 5 seconds
+      pollInterval: 5000,
+      // By default is `true`
+      notifyOnNetworkStatusChange: true,
+      onCompleted(data) {},
+      onError(error) {},
+      suspense: false,
+      // By default is `false`
+      skip: false,
+    }
+  );
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error! {error.message}</p>;
+  }
+
+  return <p>{data}</p>;
+}
+```
+
+Check [API Reference](/react/api/interfaces/usetransactionquery)
+
+## useLazyQuery
+
+Queries meant to be called in response of events, like button clicks.
+
+### Features
+
+- Lifecycle functions `onCompleted` & `onError`
+- Suspense support
+- Partial [Fetch policy](/react/api-reference#fetch-policy) support (no `'cache-first'`)
+
+```tsx
+import { useLazyQuery } from '../gqless';
+
+function Example() {
+  const [getName, { isLoading, data }] = useLazyQuery(
+    (query, name: string) => {
+      return query.hello({ name });
+    },
+    {
+      onCompleted(data) {},
+      onError(error) {},
+      // Default is 'network-only'
+      fetchPolicy: 'cache-and-network',
+      retry: false,
+      suspense: false,
+    }
+  );
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (data) {
+    return <p>{data}</p>;
+  }
+
+  return (
+    <button
+      onClick={() =>
+        getName({
+          args: 'John',
+        })
+      }
+    >
+      Get Name
+    </button>
+  );
+}
+```
+
+Check [API Reference](/react/api/interfaces/uselazyquery)
+
+## useRefetch
+
+Refetch giving specific parts of the schema or via functions
+
+Check [API Reference](http://localhost:3000/react/api/interfaces/userefetch)
+
+### Example with functions
+
+```tsx
+import { useRefetch, useQuery } from '../gqless';
+
+function Example() {
+  const refetch = useRefetch();
+  const query = useQuery();
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          refetch(() => query.helloWorld);
+        }}
+      >
+        Refetch
+      </button>
+      <p>{query.helloWorld}</p>
+    </div>
+  );
+}
+```
+
+### Example with objects
+
+In this case, you have to specify an **object type**, **scalars won't work** (for those, you have to use functions).
+
+It will automatically refetch **everything** previously requested under that tree
+
+```tsx
+import { useRefetch, useQuery } from '../gqless';
+
+function Example() {
+  const refetch = useRefetch();
+  const { user } = useQuery();
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          // It will refetch both, 'name' & 'email'
+          refetch(user);
+        }}
+      >
+        Refetch
+      </button>
+      <p>{user.name}</p>
+      <p>{user.email}</p>
+    </div>
+  );
+}
+```
+
+## prepareQuery
+
+Prepare queries on **module-level**.
+
+### Features
+
+- Enable **Render as you fetch** pattern
+- **Re-using** the callbacks in [_useTransactionQuery_](/react/query#usetransactionquery) & [_useLazyQuery_](/react/query#uselazyquery)
+- Composition
+- Prefetching
+- Refetching
+- Suspense Support
+
+### Example
+
+```tsx
+import { useState } from 'react';
+import { prepareQuery } from '../gqless';
+
+const { preload, refetch, usePrepared, callback } = prepareQuery((query) => {
+  return query.helloWorld;
+});
+
+function Example() {
+  const { data } = usePrepared();
+
+  return <p>{data}</p>;
+}
+
+function Container() {
+  const [show, setShow] = useState(false);
+
+  return (
+    <div>
+      <button
+        onClick={() => {
+          if (show) {
+            refetch();
+          } else {
+            preload();
+          }
+        }}
+      >
+        {show ? 'Refetch' : 'Show Example'}
+      </button>
+
+      {show && <Example />}
+    </div>
+  );
+}
+```
+
+Check [API Reference](/react/api/interfaces/preparequery)

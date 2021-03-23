@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "noEmit": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*.js", "bin/**/*.js"],
+  "exclude": ["node_modules"]
+}

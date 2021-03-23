@@ -1,0 +1,10 @@
+node_modules
+dist
+.nyc_output
+coverage
+.next
+examples/react/db.json
+examples/react/last-browser-open
+*.tsbuildinfo
+.docusaurus
+build

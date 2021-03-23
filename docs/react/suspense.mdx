@@ -1,0 +1,73 @@
+---
+id: suspense
+title: React Suspense Features
+sidebar_label: Suspense
+---
+
+## Focus
+
+The focus of `gqless` is to embrace [React Suspense](https://reactjs.org/docs/concurrent-mode-suspense.html) & [React Concurrent Mode](https://reactjs.org/docs/concurrent-mode-intro.html), and that's why most of it's functions/hooks are `Suspense ready`, but we understand that it's not always the best solution, and it may not be for everyone.
+
+That's why it's usage will always be [**opt-in via defaults**](/react/config#defaults), and you will always be able to turn on/off `Suspense` in a per function/hook basis.
+
+```ts
+const {
+  // ...
+} = useQuery({
+  suspense: false,
+  // ...
+});
+
+// ...
+
+const Component = graphql(
+  () => {
+    //...
+  },
+  {
+    suspense: true,
+    // ...
+  }
+);
+```
+
+## Non-Suspense usage
+
+Most of the hooks/functions offer some way of using it flawlessly without `Suspense` usage in mind, often with `isLoading` states returned.
+
+But in the main design of `gqless`, using [useQuery](/react/query#usequery) and/or [graphql HOC](/react/query#graphql-hoc) it's a little bit different.
+
+First of all, **We suggest NOT using the `graphql HOC`** for `Non-Suspense usage`, instead, do [useQuery](/react/query#usequery), mainly because it returns an extra reserved `gqlessState` object, in which you can check easily if the data you requested is being fetched for the first time:
+
+```tsx
+function Example() {
+  const { helloWorld, gqlessState } = useQuery({
+    suspense: false,
+  });
+
+  if (gqlessState.isLoading) return <p>Loading...</p>;
+
+  return <p>{helloWorld}</p>;
+}
+```
+
+## Suspense in SSR
+
+Meanwhile we [support Server-Side Rendering](/react/ssr), React still today doesn't support `Suspense` in `SSR`, that's why we use [react-ssr-prepass](https://github.com/FormidableLabs/react-ssr-prepass) for our `SSR` helpers, but while you are using it, you might encounter something like this:
+
+![React Error with Suspense in SSR](/img/suspense-ssr.png)
+
+And for that, reason we suggest using a slighty modified `Suspense` component:
+
+```tsx
+import { Suspense as ReactSuspense, SuspenseProps } from 'react';
+
+export const Suspense =
+  typeof window !== 'undefined'
+    ? ReactSuspense
+    : function SuspenseSSR({ children }: SuspenseProps) {
+        return <>{children}</>;
+      };
+```
+
+And everything should work as you might expect.

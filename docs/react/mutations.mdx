@@ -1,0 +1,92 @@
+---
+id: mutations
+title: React Mutations
+sidebar_label: Mutations
+---
+
+## useMutation
+
+Hook designed to be used for [GraphQL Mutations](https://graphql.org/graphql-js/mutations-and-input-types/).
+
+### Features
+
+- Lifecycle functions `onCompleted` & `onError`
+- Optional **Refetch queries** after mutation call _(with 'awaitRefetchQueries' option, to wait until they are complete before calling the mutation complete)_
+- Suspense support
+
+### Example
+
+```tsx
+import { useState } from 'react';
+import { useMutation, query } from '../gqless';
+
+export function LoginComponent() {
+  const [login, { isLoading, data, error }] = useMutation(
+    (mutation, args: { email: string; password: string }) => {
+      const { user, error } = mutation.login({ args });
+
+      if (user) {
+        return {
+          name: user.name,
+        };
+      }
+
+      return {
+        error,
+      };
+    },
+    {
+      onCompleted(data) {},
+      onError(error) {},
+      refetchQueries: [query.user],
+      awaitRefetchQueries: true,
+      suspense: false,
+    }
+  );
+
+  const [formData, setFormData] = useState(() => ({ email: '', password: '' }));
+
+  const errorMessage = data?.error || error?.message;
+
+  return (
+    <form>
+      <label>Email</label>
+      <input
+        value={formData.email}
+        onChange={(ev) => {
+          setFormData({
+            ...formData,
+            email: ev.target.value,
+          });
+        }}
+      />
+
+      <label>Password</label>
+      <input
+        value={formData.password}
+        onChange={(ev) => {
+          setFormData({
+            ...formData,
+            password: ev.target.value,
+          });
+        }}
+      />
+
+      <button
+        type="submit"
+        disabled={isLoading}
+        onClick={(ev) => {
+          ev.preventDefault();
+          login({ args: formData }).catch(console.error);
+        }}
+      >
+        Login
+      </button>
+
+      {errorMessage ? <p>Error: {errorMessage}</p> : null}
+    </form>
+  );
+}
+```
+
+Check [API Reference](/react/api/interfaces/usemutation)

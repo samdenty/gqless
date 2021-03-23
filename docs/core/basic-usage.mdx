@@ -1,0 +1,119 @@
+---
+id: basic-usage
+title: Core Basic Usage
+sidebar_label: Basic usage
+---
+
+The `Core` of **gqless** can work in two ways:
+
+- With `pre-defined` functions.
+- Using a `scheduler` that catches everything you have requested every
+  few milliseconds.
+
+> #### Prerequisites
+>
+> Make sure you've completed [Getting Started](/introduction/getting-started) first
+>
+> `"../gqless"` refers to the generated client file/directory
+
+The [React bindings](/react/basic-usage) uses both, but **primarily** via the `scheduler`, and playing with the `React Lifecycle` to make it work seamlessly.
+
+But `gqless` is not a `React-Exclusive` library, you can use it without it
+in Node.js, or any framework _(we might add more bindings for other Frontend frameworks in the future)_.
+
+Without making extra bindings/helpers, we suggest using pre-defined functions for most use-cases, since you can avoid repeating yourself.
+
+## Pre-defined functions
+
+### resolved
+
+`resolved` is very straightforward, you give it a function, and it will isolate the requests you are making,
+and it returns a promise of the data just as you returned it.
+
+If your requests has any error, either from syntax or from the GraphQL API,
+it will always throw an instance of [`gqlessError`](/core/api/classes/gqlesserror) _(which is itself, an instance of [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))_
+
+```ts
+import { query, resolved } from '../gqless';
+
+resolved(() => {
+  return query.helloWorld!;
+})
+  .then((data) => {
+    // data == string
+  })
+  .catch((err) => {
+    // err == import("gqless").gqlessError
+  });
+```
+
+You can also specify some options in the second argument, like forcing refetch or isolating from existing cache, check [**ResolveOptions**](/core/api/interfaces/resolveoptions) for more information.
+
+## Using the Scheduler directly
+
+Using the scheduler consists in basically making the data request,
+and then awaiting for a _possible_ promise, that resolves when your data has arrived.
+
+```ts
+import { query, client } from '../gqless';
+
+async function Example() {
+  query.helloWorld;
+
+  await client.scheduler.resolving?.promise;
+
+  // string
+  const helloWorld = query.helloWorld!;
+}
+```
+
+Using this method, error handling is also more tricky, since the `scheduler.resolving.promise` **never** rejects,
+instead, it returns the possible [error](/core/api/classes/gqlesserror) and data in the resulting value.
+
+You could do something like this:
+
+```ts
+async function Example() {
+  query.helloWorld;
+
+  await client.scheduler.resolving?.promise.then(({ error }) => {
+    // error == import("gqless").gqlessError | undefined
+    if (error) {
+      throw error;
+    }
+  });
+}
+```
+
+## refetch
+
+`refetch` is a special function that accepts object proxies, or functions.
+
+When dealing with object proxies, it recovers **all** the history of the specific object down the tree of selections,
+and refetchs them, returning the same object back after all the resolutions are done.
+
+On the other hand, when used with a **function**, it calls the function (using the core scheduler) ignoring possible nulls in the middle in the first pass,
+and returns whatever the function gave back as a promise.
+
+```ts
+import { query, refetch, resolved } from '../gqless';
+
+// ...
+
+const data = await resolved(() => {
+  const user = query.user;
+
+  if (user) {
+    return {
+      id: user.name,
+      name: user.name,
+    };
+  }
+  return null;
+});
+
+// Later...
+
+// It will refetch 'id' & 'name' of 'query.user'
+const refetchedUser = await refetch(query.user);
+```

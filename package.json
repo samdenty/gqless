@@ -1,0 +1,60 @@
+{
+  "name": "gqless_refactor",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm build -r --stream",
+    "changeset": "changeset",
+    "ci:version": "changeset version && pnpm i --no-frozen-lockfile --lockfile-only --ignore-scripts",
+    "ci:release": "pnpm -r publish --access public --no-git-checks",
+    "clean": "rimraf packages/*/dist packages/*/coverage packages/*/.nyc_output packages/*/*.tsbuildinfo",
+    "dev": "pnpm clean && node dev.mjs",
+    "dev:mercurius": "pnpm -r exec --filter gqless -- tsc -m commonjs && concurrently \"pnpm -r --filter mercurius-example test:watch\" \"pnpm -r --filter gqless start\"",
+    "dev:nodemon": "pnpm prepare -r --no-bail && pnpm test -r --no-bail --no-sort --stream",
+    "dev:react": "node dev-react.mjs",
+    "dev:start": "pnpm start -r --no-bail --no-sort",
+    "dev:test": "pnpm test:watch -r --no-bail --no-sort --stream",
+    "publish:all": "changeset version && pnpm i && pnpm test && pnpm -r publish --access public",
+    "test": "jest --clearCache && pnpm test -r --no-sort --no-bail --stream"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  },
+  "dependencies": {
+    "bufferutil": "^4.0.3",
+    "build-utils": "workspace:^1.0.0",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7",
+    "open": "^8.0.4",
+    "ts-jest": "^26.5.4",
+    "ts-node": "^9.1.1",
+    "tslib": "^2.1.0",
+    "tsup": "^4.8.19",
+    "typescript": "^4.2.3",
+    "utf-8-validate": "^5.0.4",
+    "wait-on": "^5.3.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.13.8",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.12",
+    "@changesets/cli": "^2.14.1",
+    "@types/node": "^14.14.35",
+    "concurrently": "^6.0.0",
+    "fkill": "^7.1.0",
+    "husky": "^4.3.8",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
+    "rimraf": "^3.0.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "typescript": "^4.2.3",
+      "jest": "^26.6.3",
+      "ts-jest": "^26.4.4",
+      "prettier": "^2.2.1"
+    }
+  }
+}

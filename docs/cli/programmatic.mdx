@@ -1,0 +1,125 @@
+---
+id: programmatic
+title: CLI Programmatic usage
+sidebar_label: Programmatic usage
+---
+
+**@gqless/cli** has also a complete programmatic API, which allows you to generate the client with custom scripts.
+
+## inspectWriteGenerate
+
+Basically calling CLI functionality programmatically.
+
+All the fields are optional, and it will always read from the [Configuration](/cli/config) if any field is not specified.
+
+```tsx
+import { inspectWriteGenerate } from '@gqless/cli';
+
+await inspectWriteGenerate({
+  endpoint: 'http://localhost:3000/api/graphql',
+  destination: './src/gqless/index.ts',
+  generateOptions: {
+    endpoint: '/api/graphql',
+    preImport: '',
+    scalars: {
+      DateTime: 'string',
+    },
+    react: true,
+    enumsAsStrings: false,
+    subscriptions: false,
+  },
+  headers: {
+    authorization: process.env.TOKEN,
+  },
+});
+```
+
+## writeGenerate
+
+If you have direct access to the [GraphQLSchema](https://graphql.org/graphql-js/type/#graphqlschema) from [graphql-js](https://github.com/graphql/graphql-js), you can give it to this function and it will do the rest.
+
+All the `GenerateOptions` are optional, and it will always read from the [Configuration](/cli/config) if any field is not specified.
+
+```tsx
+import { writeGenerate } from '@gqless/cli';
+
+// You get the `schema` from somewhere...
+
+await writeGenerate(
+  // Required
+  schema,
+  // Destination, Required
+  './src/gqless/index.ts',
+  // GenerateOptions, optional
+  {
+    endpoint: '/api/graphql',
+    preImport: '',
+    scalars: {
+      DateTime: 'string',
+    },
+    react: true,
+    enumsAsStrings: false,
+    subscriptions: false,
+  },
+  // What to do if a gqless client file already exists, Optional
+  (existingFile) => {
+    // existingFile == string
+  }
+);
+```
+
+## generate
+
+If you have direct access to the [GraphQLSchema](https://graphql.org/graphql-js/type/#graphqlschema) from [graphql-js](https://github.com/graphql/graphql-js), you can give it to this function and it generates the code and simply return it.
+
+All the GenerateOptions are optional, and it will always read from the [Configuration](/cli/config) if any field is not specified.
+
+```tsx
+import { generate } from '@gqless/cli';
+
+// You get the `schema` from somewhere...
+
+const {
+  clientCode,
+  schemaCode,
+  generatedSchema,
+  scalarsEnumsHash,
+} = await generate(
+  // Required
+  schema,
+  // GenerateOptions, optional
+  {
+    endpoint: '/api/graphql',
+    preImport: '',
+    scalars: {
+      DateTime: 'string',
+    },
+    react: true,
+    enumsAsStrings: false,
+    subscriptions: false,
+  }
+);
+```
+
+## getRemoteSchema
+
+Inspect a remote GraphQL API
+
+If the headers are not specified, it will look for [Configuration](/cli/config).
+
+```tsx
+import { getRemoteSchema } from '@gqless/cli';
+
+const schema = await getRemoteSchema(
+  // Endpoint, required
+  'http://localhost:3000/api/graphql',
+  // Optional
+  {
+    headers: {
+      authorization: process.env.TOKEN,
+    },
+  }
+);
+
+// schema == import("graphql").GraphQLSchema
+```

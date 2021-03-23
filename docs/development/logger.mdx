@@ -1,0 +1,37 @@
+---
+id: logger
+title: Logger
+---
+
+You can improve the development experience using a `Logger` of your `gqless` usage, which will print relevant information about the requests made to your GraphQL API Server.
+
+![Logger screenshot](/img/logger.png)
+
+## Installation
+
+```bash yarn2npm
+yarn add @gqless/logger
+```
+
+## Usage
+
+```ts
+import { client } from '../gqless';
+
+if (process.env.NODE_ENV === 'development') {
+  import('@gqless/logger').then(({ createLogger }) => {
+    const logger = createLogger(client, {
+      // Custom options...
+    });
+    logger.start();
+  });
+}
+```
+
+### Options
+
+| Name           | Type      | Default Value | Description                       |
+| -------------- | --------- | ------------- | --------------------------------- |
+| showSelections | `boolean` | `true`        | Show "selections" in logs         |
+| showCache      | `boolean` | `true`        | Show cache snapshots in logs      |
+| stringifyJSON  | `boolean` | `false`       | Stringify JSON before printing it |
