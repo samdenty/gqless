@@ -8,6 +8,7 @@ env:
 
 jobs:
   build:
+    name: Install, Build and Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,10 +20,20 @@ jobs:
         uses: actions/setup-node@v2-beta
         with:
           node-version: ${{ matrix.node }}
-      - name: install pnpm
-        run: npm i pnpm@latest -g
-      - name: setup pnpm config
-        run: pnpm config set store-dir $PNPM_CACHE_FOLDER
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node }}-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node }}-
+
+      - uses: pnpm/action-setup@v1.2.1
+        with:
+          version: 5.18.8
+          run_install: true
       - name: install dependencies
         run: pnpm install --frozen-lockfile=false
       - name: Test everything
