@@ -1,5 +1,13 @@
 # @gqless/cli
 
+## 2.0.3
+
+### Patch Changes
+
+- 27f9ece: set "graphql" as optional peerDependency
+- Updated dependencies [27f9ece]
+  - gqless@2.0.3
+
 ## 2.0.2
 
 ### Patch Changes

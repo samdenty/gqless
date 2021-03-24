@@ -1,5 +1,12 @@
 # @gqless/logger
 
+## 2.0.3
+
+### Patch Changes
+
+- Updated dependencies [27f9ece]
+  - gqless@2.0.3
+
 ## 2.0.2
 
 ### Patch Changes
