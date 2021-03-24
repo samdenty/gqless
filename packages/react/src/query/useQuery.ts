@@ -1,5 +1,5 @@
-import type { GqlessClient } from 'gqless';
-import { useMemo, useState } from 'react';
+import { GqlessClient, prepass } from 'gqless';
+import { useMemo, useRef, useState } from 'react';
 
 import {
   OnErrorHandler,
@@ -8,17 +8,30 @@ import {
 } from '../common';
 import { ReactClientOptionsWithDefaults } from '../utils';
 
-export interface UseQueryOptions {
+export interface UseQueryPrepareHelpers<
+  GeneratedSchema extends {
+    query: object;
+  }
+> {
+  readonly prepass: typeof prepass;
+  readonly query: GeneratedSchema['query'];
+}
+export interface UseQueryOptions<
+  GeneratedSchema extends {
+    query: object;
+  } = never
+> {
   suspense?: boolean;
   staleWhileRevalidate?: boolean | object | number | string | null;
   onError?: OnErrorHandler;
+  prepare?: (helpers: UseQueryPrepareHelpers<GeneratedSchema>) => void;
 }
 
 export interface UseQueryState {
   /**
    * Useful for `Non-Suspense` usage.
    */
-  isLoading: boolean;
+  readonly isLoading: boolean;
 }
 
 export type UseQueryReturnValue<
@@ -27,7 +40,9 @@ export type UseQueryReturnValue<
   $state: UseQueryState;
 };
 export interface UseQuery<GeneratedSchema extends { query: object }> {
-  (options?: UseQueryOptions): UseQueryReturnValue<GeneratedSchema>;
+  (
+    options?: UseQueryOptions<GeneratedSchema>
+  ): UseQueryReturnValue<GeneratedSchema>;
 }
 
 export function createUseQuery<
@@ -45,34 +60,54 @@ export function createUseQuery<
 
   const clientQuery: GeneratedSchema['query'] = client.query;
 
+  const prepareHelpers: UseQueryPrepareHelpers<GeneratedSchema> = {
+    prepass,
+    query: clientQuery,
+  };
+
+  type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+
   const useQuery: UseQuery<GeneratedSchema> = function useQuery({
     suspense = defaultSuspense,
     staleWhileRevalidate = defaultStaleWhileRevalidate,
     onError,
-  }: UseQueryOptions = {}): UseQueryReturnValue<GeneratedSchema> {
-    const [$state] = useState<UseQueryState>(() => {
+    prepare,
+  }: UseQueryOptions<GeneratedSchema> = {}): UseQueryReturnValue<GeneratedSchema> {
+    const updateOnFetchPromise = useRef(true);
+    const [$state] = useState<Writeable<UseQueryState>>(() => {
       return {
         isLoading: true,
       };
     });
-    const {
-      unsubscribe,
-      fetchingPromise: { current: fetchingPromise },
-    } = useInterceptSelections({
+    const { unsubscribe, fetchingPromise } = useInterceptSelections({
       staleWhileRevalidate,
       eventHandler,
       interceptorManager,
       scheduler,
       onError,
-      updateOnFetchPromise: true,
+      updateOnFetchPromise,
     });
+
+    if (prepare) {
+      updateOnFetchPromise.current = false;
+      try {
+        prepare(prepareHelpers);
+      } catch (err) {
+        if (err instanceof Error && Error.captureStackTrace!) {
+          Error.captureStackTrace(err, useQuery);
+        }
+        throw err;
+      } finally {
+        updateOnFetchPromise.current = true;
+      }
+    }
 
     useIsomorphicLayoutEffect(unsubscribe);
 
-    if (fetchingPromise) {
+    if (fetchingPromise.current) {
       $state.isLoading = true;
 
-      if (suspense) throw fetchingPromise;
+      if (suspense) throw fetchingPromise.current;
     } else {
       $state.isLoading = false;
     }

@@ -10,6 +10,9 @@ export type SchedulerPromiseValue = {
   selections: Set<Selection>;
 };
 
+export type ResolvingLazyPromise = DeferredPromise<SchedulerPromiseValue>;
+export type ResolvedLazyPromise = Promise<SchedulerPromiseValue>;
+
 export type ErrorSubscriptionEvent =
   | {
       type: 'new_error';
@@ -56,6 +59,9 @@ export interface Scheduler {
     Set<Selection>,
     Promise<SchedulerPromiseValue>
   >;
+  getResolvingPromise(
+    selections: Selection | Set<Selection>
+  ): ResolvedLazyPromise | void;
 }
 
 export const createScheduler = (
@@ -63,9 +69,6 @@ export const createScheduler = (
   resolveSchedulerSelections: (selections: Set<Selection>) => Promise<void>,
   catchSelectionsTimeMS: number
 ): Scheduler => {
-  type ResolvingLazyPromise = DeferredPromise<SchedulerPromiseValue>;
-  type ResolvedLazyPromise = Promise<SchedulerPromiseValue>;
-
   type ResolveSubscriptionFn = (
     promise: ResolvedLazyPromise,
     selection: Selection
@@ -93,7 +96,7 @@ export const createScheduler = (
 
   const selectionsWithFinalErrors = new Set<Selection>();
 
-  const scheduler = {
+  const scheduler: Scheduler = {
     resolving: null as null | ResolvingLazyPromise,
     subscribeResolve,
     errors: {
@@ -106,6 +109,7 @@ export const createScheduler = (
     isFetching: false,
     pendingSelectionsGroups,
     pendingSelectionsGroupsPromises,
+    getResolvingPromise,
   };
 
   const errorsListeners = new Set<ErrorSubscriptionFn>();
@@ -179,6 +183,22 @@ export const createScheduler = (
 
   let resolvingPromise: ResolvingLazyPromise | null = null;
 
+  function getResolvingPromise(
+    selections: Selection | Set<Selection>
+  ): ResolvedLazyPromise | void {
+    if (selections instanceof Selection) {
+      for (const [group, promise] of pendingSelectionsGroupsPromises) {
+        if (group.has(selections)) return promise;
+      }
+    } else {
+      for (const selection of selections) {
+        for (const [group, promise] of pendingSelectionsGroupsPromises) {
+          if (group.has(selection)) return promise;
+        }
+      }
+    }
+  }
+
   const fetchSelections = debounce((lazyPromise: ResolvingLazyPromise) => {
     resolvingPromise = null;
 
@@ -218,24 +238,18 @@ export const createScheduler = (
   function addSelectionToScheduler(selection: Selection, notifyResolve = true) {
     if (selection.type === 2) notifyResolve = false;
 
-    for (const group of pendingSelectionsGroups) {
-      if (group.has(selection)) {
-        if (!notifyResolve) return;
+    const existingPromise = getResolvingPromise(selection);
+    if (existingPromise) {
+      if (!notifyResolve) return;
 
-        const promise = pendingSelectionsGroupsPromises.get(group);
-        /* istanbul ignore next */
-        if (promise) {
-          resolveListeners.forEach((subscription) => {
-            subscription(promise, selection);
-          });
-        }
-        return;
+      for (const sub of resolveListeners) {
+        sub(existingPromise, selection);
       }
     }
 
     let lazyPromise: ResolvingLazyPromise;
     if (resolvingPromise === null) {
-      lazyPromise = createDeferredPromise();
+      lazyPromise = createDeferredPromise<SchedulerPromiseValue>();
 
       lazyPromise.promise.then(({ error }) => {
         if (error) console.error(error);
