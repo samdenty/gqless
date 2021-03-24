@@ -740,7 +740,7 @@ export async function generate(
       ? `import { createSubscriptionsClient } from "@gqless/subscriptions"`
       : ''
   }
-  import { createClient, QueryFetcher } from gqless;
+  import { createClient, QueryFetcher } from "gqless";
   import { GeneratedSchema, generatedSchema, scalarsEnumsHash, SchemaObjectTypes, SchemaObjectTypesNames } from "./schema.generated";
 
   ${queryFetcher}

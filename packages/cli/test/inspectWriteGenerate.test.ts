@@ -54,7 +54,7 @@ test('basic inspectWriteGenerate functionality', async () => {
 
       import { createReactClient } from '@gqless/react';
 
-      import { createClient, QueryFetcher } from gqless;
+      import { createClient, QueryFetcher } from 'gqless';
       import {
         GeneratedSchema,
         generatedSchema,
@@ -243,7 +243,7 @@ describe('from file', () => {
 
         import { createReactClient } from '@gqless/react';
 
-        import { createClient, QueryFetcher } from gqless;
+        import { createClient, QueryFetcher } from 'gqless';
         import {
           GeneratedSchema,
           generatedSchema,
@@ -443,7 +443,7 @@ test('specify generateOptions to inspectWriteGenerate', async () => {
 
       import { createReactClient } from '@gqless/react';
 
-      import { createClient, QueryFetcher } from gqless;
+      import { createClient, QueryFetcher } from 'gqless';
       import {
         GeneratedSchema,
         generatedSchema,
@@ -792,7 +792,7 @@ describe('CLI behavior', () => {
 
         import { createReactClient } from '@gqless/react';
 
-        import { createClient, QueryFetcher } from gqless;
+        import { createClient, QueryFetcher } from 'gqless';
         import {
           GeneratedSchema,
           generatedSchema,

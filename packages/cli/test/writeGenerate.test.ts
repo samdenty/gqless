@@ -253,7 +253,7 @@ test('creates dir, generates code and writes new file', async () => {
 
       import { createReactClient } from '@gqless/react';
 
-      import { createClient, QueryFetcher } from gqless;
+      import { createClient, QueryFetcher } from 'gqless';
       import {
         GeneratedSchema,
         generatedSchema,

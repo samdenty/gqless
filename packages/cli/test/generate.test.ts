@@ -137,7 +137,7 @@ test('basic functionality works', async () => {
 
     import { createReactClient } from '@gqless/react';
     import { createSubscriptionsClient } from '@gqless/subscriptions';
-    import { createClient, QueryFetcher } from gqless;
+    import { createClient, QueryFetcher } from 'gqless';
     import {
       GeneratedSchema,
       generatedSchema,
@@ -224,8 +224,7 @@ test('basic functionality works', async () => {
     "
   `);
 
-  expect(JSON.stringify(generatedSchema, null, 2)).toMatchInlineSnapshot(
-    `
+  expect(JSON.stringify(generatedSchema, null, 2)).toMatchInlineSnapshot(`
     "{
       \\"query\\": {
         \\"__typename\\": {
@@ -244,18 +243,15 @@ test('basic functionality works', async () => {
       \\"mutation\\": {},
       \\"subscription\\": {}
     }"
-  `
-  );
+  `);
 
-  expect(JSON.stringify(scalarsEnumsHash, null, 2)).toMatchInlineSnapshot(
-    `
+  expect(JSON.stringify(scalarsEnumsHash, null, 2)).toMatchInlineSnapshot(`
     "{
       \\"String\\": true,
       \\"Int\\": true,
       \\"Boolean\\": true
     }"
-  `
-  );
+  `);
 
   expect(clientCode.includes('= createReactClient')).toBeTruthy();
 
@@ -306,7 +302,7 @@ test('custom scalars works', async () => {
 
     import { createReactClient } from '@gqless/react';
 
-    import { createClient, QueryFetcher } from gqless;
+    import { createClient, QueryFetcher } from 'gqless';
     import {
       GeneratedSchema,
       generatedSchema,
@@ -449,8 +445,7 @@ test('custom scalars works', async () => {
     "
   `);
 
-  expect(JSON.stringify(generatedSchema, null, 2)).toMatchInlineSnapshot(
-    `
+  expect(JSON.stringify(generatedSchema, null, 2)).toMatchInlineSnapshot(`
     "{
       \\"query\\": {
         \\"__typename\\": {
@@ -463,18 +458,15 @@ test('custom scalars works', async () => {
       \\"mutation\\": {},
       \\"subscription\\": {}
     }"
-  `
-  );
+  `);
 
-  expect(JSON.stringify(scalarsEnumsHash, null, 2)).toMatchInlineSnapshot(
-    `
+  expect(JSON.stringify(scalarsEnumsHash, null, 2)).toMatchInlineSnapshot(`
     "{
       \\"Custom\\": true,
       \\"Boolean\\": true,
       \\"String\\": true
     }"
-  `
-  );
+  `);
 
   expect(
     schemaCode.includes(
