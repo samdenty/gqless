@@ -15,7 +15,7 @@ const { program } = commander;
 program
   .version('1.0.0')
   .arguments('<module-name>')
-  .option('--onSuccess <command>', 'Execute command after successfull build')
+  .option('--onSuccess <command>', 'Execute command after successful build')
   .option('--clean', 'Clean dist folder before start watching')
   .action(
     async (
