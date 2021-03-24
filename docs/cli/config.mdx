@@ -30,7 +30,7 @@ const config = {
     endpoint: 'SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE',
     headers: {},
   },
-  destination: './src/generated/graphql.ts',
+  destination: './src/gqless/index.ts',
   subscriptions: false,
 };
 
@@ -50,3 +50,9 @@ module.exports = config;
 | introspection.headers  | `Record<string,string>` | Custom headers to be added to `http`/`https` introspection, normally for authorization purposes.                                                                          |
 | destination            | `string`                | **File destination** of the generated client. Keep in mind that the generated schema always will be alongside this destination, but named `schema.generated.ts`.          |
 | subscriptions          | `boolean`               | Whether to add [Subscriptions](/core/subscriptions) support to the client.                                                                                                |
+
+---
+
+- See [JavaScript Output](/cli/javascript)
+- See [Programmatic Usage](/cli/programmatic)
+- See [Codegen](/cli/codegen)

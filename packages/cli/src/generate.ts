@@ -756,7 +756,7 @@ export const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
       return `${JSON.stringify(key)}:${JSON.stringify(value)}, ${acum}`;
     },
     hasUnions ? `[SchemaUnionsKey]: ${JSON.stringify(unionsMapObj)}` : ''
-  )}} as const;
+  )}};
   `);
 
   const schemaCode = await format(
@@ -774,17 +774,17 @@ export const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
 
   export${
     isJavascriptOutput ? ' declare' : ''
-  } const scalarsEnumsHash: ScalarsEnumsHash = ${JSON.stringify(
-      scalarsEnumsHash
-    )};
-  export${
-    isJavascriptOutput ? ' declare' : ''
-  } const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
+  } const scalarsEnumsHash: ScalarsEnumsHash${
+      isJavascriptOutput ? ';' : ` = ${JSON.stringify(scalarsEnumsHash)};`
+    }
+  export${isJavascriptOutput ? ' declare' : ''} const generatedSchema ${
+      isJavascriptOutput ? ':' : '='
+    } {${Object.entries(generatedSchema).reduceRight(
       (acum, [key, value]) => {
         return `${JSON.stringify(key)}:${JSON.stringify(value)}, ${acum}`;
       },
       hasUnions ? `[SchemaUnionsKey]: ${JSON.stringify(unionsMapObj)}` : ''
-    )}} as const;
+    )}}${isJavascriptOutput ? '' : ' as const'};
 
   ${typescriptTypes}
     `

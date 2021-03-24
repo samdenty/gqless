@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "build:docs": "docusaurus build",
     "ci:build": "cross-env SKIP_TYPEDOC=true docusaurus build",
     "docs:build": "docusaurus build",
     "fix-typedoc": "node fix-typedoc.js",

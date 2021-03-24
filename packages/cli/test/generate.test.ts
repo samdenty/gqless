@@ -1261,7 +1261,7 @@ test('javascript output works', async () => {
       A: { __typename: { __type: 'String!' }, a: { __type: 'String' } },
       B: { __typename: { __type: 'String!' }, b: { __type: 'Int' } },
       [SchemaUnionsKey]: { C: ['A', 'B'] },
-    } as const;
+    };
     "
   `);
   expect(generatedSchema).toMatchInlineSnapshot(`
@@ -1331,22 +1331,18 @@ test('javascript output works', async () => {
       Float: number;
     }
 
-    export declare const scalarsEnumsHash: ScalarsEnumsHash = {
-      String: true,
-      Int: true,
-      Boolean: true,
-    };
-    export declare const generatedSchema = {
-      query: { __typename: { __type: 'String!' }, hello: { __type: 'String!' } },
-      mutation: {},
+    export declare const scalarsEnumsHash: ScalarsEnumsHash;
+    export declare const generatedSchema: {
+      query: { __typename: { __type: 'String!' }; hello: { __type: 'String!' } };
+      mutation: {};
       subscription: {
-        __typename: { __type: 'String!' },
-        newNotification: { __type: 'String!' },
-      },
-      A: { __typename: { __type: 'String!' }, a: { __type: 'String' } },
-      B: { __typename: { __type: 'String!' }, b: { __type: 'Int' } },
-      [SchemaUnionsKey]: { C: ['A', 'B'] },
-    } as const;
+        __typename: { __type: 'String!' };
+        newNotification: { __type: 'String!' };
+      };
+      A: { __typename: { __type: 'String!' }; a: { __type: 'String' } };
+      B: { __typename: { __type: 'String!' }; b: { __type: 'Int' } };
+      [SchemaUnionsKey]: { C: ['A', 'B'] };
+    };
 
     export interface Query {
       __typename: 'Query' | undefined;

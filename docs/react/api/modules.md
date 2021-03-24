@@ -107,7 +107,7 @@ Defined in: [ssr/ssr.ts:25](https://github.com/gqless/gqless/blob/master/package
 | `GeneratedSchema`       | _object_ |
 | `GeneratedSchema.query` | _object_ |
 
-Defined in: [query/useQuery.ts:24](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L24)
+Defined in: [query/useQuery.ts:37](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L37)
 
 ---
 

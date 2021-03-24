@@ -2,6 +2,7 @@ import { existsSync, promises } from 'fs';
 import { GraphQLSchema } from 'graphql';
 import mkdirp from 'mkdirp';
 import { dirname, resolve } from 'path';
+import { defaultConfig, gqlessConfigPromise } from './config';
 
 import { generate, GenerateOptions } from './generate';
 
@@ -93,26 +94,18 @@ async function writeSchemaCode({
 export async function writeGenerate(
   schema: GraphQLSchema,
   destinationPath: string,
-  generateOptions?: GenerateOptions,
+  generateOptions: GenerateOptions = {},
   onExistingFileConflict?: OnExistingFileConflict
 ) {
-  const [
-    { clientCode, schemaCode, isJavascriptOutput, javascriptSchemaCode },
-  ] = await Promise.all([
-    generate(schema, generateOptions),
-    mkdirp(dirname(destinationPath)),
-  ]);
+  const isJavascriptOutput =
+    generateOptions.javascriptOutput ??
+    (await gqlessConfigPromise).config.javascriptOutput ??
+    defaultConfig.javascriptOutput;
 
   if (isJavascriptOutput) {
-    if (
-      !(
-        destinationPath.endsWith('.js') ||
-        destinationPath.endsWith('.cjs') ||
-        destinationPath.endsWith('.mjs')
-      )
-    ) {
+    if (!destinationPath.endsWith('.js')) {
       const err = Error(
-        'You have to specify the ".js", ".cjs" or ".mjs" extension, instead, it received: "' +
+        'You have to specify the ".js" extension, instead, it received: "' +
           destinationPath +
           '"'
       );
@@ -134,6 +127,11 @@ export async function writeGenerate(
   }
 
   destinationPath = resolve(destinationPath);
+
+  const [{ clientCode, schemaCode, javascriptSchemaCode }] = await Promise.all([
+    generate(schema, generateOptions),
+    mkdirp(dirname(destinationPath)),
+  ]);
 
   await Promise.all([
     writeClientCode({ clientCode, destinationPath, onExistingFileConflict }),
