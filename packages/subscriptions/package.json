@@ -1,6 +1,6 @@
 {
   "name": "@gqless/subscriptions",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://gqless.com",
   "author": "PabloSz <pablosaez1995@gmail.com>",
   "main": "dist/index.js",
@@ -24,13 +24,13 @@
   "devDependencies": {
     "@types/ws": "^7.4.0",
     "build-utils": "workspace:*",
-    "gqless": "workspace:^2.0.1",
+    "gqless": "workspace:^2.0.2",
     "graphql": "^15.5.0",
     "test-utils": "workspace:^0.1.0",
     "tslib": "^2.1.0",
     "typescript": "^4.2.3"
   },
   "peerDependencies": {
-    "gqless": "workspace:^2.0.1"
+    "gqless": "workspace:^2.0.2"
   }
 }
