@@ -23,8 +23,8 @@
     "test:watch": "watch mercurius"
   },
   "dependencies": {
-    "gqless": "workspace:^2.0.2",
-    "@gqless/cli": "workspace:^2.0.2",
+    "gqless": "workspace:^2.0.3",
+    "@gqless/cli": "workspace:^2.0.3",
     "@graphql-typed-document-node/core": "^3.1.0",
     "fastify": "^3.14.0",
     "graphql": "^15.5.0",
