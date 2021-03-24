@@ -13,6 +13,12 @@ import {
   GraphQLScalarType,
   GraphQLSchema,
   GraphQLUnionType,
+  isEnumType,
+  isInputObjectType,
+  isInterfaceType,
+  isObjectType,
+  isScalarType,
+  isUnionType,
   parse,
 } from 'graphql';
 
@@ -386,17 +392,17 @@ export async function generate(
     }
 
     /* istanbul ignore else */
-    if (type instanceof GraphQLScalarType) {
+    if (isScalarType(type)) {
       parseScalarType(type);
-    } else if (type instanceof GraphQLObjectType) {
+    } else if (isObjectType(type)) {
       parseObjectType(type);
-    } else if (type instanceof GraphQLInterfaceType) {
+    } else if (isInterfaceType(type)) {
       parseInterfaceType(type);
-    } else if (type instanceof GraphQLUnionType) {
+    } else if (isUnionType(type)) {
       parseUnionType(type);
-    } else if (type instanceof GraphQLEnumType) {
+    } else if (isEnumType(type)) {
       parseEnumType(type);
-    } else if (type instanceof GraphQLInputObjectType) {
+    } else if (isInputObjectType(type)) {
       parseInputType(type);
     }
   });

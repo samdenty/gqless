@@ -71,7 +71,12 @@
     "ws": "^7.4.4"
   },
   "peerDependencies": {
-    "graphql": "^15.4.0"
+    "graphql": "^15.5.0"
+  },
+  "peerDependenciesMeta": {
+    "graphql": {
+      "optional": true
+    }
   },
   "size-limit": [
     {
