@@ -74,7 +74,7 @@ export async function inspectWriteGenerate({
   if (!destination) {
     const configDestination = (await gqlessConfigPromise).config.destination;
 
-    destination = configDestination || './src/generated/graphql.ts';
+    destination = configDestination || defaultConfig.destination;
   }
 
   destination = resolve(destination);
@@ -84,7 +84,7 @@ export async function inspectWriteGenerate({
   let schema: GraphQLSchema;
 
   defaultConfig.introspection.endpoint = endpoint;
-  defaultConfig.introspection.headers = headers;
+  defaultConfig.introspection.headers = headers || {};
 
   if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
     defaultConfig.endpoint = endpoint;
@@ -113,9 +113,12 @@ export async function inspectWriteGenerate({
     async (existingFile) => {
       const subscriptions =
         genOptions.subscriptions ??
-        (await gqlessConfigPromise).config.subscriptions;
+        (await gqlessConfigPromise).config.subscriptions ??
+        defaultConfig.subscriptions;
       const react =
-        genOptions.react ?? (await gqlessConfigPromise).config.react;
+        genOptions.react ??
+        (await gqlessConfigPromise).config.react ??
+        defaultConfig.react;
 
       const advice =
         '\nPlease remove manually the existing file and re-run code generation.';

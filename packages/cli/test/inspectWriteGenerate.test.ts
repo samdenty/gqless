@@ -56,9 +56,9 @@ test('basic inspectWriteGenerate functionality', async () => {
 
       import { createClient, QueryFetcher } from 'gqless';
       import {
-        GeneratedSchema,
         generatedSchema,
         scalarsEnumsHash,
+        GeneratedSchema,
         SchemaObjectTypes,
         SchemaObjectTypesNames,
       } from './schema.generated';
@@ -245,9 +245,9 @@ describe('from file', () => {
 
         import { createClient, QueryFetcher } from 'gqless';
         import {
-          GeneratedSchema,
           generatedSchema,
           scalarsEnumsHash,
+          GeneratedSchema,
           SchemaObjectTypes,
           SchemaObjectTypesNames,
         } from './schema.generated';
@@ -445,9 +445,9 @@ test('specify generateOptions to inspectWriteGenerate', async () => {
 
       import { createClient, QueryFetcher } from 'gqless';
       import {
-        GeneratedSchema,
         generatedSchema,
         scalarsEnumsHash,
+        GeneratedSchema,
         SchemaObjectTypes,
         SchemaObjectTypesNames,
       } from './schema.generated';
@@ -794,9 +794,9 @@ describe('CLI behavior', () => {
 
         import { createClient, QueryFetcher } from 'gqless';
         import {
-          GeneratedSchema,
           generatedSchema,
           scalarsEnumsHash,
+          GeneratedSchema,
           SchemaObjectTypes,
           SchemaObjectTypesNames,
         } from './schema.generated';

@@ -255,9 +255,9 @@ test('creates dir, generates code and writes new file', async () => {
 
       import { createClient, QueryFetcher } from 'gqless';
       import {
-        GeneratedSchema,
         generatedSchema,
         scalarsEnumsHash,
+        GeneratedSchema,
         SchemaObjectTypes,
         SchemaObjectTypesNames,
       } from './schema.generated';
