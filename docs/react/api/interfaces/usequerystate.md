@@ -12,8 +12,8 @@ hide_title: true
 
 ### isLoading
 
-• **isLoading**: _boolean_
+• `Readonly` **isLoading**: _boolean_
 
 Useful for `Non-Suspense` usage.
 
-Defined in: [query/useQuery.ts:21](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L21)
+Defined in: [query/useQuery.ts:34](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L34)

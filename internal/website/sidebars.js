@@ -6,7 +6,7 @@ module.exports = {
       'introduction/features',
       'introduction/motivation',
     ],
-    CLI: ['cli/config', 'cli/codegen', 'cli/programmatic'],
+    CLI: ['cli/config', 'cli/codegen', 'cli/javascript', 'cli/programmatic'],
     React: [
       'react/basic-usage',
       'react/caveats',

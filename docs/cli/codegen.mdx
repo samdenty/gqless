@@ -5,10 +5,35 @@ title: Codegen
 
 Given it's [configuration](/cli/config), creates a typed gqless client from a graphql endpoint/schema.
 
+## Installation
+
+Install the following dependencies to your project:
+
+```bash yarn2npm
+yarn add gqless
+yarn add -D @gqless/cli graphql
+```
+
 ## Command
 
+It already being installed in your package you can either do:
+
 ```shell
-npx @gqless/cli generate
+npx gqless generate
+```
+
+Or, if you have a script in your `package.json`
+
+```json
+{
+  "scripts": {
+    "generate": "gqless generate"
+  }
+}
+```
+
+```bash yarn2npm
+yarn generate
 ```
 
 ## Format output code

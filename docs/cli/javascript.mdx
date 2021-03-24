@@ -1,0 +1,106 @@
+---
+id: javascript
+title: JavaScript Output
+---
+
+Although the focus of `gqless` is to be used in [TypeScript](https://www.typescriptlang.org/),
+it's completely possible to use it in JavaScript projects, outputting valid JavaScript code,
+alongside it's type-definitions, and using [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html)
+to be able to use a typed `gqless`.
+
+We recommend taking a look at [Type Checking JavaScript files](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html), [allowJs](https://www.typescriptlang.org/tsconfig#allowJs) and [checkJs](https://www.typescriptlang.org/tsconfig#checkJs).
+
+## Configuration
+
+To enable `JavaScript Output` you have to especify an extra `javascriptOutput` property in your [Configuration file](/cli/config), with some extra considerations:
+
+```js
+/**
+ * @type {import("@gqless/cli").GqlessConfig}
+ */
+const config = {
+  // It should be set as 'true' or removed.
+  enumsAsStrings: true,
+
+  // You have to specify the '.js' extension
+  destination: './src/gqless/index.js',
+
+  // This has to be set as 'true'
+  javascriptOutput: true,
+};
+
+module.exports = config;
+```
+
+And the client will be created following the structure:
+
+```bash
+src/gqless
+├── schema.generated.d.ts # Generated schema, you shouldn't modify it manually
+├── schema.generated.js # Generated schema, you shouldn't modify it manually
+└── index.js # gqless client is exported from here, you can safely modify it based on your needs
+```
+
+## Usage
+
+The usage should be exactly the same:
+
+```js
+import { query, resolved } from './gqless/index.js';
+
+resolved(() => {
+  const dogsNames = query.dogs.map((dog) => {
+    return dog.name;
+  });
+  return {
+    type: query.time,
+    dogsNames,
+  };
+})
+  .then((data) => {
+    console.log({
+      data,
+    });
+  })
+  .catch(console.error);
+```
+
+With the caveat that, even if the autocomplete might allow you to import the types, it will probably mean a runtime-error:
+
+![Javascript Output Type Error](/img/javascript-output-type-error.png)
+
+To use the types, you have to use the [JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) [`@type`](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html#type):
+
+```js
+import { query, resolved } from '../gqless';
+
+// ...
+
+// Here user should be automatically typed
+const user = await resolved((query) => {
+  const user = query.user({
+    id: '1',
+  });
+
+  user.id;
+  user.name;
+
+  return user;
+});
+
+function readUserData(
+  /**
+   * @type {import("./gqless").User}
+   */
+  user
+) {
+  // Here `user` will be typed
+}
+
+readUserData(user);
+```
+
+:::caution
+For [`Node.js`](https://nodejs.org/) usage, if you don't have `"type": "module"` in your `package.json`, you might have to manually modify some `imports` to `requires`,
+since _for now_, outputting `.mjs` doesn't have much utility, since [TypeScript doesn't support it yet](https://github.com/microsoft/TypeScript/issues/18442)
+:::

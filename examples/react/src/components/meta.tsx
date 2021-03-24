@@ -20,6 +20,7 @@ const NavigationList = [
   '/subscriptions',
   '/preparedQuery',
   '/useQueryTest',
+  '/prepass',
 ];
 
 export const MetaClient = () => {

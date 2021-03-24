@@ -1,7 +1,8 @@
-import fs from 'fs';
+import { existsSync, promises } from 'fs';
 import { GraphQLSchema } from 'graphql';
 import mkdirp from 'mkdirp';
 import { dirname, resolve } from 'path';
+import { defaultConfig, gqlessConfigPromise } from './config';
 
 import { generate, GenerateOptions } from './generate';
 
@@ -18,9 +19,9 @@ async function writeClientCode({
   destinationPath: string;
   onExistingFileConflict: OnExistingFileConflict;
 }): Promise<void> {
-  if (fs.existsSync(destinationPath)) {
+  if (existsSync(destinationPath)) {
     if (onExistingFileConflict) {
-      const existingFile = await fs.promises.readFile(destinationPath, {
+      const existingFile = await promises.readFile(destinationPath, {
         encoding: 'utf-8',
       });
       onExistingFileConflict(existingFile);
@@ -28,40 +29,92 @@ async function writeClientCode({
     return;
   }
 
-  await fs.promises.writeFile(destinationPath, clientCode, {
+  await promises.writeFile(destinationPath, clientCode, {
     encoding: 'utf-8',
   });
+}
+
+function waitFunctions(...fns: Array<() => Promise<unknown>>) {
+  return Promise.all(fns.map((fn) => fn()));
 }
 
 async function writeSchemaCode({
   schemaCode,
   destinationPath,
+  isJavascriptOutput,
+  javascriptSchemaCode,
 }: {
   schemaCode: string;
   destinationPath: string;
+  isJavascriptOutput: boolean;
+  javascriptSchemaCode: string;
 }): Promise<void> {
-  const schemaPath = resolve(dirname(destinationPath), './schema.generated.ts');
+  await waitFunctions(
+    async () => {
+      const schemaPath = resolve(
+        dirname(destinationPath),
+        isJavascriptOutput ? './schema.generated.d.ts' : './schema.generated.ts'
+      );
 
-  if (fs.existsSync(schemaPath)) {
-    const existingCode = await fs.promises.readFile(schemaPath, {
-      encoding: 'utf-8',
-    });
+      if (existsSync(schemaPath)) {
+        const existingCode = await promises.readFile(schemaPath, {
+          encoding: 'utf-8',
+        });
 
-    if (existingCode === schemaCode) return;
-  }
+        if (existingCode === schemaCode) return;
+      }
 
-  await fs.promises.writeFile(schemaPath, schemaCode, {
-    encoding: 'utf-8',
-  });
+      await promises.writeFile(schemaPath, schemaCode, {
+        encoding: 'utf-8',
+      });
+    },
+    async () => {
+      if (isJavascriptOutput) {
+        const schemaPath = resolve(
+          dirname(destinationPath),
+          './schema.generated.js'
+        );
+
+        if (existsSync(schemaPath)) {
+          const existingCode = await promises.readFile(schemaPath, {
+            encoding: 'utf-8',
+          });
+
+          if (existingCode === javascriptSchemaCode) return;
+        }
+
+        await promises.writeFile(schemaPath, javascriptSchemaCode, {
+          encoding: 'utf-8',
+        });
+      }
+    }
+  );
 }
 
 export async function writeGenerate(
   schema: GraphQLSchema,
   destinationPath: string,
-  generateOptions?: GenerateOptions,
+  generateOptions: GenerateOptions = {},
   onExistingFileConflict?: OnExistingFileConflict
 ) {
-  if (!destinationPath.endsWith('.ts')) {
+  const isJavascriptOutput =
+    generateOptions.javascriptOutput ??
+    (await gqlessConfigPromise).config.javascriptOutput ??
+    defaultConfig.javascriptOutput;
+
+  if (isJavascriptOutput) {
+    if (!destinationPath.endsWith('.js')) {
+      const err = Error(
+        'You have to specify the ".js" extension, instead, it received: "' +
+          destinationPath +
+          '"'
+      );
+
+      Error.captureStackTrace(err, writeGenerate);
+
+      throw err;
+    }
+  } else if (!destinationPath.endsWith('.ts')) {
     const err = Error(
       'You have to specify the ".ts" extension, instead, it received: "' +
         destinationPath +
@@ -75,14 +128,19 @@ export async function writeGenerate(
 
   destinationPath = resolve(destinationPath);
 
-  const [{ clientCode, schemaCode }] = await Promise.all([
+  const [{ clientCode, schemaCode, javascriptSchemaCode }] = await Promise.all([
     generate(schema, generateOptions),
     mkdirp(dirname(destinationPath)),
   ]);
 
   await Promise.all([
     writeClientCode({ clientCode, destinationPath, onExistingFileConflict }),
-    writeSchemaCode({ schemaCode, destinationPath }),
+    writeSchemaCode({
+      schemaCode,
+      destinationPath,
+      isJavascriptOutput,
+      javascriptSchemaCode,
+    }),
   ]);
 
   return destinationPath;

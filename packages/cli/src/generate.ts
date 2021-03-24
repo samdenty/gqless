@@ -26,7 +26,7 @@ import { codegen } from '@graphql-codegen/core';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
-import { gqlessConfigPromise } from './config';
+import { defaultConfig, gqlessConfigPromise } from './config';
 import { formatPrettier } from './prettier';
 
 export interface GenerateOptions {
@@ -57,6 +57,12 @@ export interface GenerateOptions {
    * @default false
    */
   subscriptions?: boolean;
+  /**
+   * Generate Javascript code instead of TypeScript
+   *
+   * @default false
+   */
+  javascriptOutput?: boolean;
 }
 
 export async function generate(
@@ -68,20 +74,40 @@ export async function generate(
     endpoint,
     enumsAsStrings,
     subscriptions,
+    javascriptOutput,
   }: GenerateOptions = {}
 ): Promise<{
   clientCode: string;
   schemaCode: string;
+  javascriptSchemaCode: string;
   generatedSchema: Schema;
   scalarsEnumsHash: ScalarsEnumsHash;
+  isJavascriptOutput: boolean;
 }> {
   const gqlessConfig = (await gqlessConfigPromise).config;
-  enumsAsStrings ??= gqlessConfig.enumsAsStrings ?? false;
-  scalars ||= gqlessConfig.scalars;
-  endpoint ||= gqlessConfig.endpoint ?? '/graphql';
-  react ??= gqlessConfig.react ?? false;
-  preImport ??= gqlessConfig.preImport ?? '';
-  subscriptions ??= gqlessConfig.subscriptions ?? false;
+
+  const isJavascriptOutput =
+    javascriptOutput ??
+    gqlessConfig.javascriptOutput ??
+    defaultConfig.javascriptOutput;
+
+  if (isJavascriptOutput) {
+    if (gqlessConfig.enumsAsStrings) {
+      console.warn(
+        `"enumsAsStrings" is automatically set as "true" with "javascriptOutput" enabled.`
+      );
+    }
+    enumsAsStrings = true;
+  } else {
+    enumsAsStrings ??=
+      gqlessConfig.enumsAsStrings ?? defaultConfig.enumsAsStrings;
+  }
+
+  scalars ||= gqlessConfig.scalars || defaultConfig.scalars;
+  endpoint ||= gqlessConfig.endpoint ?? defaultConfig.endpoint;
+  react ??= gqlessConfig.react ?? defaultConfig.react;
+  preImport ??= gqlessConfig.preImport ?? defaultConfig.preImport;
+  subscriptions ??= gqlessConfig.subscriptions ?? defaultConfig.subscriptions;
 
   const { format } = formatPrettier({
     parser: 'typescript',
@@ -684,8 +710,16 @@ export async function generate(
     }
     `;
 
+  function typeDoc(type: string) {
+    return `/**\n * @type {${type}}\n */\n`;
+  }
+
   const queryFetcher = `
-    const queryFetcher : QueryFetcher = async function (query, variables) {
+    ${
+      isJavascriptOutput
+        ? typeDoc('import("gqless").QueryFetcher') + 'const queryFetcher'
+        : 'const queryFetcher : QueryFetcher'
+    } = async function (query, variables) {
         // Modify "${endpoint}" if needed
         const response = await fetch("${endpoint}", {
           method: "POST",
@@ -707,6 +741,24 @@ export async function generate(
 
   const hasUnions = !!unionsMap.size;
 
+  const javascriptSchemaCode = await format(`
+/**
+ * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
+ */
+${hasUnions ? 'import { SchemaUnionsKey } from "gqless";' : ''}
+
+${typeDoc(
+  'import("gqless").ScalarsEnumsHash'
+)}export const scalarsEnumsHash = ${JSON.stringify(scalarsEnumsHash)};
+
+export const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
+    (acum, [key, value]) => {
+      return `${JSON.stringify(key)}:${JSON.stringify(value)}, ${acum}`;
+    },
+    hasUnions ? `[SchemaUnionsKey]: ${JSON.stringify(unionsMapObj)}` : ''
+  )}};
+  `);
+
   const schemaCode = await format(
     `
 /**
@@ -720,19 +772,79 @@ export async function generate(
 
   ${await codegenResultPromise}
 
-  export const scalarsEnumsHash: ScalarsEnumsHash = ${JSON.stringify(
-    scalarsEnumsHash
-  )};
-  export const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
-    (acum, [key, value]) => {
-      return `${JSON.stringify(key)}:${JSON.stringify(value)}, ${acum}`;
-    },
-    hasUnions ? `[SchemaUnionsKey]: ${JSON.stringify(unionsMapObj)}` : ''
-  )}} as const;
+  export${
+    isJavascriptOutput ? ' declare' : ''
+  } const scalarsEnumsHash: ScalarsEnumsHash${
+      isJavascriptOutput ? ';' : ` = ${JSON.stringify(scalarsEnumsHash)};`
+    }
+  export${isJavascriptOutput ? ' declare' : ''} const generatedSchema ${
+      isJavascriptOutput ? ':' : '='
+    } {${Object.entries(generatedSchema).reduceRight(
+      (acum, [key, value]) => {
+        return `${JSON.stringify(key)}:${JSON.stringify(value)}, ${acum}`;
+      },
+      hasUnions ? `[SchemaUnionsKey]: ${JSON.stringify(unionsMapObj)}` : ''
+    )}}${isJavascriptOutput ? '' : ' as const'};
 
   ${typescriptTypes}
     `
   );
+
+  let reactClientCode = '';
+  if (react) {
+    if (isJavascriptOutput) {
+      reactClientCode = `
+      ${typeDoc(
+        'import("@gqless/react").ReactClient<import("./schema.generated").GeneratedSchema>'
+      )}const reactClient = createReactClient(client, {
+        defaults: {
+          // Set this flag as "true" if your usage involves React Suspense
+          // Keep in mind that you can overwrite it in a per-hook basis
+          suspense: false,
+    
+          // Set this flag based on your needs
+          staleWhileRevalidate: false
+        }
+      });
+
+      export const {
+        graphql,
+        useQuery,
+        useTransactionQuery,
+        useLazyQuery,
+        useRefetch,
+        useMutation,
+        useMetaState,
+        prepareReactRender,
+        useHydrateCache,
+        prepareQuery,
+      } = reactClient;
+      `.trim();
+    } else {
+      reactClientCode = `export const {
+        graphql,
+        useQuery,
+        useTransactionQuery,
+        useLazyQuery,
+        useRefetch,
+        useMutation,
+        useMetaState,
+        prepareReactRender,
+        useHydrateCache,
+        prepareQuery,
+        ${subscriptions ? 'useSubscription,' : ''}    
+      } = createReactClient<GeneratedSchema>(client, {
+        defaults: {
+          // Set this flag as "true" if your usage involves React Suspense
+          // Keep in mind that you can overwrite it in a per-hook basis
+          suspense: false,
+    
+          // Set this flag based on your needs
+          staleWhileRevalidate: false
+        }
+      });`;
+    }
+  }
 
   const clientCode = await format(
     `
@@ -746,8 +858,14 @@ export async function generate(
       ? `import { createSubscriptionsClient } from "@gqless/subscriptions"`
       : ''
   }
-  import { createClient, QueryFetcher } from "gqless";
-  import { GeneratedSchema, generatedSchema, scalarsEnumsHash, SchemaObjectTypes, SchemaObjectTypesNames } from "./schema.generated";
+  import { createClient${
+    isJavascriptOutput ? '' : ', QueryFetcher'
+  } } from "gqless";
+  import { generatedSchema, scalarsEnumsHash${
+    isJavascriptOutput
+      ? ''
+      : ', GeneratedSchema, SchemaObjectTypes, SchemaObjectTypesNames'
+  } } from "./schema.generated";
 
   ${queryFetcher}
 
@@ -768,41 +886,28 @@ export async function generate(
       : ''
   }
 
-  export const client = createClient<GeneratedSchema, SchemaObjectTypesNames, SchemaObjectTypes>({ 
+  ${
+    isJavascriptOutput
+      ? `${typeDoc(
+          'import("gqless").GqlessClient<import("./schema.generated").GeneratedSchema>'
+        )}export const client = createClient({
+        schema: generatedSchema,
+        scalarsEnumsHash, 
+        queryFetcher
+        ${subscriptions ? ', subscriptionsClient' : ''}
+      });`
+      : `export const client = createClient<GeneratedSchema, SchemaObjectTypesNames, SchemaObjectTypes>({ 
     schema: generatedSchema, 
     scalarsEnumsHash, 
     queryFetcher
     ${subscriptions ? ', subscriptionsClient' : ''}
-  });
+  });`
+  }
+  
 
   export const { query, mutation, mutate, subscription, resolved, refetch } = client;
 
-  ${
-    react
-      ? `export const {
-    graphql,
-    useQuery,
-    useTransactionQuery,
-    useLazyQuery,
-    useRefetch,
-    useMutation,
-    useMetaState,
-    prepareReactRender,
-    useHydrateCache,
-    prepareQuery,
-    ${subscriptions ? 'useSubscription,' : ''}    
-  } = createReactClient<GeneratedSchema>(client, {
-    defaults: {
-      // Set this flag as "true" if your usage involves React Suspense
-      // Keep in mind that you can overwrite it in a per-hook basis
-      suspense: false,
-
-      // Set this flag based on your needs
-      staleWhileRevalidate: false
-    }
-  });`
-      : ''
-  }
+  ${reactClientCode}
 
   export * from "./schema.generated";
   `
@@ -810,7 +915,9 @@ export async function generate(
   return {
     clientCode,
     schemaCode,
+    javascriptSchemaCode,
     generatedSchema,
     scalarsEnumsHash,
+    isJavascriptOutput,
   };
 }

@@ -77,6 +77,98 @@ function Example() {
 }
 ```
 
+### prepare
+
+`useQuery` offers a nice helper that allows for good optimizations, allowing you to do a _prepass_ over specific parts of your expected query, before your component ends rendering the first time.
+
+It's basically a function that is called right before the `useQuery` returns, allowing your component to either [`Suspend immediately`](/react/suspense) or add a conditional render using the `$state.isLoading` property.
+
+The function receives as parameters:
+
+- The [`prepass`](/core/helpers#prepass) helper.
+- Your auto-generated `query` object.
+
+:::caution
+Since it's a function called before the hook itself returned, the returned value/values **are `undefined`**, and unfortunately `TypeScript` can't know that.
+:::
+
+#### Suspense example
+
+```tsx
+import { useQuery } from '../gqless';
+
+function ExampleSuspense() {
+  const { users } = useQuery({
+    prepare({ prepass, query }) {
+      prepass(query.users, 'id', 'name', 'dogs.name');
+    },
+    suspense: true,
+  });
+
+  return (
+    <>
+      {users.map(({ id, name, dogs }) => {
+        return (
+          <p key={id}>
+            Name: {name}
+            <br />
+            Dogs:
+            <br />
+            <ul>
+              {dogs.map(({ name }) => {
+                return <li key={name}>{name}</li>;
+              })}
+            </ul>
+          </p>
+        );
+      })}
+    </>
+  );
+}
+
+// ...
+<Suspense fallback="Loading...">
+  <ExampleSuspense />
+</Suspense>;
+```
+
+#### Non-Suspense example
+
+```tsx
+import { useQuery } from '../gqless';
+
+function Example() {
+  const { users, $state } = useQuery({
+    prepare({ prepass, query }) {
+      prepass(query.users, 'id', 'name', 'dogs.name');
+    },
+    suspense: false,
+  });
+
+  if ($state.isLoading) return <p>Loading...</p>;
+
+  return (
+    <>
+      {users.map(({ id, name, dogs }) => {
+        return (
+          <p key={id}>
+            Name: {name}
+            <br />
+            Dogs:
+            <br />
+            <ul>
+              {dogs.map(({ name }) => {
+                return <li key={name}>{name}</li>;
+              })}
+            </ul>
+          </p>
+        );
+      })}
+    </>
+  );
+}
+```
+
 ## graphql HOC
 
 The `graphql HOC` is a [Higher-Order Component](https://reactjs.org/docs/higher-order-components.html) alternative to [useQuery](#usequery), designed specially for [Suspense usage](/react/suspense).
@@ -130,7 +222,7 @@ If you read both, you could see that both do similar stuff, but enable different
 
 The [graphql HOC](#graphql-hoc) is targeted specially for **Suspense usage**, since it can intercept the data requests before the render phase and _Suspend_ right away, and also specify the fallback directly, but since it's a [`HOC`](https://reactjs.org/docs/higher-order-components.html), it's not as nice to use as hooks.
 
-On the other hand, [useQuery](#usequery) enables very nice composability, but it lacks the ability to intercept the Render Phase, which in practice it only means 1 extra render, which most of the time it doesn't matter.
+On the other hand, [useQuery](#usequery) enables very nice composability, but it lacks the ability to intercept the Render Phase if not using [useQuery "prepare" helper](#prepare), which in practice it only means 1 extra render, which most of the time it doesn't matter.
 
 And it's important to note that for `Non-Suspense` usage we encourage to always use [useQuery](#usequery).
 

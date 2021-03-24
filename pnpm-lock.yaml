@@ -346,7 +346,6 @@ importers:
       gqless: link:../gqless
       mkdirp: 1.0.4
       prettier: 2.2.1
-      runtypes: 5.1.0
     devDependencies:
       '@size-limit/preset-small-lib': 4.10.1_9e1fedab717cf71fbaebcc1febc76206
       '@types/mkdirp': 1.0.1
@@ -379,7 +378,6 @@ importers:
       open-cli: ^6.0.1
       prettier: ^2.2.1
       rimraf: ^3.0.2
-      runtypes: ^5.1.0
       serve: ^11.3.2
       size-limit: ^4.10.1
       test-utils: workspace:^0.1.0
@@ -15113,10 +15111,6 @@ packages:
       aproba: 1.2.0
     resolution:
       integrity: sha1-6Eg5bwV9Ij8kOGkkYY4laUFh7Ec=
-  /runtypes/5.1.0:
-    dev: false
-    resolution:
-      integrity: sha512-OMHkz6dxysXj4E8Fj/HCGjtdJUhapQUN7puvqzuzvjaX28pd52PZmEMqQlkIzCfKdhXdM0ghx8PpvELprEnOLQ==
   /rxjs/6.6.6:
     dependencies:
       tslib: 1.14.1

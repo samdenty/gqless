@@ -1,11 +1,9 @@
 import { promises } from 'fs';
 import { resolve } from 'path';
-import { Boolean, Partial, Static, String, Unknown } from 'runtypes';
-
 import type { GenerateOptions } from './generate';
 import type { IntrospectionOptions } from './introspection';
 
-type GqlessCombinedOptions = GenerateOptions & {
+export type GqlessConfig = GenerateOptions & {
   /**
    * Introspection options
    */
@@ -16,36 +14,15 @@ type GqlessCombinedOptions = GenerateOptions & {
   destination?: string;
 };
 
-export type GqlessConfig = Required<
-  Static<typeof gqlessCLIConfigRecord>
-> extends Required<GqlessCombinedOptions>
-  ? GqlessCombinedOptions
-  : never;
+function isPlainObject(v: unknown): v is Record<string, unknown> {
+  return v != null && typeof v === 'object' && !Array.isArray(v);
+}
 
-const StringRecord = Unknown.withConstraint<Record<string, string>>(
-  (scalars) => {
-    return (
-      typeof scalars === 'object' &&
-      scalars != null &&
-      !Array.isArray(scalars) &&
-      Object.values(scalars).every((v) => typeof v === 'string')
-    );
-  }
-);
-
-const gqlessCLIConfigRecord = Partial({
-  endpoint: String,
-  enumsAsStrings: Boolean,
-  scalars: StringRecord,
-  react: Boolean,
-  preImport: String,
-  introspection: Partial({
-    endpoint: String,
-    headers: StringRecord,
-  }),
-  destination: String,
-  subscriptions: Boolean,
-});
+function isStringRecord(v: unknown): v is Record<string, string> {
+  return (
+    isPlainObject(v) && Object.values(v).every((v) => typeof v === 'string')
+  );
+}
 
 export const defaultConfig = {
   endpoint: '/api/graphql',
@@ -57,11 +34,137 @@ export const defaultConfig = {
   preImport: '',
   introspection: {
     endpoint: 'SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE',
-    headers: {},
-  } as IntrospectionOptions,
+    headers: {} as Record<string, string>,
+  },
   destination: './src/gqless/index.ts',
   subscriptions: false,
+  javascriptOutput: false,
 };
+
+function warnConfig(
+  fieldName: string,
+  invalidValue: unknown,
+  expectedValue: string,
+  defaultValue: unknown
+) {
+  console.warn(
+    `Warning, invalid config ${fieldName}, got: ${JSON.stringify(
+      invalidValue
+    )}, expected ${expectedValue}. ${JSON.stringify(
+      defaultValue
+    )} used instead.`
+  );
+}
+
+export function getValidConfig(v: unknown): GqlessConfig {
+  if (isPlainObject(v)) {
+    const newConfig: GqlessConfig = {};
+
+    if (typeof v.javascriptOutput === 'boolean') {
+      newConfig.javascriptOutput = v.javascriptOutput;
+    }
+
+    for (const [key, value] of Object.entries(v)) {
+      if (value === undefined) continue;
+
+      switch (key) {
+        case 'destination':
+        case 'preImport':
+        case 'endpoint': {
+          if (typeof value === 'string') {
+            newConfig[key] = value;
+          } else {
+            warnConfig(key, value, 'string', defaultConfig[key]);
+          }
+
+          break;
+        }
+        case 'javascriptOutput':
+        case 'react':
+        case 'subscriptions':
+        case 'enumsAsStrings': {
+          if (typeof value === 'boolean') {
+            newConfig[key] = value;
+          } else {
+            warnConfig(key, value, 'boolean', defaultConfig[key]);
+          }
+          break;
+        }
+        case 'scalars': {
+          if (isStringRecord(value)) {
+            newConfig[key] = value;
+          } else {
+            warnConfig(key, value, '"object of strings"', defaultConfig[key]);
+          }
+          break;
+        }
+        case 'introspection': {
+          if (isPlainObject(value)) {
+            const introspectionOptions: IntrospectionOptions = {};
+            for (const [introspectionKey, introspectionValue] of Object.entries(
+              value
+            )) {
+              if (introspectionValue === undefined) continue;
+              switch (introspectionKey) {
+                case 'endpoint': {
+                  if (typeof introspectionValue === 'string') {
+                    introspectionOptions[introspectionKey] = introspectionValue;
+                  } else {
+                    warnConfig(
+                      `${key}.${introspectionKey}`,
+                      introspectionValue,
+                      'string',
+                      defaultConfig.introspection.endpoint
+                    );
+                  }
+                  break;
+                }
+                case 'headers': {
+                  if (isStringRecord(introspectionValue)) {
+                    introspectionOptions[introspectionKey] = introspectionValue;
+                  } else {
+                    warnConfig(
+                      `${key}.${introspectionKey}`,
+                      introspectionValue,
+                      '"object of strings"',
+                      defaultConfig.introspection.headers
+                    );
+                  }
+                  break;
+                }
+                default: {
+                  console.warn(
+                    `Warning, invalid and unused config property "${key}.${introspectionKey}": ${JSON.stringify(
+                      value
+                    )}`
+                  );
+                }
+              }
+            }
+
+            newConfig[key] = introspectionOptions;
+          } else {
+            warnConfig(key, value, 'object', defaultConfig[key]);
+          }
+          break;
+        }
+        default:
+          console.warn(
+            `Warning, invalid and unused config property "${key}": ${JSON.stringify(
+              value
+            )}`
+          );
+      }
+    }
+
+    return newConfig;
+  } else {
+    console.warn(
+      'Invalid config, using instead: ' + JSON.stringify(defaultConfig, null, 2)
+    );
+    return defaultConfig;
+  }
+}
 
 const defaultFilePath = resolve(process.cwd(), 'gqless.config.cjs');
 
@@ -88,12 +191,12 @@ export const gqlessConfigPromise: Promise<{
   filepath: string;
   config: DeepReadonly<GqlessConfig>;
 }> = new Promise(async (resolve) => {
+  /* istanbul ignore else */
   if (process.env.NODE_ENV === 'test') {
     setTimeout(() => {
       resolve(defaultGqlessConfig);
     }, 10);
   } else {
-    /* istanbul ignore next */
     import('cosmiconfig')
       .then(({ cosmiconfig }) => {
         cosmiconfig('gqless', {
@@ -130,8 +233,9 @@ export const gqlessConfigPromise: Promise<{
                 config: defaultConfig,
               });
             }
+
             resolve({
-              config: gqlessCLIConfigRecord.check(config.config),
+              config: getValidConfig(config.config),
               filepath: config.filepath,
             });
           })

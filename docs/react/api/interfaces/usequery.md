@@ -17,14 +17,14 @@ hide_title: true
 
 ## Callable
 
-▸ **UseQuery**(`options?`: [_UseQueryOptions_](usequeryoptions.md)): [_UseQueryReturnValue_](../modules.md#usequeryreturnvalue)<GeneratedSchema\>
+▸ **UseQuery**(`options?`: [_UseQueryOptions_](usequeryoptions.md)<GeneratedSchema\>): [_UseQueryReturnValue_](../modules.md#usequeryreturnvalue)<GeneratedSchema\>
 
 #### Parameters:
 
-| Name       | Type                                    |
-| :--------- | :-------------------------------------- |
-| `options?` | [_UseQueryOptions_](usequeryoptions.md) |
+| Name       | Type                                                      |
+| :--------- | :-------------------------------------------------------- |
+| `options?` | [_UseQueryOptions_](usequeryoptions.md)<GeneratedSchema\> |
 
 **Returns:** [_UseQueryReturnValue_](../modules.md#usequeryreturnvalue)<GeneratedSchema\>
 
-Defined in: [query/useQuery.ts:29](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L29)
+Defined in: [query/useQuery.ts:42](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L42)
