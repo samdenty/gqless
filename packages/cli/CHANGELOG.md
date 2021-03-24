@@ -1,5 +1,13 @@
 # @gqless/cli
 
+## 2.0.4
+
+### Patch Changes
+
+- 2bf4ce2: improve config validation & add javascript output
+- Updated dependencies [2bf4ce2]
+  - gqless@2.0.4
+
 ## 2.0.3
 
 ### Patch Changes
