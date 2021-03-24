@@ -1,5 +1,11 @@
 # gqless
 
+## 2.0.4
+
+### Patch Changes
+
+- 2bf4ce2: add inner scheduler "getResolvingPromise"
+
 ## 2.0.3
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @gqless/react
 
+## 2.0.5
+
+### Patch Changes
+
+- 2bf4ce2: add useQuery "prepare" helper
+- Updated dependencies [2bf4ce2]
+  - gqless@2.0.4
+
 ## 2.0.4
 
 ### Patch Changes
