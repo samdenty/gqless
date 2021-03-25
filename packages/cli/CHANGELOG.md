@@ -1,5 +1,11 @@
 # @gqless/cli
 
+## 2.0.5
+
+### Patch Changes
+
+- 940883a: fix yarn berry compatibility
+
 ## 2.0.4
 
 ### Patch Changes
