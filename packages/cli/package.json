@@ -8,7 +8,6 @@
   "module": "dist/gqless-cli.esm.js",
   "typings": "dist/index.d.ts",
   "bin": {
-    "@gqless/cli": "bin/gqless.js",
     "gqless": "bin/gqless.js"
   },
   "files": [
