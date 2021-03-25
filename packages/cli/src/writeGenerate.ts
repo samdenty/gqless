@@ -4,7 +4,7 @@ import mkdirp from 'mkdirp';
 import { dirname, resolve } from 'path';
 import { defaultConfig, gqlessConfigPromise } from './config';
 
-import { generate, GenerateOptions } from './generate';
+import { generate, GenerateOptions, TransformSchemaOptions } from './generate';
 
 export type OnExistingFileConflict =
   | ((existingFile: string) => void)
@@ -95,7 +95,8 @@ export async function writeGenerate(
   schema: GraphQLSchema,
   destinationPath: string,
   generateOptions: GenerateOptions = {},
-  onExistingFileConflict?: OnExistingFileConflict
+  onExistingFileConflict?: OnExistingFileConflict,
+  transformsGenerate?: TransformSchemaOptions
 ) {
   const isJavascriptOutput =
     generateOptions.javascriptOutput ??
@@ -129,7 +130,7 @@ export async function writeGenerate(
   destinationPath = resolve(destinationPath);
 
   const [{ clientCode, schemaCode, javascriptSchemaCode }] = await Promise.all([
-    generate(schema, generateOptions),
+    generate(schema, generateOptions, transformsGenerate),
     mkdirp(dirname(destinationPath)),
   ]);
 

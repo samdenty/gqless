@@ -5,7 +5,7 @@ import { resolve } from 'path';
 
 import { defaultConfig, gqlessConfigPromise } from './config';
 
-import type { GenerateOptions } from './generate';
+import type { GenerateOptions, TransformSchemaOptions } from './generate';
 
 export async function inspectWriteGenerate({
   endpoint,
@@ -13,6 +13,7 @@ export async function inspectWriteGenerate({
   generateOptions,
   cli,
   headers,
+  transformSchemaOptions,
 }: {
   /**
    * GraphQL API endpoint or GraphQL Schema file
@@ -38,6 +39,10 @@ export async function inspectWriteGenerate({
    * Specify headers for the introspection HTTP request
    */
   headers?: Record<string, string>;
+  /**
+   * Specify schema transforms
+   */
+  transformSchemaOptions?: TransformSchemaOptions;
 } = {}) {
   if (destination) {
     defaultConfig.destination = destination;
@@ -139,7 +144,8 @@ export async function inspectWriteGenerate({
           );
         }
       }
-    }
+    },
+    transformSchemaOptions
   );
 
   if (cli) {

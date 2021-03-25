@@ -7,6 +7,7 @@ import {
 } from 'gqless';
 import {
   GraphQLEnumType,
+  GraphQLField,
   GraphQLInputObjectType,
   GraphQLInterfaceType,
   GraphQLObjectType,
@@ -16,6 +17,7 @@ import {
   isEnumType,
   isInputObjectType,
   isInterfaceType,
+  isNullableType,
   isObjectType,
   isScalarType,
   isUnionType,
@@ -65,6 +67,14 @@ export interface GenerateOptions {
   javascriptOutput?: boolean;
 }
 
+export interface TransformSchemaOptions {
+  /**
+   * Get a field in which every argument is optional, if this functions return "true", gqless will _always__ ignore it's arguments,
+   * and you won't be able to specify them
+   */
+  ignoreArgs?: (type: GraphQLField<unknown, unknown>) => boolean;
+}
+
 export async function generate(
   schema: GraphQLSchema,
   {
@@ -75,7 +85,8 @@ export async function generate(
     enumsAsStrings,
     subscriptions,
     javascriptOutput,
-  }: GenerateOptions = {}
+  }: GenerateOptions = {},
+  { ignoreArgs }: TransformSchemaOptions = {}
 ): Promise<{
   clientCode: string;
   schemaCode: string;
@@ -281,6 +292,19 @@ export async function generate(
 
       if (gqlType.args.length) {
         objectFieldsArgsDescriptions[fieldName] ||= {};
+
+        if (ignoreArgs) {
+          const isEveryArgOptional = gqlType.args.every(({ type }) => {
+            return isNullableType(type);
+          });
+
+          if (isEveryArgOptional) {
+            const shouldIgnore = ignoreArgs(gqlType);
+
+            if (shouldIgnore) return;
+          }
+        }
+
         schemaType[fieldName].__args = gqlType.args.reduce((acum, arg) => {
           acum[arg.name] = arg.type.toString();
           if (
