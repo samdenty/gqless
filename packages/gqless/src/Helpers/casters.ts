@@ -4,12 +4,12 @@ export type NotUndefined<T> = T extends undefined ? never : T;
  * Remove all possible 'undefined' values recursively from an object
  */
 export type NotSkeletonDeep<T> = T extends Array<any>
-  ? Array<NotSkeletonDeep<T[number]>>
+  ? Array<NotUndefined<NotSkeletonDeep<T[number]>>>
+  : T extends (...args: any[]) => any
+  ? (...args: Parameters<T>) => NotSkeletonDeep<NotUndefined<ReturnType<T>>>
   : T extends object
   ? {
-      [P in keyof T]: undefined extends T[P]
-        ? NotUndefined<NotSkeletonDeep<T[P]>>
-        : NotSkeletonDeep<T[P]>;
+      [P in keyof T]: NotUndefined<NotSkeletonDeep<T[P]>>;
     }
   : NotUndefined<T>;
 
@@ -18,9 +18,11 @@ export type NotSkeletonDeep<T> = T extends Array<any>
  */
 export type NotSkeleton<T> = T extends Array<any>
   ? Array<NotSkeleton<T[number]>>
+  : T extends (...args: any[]) => any
+  ? (...args: Parameters<T>) => NotUndefined<ReturnType<T>>
   : T extends object
   ? {
-      [P in keyof T]: undefined extends T[P] ? NotUndefined<T[P]> : T[P];
+      [P in keyof T]: NotUndefined<T[P]>;
     }
   : NotUndefined<T>;
 

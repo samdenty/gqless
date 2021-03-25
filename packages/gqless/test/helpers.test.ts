@@ -1,4 +1,11 @@
-import { getArrayFields, getFields, selectFields, prepass } from '../src';
+import {
+  getArrayFields,
+  getFields,
+  selectFields,
+  prepass,
+  castNotSkeleton,
+  castNotSkeletonDeep,
+} from '../src';
 import { createTestClient } from './utils';
 
 describe('selectFields', () => {
@@ -812,6 +819,20 @@ describe('get fields', () => {
     expect(humanProxy.id).toBe('1');
 
     expect(humanProxy.name).toBe('default');
+
+    const human2 = query.human({
+      name: 'other',
+    });
+
+    getFields(human2);
+
+    await scheduler.resolving!.promise;
+
+    expect(JSON.stringify(human2)).toMatchInlineSnapshot(
+      `"{\\"__typename\\":\\"Human\\",\\"id\\":\\"2\\",\\"name\\":\\"other\\"}"`
+    );
+
+    expect(getFields(null)).toBe(null);
   });
 
   test('getArrayFields works', async () => {
@@ -824,6 +845,15 @@ describe('get fields', () => {
     await scheduler.resolving!.promise;
 
     expect(query.dogs.map((v) => v.name).join(',')).toBe('a,b');
+
+    expect(getArrayFields(null)).toBe(null);
+
+    const emptyObj: any = {};
+    expect(getArrayFields(emptyObj)).toBe(emptyObj);
+
+    const emptyArray = [null, undefined];
+
+    expect(getArrayFields(emptyArray)).toBe(emptyArray);
   });
 });
 
@@ -1003,4 +1033,88 @@ test('prepass works', () => {
 
   expect(proxy3.passed).toBe(true);
   expect(proxy4.passed).toBe(true);
+});
+
+test('type casters', async () => {
+  type Equals<X, Y> = (<T>() => T extends X ? 1 : 2) extends <
+    T
+  >() => T extends Y ? 1 : 2
+    ? true
+    : false;
+
+  const a1: {
+    a: string | undefined;
+    b: number | null | undefined;
+    c: {
+      d: number | undefined;
+    };
+  } = {} as any;
+
+  let a2 = castNotSkeleton(a1);
+
+  expect(a2).toBe(a1);
+
+  const equals: true = true as Equals<
+    typeof a2,
+    {
+      a: string;
+      b: number | null;
+      c: {
+        d: number | undefined;
+      };
+    }
+  >;
+
+  expect(equals).toBe(true);
+
+  const b1: {
+    a: string | undefined;
+    b: {
+      c:
+        | {
+            d: {
+              e: (
+                | {
+                    f: {
+                      h: [
+                        {
+                          i: number | undefined;
+                        }
+                      ];
+                    };
+                  }
+                | undefined
+                | null
+              )[];
+              j: () => string | undefined;
+            };
+          }
+        | undefined;
+    };
+  } = {} as any;
+
+  let b2 = castNotSkeletonDeep(b1);
+
+  const equal2: true = true as Equals<
+    typeof b2,
+    {
+      a: string;
+      b: {
+        c: {
+          d: {
+            e: ({
+              f: {
+                h: {
+                  i: number;
+                }[];
+              };
+            } | null)[];
+            j: () => string;
+          };
+        };
+      };
+    }
+  >;
+
+  expect(equal2).toBe(true);
 });
