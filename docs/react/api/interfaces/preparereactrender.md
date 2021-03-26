@@ -10,13 +10,13 @@ hide_title: true
 
 ## Callable
 
-▸ **PrepareReactRender**(`element`: _undefined_ \| _null_ \| _boolean_ \| _ReactElement_<any, string \| JSXElementConstructor<any\>\> \| ReactText \| ReactFragment \| _ReactPortal_): _Promise_<{ `cacheSnapshot`: _string_ }\>
+▸ **PrepareReactRender**(`element`: ReactNode): _Promise_<{ `cacheSnapshot`: _string_ }\>
 
 #### Parameters:
 
-| Name      | Type                                                                                                                                             |
-| :-------- | :----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `element` | _undefined_ \| _null_ \| _boolean_ \| _ReactElement_<any, string \| JSXElementConstructor<any\>\> \| ReactText \| ReactFragment \| _ReactPortal_ |
+| Name      | Type      |
+| :-------- | :-------- |
+| `element` | ReactNode |
 
 **Returns:** _Promise_<{ `cacheSnapshot`: _string_ }\>
 
