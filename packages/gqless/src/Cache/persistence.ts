@@ -23,7 +23,8 @@ export function createPersistenceHelpers(
   selectionManager: SelectionManager
 ): PersistenceHelpers {
   function backupPersistence(version?: string): string {
-    const cache = decycle(clientCache.cache);
+    const { query } = clientCache.cache;
+    const cache = decycle({ query });
     let normalizedCache: object | undefined;
     if (clientCache.normalizedCache) {
       normalizedCache = decycle(clientCache.normalizedCache);

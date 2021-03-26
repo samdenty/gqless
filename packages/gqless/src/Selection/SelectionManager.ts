@@ -126,8 +126,8 @@ export function createSelectionManager(): SelectionManager {
     let alias = aliasMap.get(aliasKey);
 
     if (alias == null) {
-      if (incIds[key] === undefined) incIds[key] = 0;
-      const incId = incIds[key]++;
+      if (incIds[key] === undefined) incIds[key] = -1;
+      const incId = ++incIds[key];
       alias = `${key}${incId}`;
       aliasMap.set(aliasKey, alias);
 
