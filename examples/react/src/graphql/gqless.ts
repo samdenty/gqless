@@ -1,4 +1,4 @@
-import { createClient, QueryFetcher } from 'gqless';
+import { createClient, QueryFetcher, debounce } from 'gqless';
 import { createSubscriptionsClient } from '@gqless/subscriptions';
 
 import {
@@ -57,6 +57,17 @@ export const client = createClient<
   },
   subscriptionsClient,
 });
+
+if (typeof window !== 'undefined') {
+  client.restorePersistence(localStorage.getItem('gqless-cache'), 'v1');
+  const backup = debounce(() => {
+    localStorage.setItem('gqless-cache', client.backupPersistence('v1'));
+  }, 1000);
+
+  client.eventHandler.onFetchSubscribe((promise) => promise.then(backup));
+
+  client.eventHandler.onCacheChangeSubscribe(backup);
+}
 
 export const {
   query,

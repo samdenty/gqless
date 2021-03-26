@@ -173,7 +173,7 @@ const resolvers: IResolvers = {
       return db.getData('/dogs');
     },
     async time() {
-      await sleep(2500);
+      // await sleep(2500);
       return new Date().toISOString();
     },
     async expectedError() {

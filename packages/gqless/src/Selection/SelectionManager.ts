@@ -54,15 +54,66 @@ export interface GetSelection {
 
 export interface SelectionManager {
   getSelection: GetSelection;
+  restoreAliases(backup: AliasBackupTuple[]): void;
+  backupAliases(): AliasBackupTuple[];
 }
 
-export function createSelectionManager(): SelectionManager {
-  const selectionCache = new Map<string, Selection>();
+export type AliasBackupTuple = [aliasKey: string, alias: string, incId: number];
 
-  const incIds: Record<string, number> = {};
-  const aliasMap = new Map<string, string>();
+export function createSelectionManager(): SelectionManager {
+  const selectionCache = new Map<
+    /**
+     * cacheKey
+     */
+    string,
+    Selection
+  >();
+
+  const incIds: Record<
+    /**
+     * key
+     */
+    string,
+    /**
+     * incId
+     */
+    number
+  > = {};
+  const aliasMap = new Map<
+    /**
+     * aliasKey
+     */
+    string,
+    /**
+     * alias
+     */
+    string
+  >();
 
   let id = 0;
+
+  let restoredAliases: AliasBackupTuple[] | undefined;
+
+  function restoreAliases(backup: AliasBackupTuple[]) {
+    restoredAliases = backup;
+    for (const [aliasKey, alias, incId] of backup) {
+      const key = aliasKey.slice(0, aliasKey.indexOf('-'));
+      aliasMap.set(aliasKey, alias);
+      incIds[key] = incId;
+    }
+  }
+
+  function backupAliases(): AliasBackupTuple[] {
+    if (restoredAliases) return restoredAliases;
+
+    const backup: AliasBackupTuple[] = [];
+    for (const [aliasKey, alias] of aliasMap.entries()) {
+      const key = aliasKey.slice(0, aliasKey.indexOf('-'));
+      backup.push([aliasKey, alias, incIds[key]]);
+    }
+
+    return (restoredAliases = backup);
+  }
 
   function getVariableAlias(
     key: string | number,
@@ -76,8 +127,11 @@ export function createSelectionManager(): SelectionManager {
 
     if (alias == null) {
       if (incIds[key] === undefined) incIds[key] = 0;
-      alias = `${key}${incIds[key]++}`;
+      const incId = incIds[key]++;
+      alias = `${key}${incId}`;
       aliasMap.set(aliasKey, alias);
+
+      if (restoredAliases) restoredAliases.push([aliasKey, alias, incId]);
     }
 
     return alias;
@@ -130,5 +184,7 @@ export function createSelectionManager(): SelectionManager {
 
   return {
     getSelection,
+    restoreAliases,
+    backupAliases,
   };
 }

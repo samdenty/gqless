@@ -12,6 +12,10 @@ import {
   createAccessorCache,
   createCache,
 } from '../Cache';
+import {
+  createPersistenceHelpers,
+  PersistenceHelpers,
+} from '../Cache/persistence';
 import { gqlessError } from '../Error';
 import { EventHandler } from '../Events';
 import { createPrefetch, Prefetch } from '../Helpers/prefetch';
@@ -143,7 +147,7 @@ export interface GqlessClient<
     mutation: {};
     subscription: {};
   }
-> {
+> extends PersistenceHelpers {
   query: GeneratedSchema['query'];
   mutation: GeneratedSchema['mutation'];
   subscription: GeneratedSchema['subscription'];
@@ -286,7 +290,7 @@ export function createClient<
     assignSelections,
   } = createAccessorCreators<GeneratedSchema>(innerState);
 
-  const { hydrateCache, prepareRender } = createSSRHelpers({
+  const ssrHelpers = createSSRHelpers({
     innerState,
     query,
     refetch,
@@ -340,6 +344,11 @@ export function createClient<
 
   const prefetch = createPrefetch<GeneratedSchema>(query, innerState);
 
+  const persistenceHelpers = createPersistenceHelpers(
+    clientCache,
+    selectionManager
+  );
+
   return {
     query,
     mutation,
@@ -353,12 +362,12 @@ export function createClient<
     buildAndFetchSelections,
     eventHandler,
     setCache,
-    hydrateCache,
-    prepareRender,
+    ...ssrHelpers,
     assignSelections,
     mutate,
     buildSelection,
     subscriptionsClient,
     prefetch,
+    ...persistenceHelpers,
   };
 }

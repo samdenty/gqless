@@ -28,6 +28,6 @@ Defined in: [query/hoc.tsx:14](https://github.com/gqless/gqless/blob/master/pack
 
 ### suspense
 
-• `Optional` **suspense**: _boolean_ \| { `fallback`: _null_ \| _boolean_ \| _ReactElement_<any, string \| JSXElementConstructor<any\>\> \| ReactText \| ReactFragment \| _ReactPortal_ }
+• `Optional` **suspense**: _boolean_ \| { `fallback`: _null_ \| _boolean_ \| ReactChild \| ReactFragment \| _ReactPortal_ }
 
 Defined in: [query/hoc.tsx:9](https://github.com/gqless/gqless/blob/master/packages/react/src/query/hoc.tsx#L9)

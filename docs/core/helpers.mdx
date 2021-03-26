@@ -19,7 +19,7 @@ with some specific features:
 
 The only **disadvantages** we see are basically:
 
-- If it finds a function, and you don't specify it's variables, it can't check if all variables are actually optional, and it call the function anyways, and that might result in a GraphQL error.
+- If it finds a function, and you don't specify it's variables, it can't check if all variables are actually optional, so it will call the function anyways without any variable, and that might result in a GraphQL error.
 - It doesn't have autocomplete 😔
 
 ```ts
@@ -78,8 +78,10 @@ Given an object, pre-access the specified fields, and returns the object back.
 
 - Good Type-Safety
 - Allows keeping the proxies around.
+- If no keys are specified, it selects all the scalars of the object
 - You can only specify the first level of scalars
 - It doesn't do anything for objects inside objects
+- It skips fields with arguments
 
 ```ts
 import { getFields, query, resolved } from 'gqless';

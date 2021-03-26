@@ -16,7 +16,7 @@ hide_title: true
 
 **Returns:** _Promise_<void\>
 
-Defined in: [packages/gqless/src/Client/client.ts:84](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L84)
+Defined in: [packages/gqless/src/Client/client.ts:88](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L88)
 
 ---
 
@@ -33,7 +33,7 @@ Defined in: [packages/gqless/src/Client/client.ts:84](https://github.com/gqless/
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/client.ts:85](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L85)
+Defined in: [packages/gqless/src/Client/client.ts:89](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L89)
 
 ---
 
@@ -54,7 +54,7 @@ Defined in: [packages/gqless/src/Client/client.ts:85](https://github.com/gqless/
 
 **Returns:** _Promise_<{ `unsubscribe`: () => _Promise_<void\> }\>
 
-Defined in: [packages/gqless/src/Client/client.ts:72](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L72)
+Defined in: [packages/gqless/src/Client/client.ts:76](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L76)
 
 ---
 
@@ -70,4 +70,4 @@ Defined in: [packages/gqless/src/Client/client.ts:72](https://github.com/gqless/
 
 **Returns:** _Promise_<void\>
 
-Defined in: [packages/gqless/src/Client/client.ts:83](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L83)
+Defined in: [packages/gqless/src/Client/client.ts:87](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L87)

@@ -75,3 +75,69 @@ export const getStaticProps: GetStaticProps<PageProps> = async (_ctx) => {
 ## Using Suspense
 
 Please check [Suspense in SSR](/react/suspense#suspense-in-ssr)
+
+## Using Next.js Router
+
+If you are using [Next.js `useRouter`](https://nextjs.org/docs/api-reference/next/router) inside a component of a Next.js project, you might encounter errors like:
+
+- `TypeError: Cannot destructure property 'pathname' of 'Object(...)(...)' as it is null.`
+
+Since with `prepareReactRender` you are rendering outside of the Next.js tree, you don't have access to it's `router`, and it's not even created yet.
+
+We suggest a couple of solutions:
+
+### Add a default object before destructuring
+
+You will need to check if you really have any router property available
+
+```ts
+import { useRouter } from 'next/router';
+
+// ...
+
+const { pathname } = useRouter() || {};
+
+// pathname == undefined while "prepareReactRender"
+```
+
+### Mocking Router Data
+
+Here you can either manually set the values of the router, or simply let it be `{}`, and all it's properties are simply going to be undefined.
+
+```tsx
+import type { PropsWithServerCache } from '@gqless/react';
+import type { GetServerSideProps } from 'next';
+import { useHydrateCache, prepareReactRender } from '../gqless';
+
+import { useRouter } from 'next/router';
+
+import { RouterContext } from 'next/dist/next-server/lib/router-context';
+
+export const getServerSideProps: GetServerSideProps<PropsWithServerCache> = async ({}) => {
+  const { cacheSnapshot } = await prepareReactRender(
+    <RouterContext.Provider
+      value={
+        {
+          pathname: '/page',
+        } as any
+      }
+    >
+      <Page />
+    </RouterContext.Provider>
+  );
+
+  return {
+    props: {
+      cacheSnapshot,
+    },
+  };
+};
+
+export default function Page({ cacheSnapshot }: PropsWithServerCache) {
+  // ...
+  const {
+    // ...
+  } = useRouter();
+  // ...
+}
+```

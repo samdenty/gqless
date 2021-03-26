@@ -1,5 +1,6 @@
-import { GetServerSideProps } from 'next';
-import { renderToString } from 'react-dom/server';
+import { RouterContext } from 'next/dist/next-server/lib/router-context';
+
+import { PropsWithServerCache } from '@gqless/react';
 
 import {
   graphql,
@@ -8,27 +9,24 @@ import {
 } from '../components/client';
 import { default as RefetchPage } from './refetch';
 
-interface PageProps {
-  page: string;
-  cacheSnapshot: string;
-}
+import type { GetServerSideProps } from 'next';
 
-export const getServerSideProps: GetServerSideProps<PageProps> = async () => {
-  const { cacheSnapshot } = await prepareReactRender(<RefetchPage />);
-
-  const page = renderToString(<RefetchPage />);
+export const getServerSideProps: GetServerSideProps<PropsWithServerCache> = async ({}) => {
+  const { cacheSnapshot } = await prepareReactRender(
+    <RouterContext.Provider value={{} as any}>
+      <RefetchPage />
+    </RouterContext.Provider>
+  );
 
   return {
     props: {
-      page,
       cacheSnapshot,
     },
   };
 };
 
 export default graphql(
-  function SSRPage({ page, cacheSnapshot }: PageProps) {
-    console.log(page, cacheSnapshot);
+  function SSRPage({ cacheSnapshot }: PropsWithServerCache) {
     useHydrateCache({
       cacheSnapshot,
     });

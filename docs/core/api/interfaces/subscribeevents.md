@@ -20,9 +20,9 @@ hide_title: true
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/client.ts:68](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L68)
+Defined in: [packages/gqless/src/Client/client.ts:72](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L72)
 
-Defined in: [packages/gqless/src/Client/client.ts:68](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L68)
+Defined in: [packages/gqless/src/Client/client.ts:72](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L72)
 
 ---
 
@@ -42,9 +42,9 @@ Defined in: [packages/gqless/src/Client/client.ts:68](https://github.com/gqless/
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/client.ts:62](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L62)
+Defined in: [packages/gqless/src/Client/client.ts:66](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L66)
 
-Defined in: [packages/gqless/src/Client/client.ts:62](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L62)
+Defined in: [packages/gqless/src/Client/client.ts:66](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L66)
 
 ---
 
@@ -66,9 +66,9 @@ Defined in: [packages/gqless/src/Client/client.ts:62](https://github.com/gqless/
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/client.ts:63](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L63)
+Defined in: [packages/gqless/src/Client/client.ts:67](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L67)
 
-Defined in: [packages/gqless/src/Client/client.ts:63](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L63)
+Defined in: [packages/gqless/src/Client/client.ts:67](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L67)
 
 ---
 
@@ -82,6 +82,6 @@ Defined in: [packages/gqless/src/Client/client.ts:63](https://github.com/gqless/
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/client.ts:67](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L67)
+Defined in: [packages/gqless/src/Client/client.ts:71](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L71)
 
-Defined in: [packages/gqless/src/Client/client.ts:67](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L67)
+Defined in: [packages/gqless/src/Client/client.ts:71](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L71)
