@@ -72,23 +72,31 @@ export interface SubscribeEvents {
   onComplete?: () => void;
 }
 
+export type PossiblePromise<T> = Promise<T> | T;
+
 export interface SubscriptionsClient {
   subscribe(opts: {
     query: string;
     variables: Record<string, unknown> | undefined;
     selections: Selection[];
     events:
-      | ((ctx: { selections: Selection[] }) => SubscribeEvents)
+      | ((ctx: {
+          selections: Selection[];
+          query: string;
+          variables: Record<string, unknown> | undefined;
+          operationId: string;
+        }) => SubscribeEvents)
       | SubscribeEvents;
     cacheKey?: string;
-  }): Promise<{
+  }): PossiblePromise<{
     unsubscribe: () => Promise<void>;
+    operationId: string;
   }>;
-  unsubscribe(selections: Selection[] | Set<Selection>): Promise<void>;
+  unsubscribe(selections: Selection[] | Set<Selection>): Promise<string[]>;
   close(): Promise<void>;
   setConnectionParams(
     connectionParams:
-      | (() => Record<string, unknown> | Promise<Record<string, unknown>>)
+      | (() => PossiblePromise<Record<string, unknown>>)
       | Record<string, unknown>,
     restartClient?: boolean
   ): void;

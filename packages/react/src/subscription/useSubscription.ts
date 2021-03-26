@@ -79,7 +79,26 @@ export function createUseSubscription<
         isMounted = false;
         unsubErrors();
         unsubscribeCache();
-        subscriptionsClient.unsubscribe(hookSelections);
+        subscriptionsClient
+          .unsubscribe(hookSelections)
+          .then((operationsIds) => {
+            if (eventHandler.hasFetchSubscribers && operationsIds.length) {
+              const arraySelections = Array.from(hookSelections);
+              for (const id of operationsIds) {
+                eventHandler.sendFetchPromise(
+                  Promise.resolve({
+                    query: '',
+                    variables: undefined,
+                    cacheSnapshot: client.cache,
+                    selections: arraySelections,
+                    type: 'subscription',
+                    label: `[id=${id}] [unsubscribe]`,
+                  }),
+                  arraySelections
+                );
+              }
+            }
+          });
       };
     }, [hookSelections, forceUpdate]);
 

@@ -5,6 +5,7 @@ import { gqlessError } from '../Error';
 import { Selection } from '../Selection';
 
 export interface FetchEventData {
+  label?: string;
   executionResult?: Pick<ExecutionResult, 'data' | 'extensions'>;
   error?: gqlessError;
   query: string;

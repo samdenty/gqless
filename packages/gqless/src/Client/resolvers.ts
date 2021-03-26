@@ -490,13 +490,15 @@ export function createResolvers(
     }
   }
 
-  function subscriptionSchedulerEvents({
-    selections,
-  }: {
+  function subscriptionSchedulerEvents(ctx: {
     selections: Selection[];
+    query: string;
+    variables: Record<string, unknown> | undefined;
+    operationId: string;
   }): SubscribeEvents {
     return {
       onData(data) {
+        const { selections, query, operationId, variables } = ctx;
         globalCache.mergeCache(data, 'subscription');
         scheduler.errors.removeErrors(selections);
         for (const selection of selections) {
@@ -505,8 +507,25 @@ export function createResolvers(
             selection,
           });
         }
+        if (eventHandler.hasFetchSubscribers) {
+          eventHandler.sendFetchPromise(
+            Promise.resolve({
+              executionResult: {
+                data,
+              },
+              cacheSnapshot: globalCache.cache,
+              query,
+              variables,
+              selections,
+              type: 'subscription',
+              label: `[id=${operationId}] [data]`,
+            }),
+            selections
+          );
+        }
       },
       onError({ data, error }) {
+        const { query, variables, selections, operationId } = ctx;
         if (data) globalCache.mergeCache(data, 'subscription');
 
         scheduler.errors.triggerError(
@@ -514,6 +533,24 @@ export function createResolvers(
           filterSelectionsWithErrors(error.graphQLErrors, data, selections),
           true
         );
+
+        if (eventHandler.hasFetchSubscribers) {
+          eventHandler.sendFetchPromise(
+            Promise.resolve({
+              executionResult: {
+                data,
+              },
+              error,
+              cacheSnapshot: globalCache.cache,
+              query,
+              variables,
+              selections,
+              type: 'subscription',
+              label: `[id=${operationId}] [error]`,
+            }),
+            selections
+          );
+        }
       },
     };
   }
@@ -539,7 +576,9 @@ export function createResolvers(
       true
     );
 
-    const { unsubscribe } = await subscriptions.subscribe({
+    let unsubscribe: () => Promise<void>;
+    let operationId: string;
+    const subResult = subscriptions.subscribe({
       query,
       variables,
       selections,
@@ -555,6 +594,22 @@ export function createResolvers(
                 unsubscribe,
                 data,
               });
+              if (eventHandler.hasFetchSubscribers) {
+                eventHandler.sendFetchPromise(
+                  Promise.resolve({
+                    executionResult: {
+                      data,
+                    },
+                    cacheSnapshot: globalCache.cache,
+                    query,
+                    variables,
+                    selections,
+                    type: 'subscription',
+                    label: `[id=${operationId}] [data]`,
+                  }),
+                  selections
+                );
+              }
             },
             onError({ data, error }) {
               if (data) cache.mergeCache(data, 'subscription');
@@ -565,6 +620,24 @@ export function createResolvers(
                 data,
                 error,
               });
+
+              if (eventHandler.hasFetchSubscribers) {
+                eventHandler.sendFetchPromise(
+                  Promise.resolve({
+                    executionResult: {
+                      data,
+                    },
+                    error,
+                    cacheSnapshot: globalCache.cache,
+                    query,
+                    variables,
+                    selections,
+                    type: 'subscription',
+                    label: `[id=${operationId}] [error]`,
+                  }),
+                  selections
+                );
+              }
             },
             onStart: options.onSubscription
               ? () => {
@@ -584,6 +657,25 @@ export function createResolvers(
               : undefined,
           },
     });
+
+    if (subResult instanceof Promise) {
+      let loggingPromise: DeferredPromise<FetchEventData> | undefined;
+      if (eventHandler.hasFetchSubscribers) {
+        loggingPromise = createDeferredPromise();
+        eventHandler.sendFetchPromise(loggingPromise.promise, selections);
+      }
+      ({ unsubscribe, operationId } = await subResult);
+      loggingPromise?.resolve({
+        cacheSnapshot: cache.cache,
+        query,
+        variables,
+        selections,
+        type: 'subscription',
+        label: `[id=${operationId}] [created]`,
+      });
+    } else {
+      unsubscribe = subResult.unsubscribe;
+    }
   }
 
   async function resolveSelections<

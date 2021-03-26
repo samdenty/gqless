@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import { name, seed } from 'faker';
+import * as faker from 'faker';
 import { defaults, keyBy } from 'lodash';
 import mercurius, { IResolvers, MercuriusLoaders } from 'mercurius';
 import { codegenMercurius, gql } from 'mercurius-codegen';
@@ -14,7 +14,7 @@ export const sleep = (amount: number) =>
 
 const db = new JsonDB('db.json', true, true, '/');
 
-seed(2021);
+faker.seed(2021);
 
 const paginatedData: {
   id: string;
@@ -22,7 +22,7 @@ const paginatedData: {
 }[] = new Array(200).fill(0).map((_, index) => {
   return {
     id: index + '',
-    name: name.firstName(),
+    name: faker.name.firstName(),
   };
 });
 
