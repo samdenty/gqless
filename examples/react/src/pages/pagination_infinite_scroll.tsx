@@ -1,66 +1,87 @@
 import { useEffect, useState } from 'react';
-import { graphql } from '../components/client';
-import { query, Human } from '../graphql/gqless';
 import { useInView } from 'react-intersection-observer';
+import { useDebounce } from 'react-use';
+
 import { Stack, Text } from '@chakra-ui/react';
 
-const amount = 20;
-export default graphql(
-  function PaginationPage() {
-    const [humans, setHumans] = useState<Human[]>(() => []);
-    const [after, setAfter] = useState<string | null | undefined>(null);
-    const [first, setFirst] = useState<number | null>(amount);
+import { useQuery } from '../components/client';
+import { Human } from '../graphql/gqless';
 
-    const {
-      nodes,
-      pageInfo: { startCursor, endCursor, hasNextPage, hasPreviousPage },
-    } = query.paginatedHumans({
-      input: {
-        first,
-        after,
-      },
-    });
+const first = 20;
+export default function PaginationPage() {
+  const [after, setAfter] = useState<string | null | undefined>(null);
 
-    const { ref, inView } = useInView({
-      threshold: 0,
-    });
+  const args = {
+    input: {
+      first,
+      after,
+    },
+  };
 
-    useEffect(() => {
-      if (nodes.length && nodes.every((v) => v.name)) {
-        setHumans((prev) => [...prev, ...nodes]);
-      }
-    }, [nodes, setHumans]);
-
-    useEffect(() => {
-      if (inView && hasNextPage) {
-        setAfter(endCursor);
-        setFirst(amount);
-      }
-    }, [inView, hasNextPage, setAfter, setFirst, endCursor]);
-
-    return (
-      <Stack>
-        <Text whiteSpace="pre-wrap">
-          {JSON.stringify(
-            {
-              time: query.time,
-              data: humans.map(({ id, name }) => ({ id, name })),
-              startCursor,
-              endCursor,
-              hasNextPage,
-              hasPreviousPage,
-            },
-            null,
-            2
-          )}
-        </Text>
-
-        {hasNextPage && <Text ref={ref}>Loading...</Text>}
-      </Stack>
-    );
-  },
-  {
+  const { paginatedHumans, time } = useQuery({
+    staleWhileRevalidate: after,
     suspense: false,
-    staleWhileRevalidate: false,
-  }
-);
+  });
+
+  const {
+    __typename,
+    nodes,
+    pageInfo: { startCursor, endCursor, hasNextPage, hasPreviousPage },
+  } = paginatedHumans(args);
+
+  const [humans, setHumans] = useState<Human[]>(() => {
+    if (__typename) return nodes;
+
+    return [];
+  });
+
+  const { ref, inView } = useInView({
+    threshold: 0,
+  });
+
+  useEffect(() => {
+    // This way, we can check if the data is "skeleton", or real data
+    if (__typename) {
+      setHumans((prev) =>
+        [...prev, ...nodes].filter((value, index, self) => {
+          return self.indexOf(value) === index;
+        })
+      );
+    }
+  }, [__typename, nodes, setHumans]);
+
+  const [next] = useDebounce(
+    () => {
+      if (inView && hasNextPage && endCursor) {
+        setAfter(endCursor);
+      }
+    },
+    100,
+    [inView, hasNextPage, setAfter, endCursor]
+  );
+
+  useEffect(() => {
+    next();
+  }, [next]);
+
+  return (
+    <Stack>
+      <Text whiteSpace="pre-wrap">
+        {JSON.stringify(
+          {
+            time,
+            data: humans.map(({ id, name }) => ({ id, name })),
+            startCursor,
+            endCursor,
+            hasNextPage,
+            hasPreviousPage,
+          },
+          null,
+          2
+        )}
+      </Text>
+
+      {hasNextPage && <Text ref={ref}>Loading...</Text>}
+    </Stack>
+  );
+}

@@ -16,7 +16,8 @@
     "dev:start": "pnpm start -r --no-bail --no-sort",
     "dev:test": "pnpm test:watch -r --no-bail --no-sort --stream",
     "publish:all": "changeset version && pnpm i && pnpm test && pnpm -r publish --access public",
-    "test": "jest --clearCache && pnpm test -r --no-sort --no-bail --stream"
+    "test": "jest --clearCache && pnpm test -r --no-sort --no-bail --stream",
+    "website": "pnpm -r --filter website start"
   },
   "husky": {
     "hooks": {
@@ -41,7 +42,7 @@
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.13.8",
     "@babel/plugin-proposal-optional-chaining": "^7.13.12",
     "@changesets/cli": "^2.14.1",
-    "@types/node": "^14.14.35",
+    "@types/node": "^14.14.36",
     "concurrently": "^6.0.0",
     "fkill": "^7.1.0",
     "husky": "^4.3.8",

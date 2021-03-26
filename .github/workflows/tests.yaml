@@ -42,4 +42,4 @@ jobs:
       - name: Install dependencies and build
         run: pnpm install
       - name: Test everything
-        run: pnpm test
+        run: pnpm test --workspace-concurrency 1

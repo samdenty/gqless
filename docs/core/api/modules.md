@@ -94,7 +94,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:64](https://github.com/gqless/g
 
 ### NotSkeleton
 
-Ƭ **NotSkeleton**<T\>: T _extends_ _any_[] ? [_NotSkeleton_](modules.md#notskeleton)<T[*number*]\>[] : T _extends_ _object_ ? { [P in keyof T]: undefined extends T[P] ? NotUndefined<T[P]\> : T[P]} : [_NotUndefined_](modules.md#notundefined)<T\>
+Ƭ **NotSkeleton**<T\>: T _extends_ _any_[] ? [_NotSkeleton_](modules.md#notskeleton)<T[*number*]\>[] : T _extends_ (...`args`: _any_[]) => _any_ ? (...`args`: _Parameters_<T\>) => [_NotUndefined_](modules.md#notundefined)<ReturnType<T\>\> : T _extends_ _object_ ? { [P in keyof T]: NotUndefined<T[P]\>} : [_NotUndefined_](modules.md#notundefined)<T\>
 
 Remove all possible 'undefined' types in the first level.
 
@@ -110,7 +110,7 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:19](https://github.com/gqles
 
 ### NotSkeletonDeep
 
-Ƭ **NotSkeletonDeep**<T\>: T _extends_ _any_[] ? [_NotSkeletonDeep_](modules.md#notskeletondeep)<T[*number*]\>[] : T _extends_ _object_ ? { [P in keyof T]: undefined extends T[P] ? NotUndefined<NotSkeletonDeep<T[P]\>\> : NotSkeletonDeep<T[P]\>} : [_NotUndefined_](modules.md#notundefined)<T\>
+Ƭ **NotSkeletonDeep**<T\>: T _extends_ _any_[] ? [_NotUndefined_](modules.md#notundefined)<[_NotSkeletonDeep_](modules.md#notskeletondeep)<T[*number*]\>\>[] : T _extends_ (...`args`: _any_[]) => _any_ ? (...`args`: _Parameters_<T\>) => [_NotSkeletonDeep_](modules.md#notskeletondeep)<[_NotUndefined_](modules.md#notundefined)<ReturnType<T\>\>\> : T _extends_ _object_ ? { [P in keyof T]: NotUndefined<NotSkeletonDeep<T[P]\>\>} : [_NotUndefined_](modules.md#notundefined)<T\>
 
 Remove all possible 'undefined' values recursively from an object
 
@@ -224,7 +224,7 @@ Runtime no-op that removes all the undefined types in the first level
 
 **Returns:** [_NotSkeleton_](modules.md#notskeleton)<T\>
 
-Defined in: [packages/gqless/src/Helpers/casters.ts:37](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L37)
+Defined in: [packages/gqless/src/Helpers/casters.ts:39](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L39)
 
 ---
 
@@ -248,7 +248,7 @@ Runtime no-op that removes all the undefined types recursively
 
 **Returns:** [_NotSkeletonDeep_](modules.md#notskeletondeep)<T\>
 
-Defined in: [packages/gqless/src/Helpers/casters.ts:32](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L32)
+Defined in: [packages/gqless/src/Helpers/casters.ts:34](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/casters.ts#L34)
 
 ---
 
@@ -275,7 +275,30 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:32](https://github.com/gqles
 
 **Returns:** [_GqlessClient_](interfaces/gqlessclient.md)<GeneratedSchema\>
 
-Defined in: [packages/gqless/src/Client/client.ts:186](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L186)
+Defined in: [packages/gqless/src/Client/client.ts:190](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L190)
+
+---
+
+### debounce
+
+▸ **debounce**<T\>(`fn`: (...`args`: T) => _void_, `delay`: _number_): _function_
+
+#### Type parameters:
+
+| Name | Type        |
+| :--- | :---------- |
+| `T`  | _unknown_[] |
+
+#### Parameters:
+
+| Name    | Type                     |
+| :------ | :----------------------- |
+| `fn`    | (...`args`: T) => _void_ |
+| `delay` | _number_                 |
+
+**Returns:** (...`args`: T) => _void_
+
+Defined in: [packages/gqless/src/Utils/debounce.ts:1](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Utils/debounce.ts#L1)
 
 ---
 

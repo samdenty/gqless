@@ -58,7 +58,7 @@ export interface SelectionManager {
   backupAliases(): AliasBackupTuple[];
 }
 
-type AliasBackupTuple = [aliasKey: string, alias: string, incId: number];
+export type AliasBackupTuple = [aliasKey: string, alias: string, incId: number];
 
 export function createSelectionManager(): SelectionManager {
   const selectionCache = new Map<

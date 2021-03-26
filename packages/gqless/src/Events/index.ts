@@ -34,18 +34,14 @@ export class EventHandler {
   private onCacheChangeListeners = new Set<OnCacheChangeEventFn>();
 
   public sendCacheChange(data: CacheChangeEventData) {
-    this.onCacheChangeListeners.forEach((listener) => {
-      listener(data);
-    });
+    for (const listener of this.onCacheChangeListeners) listener(data);
   }
 
   public sendFetchPromise(
     data: Promise<FetchEventData>,
     selections: Selection[]
   ) {
-    this.onFetchListeners.forEach((listener) => {
-      listener(data, selections);
-    });
+    for (const listener of this.onFetchListeners) listener(data, selections);
   }
 
   public onCacheChangeSubscribe(fn: OnCacheChangeEventFn) {

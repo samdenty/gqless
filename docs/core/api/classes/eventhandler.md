@@ -54,7 +54,7 @@ Defined in: [packages/gqless/src/Events/index.ts:32](https://github.com/gqless/g
 
 **Returns:** () => _void_
 
-Defined in: [packages/gqless/src/Events/index.ts:51](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Events/index.ts#L51)
+Defined in: [packages/gqless/src/Events/index.ts:47](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Events/index.ts#L47)
 
 ---
 
@@ -70,7 +70,7 @@ Defined in: [packages/gqless/src/Events/index.ts:51](https://github.com/gqless/g
 
 **Returns:** () => _void_
 
-Defined in: [packages/gqless/src/Events/index.ts:61](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Events/index.ts#L61)
+Defined in: [packages/gqless/src/Events/index.ts:57](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Events/index.ts#L57)
 
 ---
 
@@ -103,4 +103,4 @@ Defined in: [packages/gqless/src/Events/index.ts:36](https://github.com/gqless/g
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Events/index.ts:42](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Events/index.ts#L42)
+Defined in: [packages/gqless/src/Events/index.ts:40](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Events/index.ts#L40)

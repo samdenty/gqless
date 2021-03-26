@@ -21,7 +21,7 @@ hide_title: true
 
 • `Optional` **catchSelectionsTimeMS**: _number_
 
-Defined in: [packages/gqless/src/Client/client.ts:104](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L104)
+Defined in: [packages/gqless/src/Client/client.ts:108](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L108)
 
 ---
 
@@ -29,7 +29,7 @@ Defined in: [packages/gqless/src/Client/client.ts:104](https://github.com/gqless
 
 • `Optional` **normalization**: _boolean_ \| _NormalizationOptions_<ObjectTypesNames, SchemaObjectTypes\>
 
-Defined in: [packages/gqless/src/Client/client.ts:106](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L106)
+Defined in: [packages/gqless/src/Client/client.ts:110](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L110)
 
 ---
 
@@ -37,7 +37,7 @@ Defined in: [packages/gqless/src/Client/client.ts:106](https://github.com/gqless
 
 • **queryFetcher**: [_QueryFetcher_](../modules.md#queryfetcher)
 
-Defined in: [packages/gqless/src/Client/client.ts:103](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L103)
+Defined in: [packages/gqless/src/Client/client.ts:107](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L107)
 
 ---
 
@@ -45,7 +45,7 @@ Defined in: [packages/gqless/src/Client/client.ts:103](https://github.com/gqless
 
 • `Optional` **retry**: RetryOptions
 
-Defined in: [packages/gqless/src/Client/client.ts:105](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L105)
+Defined in: [packages/gqless/src/Client/client.ts:109](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L109)
 
 ---
 
@@ -53,7 +53,7 @@ Defined in: [packages/gqless/src/Client/client.ts:105](https://github.com/gqless
 
 • **scalarsEnumsHash**: [_ScalarsEnumsHash_](../modules.md#scalarsenumshash)
 
-Defined in: [packages/gqless/src/Client/client.ts:102](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L102)
+Defined in: [packages/gqless/src/Client/client.ts:106](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L106)
 
 ---
 
@@ -61,7 +61,7 @@ Defined in: [packages/gqless/src/Client/client.ts:102](https://github.com/gqless
 
 • **schema**: _Readonly_<[_Schema_](schema.md)\>
 
-Defined in: [packages/gqless/src/Client/client.ts:101](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L101)
+Defined in: [packages/gqless/src/Client/client.ts:105](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L105)
 
 ---
 
@@ -69,4 +69,4 @@ Defined in: [packages/gqless/src/Client/client.ts:101](https://github.com/gqless
 
 • `Optional` **subscriptionsClient**: [_SubscriptionsClient_](subscriptionsclient.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:109](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L109)
+Defined in: [packages/gqless/src/Client/client.ts:113](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L113)

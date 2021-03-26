@@ -29,6 +29,7 @@ module.exports = {
       'core/helpers',
       'core/config',
       'core/subscriptions',
+      'core/persistence',
       'core/api-reference',
       {
         type: 'category',
