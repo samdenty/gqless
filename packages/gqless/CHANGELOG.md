@@ -1,5 +1,12 @@
 # gqless
 
+## 2.0.6
+
+### Patch Changes
+
+- 173e11d: add subscriptions to events
+- c613410: fix selection alias id & persistence only query
+
 ## 2.0.5
 
 ### Patch Changes
