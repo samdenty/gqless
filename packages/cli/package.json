@@ -1,6 +1,6 @@
 {
   "name": "@gqless/cli",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "homepage": "https://gqless.com",
   "license": "MIT",
   "author": "PabloSz <pablosaez1995@gmail.com>",
@@ -34,7 +34,7 @@
     "commander": "^7.2.0",
     "cosmiconfig": "^7.0.0",
     "cross-fetch": "^3.1.2",
-    "gqless": "workspace:^2.0.4",
+    "gqless": "workspace:^2.0.5",
     "mkdirp": "^1.0.4",
     "prettier": "^2.2.1"
   },

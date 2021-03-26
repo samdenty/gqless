@@ -1,5 +1,13 @@
 # @gqless/cli
 
+## 2.0.6
+
+### Patch Changes
+
+- 8f1a329: add "ignoreArgs" schema transform
+- Updated dependencies [6fef085]
+  - gqless@2.0.5
+
 ## 2.0.5
 
 ### Patch Changes
