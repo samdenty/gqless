@@ -1,5 +1,14 @@
 # @gqless/logger
 
+## 2.0.6
+
+### Patch Changes
+
+- 173e11d: add subscriptions to events
+- Updated dependencies [173e11d]
+- Updated dependencies [c613410]
+  - gqless@2.0.6
+
 ## 2.0.5
 
 ### Patch Changes
