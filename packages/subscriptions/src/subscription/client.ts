@@ -383,12 +383,12 @@ export class Client {
     }
   }
 
-  async createSubscription(
+  createSubscription(
     query: string,
     variables: Record<string, unknown> | undefined,
     publish: OperationCallback,
     subscriptionString?: string
-  ) {
+  ): Promise<string> | string {
     if (!this.socket) this.connect();
 
     subscriptionString ||= JSON.stringify({
@@ -397,6 +397,8 @@ export class Client {
     });
 
     let operationId = this.subscriptionQueryMap[subscriptionString];
+
+    let startPromise: Promise<void> | undefined;
 
     try {
       let existingOperation: Operation | undefined;
@@ -437,21 +439,24 @@ export class Client {
 
       this.operations.set(operationId, operation);
 
-      const startPromise = this.startOperation(operationId);
+      startPromise = this.startOperation(operationId);
       this.operationsCount[operationId] = 1;
 
       this.subscriptionQueryMap[subscriptionString] = operationId;
 
-      await startPromise;
-
-      return operationId;
+      return startPromise.then(() => operationId);
     } finally {
-      setTimeout(() => {
-        publish({
-          operationId,
-          payload: 'start',
-        });
-      }, 0);
+      function start() {
+        setTimeout(() => {
+          publish({
+            operationId,
+            payload: 'start',
+          });
+        }, 0);
+      }
+
+      if (startPromise) startPromise.then(start);
+      else start();
     }
   }
 }

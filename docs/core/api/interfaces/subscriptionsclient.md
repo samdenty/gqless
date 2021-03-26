@@ -16,51 +16,51 @@ hide_title: true
 
 **Returns:** _Promise_<void\>
 
-Defined in: [packages/gqless/src/Client/client.ts:88](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L88)
+Defined in: [packages/gqless/src/Client/client.ts:96](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L96)
 
 ---
 
 ### setConnectionParams
 
-▸ **setConnectionParams**(`connectionParams`: _Record_<string, unknown\> \| () => _Record_<string, unknown\> \| _Promise_<Record<string, unknown\>\>, `restartClient?`: _boolean_): _void_
+▸ **setConnectionParams**(`connectionParams`: _Record_<string, unknown\> \| () => [_PossiblePromise_](../modules.md#possiblepromise)<Record<string, unknown\>\>, `restartClient?`: _boolean_): _void_
 
 #### Parameters:
 
-| Name               | Type                                                                                                   |
-| :----------------- | :----------------------------------------------------------------------------------------------------- |
-| `connectionParams` | _Record_<string, unknown\> \| () => _Record_<string, unknown\> \| _Promise_<Record<string, unknown\>\> |
-| `restartClient?`   | _boolean_                                                                                              |
+| Name               | Type                                                                                                              |
+| :----------------- | :---------------------------------------------------------------------------------------------------------------- |
+| `connectionParams` | _Record_<string, unknown\> \| () => [_PossiblePromise_](../modules.md#possiblepromise)<Record<string, unknown\>\> |
+| `restartClient?`   | _boolean_                                                                                                         |
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/client.ts:89](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L89)
+Defined in: [packages/gqless/src/Client/client.ts:97](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L97)
 
 ---
 
 ### subscribe
 
-▸ **subscribe**(`opts`: { `cacheKey?`: _string_ ; `events`: [_SubscribeEvents_](subscribeevents.md) \| (`ctx`: { `selections`: [_Selection_](../classes/selection.md)[] }) => [_SubscribeEvents_](subscribeevents.md) ; `query`: _string_ ; `selections`: [_Selection_](../classes/selection.md)[] ; `variables`: _undefined_ \| _Record_<string, unknown\> }): _Promise_<{ `unsubscribe`: () => _Promise_<void\> }\>
+▸ **subscribe**(`opts`: { `cacheKey?`: _string_ ; `events`: [_SubscribeEvents_](subscribeevents.md) \| (`ctx`: { `operationId`: _string_ ; `query`: _string_ ; `selections`: [_Selection_](../classes/selection.md)[] ; `variables`: _undefined_ \| _Record_<string, unknown\> }) => [_SubscribeEvents_](subscribeevents.md) ; `query`: _string_ ; `selections`: [_Selection_](../classes/selection.md)[] ; `variables`: _undefined_ \| _Record_<string, unknown\> }): [_PossiblePromise_](../modules.md#possiblepromise)<{ `operationId`: _string_ ; `unsubscribe`: () => _Promise_<void\> }\>
 
 #### Parameters:
 
-| Name              | Type                                                                                                                                                      |
-| :---------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `opts`            | _object_                                                                                                                                                  |
-| `opts.cacheKey?`  | _string_                                                                                                                                                  |
-| `opts.events`     | [_SubscribeEvents_](subscribeevents.md) \| (`ctx`: { `selections`: [_Selection_](../classes/selection.md)[] }) => [_SubscribeEvents_](subscribeevents.md) |
-| `opts.query`      | _string_                                                                                                                                                  |
-| `opts.selections` | [_Selection_](../classes/selection.md)[]                                                                                                                  |
-| `opts.variables`  | _undefined_ \| _Record_<string, unknown\>                                                                                                                 |
+| Name              | Type                                                                                                                                                                                                                                                             |
+| :---------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `opts`            | _object_                                                                                                                                                                                                                                                         |
+| `opts.cacheKey?`  | _string_                                                                                                                                                                                                                                                         |
+| `opts.events`     | [_SubscribeEvents_](subscribeevents.md) \| (`ctx`: { `operationId`: _string_ ; `query`: _string_ ; `selections`: [_Selection_](../classes/selection.md)[] ; `variables`: _undefined_ \| _Record_<string, unknown\> }) => [_SubscribeEvents_](subscribeevents.md) |
+| `opts.query`      | _string_                                                                                                                                                                                                                                                         |
+| `opts.selections` | [_Selection_](../classes/selection.md)[]                                                                                                                                                                                                                         |
+| `opts.variables`  | _undefined_ \| _Record_<string, unknown\>                                                                                                                                                                                                                        |
 
-**Returns:** _Promise_<{ `unsubscribe`: () => _Promise_<void\> }\>
+**Returns:** [_PossiblePromise_](../modules.md#possiblepromise)<{ `operationId`: _string_ ; `unsubscribe`: () => _Promise_<void\> }\>
 
-Defined in: [packages/gqless/src/Client/client.ts:76](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L76)
+Defined in: [packages/gqless/src/Client/client.ts:78](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L78)
 
 ---
 
 ### unsubscribe
 
-▸ **unsubscribe**(`selections`: [_Selection_](../classes/selection.md)[] \| _Set_<[_Selection_](../classes/selection.md)\>): _Promise_<void\>
+▸ **unsubscribe**(`selections`: [_Selection_](../classes/selection.md)[] \| _Set_<[_Selection_](../classes/selection.md)\>): _Promise_<string[]\>
 
 #### Parameters:
 
@@ -68,6 +68,6 @@ Defined in: [packages/gqless/src/Client/client.ts:76](https://github.com/gqless/
 | :----------- | :----------------------------------------------------------------------------------------- |
 | `selections` | [_Selection_](../classes/selection.md)[] \| _Set_<[_Selection_](../classes/selection.md)\> |
 
-**Returns:** _Promise_<void\>
+**Returns:** _Promise_<string[]\>
 
-Defined in: [packages/gqless/src/Client/client.ts:87](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L87)
+Defined in: [packages/gqless/src/Client/client.ts:95](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L95)

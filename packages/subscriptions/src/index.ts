@@ -15,6 +15,15 @@ export interface SubscriptionsClientOptions extends ClientOptions {
   wsEndpoint: string | (() => string | Promise<string>);
 }
 
+export type PossiblePromise<T> = Promise<T> | T;
+
+type SubContext = {
+  selections: Selection[];
+  query: string;
+  variables: Record<string, unknown> | undefined;
+  operationId: string;
+};
+
 export function createSubscriptionsClient({
   wsEndpoint,
   ...opts
@@ -40,66 +49,97 @@ export function createSubscriptionsClient({
   const SubscriptionsSelections: Map<string, Set<Selection>> = new Map();
 
   const eventsReference = new WeakMap<
-    ((ctx: { selections: Selection[] }) => SubscribeEvents) | SubscribeEvents,
+    ((ctx: SubContext) => SubscribeEvents) | SubscribeEvents,
     OperationCallback
   >();
 
   return {
-    async subscribe({ query, variables, events, cacheKey, selections }) {
-      const wsClient = wsClientValue || (await wsClientPromise);
-
-      let callback: OperationCallback | undefined;
-
-      if (!(callback = eventsReference.get(events))) {
-        const { onData, onError, onComplete, onStart } =
-          typeof events === 'function' ? events({ selections }) : events;
-
-        callback = function ({ payload }) {
-          switch (payload) {
-            case 'start':
-              onStart?.();
-              break;
-            case 'complete':
-              SubscriptionsSelections.delete(operationId);
-              onComplete?.();
-              break;
-            default:
-              const { data, errors } = payload;
-              if (errors?.length) {
-                onError({
-                  data,
-                  error: gqlessError.fromGraphQLErrors(errors),
-                });
-              } else if (data) {
-                onData(data);
-              }
-          }
-        };
-        eventsReference.set(events, callback);
-      }
-
-      const operationId = await wsClient.createSubscription(
+    subscribe({ query, variables, events, cacheKey, selections }) {
+      let operationId: string = 'NO_ID';
+      const ctx: SubContext = {
         query,
         variables,
-        callback,
-        cacheKey
-      );
-
-      SubscriptionsSelections.set(operationId, new Set(selections));
-
-      const unsubscribe = async () => {
-        await wsClient.unsubscribe(operationId, true);
-        SubscriptionsSelections.delete(operationId);
+        operationId,
+        selections,
       };
+      if (wsClientValue) {
+        return execSubscribe(wsClientValue);
+      } else {
+        return wsClientPromise.then((wsSubClient) =>
+          execSubscribe(wsSubClient)
+        );
+      }
 
-      return {
-        unsubscribe,
-      };
+      function execSubscribe(
+        wsSubClient: Client
+      ): ReturnType<SubscriptionsClient['subscribe']> {
+        let callback: OperationCallback | undefined;
+
+        if (!(callback = eventsReference.get(events))) {
+          const { onData, onError, onComplete, onStart } =
+            typeof events === 'function' ? events(ctx) : events;
+
+          callback = function ({ payload, operationId }) {
+            ctx.operationId = operationId;
+            switch (payload) {
+              case 'start':
+                onStart?.();
+                break;
+              case 'complete':
+                SubscriptionsSelections.delete(operationId);
+                onComplete?.();
+                break;
+              default:
+                const { data, errors } = payload;
+                if (errors?.length) {
+                  onError({
+                    data,
+                    error: gqlessError.fromGraphQLErrors(errors),
+                  });
+                } else if (data) {
+                  onData(data);
+                }
+            }
+          };
+          eventsReference.set(events, callback);
+        }
+
+        const operationIdPromise = wsSubClient.createSubscription(
+          query,
+          variables,
+          callback,
+          cacheKey
+        );
+
+        if (operationIdPromise instanceof Promise) {
+          return operationIdPromise.then((id) => {
+            ctx.operationId = operationId = id;
+            return returnSub(id);
+          });
+        } else {
+          ctx.operationId = operationId = operationIdPromise;
+          return returnSub(operationId);
+        }
+
+        function returnSub(operationId: string) {
+          const unsubscribe = async () => {
+            await wsSubClient.unsubscribe(operationId, true);
+            SubscriptionsSelections.delete(operationId);
+          };
+          SubscriptionsSelections.set(operationId, new Set(selections));
+
+          return {
+            unsubscribe,
+            operationId,
+          };
+        }
+      }
     },
     async unsubscribe(selections) {
       const wsClient = wsClientValue || (await wsClientPromise);
 
       let promises: Promise<void>[] = [];
+      const operationIds: string[] = [];
 
       checkOperations: for (const [
         operationId,
@@ -107,6 +147,7 @@ export function createSubscriptionsClient({
       ] of SubscriptionsSelections.entries()) {
         for (const selection of selections) {
           if (operationSelections.has(selection)) {
+            operationIds.push(operationId);
             promises.push(wsClient.unsubscribe(operationId, true));
             SubscriptionsSelections.delete(operationId);
             continue checkOperations;
@@ -115,6 +156,8 @@ export function createSubscriptionsClient({
       }
 
       if (promises.length) await Promise.all(promises);
+
+      return operationIds;
     },
     async close() {
       const wsClient = wsClientValue || (await wsClientPromise);

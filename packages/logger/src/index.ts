@@ -85,6 +85,7 @@ export function createLogger(
       executionResult,
       cacheSnapshot,
       type,
+      label,
     } = await dataPromise;
 
     const fetchTime = Date.now() - startTime;
@@ -93,6 +94,7 @@ export function createLogger(
       ...format(
         ['GraphQL ', 'color: gray'],
         [type + ' ', `color: ${error ? 'red' : '#03A9F4'}; font-weight: bold`],
+        ...(label ? [[label + ' ', 'color: green']] : []),
         [`(${fetchTime}ms)`, 'color: gray'],
         [` ${selections.length} selections`, 'color: gray'],
 
@@ -105,27 +107,30 @@ export function createLogger(
 
     const headerStyles = `font-weight: bold; color: #f316c1`;
 
-    console.group(
-      ...format(
-        ['Query ', headerStyles],
-        ['  ', `background-image: url(https://graphql.org/img/logo.svg)`]
-      )
-    );
-
-    if (variables) {
-      console.log(
-        ...format(['Variables', 'color: #25e1e1']),
-        stringifyJSONIfEnabled(variables)
+    // Ignore empty string queries
+    if (query) {
+      console.group(
+        ...format(
+          ['Query ', headerStyles],
+          ['  ', `background-image: url(https://graphql.org/img/logo.svg)`]
+        )
       );
+
+      if (variables) {
+        console.log(
+          ...format(['Variables', 'color: #25e1e1']),
+          stringifyJSONIfEnabled(variables)
+        );
+      }
+
+      console.log(...format([parseGraphQL(query)]));
+
+      console.groupEnd();
     }
-
-    console.log(...format([parseGraphQL(query)]));
-
-    console.groupEnd();
 
     if (error) {
       console.error(...format(['Error', headerStyles]), serializeError(error));
-    } else {
+    } else if (executionResult) {
       console.log(
         ...format(['Result', headerStyles]),
         stringifyJSONIfEnabled(executionResult)
@@ -151,6 +156,9 @@ export function createLogger(
     }
   }
 
+  /**
+   * Start logging, it returns the "stop" function
+   */
   function start() {
     const unsubscribe = eventHandler.onFetchSubscribe(onFetch);
 

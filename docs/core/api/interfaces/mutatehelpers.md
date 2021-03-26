@@ -21,7 +21,7 @@ hide_title: true
 
 • **assignSelections**: [_AssignSelections_](assignselections.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:123](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L123)
+Defined in: [packages/gqless/src/Client/client.ts:131](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L131)
 
 ---
 
@@ -29,7 +29,7 @@ Defined in: [packages/gqless/src/Client/client.ts:123](https://github.com/gqless
 
 • **query**: GeneratedSchema[*query*]
 
-Defined in: [packages/gqless/src/Client/client.ts:121](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L121)
+Defined in: [packages/gqless/src/Client/client.ts:129](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L129)
 
 ---
 
@@ -37,4 +37,4 @@ Defined in: [packages/gqless/src/Client/client.ts:121](https://github.com/gqless
 
 • **setCache**: [_SetCache_](setcache.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:122](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L122)
+Defined in: [packages/gqless/src/Client/client.ts:130](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L130)
