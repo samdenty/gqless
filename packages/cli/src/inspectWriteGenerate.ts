@@ -118,20 +118,16 @@ export async function inspectWriteGenerate({
     async (existingFile) => {
       const subscriptions =
         genOptions.subscriptions ??
-        (await gqlessConfigPromise).config.subscriptions ??
-        defaultConfig.subscriptions;
+        (await gqlessConfigPromise).config.subscriptions;
       const react =
-        genOptions.react ??
-        (await gqlessConfigPromise).config.react ??
-        defaultConfig.react;
+        genOptions.react ?? (await gqlessConfigPromise).config.react;
 
-      const advice =
-        '\nPlease remove manually the existing file and re-run code generation.';
+      const advice = `\nIf you meant to change this, please remove "${destination}" and re-run code generation.`;
 
       if (subscriptions) {
         if (!existingFile.includes('createSubscriptionsClient')) {
           console.warn(
-            '[Warning] In the existing gqless Client file "Subscriptions" was not enabled.' +
+            `[Warning] You've changed the option "subscriptions" to 'true', which is different from your existing "${destination}".` +
               advice
           );
         }
@@ -139,7 +135,7 @@ export async function inspectWriteGenerate({
       if (react) {
         if (!existingFile.includes('createReactClient')) {
           console.warn(
-            '[Warning] In the existing gqless Client file "React" was not enabled.' +
+            `[Warning] You've changed the option "react" to 'true', which is different from your existing "${destination}".` +
               advice
           );
         }

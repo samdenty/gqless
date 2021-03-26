@@ -946,20 +946,27 @@ describe('CLI behavior', () => {
 test('detect client config change between files', async () => {
   const tempDir = await getTempDir();
 
+  const clientPathRegex = new RegExp(
+    tempDir.clientPath.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'),
+    'g'
+  );
+
   let n = 0;
   const spy = jest.spyOn(console, 'warn').mockImplementation((message) => {
     switch (++n) {
       case 1: {
-        expect(message).toMatchInlineSnapshot(`
-          "[Warning] In the existing gqless Client file \\"Subscriptions\\" was not enabled.
-          Please remove manually the existing file and re-run code generation."
+        expect(message.replace(clientPathRegex, 'client.ts'))
+          .toMatchInlineSnapshot(`
+          "[Warning] You've changed the option \\"subscriptions\\" to 'true', which is different from your existing \\"client.ts\\".
+          If you meant to change this, please remove \\"client.ts\\" and re-run code generation."
         `);
         break;
       }
       case 2: {
-        expect(message).toMatchInlineSnapshot(`
-          "[Warning] In the existing gqless Client file \\"React\\" was not enabled.
-          Please remove manually the existing file and re-run code generation."
+        expect(message.replace(clientPathRegex, 'client.ts'))
+          .toMatchInlineSnapshot(`
+          "[Warning] You've changed the option \\"react\\" to 'true', which is different from your existing \\"client.ts\\".
+          If you meant to change this, please remove \\"client.ts\\" and re-run code generation."
         `);
         break;
       }
