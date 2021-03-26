@@ -1,5 +1,12 @@
 # @gqless/react
 
+## 2.0.6
+
+### Patch Changes
+
+- Updated dependencies [6fef085]
+  - gqless@2.0.5
+
 ## 2.0.5
 
 ### Patch Changes

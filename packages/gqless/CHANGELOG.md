@@ -1,5 +1,11 @@
 # gqless
 
+## 2.0.5
+
+### Patch Changes
+
+- 6fef085: add cache persistence helpers
+
 ## 2.0.4
 
 ### Patch Changes
