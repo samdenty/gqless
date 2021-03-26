@@ -138,6 +138,20 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:1](https://github.com/gqless
 
 ---
 
+### PossiblePromise
+
+Ƭ **PossiblePromise**<T\>: _Promise_<T\> \| T
+
+#### Type parameters:
+
+| Name |
+| :--- |
+| `T`  |
+
+Defined in: [packages/gqless/src/Client/client.ts:75](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L75)
+
+---
+
 ### QueryFetcher
 
 Ƭ **QueryFetcher**: (`query`: _string_, `variables?`: _Record_<string, any\>) => _Promise_<ExecutionResult\> \| ExecutionResult
@@ -275,7 +289,7 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:34](https://github.com/gqles
 
 **Returns:** [_GqlessClient_](interfaces/gqlessclient.md)<GeneratedSchema\>
 
-Defined in: [packages/gqless/src/Client/client.ts:190](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L190)
+Defined in: [packages/gqless/src/Client/client.ts:198](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L198)
 
 ---
 
