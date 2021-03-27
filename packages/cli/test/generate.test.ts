@@ -97,8 +97,8 @@ test('basic functionality works', async () => {
         /**
          * @defaultValue \`123\`
          */
-        arg?: ScalarsEnums['Int'];
-      }) => ScalarsEnums['Int'];
+        arg?: Maybe<Scalars['Int']>;
+      }) => Maybe<ScalarsEnums['Int']>;
     }
 
     export interface Mutation {
@@ -521,6 +521,10 @@ describe('feature complete app', () => {
         arrayObjectArgs(limit: Int = 10): [Human!]!
         greetings: GreetingsEnum!
         giveGreetingsInput(input: GreetingsInput!): String!
+        enumsInput(
+          nullableEnum: GreetingsEnum
+          notNullableEnum: GreetingsEnum!
+        ): GreetingsEnum
         number: Int!
       }
       type Mutation {
@@ -645,6 +649,13 @@ describe('feature complete app', () => {
             __type: 'String!',
             __args: { input: 'GreetingsInput!' },
           },
+          enumsInput: {
+            __type: 'GreetingsEnum',
+            __args: {
+              nullableEnum: 'GreetingsEnum',
+              notNullableEnum: 'GreetingsEnum!',
+            },
+          },
           number: { __type: 'Int!' },
         },
         mutation: {
@@ -680,43 +691,47 @@ describe('feature complete app', () => {
         __typename: 'Query' | undefined;
         simpleString: ScalarsEnums['String'];
         stringWithArgs: (args: {
-          hello: ScalarsEnums['String'];
+          hello: Scalars['String'];
         }) => ScalarsEnums['String'];
         stringNullableWithArgs: (args: {
-          hello: ScalarsEnums['String']
+          hello: Scalars['String']
           /**
            * @defaultValue \`\\"Hi\\"\`
            */;
-          helloTwo?: ScalarsEnums['String'];
-        }) => ScalarsEnums['String'];
+          helloTwo?: Maybe<Scalars['String']>;
+        }) => Maybe<ScalarsEnums['String']>;
         stringNullableWithArgsArray: (args: {
-          hello: Array<Maybe<ScalarsEnums['String']>>;
-        }) => ScalarsEnums['String'];
+          hello: Array<Maybe<Scalars['String']>>;
+        }) => Maybe<ScalarsEnums['String']>;
         object?: Maybe<Human>;
         objectArray?: Maybe<Array<Maybe<Human>>>;
         objectWithArgs: (args: {
           /**
            * Who?
            */
-          who: ScalarsEnums['String'];
+          who: Scalars['String'];
         }) => Human;
         arrayString: Array<ScalarsEnums['String']>;
         arrayObjectArgs: (args?: {
           /**
            * @defaultValue \`10\`
            */
-          limit?: ScalarsEnums['Int'];
+          limit?: Maybe<Scalars['Int']>;
         }) => Array<Human>;
         greetings: ScalarsEnums['GreetingsEnum'];
         giveGreetingsInput: (args: {
           input: GreetingsInput;
         }) => ScalarsEnums['String'];
+        enumsInput: (args: {
+          nullableEnum?: Maybe<GreetingsEnum>;
+          notNullableEnum: GreetingsEnum;
+        }) => Maybe<ScalarsEnums['GreetingsEnum']>;
         number: ScalarsEnums['Int'];
       }
 
       export interface Mutation {
         __typename: 'Mutation' | undefined;
-        increment: (args: { n: ScalarsEnums['Int'] }) => ScalarsEnums['Int'];
+        increment: (args: { n: Scalars['Int'] }) => ScalarsEnums['Int'];
       }
 
       export interface Subscription {
@@ -726,25 +741,25 @@ describe('feature complete app', () => {
       export interface Human extends NamedEntity {
         __typename: 'Human' | undefined;
         name: ScalarsEnums['String'];
-        other?: ScalarsEnums['String'];
+        other?: Maybe<ScalarsEnums['String']>;
         father: Human;
-        fieldWithArgs: (args: { id: ScalarsEnums['Int'] }) => ScalarsEnums['Int'];
+        fieldWithArgs: (args: { id: Scalars['Int'] }) => ScalarsEnums['Int'];
         withArgs: (args: {
-          a: ScalarsEnums['Int'];
-          b?: ScalarsEnums['Int'];
-        }) => ScalarsEnums['Int'];
-        withArgs2: (args?: { a?: ScalarsEnums['Int'] }) => ScalarsEnums['Int'];
+          a: Scalars['Int'];
+          b?: Maybe<Scalars['Int']>;
+        }) => Maybe<ScalarsEnums['Int']>;
+        withArgs2: (args?: { a?: Maybe<Scalars['Int']> }) => ScalarsEnums['Int'];
       }
 
       export interface OtherHuman {
         __typename: 'OtherHuman' | undefined;
         name: ScalarsEnums['String'];
-        other?: ScalarsEnums['String'];
+        other?: Maybe<ScalarsEnums['String']>;
         withArgs: (args: {
-          a: ScalarsEnums['Int'];
-          b?: ScalarsEnums['Int'];
-        }) => ScalarsEnums['Int'];
-        withArgs2: (args?: { a?: ScalarsEnums['Int'] }) => ScalarsEnums['Int'];
+          a: Scalars['Int'];
+          b?: Maybe<Scalars['Int']>;
+        }) => Maybe<ScalarsEnums['Int']>;
+        withArgs2: (args?: { a?: Maybe<Scalars['Int']> }) => ScalarsEnums['Int'];
       }
 
       export interface SchemaObjectTypes {
@@ -765,26 +780,26 @@ describe('feature complete app', () => {
         | {
             __typename: 'Human' | undefined;
             father: Human;
-            fieldWithArgs: (args: { id: ScalarsEnums['Int'] }) => ScalarsEnums['Int'];
+            fieldWithArgs: (args: { id: Scalars['Int'] }) => ScalarsEnums['Int'];
             name: ScalarsEnums['String'];
-            other?: ScalarsEnums['String'];
+            other?: Maybe<ScalarsEnums['String']>;
             withArgs: (args: {
-              a: ScalarsEnums['Int'];
-              b?: ScalarsEnums['Int'];
-            }) => ScalarsEnums['Int'];
-            withArgs2: (args?: { a?: ScalarsEnums['Int'] }) => ScalarsEnums['Int'];
+              a: Scalars['Int'];
+              b?: Maybe<Scalars['Int']>;
+            }) => Maybe<ScalarsEnums['Int']>;
+            withArgs2: (args?: { a?: Maybe<Scalars['Int']> }) => ScalarsEnums['Int'];
           }
         | {
             __typename: 'OtherHuman' | undefined;
             father?: undefined;
             fieldWithArgs?: undefined;
             name: ScalarsEnums['String'];
-            other?: ScalarsEnums['String'];
+            other?: Maybe<ScalarsEnums['String']>;
             withArgs: (args: {
-              a: ScalarsEnums['Int'];
-              b?: ScalarsEnums['Int'];
-            }) => ScalarsEnums['Int'];
-            withArgs2: (args?: { a?: ScalarsEnums['Int'] }) => ScalarsEnums['Int'];
+              a: Scalars['Int'];
+              b?: Maybe<Scalars['Int']>;
+            }) => Maybe<ScalarsEnums['Int']>;
+            withArgs2: (args?: { a?: Maybe<Scalars['Int']> }) => ScalarsEnums['Int'];
           };
 
       /**
@@ -795,7 +810,7 @@ describe('feature complete app', () => {
          * Named Entity Name
          */
         name: ScalarsEnums['String'];
-        other?: ScalarsEnums['String'];
+        other?: Maybe<ScalarsEnums['String']>;
       }
 
       export interface GeneratedSchema {
@@ -815,7 +830,7 @@ describe('feature complete app', () => {
       "
     `);
     expect(JSON.stringify(generatedSchema)).toMatchInlineSnapshot(
-      `"{\\"query\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"simpleString\\":{\\"__type\\":\\"String!\\"},\\"stringWithArgs\\":{\\"__type\\":\\"String!\\",\\"__args\\":{\\"hello\\":\\"String!\\"}},\\"stringNullableWithArgs\\":{\\"__type\\":\\"String\\",\\"__args\\":{\\"hello\\":\\"String!\\",\\"helloTwo\\":\\"String\\"}},\\"stringNullableWithArgsArray\\":{\\"__type\\":\\"String\\",\\"__args\\":{\\"hello\\":\\"[String]!\\"}},\\"object\\":{\\"__type\\":\\"Human\\"},\\"objectArray\\":{\\"__type\\":\\"[Human]\\"},\\"objectWithArgs\\":{\\"__type\\":\\"Human!\\",\\"__args\\":{\\"who\\":\\"String!\\"}},\\"arrayString\\":{\\"__type\\":\\"[String!]!\\"},\\"arrayObjectArgs\\":{\\"__type\\":\\"[Human!]!\\",\\"__args\\":{\\"limit\\":\\"Int\\"}},\\"greetings\\":{\\"__type\\":\\"GreetingsEnum!\\"},\\"giveGreetingsInput\\":{\\"__type\\":\\"String!\\",\\"__args\\":{\\"input\\":\\"GreetingsInput!\\"}},\\"number\\":{\\"__type\\":\\"Int!\\"}},\\"mutation\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"increment\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"n\\":\\"Int!\\"}}},\\"subscription\\":{},\\"GreetingsInput\\":{\\"language\\":{\\"__type\\":\\"String!\\"},\\"value\\":{\\"__type\\":\\"String\\"},\\"scal\\":{\\"__type\\":\\"ExampleScalar\\"}},\\"Human\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"father\\":{\\"__type\\":\\"Human!\\"},\\"fieldWithArgs\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"id\\":\\"Int!\\"}},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}},\\"OtherHuman\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}}}"`
+      `"{\\"query\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"simpleString\\":{\\"__type\\":\\"String!\\"},\\"stringWithArgs\\":{\\"__type\\":\\"String!\\",\\"__args\\":{\\"hello\\":\\"String!\\"}},\\"stringNullableWithArgs\\":{\\"__type\\":\\"String\\",\\"__args\\":{\\"hello\\":\\"String!\\",\\"helloTwo\\":\\"String\\"}},\\"stringNullableWithArgsArray\\":{\\"__type\\":\\"String\\",\\"__args\\":{\\"hello\\":\\"[String]!\\"}},\\"object\\":{\\"__type\\":\\"Human\\"},\\"objectArray\\":{\\"__type\\":\\"[Human]\\"},\\"objectWithArgs\\":{\\"__type\\":\\"Human!\\",\\"__args\\":{\\"who\\":\\"String!\\"}},\\"arrayString\\":{\\"__type\\":\\"[String!]!\\"},\\"arrayObjectArgs\\":{\\"__type\\":\\"[Human!]!\\",\\"__args\\":{\\"limit\\":\\"Int\\"}},\\"greetings\\":{\\"__type\\":\\"GreetingsEnum!\\"},\\"giveGreetingsInput\\":{\\"__type\\":\\"String!\\",\\"__args\\":{\\"input\\":\\"GreetingsInput!\\"}},\\"enumsInput\\":{\\"__type\\":\\"GreetingsEnum\\",\\"__args\\":{\\"nullableEnum\\":\\"GreetingsEnum\\",\\"notNullableEnum\\":\\"GreetingsEnum!\\"}},\\"number\\":{\\"__type\\":\\"Int!\\"}},\\"mutation\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"increment\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"n\\":\\"Int!\\"}}},\\"subscription\\":{},\\"GreetingsInput\\":{\\"language\\":{\\"__type\\":\\"String!\\"},\\"value\\":{\\"__type\\":\\"String\\"},\\"scal\\":{\\"__type\\":\\"ExampleScalar\\"}},\\"Human\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"father\\":{\\"__type\\":\\"Human!\\"},\\"fieldWithArgs\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"id\\":\\"Int!\\"}},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}},\\"OtherHuman\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}}}"`
     );
     expect(JSON.stringify(scalarsEnumsHash)).toMatchInlineSnapshot(
       `"{\\"ExampleScalar\\":true,\\"GreetingsEnum\\":true,\\"OtherEnum\\":true,\\"String\\":true,\\"Int\\":true,\\"Boolean\\":true}"`
@@ -914,9 +929,7 @@ describe('mutation', () => {
 
       export interface Mutation {
         __typename: 'Mutation' | undefined;
-        helloMutation: (args: {
-          hello: ScalarsEnums['String'];
-        }) => ScalarsEnums['String'];
+        helloMutation: (args: { hello: Scalars['String'] }) => ScalarsEnums['String'];
       }
 
       export interface Subscription {
@@ -1360,12 +1373,12 @@ test('javascript output works', async () => {
 
     export interface A {
       __typename: 'A' | undefined;
-      a?: ScalarsEnums['String'];
+      a?: Maybe<ScalarsEnums['String']>;
     }
 
     export interface B {
       __typename: 'B' | undefined;
-      b?: ScalarsEnums['Int'];
+      b?: Maybe<ScalarsEnums['Int']>;
     }
 
     export interface SchemaObjectTypes {
@@ -1383,8 +1396,16 @@ test('javascript output works', async () => {
       | 'B';
 
     export type C =
-      | { __typename: 'A' | undefined; a?: ScalarsEnums['String']; b?: undefined }
-      | { __typename: 'B' | undefined; a?: undefined; b?: ScalarsEnums['Int'] };
+      | {
+          __typename: 'A' | undefined;
+          a?: Maybe<ScalarsEnums['String']>;
+          b?: undefined;
+        }
+      | {
+          __typename: 'B' | undefined;
+          a?: undefined;
+          b?: Maybe<ScalarsEnums['Int']>;
+        };
 
     export interface GeneratedSchema {
       query: Query;
@@ -1600,9 +1621,9 @@ test('ignoreArgs transform', async () => {
       __typename: 'Query' | undefined;
       asd: ScalarsEnums['String'];
       zxc: (args: {
-        optional?: ScalarsEnums['String'];
-        required: ScalarsEnums['Int'];
-      }) => ScalarsEnums['Int'];
+        optional?: Maybe<Scalars['String']>;
+        required: Scalars['Int'];
+      }) => Maybe<ScalarsEnums['Int']>;
     }
 
     export interface Mutation {

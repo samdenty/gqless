@@ -481,6 +481,35 @@ export async function generate(
     generatedSchema[SchemaUnionsKey] = unionsMapObj;
   }
 
+  function parseArgType({
+    pureType,
+    isArray,
+    nullableItems,
+    isNullable,
+  }: ReturnType<typeof parseSchemaType>) {
+    let typeToReturn: string[] = [
+      scalarsEnumsHash[pureType]
+        ? enumsNames.includes(pureType)
+          ? pureType
+          : `Scalars["${pureType}"]`
+        : pureType,
+    ];
+
+    if (isArray) {
+      typeToReturn = [
+        'Array<',
+        ...(nullableItems ? ['Maybe<', ...typeToReturn, '>'] : typeToReturn),
+        '>',
+      ];
+    }
+
+    if (isNullable) {
+      typeToReturn = ['Maybe<', ...typeToReturn, '>'];
+    }
+
+    return typeToReturn.join('');
+  }
+
   function parseFinalType({
     pureType,
     isArray,
@@ -499,7 +528,7 @@ export async function generate(
       ];
     }
 
-    if (isNullable && !scalarsEnumsHash[pureType]) {
+    if (isNullable) {
       typeToReturn = ['Maybe<', ...typeToReturn, '>'];
     }
 
@@ -562,7 +591,7 @@ export async function generate(
                 onlyNullableArgs = false;
               }
 
-              const argTypeValue = parseFinalType(argValueProps);
+              const argTypeValue = parseArgType(argValueProps);
 
               acum += `${addDescription([
                 typeName,
