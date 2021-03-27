@@ -22,6 +22,6 @@ app
     app.next('/*');
   });
 
-app.listen(4141, (err) => {
+app.listen(4141, '0.0.0.0', (err) => {
   if (err) throw err;
 });
