@@ -2,12 +2,16 @@ import Fastify from 'fastify';
 import ms from 'ms';
 import FastifyNext from 'fastify-nextjs';
 import { resolve } from 'path';
+import mercuriusUpload from 'mercurius-upload';
+
 import { register } from './graphql';
 
 const app = Fastify({
   logger: true,
   pluginTimeout: ms('60 seconds'),
 });
+
+app.register(mercuriusUpload, {});
 
 register(app).catch(console.error);
 
@@ -19,7 +23,11 @@ app
     dir: resolve(__dirname, '../'),
   })
   .after(() => {
-    app.next('/*');
+    try {
+      app.next('/*');
+    } catch (err) {
+      console.error(err);
+    }
   });
 
 app.listen(4141, '0.0.0.0', (err) => {
