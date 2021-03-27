@@ -4,6 +4,7 @@ import {
   ResolveOptions,
   Selection,
 } from 'gqless';
+import { ProxyAccessor } from 'gqless/dist/Cache';
 import { EventHandler } from 'gqless/dist/Events';
 import { InterceptorManager } from 'gqless/dist/Interceptor';
 import { Scheduler } from 'gqless/dist/Scheduler';
@@ -174,11 +175,12 @@ export function fetchPolicyDefaultResolveOptions(
   }
 }
 
-export type BuildSelections = (Selection | BuildSelectionInput)[];
+export type BuildSelections<T> = (Selection | BuildSelectionInput | T)[];
 
 export function useBuildSelections(
-  argSelections: BuildSelections | null | undefined,
+  argSelections: BuildSelections<never> | null | undefined,
   buildSelection: (...args: BuildSelectionInput) => Selection,
+  getProxySelection: (proxy: ProxyAccessor) => Selection | undefined,
   caller: Function
 ) {
   const buildSelections = useCallback(
@@ -189,9 +191,12 @@ export function useBuildSelections(
 
       try {
         for (const filterValue of argSelections) {
+          let selection: Selection | undefined;
           if (filterValue instanceof Selection) {
             selectionsSet.add(filterValue);
-          } else {
+          } else if ((selection = getProxySelection(filterValue))) {
+            selectionsSet.add(selection);
+          } else if (Array.isArray(filterValue)) {
             selectionsSet.add(buildSelection(...filterValue));
           }
         }

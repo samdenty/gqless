@@ -366,7 +366,26 @@ export function createAccessorCreators<
             throw TypeError('Invalid array assignation: ' + key);
           },
           get(target, key: string, receiver) {
-            if (key === 'toJSON')
+            if (key === 'length') {
+              if (proxyValue === proxySymbolArray) {
+                const lengthSelection = selectionManager.getSelection({
+                  key: 0,
+                  prevSelection,
+                });
+                const childAccessor = createAccessor(
+                  schemaValue,
+                  lengthSelection,
+                  unions,
+                  parentTypename
+                );
+
+                accessorCache.addAccessorChild(accessor, childAccessor);
+
+                if (childAccessor) Reflect.get(childAccessor, '__typename');
+              }
+
+              return target.length;
+            } else if (key === 'toJSON') {
               return () =>
                 decycle<unknown[]>(
                   innerState.clientCache.getCacheFromSelection(
@@ -374,6 +393,7 @@ export function createAccessorCreators<
                     []
                   )
                 );
+            }
 
             let index: number | undefined;
 

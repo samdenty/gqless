@@ -25,12 +25,14 @@ describe('selectFields', () => {
         "__typename": "Human",
         "dogs": Array [
           null,
+          null,
         ],
         "father": null,
         "id": "1",
         "name": "foo",
         "nullFather": null,
         "sons": Array [
+          null,
           null,
         ],
       }
@@ -71,12 +73,14 @@ describe('selectFields', () => {
           "__typename": "Human",
           "dogs": Array [
             null,
+            null,
           ],
           "father": null,
           "id": "2",
           "name": "default",
           "nullFather": null,
           "sons": Array [
+            null,
             null,
           ],
         },
@@ -88,12 +92,14 @@ describe('selectFields', () => {
             "__typename": "Human",
             "dogs": Array [
               null,
+              null,
             ],
             "father": null,
             "id": "2",
             "name": "default",
             "nullFather": null,
             "sons": Array [
+              null,
               null,
             ],
           },
@@ -101,12 +107,14 @@ describe('selectFields', () => {
             "__typename": "Human",
             "dogs": Array [
               null,
+              null,
             ],
             "father": null,
             "id": "2",
             "name": "default",
             "nullFather": null,
             "sons": Array [
+              null,
               null,
             ],
           },
@@ -155,12 +163,14 @@ describe('selectFields', () => {
           "__typename": "Human",
           "dogs": Array [
             null,
+            null,
           ],
           "father": null,
           "id": "2",
           "name": "default",
           "nullFather": null,
           "sons": Array [
+            null,
             null,
           ],
         },
@@ -286,12 +296,14 @@ describe('selectFields', () => {
           "__typename": "Human",
           "dogs": Array [
             null,
+            null,
           ],
           "father": null,
           "id": "1",
           "name": "default",
           "nullFather": null,
           "sons": Array [
+            null,
             null,
           ],
         },
@@ -299,12 +311,14 @@ describe('selectFields', () => {
           "__typename": "Human",
           "dogs": Array [
             null,
+            null,
           ],
           "father": null,
           "id": "1",
           "name": "default",
           "nullFather": null,
           "sons": Array [
+            null,
             null,
           ],
         },
@@ -336,12 +350,14 @@ describe('selectFields', () => {
             "__typename": "Human",
             "dogs": Array [
               null,
+              null,
             ],
             "father": null,
             "id": "1",
             "name": "default",
             "nullFather": null,
             "sons": Array [
+              null,
               null,
             ],
           },
@@ -349,12 +365,14 @@ describe('selectFields', () => {
             "__typename": "Human",
             "dogs": Array [
               null,
+              null,
             ],
             "father": null,
             "id": "1",
             "name": "default",
             "nullFather": null,
             "sons": Array [
+              null,
               null,
             ],
           },
@@ -525,12 +543,14 @@ describe('selectFields', () => {
           "__typename": "Human",
           "dogs": Array [
             null,
+            null,
           ],
           "father": null,
           "id": "1",
           "name": "default",
           "nullFather": null,
           "sons": Array [
+            null,
             null,
           ],
         },

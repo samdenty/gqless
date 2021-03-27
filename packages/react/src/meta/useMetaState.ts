@@ -12,7 +12,7 @@ import {
 } from '../common';
 import { areArraysEqual } from '../utils';
 
-export interface UseMetaStateOptions {
+export interface UseMetaStateOptions<T> {
   onStartFetching?: () => void;
   onDoneFetching?: () => void;
   onError?: (data: {
@@ -24,7 +24,7 @@ export interface UseMetaStateOptions {
     retryPromise: Promise<SchedulerPromiseValue>;
     selections: Set<Selection>;
   }) => void;
-  filterSelections?: BuildSelections;
+  filterSelections?: BuildSelections<T>;
 }
 
 export interface MetaState {
@@ -33,25 +33,33 @@ export interface MetaState {
 }
 
 export interface UseMetaState {
-  (opts?: UseMetaStateOptions): MetaState;
+  <T>(opts?: UseMetaStateOptions<T>): MetaState;
 }
 
 export function createUseMetaState(client: GqlessClient<any>) {
   const scheduler = client.scheduler;
 
-  const { buildSelection } = client;
+  const {
+    buildSelection,
+    accessorCache: { getProxySelection },
+  } = client;
 
   const errorsMap = scheduler.errors.map;
 
   const defaultEmptyOpts = {};
 
   const useMetaState: UseMetaState = function useMetaState(
-    opts: UseMetaStateOptions = defaultEmptyOpts
+    opts: UseMetaStateOptions<any> = defaultEmptyOpts
   ) {
     const {
       hasSpecifiedSelections: hasFilterSelections,
       selections: selectionsToFilter,
-    } = useBuildSelections(opts.filterSelections, buildSelection, useMetaState);
+    } = useBuildSelections(
+      opts.filterSelections,
+      buildSelection,
+      getProxySelection,
+      useMetaState
+    );
 
     const [promisesInFly] = useState(() => {
       return new Set<Promise<unknown>>();

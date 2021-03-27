@@ -81,6 +81,12 @@ export default function Root({ children }: { children: ReactNode }) {
           content="/icon/ms-icon-144x144.png"
         />
         <meta name="theme-color" content="#ffffff" />
+        <script
+          async
+          defer
+          data-website-id="2d5b0fd2-c9b4-4973-8536-dd1669a18270"
+          src="https://umami.pablosz.tech/umami.js"
+        ></script>
       </Head>
       {children}
     </>

@@ -6,7 +6,8 @@
     "build-example": "next build",
     "dev": "concurrently --raw \"pnpm dev:server\" \"wait-on -s 1 tcp:4141 && node ./open-browser.mjs\"",
     "dev:server": "tsup api/server.ts --onSuccess \"node dist/server.js\" --watch --ignore-watch .next --ignore-watch db.json --ignore-watch src --ignore-watch last-browser-open",
-    "prepare": "next build"
+    "prepare": "next build",
+    "start": "node dist/server.js"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.4.1",
