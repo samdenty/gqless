@@ -12,7 +12,7 @@
     "@chakra-ui/react": "^1.4.1",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
-    "@gqless/cli": "workspace:^2.0.7",
+    "@gqless/cli": "workspace:^2.0.8",
     "@gqless/logger": "workspace:^2.0.6",
     "@gqless/react": "workspace:^2.0.7",
     "@gqless/subscriptions": "workspace:^1.0.6",
