@@ -1,0 +1,5 @@
+---
+'gqless': patch
+---
+
+fix getFields

@@ -1,22 +1,13 @@
-import { isPlainObject } from '../Utils';
+import { isObject, isPlainObject } from '../Utils';
 
 export function getFields<
   TAccesorData extends object | undefined | null,
   TAccesorKeys extends keyof TAccesorData
 >(accessor: TAccesorData, ...keys: TAccesorKeys[]): TAccesorData {
-  if (accessor == null) return accessor;
+  if (!isObject(accessor)) return accessor;
 
-  if (keys.length) {
-    for (const key of keys) {
-      //@ts-expect-error
-      accessor[key];
-    }
-  } else {
-    for (const key in accessor) {
-      //@ts-expect-error
-      accessor[key];
-    }
-  }
+  if (keys.length) for (const key of keys) Reflect.get(accessor, key);
+  else for (const key in accessor) Reflect.get(accessor, key);
 
   return accessor;
 }
