@@ -1,5 +1,11 @@
 # @gqless/cli
 
+## 2.0.8
+
+### Patch Changes
+
+- 1eaa4b4: fix not null args & nullable scalar fields
+
 ## 2.0.7
 
 ### Patch Changes

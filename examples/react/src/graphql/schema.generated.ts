@@ -124,7 +124,7 @@ export interface Query {
    * Expected Error!
    */
   expectedError: ScalarsEnums['Boolean'];
-  expectedNullableError?: ScalarsEnums['Boolean'];
+  expectedNullableError?: Maybe<ScalarsEnums['Boolean']>;
   thirdTry: ScalarsEnums['Boolean'];
   dogs: Array<Dog>;
   time: ScalarsEnums['String'];
@@ -151,20 +151,17 @@ export interface Mutation {
     /**
      * Dog Id
      */
-    id: ScalarsEnums['ID'];
-    name: ScalarsEnums['String'];
+    id: Scalars['ID'];
+    name: Scalars['String'];
   }) => Maybe<Dog>;
   renameHuman: (args: {
-    id: ScalarsEnums['ID'];
-    name: ScalarsEnums['String'];
+    id: Scalars['ID'];
+    name: Scalars['String'];
   }) => Maybe<Human>;
-  other: (args: { arg: inputTypeExample }) => ScalarsEnums['Int'];
-  createHuman: (args: {
-    id: ScalarsEnums['ID'];
-    name: ScalarsEnums['String'];
-  }) => Human;
+  other: (args: { arg: inputTypeExample }) => Maybe<ScalarsEnums['Int']>;
+  createHuman: (args: { id: Scalars['ID']; name: Scalars['String'] }) => Human;
   sendNotification: (args: {
-    message: ScalarsEnums['String'];
+    message: Scalars['String'];
   }) => ScalarsEnums['Boolean'];
 }
 
@@ -201,8 +198,8 @@ export interface Human {
     /**
      * @defaultValue `"Hello World"`
      */
-    a?: ScalarsEnums['String'];
-  }) => ScalarsEnums['Int'];
+    a?: Maybe<Scalars['String']>;
+  }) => Maybe<ScalarsEnums['Int']>;
 }
 
 /**
@@ -221,8 +218,8 @@ export interface PageInfo {
   __typename: 'PageInfo' | undefined;
   hasPreviousPage: ScalarsEnums['Boolean'];
   hasNextPage: ScalarsEnums['Boolean'];
-  startCursor?: ScalarsEnums['String'];
-  endCursor?: ScalarsEnums['String'];
+  startCursor?: Maybe<ScalarsEnums['String']>;
+  endCursor?: Maybe<ScalarsEnums['String']>;
 }
 
 export interface SchemaObjectTypes {
@@ -254,8 +251,8 @@ export type Species =
         /**
          * @defaultValue `"Hello World"`
          */
-        a?: ScalarsEnums['String'];
-      }) => ScalarsEnums['Int'];
+        a?: Maybe<Scalars['String']>;
+      }) => Maybe<ScalarsEnums['Int']>;
       id: ScalarsEnums['ID'];
       /**
        * Human Name
