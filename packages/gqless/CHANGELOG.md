@@ -1,5 +1,13 @@
 # gqless
 
+## 2.0.7
+
+### Patch Changes
+
+- ff66195: fix getFields
+- 63fd3ea: support for non-serializable variables
+- 40d2101: improve array length access
+
 ## 2.0.6
 
 ### Patch Changes

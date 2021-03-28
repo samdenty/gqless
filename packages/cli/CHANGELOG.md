@@ -1,5 +1,14 @@
 # @gqless/cli
 
+## 2.0.9
+
+### Patch Changes
+
+- Updated dependencies [ff66195]
+- Updated dependencies [63fd3ea]
+- Updated dependencies [40d2101]
+  - gqless@2.0.7
+
 ## 2.0.8
 
 ### Patch Changes

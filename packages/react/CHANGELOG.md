@@ -1,5 +1,16 @@
 # @gqless/react
 
+## 2.0.8
+
+### Patch Changes
+
+- 40d2101: allow specify proxies in useMetaState
+- 63fd3ea: support for non-serializable variables
+- Updated dependencies [ff66195]
+- Updated dependencies [63fd3ea]
+- Updated dependencies [40d2101]
+  - gqless@2.0.7
+
 ## 2.0.7
 
 ### Patch Changes
