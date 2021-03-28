@@ -1,6 +1,6 @@
 import type { ProxyAccessor } from '../Cache';
 import type { InnerClientState, Refetch } from '../Client/client';
-import { decycle, isPlainObject, retrocycle } from '../Utils';
+import { decycle, isEmptyObject, isPlainObject, retrocycle } from '../Utils';
 
 export interface HydrateCacheOptions {
   /**
@@ -50,7 +50,10 @@ export function createSSRHelpers({
         isPlainObject(recoveredCache) &&
         isPlainObject(recoveredCache.cache)
       ) {
-        Object.assign(innerState.clientCache.cache, recoveredCache.cache);
+        if (Array.isArray(recoveredCache.selections)) {
+          innerState.selectionManager.restoreAliases(recoveredCache.selections);
+        }
+        innerState.clientCache.mergeCache(recoveredCache.cache, 'query');
         if (
           isPlainObject(recoveredCache.normalizedCache) &&
           innerState.clientCache.normalizedCache
@@ -75,27 +78,34 @@ export function createSSRHelpers({
     }
   };
 
-  const prepareRender = async (render: () => Promise<void> | void) => {
-    for (const key of Object.keys(innerState.clientCache.cache)) {
-      delete innerState.clientCache.cache[key];
-    }
-    if (innerState.clientCache.normalizedCache) {
-      for (const key of Object.keys(innerState.clientCache.normalizedCache)) {
-        delete innerState.clientCache.normalizedCache[key];
-      }
+  const prepareRender = async (render: () => Promise<unknown> | unknown) => {
+    let renderPromise: Promise<unknown> | unknown | undefined;
+
+    let prevIgnoreCache = innerState.allowCache;
+    try {
+      innerState.allowCache = false;
+      renderPromise = render();
+    } finally {
+      innerState.allowCache = prevIgnoreCache;
     }
 
-    await render();
+    await Promise.all([
+      renderPromise,
+      ...innerState.scheduler.pendingSelectionsGroupsPromises.values(),
+    ]);
 
-    await innerState.scheduler.resolving?.promise;
+    const selections = innerState.selectionManager.backupAliases();
+
+    const nC = innerState.clientCache.normalizedCache;
 
     return {
-      cacheSnapshot: JSON.stringify(
-        decycle({
-          cache: innerState.clientCache.cache,
-          normalizedCache: innerState.clientCache.normalizedCache,
-        })
-      ),
+      cacheSnapshot: JSON.stringify({
+        ...decycle({
+          cache: innerState.clientCache.cache.query,
+          normalizedCache: nC ? (isEmptyObject(nC) ? undefined : nC) : nC,
+        }),
+        selections: selections.length ? selections : undefined,
+      }),
     };
   };
 
