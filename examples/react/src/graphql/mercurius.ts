@@ -1,4 +1,9 @@
-import { GraphQLResolveInfo } from 'graphql';
+import { FileUpload } from 'graphql-upload';
+import {
+  GraphQLResolveInfo,
+  GraphQLScalarType,
+  GraphQLScalarTypeConfig,
+} from 'graphql';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = {
   [K in keyof T]: T[K];
@@ -26,6 +31,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: Promise<FileUpload>;
   _FieldSet: any;
 };
 
@@ -84,6 +91,7 @@ export type Mutation = {
   other?: Maybe<Scalars['Int']>;
   createHuman: Human;
   sendNotification: Scalars['Boolean'];
+  uploadFile: Scalars['String'];
 };
 
 /** Mutation */
@@ -112,6 +120,11 @@ export type MutationcreateHumanArgs = {
 /** Mutation */
 export type MutationsendNotificationArgs = {
   message: Scalars['String'];
+};
+
+/** Mutation */
+export type MutationuploadFileArgs = {
+  file: Scalars['Upload'];
 };
 
 export type Subscription = {
@@ -267,6 +280,7 @@ export type DirectiveResolverFn<
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Upload: ResolverTypeWrapper<Scalars['Upload']>;
   Dog: ResolverTypeWrapper<Dog>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   String: ResolverTypeWrapper<Scalars['String']>;
@@ -286,6 +300,7 @@ export type ResolversTypes = {
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Upload: Scalars['Upload'];
   Dog: Dog;
   ID: Scalars['ID'];
   String: Scalars['String'];
@@ -301,6 +316,11 @@ export type ResolversParentTypes = {
   ConnectionArgs: ConnectionArgs;
   Species: ResolversParentTypes['Human'] | ResolversParentTypes['Dog'];
 };
+
+export interface UploadScalarConfig
+  extends GraphQLScalarTypeConfig<ResolversTypes['Upload'], any> {
+  name: 'Upload';
+}
 
 export type DogResolvers<
   ContextType = any,
@@ -401,6 +421,12 @@ export type MutationResolvers<
     ContextType,
     RequireFields<MutationsendNotificationArgs, 'message'>
   >;
+  uploadFile?: Resolver<
+    ResolversTypes['String'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationuploadFileArgs, 'file'>
+  >;
 };
 
 export type SubscriptionResolvers<
@@ -455,6 +481,7 @@ export type SpeciesResolvers<
 };
 
 export type Resolvers<ContextType = any> = {
+  Upload?: GraphQLScalarType;
   Dog?: DogResolvers<ContextType>;
   Human?: HumanResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

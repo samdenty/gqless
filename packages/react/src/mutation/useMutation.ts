@@ -23,7 +23,17 @@ export interface UseMutationOptions<TData> {
    * Await refetch resolutions before calling the mutation actually complete
    */
   awaitRefetchQueries?: boolean;
+  /**
+   * Enable suspense behavior
+   */
   suspense?: boolean;
+  /**
+   * Activate special handling of non-serializable variables,
+   * for example, files uploading
+   *
+   * @default false
+   */
+  nonSerializableVariables?: boolean;
 }
 
 export interface UseMutationState<TData> {
@@ -153,7 +163,7 @@ export function createUseMutation<
     const fnRef = useRef(mutationFn);
     fnRef.current = mutationFn;
 
-    const callRefetchQueries = useCallback(async () => {
+    const callRefetchQueries = useCallback((): Promise<unknown> | void => {
       const { refetchQueries, awaitRefetchQueries } = optsRef.current;
 
       if (refetchQueries?.length) {
@@ -166,9 +176,7 @@ export function createUseMutation<
           });
         });
 
-        if (awaitRefetchQueries) {
-          await refetchPromise;
-        }
+        if (awaitRefetchQueries) return refetchPromise;
       }
     }, [optsRef, dispatch]);
 
@@ -197,9 +205,11 @@ export function createUseMutation<
         return resolved<TData>(functionResolve, {
           noCache: optsRef.current.noCache,
           refetch: true,
+          nonSerializableVariables: optsRef.current.nonSerializableVariables,
         }).then(
           async (data) => {
-            await callRefetchQueries();
+            const refetchingQueries = callRefetchQueries();
+            if (refetchingQueries) await refetchingQueries;
 
             optsRef.current.onCompleted?.(data);
             dispatch({

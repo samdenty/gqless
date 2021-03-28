@@ -10,13 +10,19 @@ hide_title: true
 
 ## Callable
 
-▸ **UseMetaState**(`opts?`: [_UseGqlessStateOptions_](usegqlessstateoptions.md)): [_MetaState_](metastate.md)
+▸ **UseMetaState**<T\>(`opts?`: [_UseGqlessStateOptions_](usegqlessstateoptions.md)<T\>): [_MetaState_](metastate.md)
+
+#### Type parameters:
+
+| Name |
+| :--- |
+| `T`  |
 
 #### Parameters:
 
-| Name    | Type                                                |
-| :------ | :-------------------------------------------------- |
-| `opts?` | [_UseGqlessStateOptions_](usegqlessstateoptions.md) |
+| Name    | Type                                                    |
+| :------ | :------------------------------------------------------ |
+| `opts?` | [_UseGqlessStateOptions_](usegqlessstateoptions.md)<T\> |
 
 **Returns:** [_MetaState_](metastate.md)
 

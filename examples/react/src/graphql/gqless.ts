@@ -1,6 +1,6 @@
 import { createClient, QueryFetcher, debounce } from 'gqless';
 import { createSubscriptionsClient } from '@gqless/subscriptions';
-
+import { extractFiles } from 'extract-files';
 import {
   GeneratedSchema,
   generatedSchema,
@@ -10,6 +10,45 @@ import {
 } from './schema.generated';
 
 const queryFetcher: QueryFetcher = async function (query, variables) {
+  const extracted = extractFiles({
+    query,
+    variables,
+  });
+
+  if (extracted.files.size > 0) {
+    const form = new FormData();
+    form.append('operations', JSON.stringify(extracted.clone));
+
+    const map: Record<number, string[]> = {};
+    let i = 0;
+    extracted.files.forEach((paths) => {
+      map[++i] = paths;
+    });
+    form.append('map', JSON.stringify(map));
+    i = 0;
+    extracted.files.forEach((_paths, file) => {
+      form.append(++i + '', file as File);
+    });
+
+    const response = await fetch(
+      typeof window !== 'undefined'
+        ? '/api/graphql'
+        : 'http://localhost:4141/api/graphql',
+      {
+        method: 'POST',
+        headers: {},
+        body: form,
+        mode: 'cors',
+      }
+    );
+
+    const json = await response.json();
+
+    return json;
+  }
+
+  // Fallback to regular queries
+
   const response = await fetch(
     typeof window !== 'undefined'
       ? '/api/graphql'

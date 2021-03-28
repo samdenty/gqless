@@ -24,6 +24,13 @@ const react = new Worker(workerURL, {
   },
 });
 
+const logger = new Worker(workerURL, {
+  workerData: {
+    name: 'gqless-logger',
+    directory: 'packages/logger',
+  },
+});
+
 core.postMessage({
   type: 'start',
   value: {
@@ -42,6 +49,9 @@ core.on('message', ({ type }) => {
       react.postMessage({
         type: 'stop',
       });
+      logger.postMessage({
+        type: 'stop',
+      });
       break;
     }
     case 'success': {
@@ -49,6 +59,9 @@ core.on('message', ({ type }) => {
         type: 'start',
       });
       react.postMessage({
+        type: 'start',
+      });
+      logger.postMessage({
         type: 'start',
       });
 
@@ -59,6 +72,7 @@ core.on('message', ({ type }) => {
 
 let readySubscriptions = false;
 let readyReact = false;
+let readyLogger = false;
 
 subscriptions.on('message', ({ type }) => {
   switch (type) {
@@ -70,7 +84,25 @@ subscriptions.on('message', ({ type }) => {
     }
     case 'success': {
       readySubscriptions = true;
-      if (readyReact) {
+      if (readyReact && readyLogger) {
+        startReactExample();
+      }
+      break;
+    }
+  }
+});
+
+logger.on('message', ({ type }) => {
+  switch (type) {
+    case 'start': {
+      killReactExample();
+      readyLogger = false;
+
+      break;
+    }
+    case 'success': {
+      readyLogger = true;
+      if (readySubscriptions && readyReact) {
         startReactExample();
       }
       break;
@@ -88,7 +120,7 @@ react.on('message', ({ type }) => {
     }
     case 'success': {
       readyReact = true;
-      if (readySubscriptions) {
+      if (readySubscriptions && readySubscriptions) {
         startReactExample();
       }
       break;

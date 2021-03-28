@@ -105,11 +105,11 @@ Optional override for formatting stack traces
 
 **Returns:** _any_
 
-Defined in: node_modules/.pnpm/@types/node@14.14.36/node_modules/@types/node/globals.d.ts:11
+Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/globals.d.ts:11
 
 Inherited from: void
 
-Defined in: node_modules/.pnpm/@types/node@14.14.36/node_modules/@types/node/globals.d.ts:11
+Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/globals.d.ts:11
 
 ---
 
@@ -119,7 +119,7 @@ Defined in: node_modules/.pnpm/@types/node@14.14.36/node_modules/@types/node/glo
 
 Inherited from: void
 
-Defined in: node_modules/.pnpm/@types/node@14.14.36/node_modules/@types/node/globals.d.ts:13
+Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/globals.d.ts:13
 
 ## Methods
 
@@ -156,7 +156,7 @@ Create .stack property on a target object
 
 Inherited from: void
 
-Defined in: node_modules/.pnpm/@types/node@14.14.36/node_modules/@types/node/globals.d.ts:4
+Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/globals.d.ts:4
 
 ---
 

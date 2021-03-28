@@ -50,8 +50,8 @@ export interface InnerClientState {
   allowCache: boolean;
   foundValidCache: boolean;
   clientCache: CacheInstance;
+  selectionManager: SelectionManager;
   readonly accessorCache: AccessorCache;
-  readonly selectionManager: SelectionManager;
   readonly interceptorManager: InterceptorManager;
   readonly scheduler: Scheduler;
   readonly eventHandler: EventHandler;

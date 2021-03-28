@@ -19,6 +19,8 @@ export interface Scalars {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: File;
 }
 
 /** Input Type Example XD */
@@ -43,6 +45,7 @@ export enum DogType {
 }
 
 export const scalarsEnumsHash: ScalarsEnumsHash = {
+  Upload: true,
   ID: true,
   String: true,
   Int: true,
@@ -75,6 +78,7 @@ export const generatedSchema = {
     other: { __type: 'Int', __args: { arg: 'inputTypeExample!' } },
     createHuman: { __type: 'Human!', __args: { id: 'ID!', name: 'String!' } },
     sendNotification: { __type: 'Boolean!', __args: { message: 'String!' } },
+    uploadFile: { __type: 'String!', __args: { file: 'Upload!' } },
   },
   subscription: {
     __typename: { __type: 'String!' },
@@ -163,6 +167,7 @@ export interface Mutation {
   sendNotification: (args: {
     message: Scalars['String'];
   }) => ScalarsEnums['Boolean'];
+  uploadFile: (args: { file: Scalars['Upload'] }) => ScalarsEnums['String'];
 }
 
 export interface Subscription {

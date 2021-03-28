@@ -4,6 +4,7 @@ import { defaults, keyBy } from 'lodash';
 import mercurius, { IResolvers, MercuriusLoaders } from 'mercurius';
 import { codegenMercurius, gql } from 'mercurius-codegen';
 import { JsonDB } from 'node-json-db';
+import { GraphQLUpload } from 'graphql-upload';
 
 import { writeGenerate } from '@gqless/cli';
 
@@ -68,6 +69,8 @@ db.push('/dogOwners', {
 });
 
 const schema = gql`
+  scalar Upload
+
   "Dog Type"
   type Dog {
     id: ID!
@@ -116,6 +119,7 @@ const schema = gql`
     other(arg: inputTypeExample!): Int
     createHuman(id: ID!, name: String!): Human!
     sendNotification(message: String!): Boolean!
+    uploadFile(file: Upload!): String!
   }
   type Subscription {
     newNotification: String!
@@ -159,7 +163,17 @@ const schema = gql`
 
 let nTries = 0;
 
+export const readStreamToBuffer = async (rs: import('fs').ReadStream) => {
+  const chunks: Uint8Array[] = [];
+  for await (let chunk of rs) {
+    chunks.push(chunk);
+  }
+
+  return Buffer.concat(chunks);
+};
+
 const resolvers: IResolvers = {
+  Upload: GraphQLUpload,
   Query: {
     emptyHumanArray: () => [],
     emptyScalarArray: () => [],
@@ -313,6 +327,13 @@ const resolvers: IResolvers = {
 
       return true;
     },
+    async uploadFile(_root, { file }) {
+      const newfile = await file;
+
+      const fileBuffer = await readStreamToBuffer(newfile.createReadStream());
+
+      return fileBuffer.toString('base64');
+    },
   },
   Subscription: {
     newNotification: {
@@ -375,12 +396,17 @@ export async function register(app: FastifyInstance) {
     resolvers,
     loaders,
     subscription: true,
-    logLevel: 'error',
   });
 
   codegenMercurius(app, {
     targetPath: './src/graphql/mercurius.ts',
     silent: true,
+    codegenConfig: {
+      scalars: {
+        Upload: 'Promise<FileUpload>',
+      },
+    },
+    preImportCode: 'import { FileUpload } from "graphql-upload";',
   }).catch(console.error);
 
   await app.ready();

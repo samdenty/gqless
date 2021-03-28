@@ -14,7 +14,7 @@ hide_title: true
 
 • `Readonly` **accessorCache**: [_AccessorCache_](accessorcache.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L53)
+Defined in: [packages/gqless/src/Client/client.ts:54](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L54)
 
 ---
 
@@ -108,6 +108,6 @@ Defined in: [packages/gqless/src/Client/client.ts:61](https://github.com/gqless/
 
 ### selectionManager
 
-• `Readonly` **selectionManager**: [_SelectionManager_](selectionmanager.md)
+• **selectionManager**: [_SelectionManager_](selectionmanager.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:54](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L54)
+Defined in: [packages/gqless/src/Client/client.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L53)

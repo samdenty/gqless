@@ -30,6 +30,7 @@ module.exports = {
       'core/config',
       'core/subscriptions',
       'core/persistence',
+      'core/graphql-upload',
       'core/api-reference',
       {
         type: 'category',

@@ -48,7 +48,7 @@ hide_title: true
 
 Ƭ **FetchPolicy**: _cache-and-network_ \| _cache-first_ \| _network-only_ \| _no-cache_
 
-Defined in: [common.ts:143](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L143)
+Defined in: [common.ts:144](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L144)
 
 ---
 
@@ -76,7 +76,7 @@ Defined in: [query/useLazyQuery.ts:13](https://github.com/gqless/gqless/blob/mas
 
 **Returns:** _void_
 
-Defined in: [common.ts:491](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L491)
+Defined in: [common.ts:496](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L496)
 
 ---
 
