@@ -261,7 +261,7 @@ export function createAccessorCreators<
         });
       }
 
-      const selection = selectionManager.getSelection({
+      const selection = innerState.selectionManager.getSelection({
         ...resolveInfo,
         args: dataOrArgs as Record<string, unknown>,
       });
@@ -327,7 +327,7 @@ export function createAccessorCreators<
             } catch (err) {}
 
             if (isInteger(index)) {
-              const selection = selectionManager.getSelection({
+              const selection = innerState.selectionManager.getSelection({
                 key: index,
                 prevSelection,
               });
@@ -368,10 +368,12 @@ export function createAccessorCreators<
           get(target, key: string, receiver) {
             if (key === 'length') {
               if (proxyValue === proxySymbolArray) {
-                const lengthSelection = selectionManager.getSelection({
-                  key: 0,
-                  prevSelection,
-                });
+                const lengthSelection = innerState.selectionManager.getSelection(
+                  {
+                    key: 0,
+                    prevSelection,
+                  }
+                );
                 const childAccessor = createAccessor(
                   schemaValue,
                   lengthSelection,
@@ -402,7 +404,7 @@ export function createAccessorCreators<
             } catch (err) {}
 
             if (isInteger(index)) {
-              const selection = selectionManager.getSelection({
+              const selection = innerState.selectionManager.getSelection({
                 key: index,
                 prevSelection,
               });
@@ -485,7 +487,7 @@ export function createAccessorCreators<
     if (isObjectWithType(cacheValue)) return cacheValue.__typename;
 
     interceptorManager.addSelection(
-      selectionManager.getSelection({
+      innerState.selectionManager.getSelection({
         key: '__typename',
         prevSelection: selection,
       })
@@ -535,7 +537,7 @@ export function createAccessorCreators<
                     if (objectNormalizationKeys) {
                       for (const key of objectNormalizationKeys) {
                         interceptorManager.addSelection(
-                          selectionManager.getSelection({
+                          innerState.selectionManager.getSelection({
                             key,
                             prevSelection,
                             unions: unionObjectTypesForSelections[
@@ -552,7 +554,7 @@ export function createAccessorCreators<
                   if (normalizationKeys) {
                     for (const key of normalizationKeys) {
                       interceptorManager.addSelection(
-                        selectionManager.getSelection({
+                        innerState.selectionManager.getSelection({
                           key,
                           prevSelection,
                         })
@@ -575,7 +577,7 @@ export function createAccessorCreators<
             if (!proxyValue.hasOwnProperty(key))
               throw TypeError('Invalid proxy assignation');
 
-            const targetSelection = selectionManager.getSelection({
+            const targetSelection = innerState.selectionManager.getSelection({
               key,
               prevSelection,
               unions,
@@ -640,7 +642,7 @@ export function createAccessorCreators<
                 argValues: Record<string, unknown>;
                 argTypes: Record<string, string>;
               }): unknown => {
-                const selection = selectionManager.getSelection({
+                const selection = innerState.selectionManager.getSelection({
                   key,
                   prevSelection,
                   args: args != null ? args.argValues : undefined,
@@ -800,7 +802,7 @@ export function createAccessorCreators<
       );
 
       for (const { key, args, argTypes } of filteredSelections) {
-        mappedSelection = selectionManager.getSelection({
+        mappedSelection = innerState.selectionManager.getSelection({
           key,
           args,
           argTypes,

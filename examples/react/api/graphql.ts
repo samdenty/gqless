@@ -328,9 +328,9 @@ const resolvers: IResolvers = {
       return true;
     },
     async uploadFile(_root, { file }) {
-      console.log(331, file);
-      file = await file;
-      const fileBuffer = await readStreamToBuffer(file.createReadStream());
+      const newfile = await file;
+
+      const fileBuffer = await readStreamToBuffer(newfile.createReadStream());
 
       return fileBuffer.toString('base64');
     },
@@ -390,26 +390,23 @@ const loaders: MercuriusLoaders = {
 };
 
 export async function register(app: FastifyInstance) {
-  try {
-    await app.register(mercurius, {
-      path: '/api/graphql',
-      schema,
-      resolvers,
-      loaders,
-      subscription: true,
-    });
-  } catch (err) {
-    console.error(388);
-  }
+  app.register(mercurius, {
+    path: '/api/graphql',
+    schema,
+    resolvers,
+    loaders,
+    subscription: true,
+  });
 
   codegenMercurius(app, {
     targetPath: './src/graphql/mercurius.ts',
     silent: true,
     codegenConfig: {
       scalars: {
-        Upload: 'import("graphql-upload").FileUpload',
+        Upload: 'Promise<FileUpload>',
       },
     },
+    preImportCode: 'import { FileUpload } from "graphql-upload";',
   }).catch(console.error);
 
   await app.ready();

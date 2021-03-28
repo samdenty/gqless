@@ -37,7 +37,8 @@ export function createQueryBuilder() {
     }: {
       type: 'query' | 'mutation' | 'subscription';
     },
-    normalization?: boolean
+    normalization?: boolean,
+    isGlobalCache?: boolean
   ): BuiltQuery {
     let variableId = 1;
 
@@ -46,13 +47,13 @@ export function createQueryBuilder() {
     const variableTypes: Record<string, string> = {};
     const variablesMapKeyValue: Record<string, unknown> = {};
 
+    let builtQuery: BuiltQuery | undefined;
     let idAcum = '';
-    for (const { id } of selections) idAcum += id;
 
-    let cachedQuery: BuiltQuery | undefined;
+    if (isGlobalCache) {
+      for (const { id } of selections) idAcum += id;
 
-    if ((cachedQuery = queryCache[idAcum])) {
-      return cachedQuery;
+      if ((builtQuery = queryCache[idAcum])) return builtQuery;
     }
 
     for (const { noIndexSelections } of selections) {
@@ -168,10 +169,14 @@ export function createQueryBuilder() {
       );
     }
 
-    return (queryCache[idAcum] = {
+    builtQuery = {
       query,
       variables,
       cacheKey: query + (variables ? JSON.stringify(variables) : ''),
-    });
+    };
+
+    if (isGlobalCache) queryCache[idAcum] = builtQuery;
+
+    return builtQuery;
   };
 }

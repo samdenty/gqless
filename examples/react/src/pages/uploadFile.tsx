@@ -15,6 +15,7 @@ export default function UploadFile() {
         setImageb64(data);
       },
       noCache: true,
+      nonSerializableVariables: true,
     }
   );
   return (
@@ -25,6 +26,7 @@ export default function UploadFile() {
         type="file"
         isRequired
         multiple
+        accept="image/png"
         onChange={({
           target: { validity, files },
         }: ChangeEvent<HTMLInputElement>) => {

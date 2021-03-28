@@ -1,3 +1,4 @@
+import { FileUpload } from 'graphql-upload';
 import {
   GraphQLResolveInfo,
   GraphQLScalarType,
@@ -31,7 +32,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   /** The `Upload` scalar type represents a file upload. */
-  Upload: import('graphql-upload').FileUpload;
+  Upload: Promise<FileUpload>;
   _FieldSet: any;
 };
 

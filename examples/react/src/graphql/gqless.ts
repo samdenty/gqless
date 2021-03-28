@@ -21,15 +21,13 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
 
     const map: Record<number, string[]> = {};
     let i = 0;
-    extracted.files.forEach((paths, file) => {
-      const index = ++i;
-      map[index] = paths;
+    extracted.files.forEach((paths) => {
+      map[++i] = paths;
     });
     form.append('map', JSON.stringify(map));
     i = 0;
     extracted.files.forEach((_paths, file) => {
-      const index = ++i;
-      form.append(index + '', file as Blob);
+      form.append(++i + '', file as Blob);
     });
 
     const response = await fetch(
@@ -48,8 +46,6 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
 
     return json;
   }
-
-  console.log(15, extracted);
 
   const response = await fetch(
     typeof window !== 'undefined'

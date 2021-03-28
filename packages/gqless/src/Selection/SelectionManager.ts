@@ -60,6 +60,8 @@ export interface SelectionManager {
 
 export type AliasBackupTuple = [aliasKey: string, alias: string, incId: number];
 
+let uniqueSelectionId = 0;
+
 export function createSelectionManager(): SelectionManager {
   const selectionCache = new Map<
     /**
@@ -89,8 +91,6 @@ export function createSelectionManager(): SelectionManager {
      */
     string
   >();
-
-  let id = 0;
 
   let restoredAliases: AliasBackupTuple[] | undefined;
 
@@ -174,7 +174,7 @@ export function createSelectionManager(): SelectionManager {
         alias,
         type,
         unions,
-        id: ++id,
+        id: ++uniqueSelectionId,
       });
       selectionCache.set(cacheKey, selection);
     }

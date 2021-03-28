@@ -7,7 +7,11 @@ import { NormalizationHandler } from '../Normalization';
 import { createQueryBuilder } from '../QueryBuilder';
 import { SchedulerPromiseValue } from '../Scheduler';
 import { Selection } from '../Selection/selection';
-import { separateSelectionTypes } from '../Selection/SelectionManager';
+import {
+  createSelectionManager,
+  SelectionManager,
+  separateSelectionTypes,
+} from '../Selection/SelectionManager';
 import { createDeferredPromise, DeferredPromise, get } from '../Utils';
 import {
   InnerClientState,
@@ -24,6 +28,13 @@ export interface ResolveOptions<TData> {
    * Ignore the client cache
    */
   noCache?: boolean;
+  /**
+   * Activate special handling of non-serializable variables,
+   * for example, files uploading
+   *
+   * @default false
+   */
+  nonSerializableVariables?: boolean;
   /**
    * Middleware function that is called if valid cache is found
    * for all the data requirements, it should return `true` if the
@@ -188,6 +199,7 @@ export function createResolvers(
     queryFetcher,
     scheduler,
     clientCache: globalCache,
+    selectionManager: globalSelectionManager,
   } = innerState;
   const { globalInterceptor } = interceptorManager;
   const buildQuery = createQueryBuilder();
@@ -201,6 +213,7 @@ export function createResolvers(
       onSelection,
       onSubscription,
       retry,
+      nonSerializableVariables,
     }: ResolveOptions<T> = {}
   ): Promise<T> {
     const prevFoundValidCache = innerState.foundValidCache;
@@ -212,8 +225,13 @@ export function createResolvers(
     }
 
     let tempCache: typeof innerState.clientCache | undefined;
+    let tempSelectionManager: SelectionManager | undefined;
     if (noCache) {
       innerState.clientCache = tempCache = createCache();
+    }
+
+    if (nonSerializableVariables) {
+      innerState.selectionManager = tempSelectionManager = createSelectionManager();
     }
 
     let prevGlobalInterceptorListening = globalInterceptor.listening;
@@ -245,6 +263,7 @@ export function createResolvers(
       innerState.foundValidCache = prevFoundValidCache;
       innerState.allowCache = prevAllowCache;
       innerState.clientCache = globalCache;
+      innerState.selectionManager = globalSelectionManager;
 
       globalInterceptor.listening = prevGlobalInterceptorListening;
 
@@ -297,6 +316,9 @@ export function createResolvers(
       if (tempCache) {
         innerState.clientCache = tempCache;
       }
+      if (tempSelectionManager) {
+        innerState.selectionManager = tempSelectionManager;
+      }
 
       return dataFn();
     } catch (err) {
@@ -305,6 +327,7 @@ export function createResolvers(
       interceptorManager.removeInterceptor(interceptor);
       innerState.allowCache = prevAllowCache;
       innerState.clientCache = globalCache;
+      innerState.selectionManager = globalSelectionManager;
       innerState.foundValidCache = prevFoundValidCache;
       globalInterceptor.listening = prevGlobalInterceptorListening;
     }
@@ -317,14 +340,16 @@ export function createResolvers(
     selections: Selection[],
     type: 'query' | 'mutation' | 'subscription',
     normalizationHandler: NormalizationHandler | undefined,
-    ignoreResolveCache: boolean | undefined
+    ignoreResolveCache: boolean | undefined,
+    isGlobalCache: boolean
   ) {
     const { query, variables, cacheKey } = buildQuery(
       selections,
       {
         type,
       },
-      normalizationHandler != null
+      normalizationHandler != null,
+      isGlobalCache
     );
 
     const cachedData = ignoreResolveCache
@@ -364,7 +389,8 @@ export function createResolvers(
       selections,
       type,
       innerState.normalizationHandler,
-      options.ignoreResolveCache
+      options.ignoreResolveCache,
+      cache === globalCache
     );
 
     let executionData: ExecutionResult['data'];
@@ -573,7 +599,8 @@ export function createResolvers(
       selections,
       'subscription',
       innerState.normalizationHandler,
-      true
+      true,
+      cache === globalCache
     );
 
     let unsubscribe: () => Promise<void>;
