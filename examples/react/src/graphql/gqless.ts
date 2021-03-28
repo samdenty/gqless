@@ -27,7 +27,7 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
     form.append('map', JSON.stringify(map));
     i = 0;
     extracted.files.forEach((_paths, file) => {
-      form.append(++i + '', file as Blob);
+      form.append(++i + '', file as File);
     });
 
     const response = await fetch(
@@ -46,6 +46,8 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
 
     return json;
   }
+
+  // Fallback to regular queries
 
   const response = await fetch(
     typeof window !== 'undefined'

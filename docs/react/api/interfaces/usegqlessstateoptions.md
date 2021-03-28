@@ -1,18 +1,24 @@
 ---
 id: 'usegqlessstateoptions'
-title: 'Interface: UseGqlessStateOptions'
+title: 'Interface: UseGqlessStateOptions<T>'
 sidebar_label: 'UseGqlessStateOptions'
 custom_edit_url: null
 hide_title: true
 ---
 
-# Interface: UseGqlessStateOptions
+# Interface: UseGqlessStateOptions<T\>
+
+## Type parameters
+
+| Name |
+| :--- |
+| `T`  |
 
 ## Properties
 
 ### filterSelections
 
-• `Optional` **filterSelections**: BuildSelections
+• `Optional` **filterSelections**: _BuildSelections_<T\>
 
 Defined in: [meta/useMetaState.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L27)
 

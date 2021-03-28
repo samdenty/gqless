@@ -34,6 +34,19 @@ Defined in: [mutation/useMutation.ts:12](https://github.com/gqless/gqless/blob/m
 
 ---
 
+### nonSerializableVariables
+
+• `Optional` **nonSerializableVariables**: _boolean_
+
+Activate special handling of non-serializable variables,
+for example, files uploading
+
+**`default`** false
+
+Defined in: [mutation/useMutation.ts:36](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L36)
+
+---
+
 ### onCompleted
 
 • `Optional` **onCompleted**: (`data`: TData) => _void_
@@ -88,4 +101,6 @@ Defined in: [mutation/useMutation.ts:15](https://github.com/gqless/gqless/blob/m
 
 • `Optional` **suspense**: _boolean_
 
-Defined in: [mutation/useMutation.ts:26](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L26)
+Enable suspense behavior
+
+Defined in: [mutation/useMutation.ts:29](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L29)

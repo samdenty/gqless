@@ -354,7 +354,7 @@ Defined in: [packages/gqless/src/Error/retry.ts:54](https://github.com/gqless/gq
 
 **Returns:** TArray
 
-Defined in: [packages/gqless/src/Helpers/getFields.ts:24](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/getFields.ts#L24)
+Defined in: [packages/gqless/src/Helpers/getFields.ts:15](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/getFields.ts#L15)
 
 ---
 
