@@ -80,7 +80,7 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
 ### Core
 
 Since the images are not serializable, `gqless` might be confused while
-using them, that's why you shoud specify a special option `nonSerializableVariables` in your [`resolved`](/core/basic-usage#resolved)s
+using them, that's why you have to specify a special option `nonSerializableVariables` in your [`resolved`](/core/basic-usage#resolved)s
 
 ```ts
 import { resolved, mutation } from '../gqless';
@@ -109,7 +109,7 @@ resolved(
 ### React
 
 Since the images are not serializable, `gqless` might be confused while
-using them, that's why you shoud specify a special option `nonSerializableVariables` in your [`useMutation`](/react/mutations)s
+using them, that's why you have to specify a special option `nonSerializableVariables` in your [`useMutation`](/react/mutations)s
 
 ```ts
 const [uploadFile, { isLoading, data, error }] = useMutation(
