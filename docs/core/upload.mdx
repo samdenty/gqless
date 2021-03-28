@@ -22,6 +22,10 @@ And then, use it in your `QueryFetcher`, like the following example:
 > Compatible with browser's [File](https://developer.mozilla.org/en-US/docs/web/api/file) and [Blob](https://developer.mozilla.org/en-US/docs/web/api/blob), and **React Native** using [ReactNativeFile](https://github.com/jaydenseric/extract-files#class-reactnativefile)
 
 ```ts
+import { extractFiles } from 'extract-files';
+
+// ...
+
 const queryFetcher: QueryFetcher = async function (query, variables) {
   const extracted = extractFiles({
     query,
