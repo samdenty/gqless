@@ -22,6 +22,8 @@ const NavigationList = [
   '/useQueryTest',
   '/prepass',
   '/uploadFile',
+  '/transactionQuery1',
+  '/transactionQuery2',
 ];
 
 export const MetaClient = () => {

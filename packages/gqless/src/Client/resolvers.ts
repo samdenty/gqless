@@ -44,6 +44,10 @@ export interface ResolveOptions<TData> {
    */
   onCacheData?: (data: TData) => boolean;
   /**
+   * On No Cache found
+   */
+  onNoCacheFound?: () => void;
+  /**
    * Get every selection intercepted in the specified function
    */
   onSelection?: (selection: Selection) => void;
@@ -210,6 +214,7 @@ export function createResolvers(
       onSubscription,
       retry,
       nonSerializableVariables,
+      onNoCacheFound,
     }: ResolveOptions<T> = {}
   ): Promise<T> {
     const prevFoundValidCache = innerState.foundValidCache;
@@ -250,10 +255,14 @@ export function createResolvers(
 
       interceptorManager.removeInterceptor(interceptor);
 
-      if (innerState.foundValidCache && onCacheData) {
-        const shouldContinue = onCacheData(data);
+      if (innerState.foundValidCache) {
+        if (onCacheData) {
+          const shouldContinue = onCacheData(data);
 
-        if (!shouldContinue) return data;
+          if (!shouldContinue) return data;
+        }
+      } else if (onNoCacheFound) {
+        onNoCacheFound();
       }
 
       innerState.foundValidCache = prevFoundValidCache;

@@ -471,19 +471,28 @@ export function useInterceptSelections({
 export function useSuspensePromise(optsRef: {
   current: { suspense?: boolean };
 }) {
-  const [promise, setPromiseState] = useState<Promise<unknown> | void>();
+  let [promise, setPromiseState] = useState<Promise<unknown> | void>();
 
   const isMounted = useIsMounted();
 
-  const setPromise = useCallback<(promise: Promise<unknown>) => void>(
-    (newPromise) => {
+  const setPromise = useCallback<
+    (promise: Promise<unknown>, inlineThrow?: boolean) => void
+  >(
+    (newPromise, inlineThrow) => {
       if (promise || !optsRef.current.suspense || !isMounted.current) return;
 
       function clearPromise() {
         if (isMounted.current) setPromiseState();
       }
 
-      setPromiseState(newPromise.then(clearPromise, clearPromise));
+      const promiseValue = (promise = newPromise.then(
+        clearPromise,
+        clearPromise
+      ));
+
+      setPromiseState(promiseValue);
+
+      if (inlineThrow) throw promiseValue;
     },
     [setPromiseState, optsRef]
   );
