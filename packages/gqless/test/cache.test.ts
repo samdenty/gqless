@@ -1,6 +1,6 @@
 import { assertIsDefined } from 'test-utils';
 
-import { CacheNotFound, createAccessorCache, createCache } from '../src/Cache';
+import { createAccessorCache, createCache } from '../src/Cache';
 import { EventHandler } from '../src/Events';
 import { createNormalizationHandler } from '../src/Normalization';
 import { Selection } from '../src/Selection';
@@ -186,7 +186,7 @@ describe('dataCache', () => {
 
     const dataEmpty = cache.getCacheFromSelection(selection);
 
-    expect(dataEmpty).toBe(CacheNotFound);
+    expect(dataEmpty).toBe(undefined);
 
     cache.mergeCache(
       {

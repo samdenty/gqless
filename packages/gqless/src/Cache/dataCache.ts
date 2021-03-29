@@ -3,15 +3,17 @@ import { get, isObject, mergeWith, PlainObject, set } from '../Utils';
 
 import type { NormalizationHandler } from '../Normalization';
 
-export const CacheNotFound = Symbol('Not Found');
-
-export type CacheType = Record<string, unknown>;
+export type CacheType = {
+  query?: Record<string, unknown>;
+  mutation?: Record<string, unknown>;
+  subscription?: Record<string, unknown>;
+};
 
 export interface CacheInstance {
   cache: CacheType;
   getCacheFromSelection: {
-    <Value = unknown>(selection: Selection): typeof CacheNotFound | Value;
-    <Value = unknown, NotFound = typeof CacheNotFound>(
+    <Value = unknown>(selection: Selection): undefined | Value;
+    <Value = unknown, NotFound = undefined>(
       selection: Selection,
       defaultValue: NotFound
     ): Value | NotFound;
@@ -31,17 +33,14 @@ export function createCache(
 
   function getCacheFromSelection<Value = unknown>(
     selection: Selection
-  ): Value | typeof CacheNotFound;
-  function getCacheFromSelection<
-    Value = unknown,
-    NotFound = typeof CacheNotFound
-  >(selection: Selection, defaultValue: NotFound): Value | NotFound;
-  function getCacheFromSelection<
-    Value = unknown,
-    NotFound = typeof CacheNotFound
-  >(
+  ): Value | undefined;
+  function getCacheFromSelection<Value = unknown, NotFound = undefined>(
     selection: Selection,
-    notFoundValue: any = CacheNotFound
+    defaultValue: NotFound
+  ): Value | NotFound;
+  function getCacheFromSelection<Value = unknown, NotFound = undefined>(
+    selection: Selection,
+    notFoundValue: any = undefined
   ): Value | NotFound {
     return normalization
       ? normalization.getCacheFromSelection<Value, NotFound>(
@@ -84,7 +83,11 @@ export function createCache(
   ) {
     normalization?.scanNormalizedObjects(data);
 
-    mergeWith(cache, { [prefix]: data }, onObjectMergeConflict);
+    mergeWith<CacheType, CacheType>(
+      cache,
+      { [prefix]: data },
+      onObjectMergeConflict
+    );
   }
 
   return {

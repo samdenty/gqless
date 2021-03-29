@@ -1,4 +1,4 @@
-import { CacheNotFound, ProxyAccessor } from '../Cache';
+import { ProxyAccessor } from '../Cache';
 import { InnerClientState } from '../Client/client';
 import { gqlessError } from '../Error';
 import {
@@ -206,7 +206,7 @@ export function createAccessorCreators<
         accessorSelection
       );
 
-      if (selectionCache === CacheNotFound) return;
+      if (selectionCache === undefined) return;
 
       return selectionCache;
     } else if (isObject(value)) {
@@ -310,7 +310,7 @@ export function createAccessorCreators<
     if (innerState.allowCache && arrayCacheValue === null) return null;
 
     const proxyValue: unknown[] =
-      arrayCacheValue === CacheNotFound || !Array.isArray(arrayCacheValue)
+      arrayCacheValue === undefined || !Array.isArray(arrayCacheValue)
         ? proxySymbolArray
         : arrayCacheValue;
 
@@ -414,7 +414,7 @@ export function createAccessorCreators<
 
               if (
                 innerState.allowCache &&
-                arrayCacheValue !== CacheNotFound &&
+                arrayCacheValue !== undefined &&
                 arrayCacheValue?.[index] == null
               ) {
                 /**
@@ -663,7 +663,7 @@ export function createAccessorCreators<
                     selection
                   );
 
-                  if (cacheValue === CacheNotFound) {
+                  if (cacheValue === undefined) {
                     innerState.foundValidCache = false;
 
                     /**

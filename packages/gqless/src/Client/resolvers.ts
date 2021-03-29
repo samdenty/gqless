@@ -1,5 +1,5 @@
 import type { ExecutionResult, GraphQLError } from 'graphql';
-import { CacheInstance, CacheNotFound, createCache } from '../Cache';
+import { CacheInstance, createCache } from '../Cache';
 import { gqlessError } from '../Error';
 import { doRetry } from '../Error/retry';
 import { FetchEventData } from '../Events';
@@ -139,14 +139,10 @@ function filterSelectionsWithErrors(
           .slice(1)
           .map((selection) => selection.alias || selection.key)
           .join('.');
-        const selectionData = get(
-          executionData,
-          selectionPathNoIndex,
-          CacheNotFound
-        );
+        const selectionData = get(executionData, selectionPathNoIndex);
 
         switch (selectionData) {
-          case CacheNotFound: {
+          case undefined: {
             return true;
           }
           case null: {

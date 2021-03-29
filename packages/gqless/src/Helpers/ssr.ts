@@ -81,11 +81,13 @@ export function createSSRHelpers({
   const prepareRender = async (render: () => Promise<unknown> | unknown) => {
     let renderPromise: Promise<unknown> | unknown | undefined;
 
+    const interceptor = innerState.interceptorManager.createInterceptor();
     let prevIgnoreCache = innerState.allowCache;
     try {
       innerState.allowCache = false;
       renderPromise = render();
     } finally {
+      innerState.interceptorManager.removeInterceptor(interceptor);
       innerState.allowCache = prevIgnoreCache;
     }
 
@@ -96,13 +98,30 @@ export function createSSRHelpers({
 
     const selections = innerState.selectionManager.backupAliases();
 
+    const queryCache = innerState.clientCache.cache.query || {};
+
+    // We only want to pass the cache that is part of the selections made
+    // Not all the acumulated server cache
+    const cache: Record<string, unknown> = {};
+    for (const {
+      type,
+      // cachePath has always the form ["query", "user", "email"]
+      cachePath: [, queryPath],
+    } of interceptor.fetchSelections) {
+      // SelectionType.Query === 0
+      if (type === 0) {
+        const value = queryCache[queryPath];
+        if (value !== undefined) cache[queryPath] = value;
+      }
+    }
+
     const nC = innerState.clientCache.normalizedCache;
 
     return {
       cacheSnapshot: JSON.stringify({
         ...decycle({
-          cache: innerState.clientCache.cache.query,
-          normalizedCache: nC ? (isEmptyObject(nC) ? undefined : nC) : nC,
+          cache: isEmptyObject(cache) ? undefined : cache,
+          normalizedCache: nC && (isEmptyObject(nC) ? undefined : nC),
         }),
         selections: selections.length ? selections : undefined,
       }),
