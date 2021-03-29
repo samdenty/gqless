@@ -1,5 +1,6 @@
 import { Selection } from '../Selection';
 import { set } from '../Utils';
+import { serializeVariables } from '../Utils/cachedJSON';
 
 interface SelectionTree {
   [P: string]: SelectionTree | true;
@@ -9,11 +10,11 @@ const stringSelectionTree = (v: SelectionTree) => {
   const treeEntries = Object.entries(v);
   return treeEntries.reduce((acum, [key, value], index) => {
     if (typeof value === 'object') {
-      acum += key + `{`;
+      acum += key + '{';
 
       acum += stringSelectionTree(value);
 
-      acum += `}`;
+      acum += '}';
     } else {
       acum += key + (index !== treeEntries.length - 1 ? ' ' : '');
     }
@@ -175,7 +176,7 @@ export function createQueryBuilder() {
     builtQuery = {
       query,
       variables,
-      cacheKey: query + (variables ? JSON.stringify(variables) : ''),
+      cacheKey: query + (variables ? serializeVariables(variables) : ''),
     };
 
     if (isGlobalCache) queryCache[idAcum] = builtQuery;

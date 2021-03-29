@@ -1,5 +1,6 @@
 import type { ProxyAccessor } from '../Cache';
 import type { InnerClientState, Refetch } from '../Client/client';
+import type { SelectionsBackup } from '../Selection/SelectionManager';
 import { decycle, isEmptyObject, isPlainObject, retrocycle } from '../Utils';
 
 export interface HydrateCacheOptions {
@@ -45,22 +46,27 @@ export function createSSRHelpers({
     shouldRefetch = false,
   }: HydrateCacheOptions) => {
     try {
-      const recoveredCache = retrocycle(JSON.parse(cacheSnapshot));
+      const recoveredCache = retrocycle<{
+        cache?: Record<string, unknown>;
+        normalizedCache?: Record<string, unknown>;
+        selections?: SelectionsBackup;
+      }>(JSON.parse(cacheSnapshot));
       if (
         isPlainObject(recoveredCache) &&
         isPlainObject(recoveredCache.cache)
       ) {
-        if (Array.isArray(recoveredCache.selections)) {
-          innerState.selectionManager.restoreAliases(recoveredCache.selections);
-        }
-        innerState.clientCache.mergeCache(recoveredCache.cache, 'query');
+        const { selections, cache, normalizedCache } = recoveredCache;
+
+        innerState.selectionManager.restore(selections);
+
+        innerState.clientCache.mergeCache(cache, 'query');
         if (
-          isPlainObject(recoveredCache.normalizedCache) &&
+          isPlainObject(normalizedCache) &&
           innerState.clientCache.normalizedCache
         ) {
           Object.assign(
             innerState.clientCache.normalizedCache,
-            recoveredCache.normalizedCache
+            normalizedCache
           );
         }
 
@@ -96,7 +102,7 @@ export function createSSRHelpers({
       ...innerState.scheduler.pendingSelectionsGroupsPromises.values(),
     ]);
 
-    const selections = innerState.selectionManager.backupAliases();
+    const selections = innerState.selectionManager.backup();
 
     const queryCache = innerState.clientCache.cache.query || {};
 
@@ -123,7 +129,8 @@ export function createSSRHelpers({
           cache: isEmptyObject(cache) ? undefined : cache,
           normalizedCache: nC && (isEmptyObject(nC) ? undefined : nC),
         }),
-        selections: selections.length ? selections : undefined,
+        selections:
+          selections[0].length || selections[1].length ? selections : undefined,
       }),
     };
   };

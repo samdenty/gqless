@@ -728,7 +728,9 @@ export function createAccessorCreators<
                 };
 
                 return Object.assign(
-                  function ProxyFn(argValues: Record<string, unknown> = {}) {
+                  function ProxyFn(
+                    argValues: Record<string, unknown> = emptyVariablesObject
+                  ) {
                     return resolve({
                       argValues,
                       argTypes: __args,
@@ -825,3 +827,5 @@ export function createAccessorCreators<
     subscription,
   };
 }
+
+const emptyVariablesObject = {};

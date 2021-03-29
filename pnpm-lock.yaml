@@ -3,6 +3,7 @@ importers:
     dependencies:
       bufferutil: 4.0.3
       build-utils: link:internal/build-utils
+      esbuild: 0.11.0
       jest: 26.6.3_1ee98dc1e60a08f453925911ae7a4b92
       nodemon: 2.0.7
       open: 8.0.4
@@ -32,6 +33,7 @@ importers:
       bufferutil: ^4.0.3
       build-utils: workspace:^1.0.0
       concurrently: ^6.0.0
+      esbuild: ^0.11.0
       fkill: ^7.1.1
       husky: ^4.3.8
       jest: ^26.6.3
@@ -106,7 +108,7 @@ importers:
       extract-files: 9.0.0
       faker: 5.4.0
       fastify: 3.14.1
-      fastify-nextjs: 5.3.0_next@10.1.0
+      fastify-nextjs: 5.3.0_next@10.1.1
       framer-motion: 4.0.3_react-dom@17.0.2+react@17.0.2
       gqless: link:../../packages/gqless
       graphql: 15.5.0
@@ -117,7 +119,7 @@ importers:
       mercurius-codegen: 1.4.2_0827c80956e877aff36bc9e6c0d2911e
       mercurius-upload: 1.1.1_graphql@15.5.0
       ms: 2.1.3
-      next: 10.1.0_19437c2f9b137c4ee9c416360487a7aa
+      next: 10.1.1_19437c2f9b137c4ee9c416360487a7aa
       node-json-db: 1.3.0
       open: 8.0.4
       react: 17.0.2
@@ -516,7 +518,7 @@ importers:
       '@size-limit/preset-small-lib': 4.10.1_9e1fedab717cf71fbaebcc1febc76206
       '@testing-library/jest-dom': 5.11.10
       '@testing-library/react': 11.2.5_react-dom@17.0.2+react@17.0.2
-      '@testing-library/react-hooks': 5.1.0_fc2bb8a5b006d3f25c5f84ea777e678d
+      '@testing-library/react-hooks': 5.1.1_fc2bb8a5b006d3f25c5f84ea777e678d
       '@types/jest': 26.0.22
       '@types/lodash': 4.14.168
       '@types/react': 17.0.3
@@ -583,6 +585,7 @@ importers:
       ws: ^7.4.4
 lockfileVersion: 5.2
 overrides:
+  esbuild: ^0.11.0
   jest: ^26.6.3
   prettier: ^2.2.1
   ts-jest: ^26.4.4
@@ -4049,19 +4052,19 @@ packages:
     dev: false
     resolution:
       integrity: sha512-H1rQc1ZOHANWBvPcW+JpGwr+juXSxM8Q8YCkm3GhZd8REu1fHR3z99CErO1p9pkcfcxZnMdIZdIsXkOHY0NilA==
-  /@next/env/10.1.0:
+  /@next/env/10.1.1:
     dev: false
     resolution:
-      integrity: sha512-cNpSuU0G+Hn0ZGg07HDwKswdR1cwkMgUXX8hFniKm5EC7/2CEANUh7r9BnSBLI39BaPUp+13uJbSHSXixX2QJw==
-  /@next/eslint-plugin-next/10.1.0:
+      integrity: sha512-r994/vTWGIah1VKHwidCqk619SK+UETgRagOtJO22PwAf9hZciJtzt75RzVyhaiW+2OOKzz4gx9PgKRYVsbTwQ==
+  /@next/eslint-plugin-next/10.1.1:
     dev: false
     resolution:
-      integrity: sha512-RYmy87ob97vHQPlm+btXJkoti6WhDkI4dAn2oGOsAN0INmX1o2vb0FAOUhoXy3NG/4u09N+AG6eN9bk/qWHKbA==
-  /@next/polyfill-module/10.1.0:
+      integrity: sha512-yM1FoUg1lEUk2m669SmokWO/9nFfLfPIUJI3TRwoc/+3lJEm2LDs14yU0WdBdpN1Uo1Qhf8YQUkl9eZW84183w==
+  /@next/polyfill-module/10.1.1:
     dev: false
     resolution:
-      integrity: sha512-1YOnzoMVJSAjZ8qwMw+QhrY+z9vP6HEZeGq2HnrKkrTz9gHlksoFYX7uvtStJqhyIFReSbOL5gc5XsFjv3p2Cg==
-  /@next/react-dev-overlay/10.1.0_react-dom@17.0.2+react@17.0.2:
+      integrity: sha512-CTFawTPp0J0nH7jb+uS8AkUVqFBkD2GC9EIonrKCb+YeGEYgZhX7wfQj74KlI83ubZ92r+lWdtcDyAT6lNSjrg==
+  /@next/react-dev-overlay/10.1.1_react-dom@17.0.2+react@17.0.2:
     dependencies:
       '@babel/code-frame': 7.12.11
       anser: 1.4.9
@@ -4081,8 +4084,8 @@ packages:
       react: ^16.9.0 || ^17
       react-dom: ^16.9.0 || ^17
     resolution:
-      integrity: sha512-wA9o0TA74W9B1GClQ2+uXCp8mAvOg8fQ1ziz37xi/9E2mh3OzMEoE7erqv4Z/LmkJoOI4DzKWz5c0hp6pvjhhw==
-  /@next/react-refresh-utils/10.1.0_react-refresh@0.8.3:
+      integrity: sha512-1beApmxIXsmn+8aFNxv5mYMgRPbrYZlIggpKyHmcINbpZPTOGv+No6S+NGsBF4qUMxRlVGvBSk4ebzdCG2xTgw==
+  /@next/react-refresh-utils/10.1.1_react-refresh@0.8.3:
     dependencies:
       react-refresh: 0.8.3
     dev: false
@@ -4093,7 +4096,7 @@ packages:
       webpack:
         optional: true
     resolution:
-      integrity: sha512-0A2K8zKbOg/QFvFKhqxoQwP3OniWErS9vc5fuWuqA00eN9U1QWGRutSXbOmLhDJDs3d4F4ldvfnH8YWB18AfBg==
+      integrity: sha512-Ey4AR+BwEYW55dejMh06wvGhZmC+5OpY4ekwYX6Ipwk+K5jecDvbrZQCYvh4iPKNq9JV7o+D3+QuFtYaDjkXmw==
   /@nodelib/fs.scandir/2.1.4:
     dependencies:
       '@nodelib/fs.stat': 2.0.4
@@ -4599,7 +4602,7 @@ packages:
       yarn: '>=1'
     resolution:
       integrity: sha512-FuKiq5xuk44Fqm0000Z9w0hjOdwZRNzgx7xGGxQYepWFZy+OYUMOT/wPI4nLYXCaVltNVpU1W/qmD88wLWDsqQ==
-  /@testing-library/react-hooks/5.1.0_fc2bb8a5b006d3f25c5f84ea777e678d:
+  /@testing-library/react-hooks/5.1.1_fc2bb8a5b006d3f25c5f84ea777e678d:
     dependencies:
       '@babel/runtime': 7.13.10
       '@types/react': 17.0.3
@@ -4621,7 +4624,7 @@ packages:
       react-test-renderer:
         optional: true
     resolution:
-      integrity: sha512-ChRyyA14e0CeVkWGp24v8q/IiWUqH+B8daRx4lGZme4dsudmMNWz+Qo2Q2NzbD2O5rAVXh2hSbS/KTKeqHYhkw==
+      integrity: sha512-52D2XnpelFDefnWpy/V6z2qGNj8JLIvW5DjYtelMvFXdEyWiykSaI7IXHwFy4ICoqXJDmmwHAiFRiFboub/U5g==
   /@testing-library/react/11.2.5_react-dom@17.0.2+react@17.0.2:
     dependencies:
       '@babel/runtime': 7.13.10
@@ -8254,11 +8257,11 @@ packages:
     dev: false
     resolution:
       integrity: sha1-wsNYJlYkfDnqEHyx5mUrb58kUjw=
-  /esbuild/0.10.2:
+  /esbuild/0.11.0:
     hasBin: true
     requiresBuild: true
     resolution:
-      integrity: sha512-/5vsZD7wTJJHC3yNXLUjXNvUDwqwNoIMvFvLd9tcDQ9el5l13pspYm3yufavjIeYvNtAbo+6N/6uoWx9dGA6ug==
+      integrity: sha512-soxN5dic/pDMM0LKLUKmpOY/MVfF+6n3RHLS2ez0YQoM0dmd2tTs/hmAC4pxfhm2Pvn/28UtMJyFedRYC+8olA==
   /esbuild/0.9.7:
     dev: false
     hasBin: true
@@ -8810,10 +8813,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Jm2LMTB5rsJqlS1+cmgqqM9tTs0UrlgYR7TvDT3ZgXsUI5ib1NjQlqZHf+tDK5tVPdFGwyq02wAoJtyYIRSiFA==
-  /fastify-nextjs/5.3.0_next@10.1.0:
+  /fastify-nextjs/5.3.0_next@10.1.1:
     dependencies:
       fastify-plugin: 3.0.0
-      next: 10.1.0_19437c2f9b137c4ee9c416360487a7aa
+      next: 10.1.1_19437c2f9b137c4ee9c416360487a7aa
       under-pressure: 5.6.0
     dev: false
     engines:
@@ -13037,17 +13040,17 @@ packages:
     dev: true
     resolution:
       integrity: sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
-  /next/10.1.0_19437c2f9b137c4ee9c416360487a7aa:
+  /next/10.1.1_19437c2f9b137c4ee9c416360487a7aa:
     dependencies:
       '@babel/core': 7.12.10
       '@babel/eslint-parser': 7.13.4_@babel+core@7.12.10+eslint@7.9.0
       '@babel/runtime': 7.12.5
       '@hapi/accept': 5.0.1
-      '@next/env': 10.1.0
-      '@next/eslint-plugin-next': 10.1.0
-      '@next/polyfill-module': 10.1.0
-      '@next/react-dev-overlay': 10.1.0_react-dom@17.0.2+react@17.0.2
-      '@next/react-refresh-utils': 10.1.0_react-refresh@0.8.3
+      '@next/env': 10.1.1
+      '@next/eslint-plugin-next': 10.1.1
+      '@next/polyfill-module': 10.1.1
+      '@next/react-dev-overlay': 10.1.1_react-dom@17.0.2+react@17.0.2
+      '@next/react-refresh-utils': 10.1.1_react-refresh@0.8.3
       '@opentelemetry/api': 0.14.0
       assert: 2.0.0
       ast-types: 0.13.2
@@ -13114,7 +13117,7 @@ packages:
       sass:
         optional: true
     resolution:
-      integrity: sha512-244psansNKBCsDQvRS1HoZzpSB3ZhdkW21Db5wWNc7WCZwyXxGgEGpgzq3LV63NtEFzq1VIHDvISUi7u9fv/PQ==
+      integrity: sha512-ZqnbOnlsatUb04twx2kfmQWGe1bSdePjK27X64H7T27zhUdRiOWe0H1uVV7KdFgjT8dXYA20QkPG1g9Id+2Mgw==
   /nice-try/1.0.5:
     resolution:
       integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
@@ -17979,7 +17982,7 @@ packages:
       chalk: 4.1.0
       chokidar: 3.5.1
       debug: 4.3.1
-      esbuild: 0.10.2
+      esbuild: 0.11.0
       execa: 5.0.0
       globby: 11.0.3
       joycon: 3.0.1
