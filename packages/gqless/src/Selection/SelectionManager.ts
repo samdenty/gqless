@@ -177,6 +177,8 @@ export function createSelectionManager(): SelectionManager {
         id: ++uniqueSelectionId,
       });
       selectionCache.set(cacheKey, selection);
+    } else if (args) {
+      selection.args = args;
     }
 
     return selection;
