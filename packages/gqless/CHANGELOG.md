@@ -1,5 +1,13 @@
 # gqless
 
+## 2.0.8
+
+### Patch Changes
+
+- c74442e: fix prepareRender logic
+- d78f2ab: resolved "onNoCacheFound" helper
+- 0ffaa9d: optimize selections cache & backups size
+
 ## 2.0.7
 
 ### Patch Changes
