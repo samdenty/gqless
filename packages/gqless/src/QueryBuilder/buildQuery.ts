@@ -9,13 +9,13 @@ const stringSelectionTree = (v: SelectionTree) => {
   const treeEntries = Object.entries(v);
   return treeEntries.reduce((acum, [key, value], index) => {
     if (typeof value === 'object') {
-      acum += `${key}{`;
+      acum += key + `{`;
 
       acum += stringSelectionTree(value);
 
       acum += `}`;
     } else {
-      acum += `${key}` + (index !== treeEntries.length - 1 ? ' ' : '');
+      acum += key + (index !== treeEntries.length - 1 ? ' ' : '');
     }
     return acum;
   }, '');
@@ -67,31 +67,32 @@ export function createQueryBuilder() {
           (acum, { args, alias, key, argTypes, unions }, index) => {
             const argsLength = args ? Object.keys(args).length : 0;
 
-            const selectionKey = alias ? `${alias}:${key}` : key;
+            const selectionKey = alias ? alias + ':' + key : key;
 
             let leafValue: string;
 
             if (args && argTypes && argsLength) {
-              leafValue = `${selectionKey}(${Object.entries(args).reduce(
-                (acum, [key, value], index) => {
-                  const variableMapKey = `${
-                    argTypes![key]
-                  }-${key}-${JSON.stringify(value)}`;
+              leafValue =
+                selectionKey +
+                '(' +
+                Object.entries(args).reduce((acum, [key, value], index) => {
+                  const variableMapKey =
+                    argTypes[key] + '-' + key + '-' + JSON.stringify(value);
 
                   variablesMapKeyValue[variableMapKey] = value;
 
                   const variableMapValue = variablesMap.get(variableMapKey);
 
                   if (variableMapValue) {
-                    acum += `${key}:$${variableMapValue}`;
+                    acum += key + ':$' + variableMapValue;
                   } else {
-                    const newVariableValue = `${key}${variableId++}`;
-                    const newVariableType = argTypes![key];
+                    const newVariableValue = key + variableId++;
+                    const newVariableType = argTypes[key];
 
                     variableTypes[newVariableValue] = newVariableType;
                     variablesMap.set(variableMapKey, newVariableValue);
 
-                    acum += `${key}:$${newVariableValue}`;
+                    acum += key + ':$' + newVariableValue;
                   }
 
                   if (index < argsLength - 1) {
@@ -99,23 +100,22 @@ export function createQueryBuilder() {
                   }
 
                   return acum;
-                },
-                ''
-              )})`;
+                }, '') +
+                ')';
             } else {
               leafValue = selectionKey + '';
             }
 
             if (unions) {
               for (const union of unions.slice(1)) {
-                const newAcum = [...acum, `...on ${union}`, leafValue];
+                const newAcum = [...acum, '...on ' + union, leafValue];
 
                 selectionBranches.push(
                   createSelectionBranch(selections.slice(index + 1), newAcum)
                 );
               }
 
-              acum.push(`...on ${unions[0]}`, leafValue);
+              acum.push('...on ' + unions[0], leafValue);
             } else {
               acum.push(leafValue);
             }
@@ -162,10 +162,13 @@ export function createQueryBuilder() {
     if (variableTypesEntries.length) {
       query = query.replace(
         type,
-        `${type}(${variableTypesEntries.reduce((acum, [variableName, type]) => {
-          acum += `$${variableName}:${type}`;
-          return acum;
-        }, '')})`
+        type +
+          '(' +
+          variableTypesEntries.reduce((acum, [variableName, type]) => {
+            acum += '$' + variableName + ':' + type;
+            return acum;
+          }, '') +
+          ')'
       );
     }
 
