@@ -1,4 +1,3 @@
-import { CacheNotFound } from '../Cache';
 import { get, isObject, set } from '../Utils';
 
 export function selectFields<A extends object | null | undefined>(
@@ -51,9 +50,9 @@ export function selectFields<A extends object | null | undefined>(
   }
 
   return fields.reduce((acum, fieldName) => {
-    const fieldValue = get(accessor, fieldName, CacheNotFound);
+    const fieldValue = get(accessor, fieldName);
 
-    if (fieldValue === CacheNotFound) return acum;
+    if (fieldValue === undefined) return acum;
 
     if (Array.isArray(fieldValue)) {
       set(

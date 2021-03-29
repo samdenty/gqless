@@ -1,5 +1,5 @@
 import type { ExecutionResult, GraphQLError } from 'graphql';
-import { CacheInstance, CacheNotFound, createCache } from '../Cache';
+import { CacheInstance, createCache } from '../Cache';
 import { gqlessError } from '../Error';
 import { doRetry } from '../Error/retry';
 import { FetchEventData } from '../Events';
@@ -43,6 +43,10 @@ export interface ResolveOptions<TData> {
    * with the existing cache data.
    */
   onCacheData?: (data: TData) => boolean;
+  /**
+   * On No Cache found
+   */
+  onNoCacheFound?: () => void;
   /**
    * Get every selection intercepted in the specified function
    */
@@ -139,14 +143,10 @@ function filterSelectionsWithErrors(
           .slice(1)
           .map((selection) => selection.alias || selection.key)
           .join('.');
-        const selectionData = get(
-          executionData,
-          selectionPathNoIndex,
-          CacheNotFound
-        );
+        const selectionData = get(executionData, selectionPathNoIndex);
 
         switch (selectionData) {
-          case CacheNotFound: {
+          case undefined: {
             return true;
           }
           case null: {
@@ -214,6 +214,7 @@ export function createResolvers(
       onSubscription,
       retry,
       nonSerializableVariables,
+      onNoCacheFound,
     }: ResolveOptions<T> = {}
   ): Promise<T> {
     const prevFoundValidCache = innerState.foundValidCache;
@@ -254,10 +255,14 @@ export function createResolvers(
 
       interceptorManager.removeInterceptor(interceptor);
 
-      if (innerState.foundValidCache && onCacheData) {
-        const shouldContinue = onCacheData(data);
+      if (innerState.foundValidCache) {
+        if (onCacheData) {
+          const shouldContinue = onCacheData(data);
 
-        if (!shouldContinue) return data;
+          if (!shouldContinue) return data;
+        }
+      } else if (onNoCacheFound) {
+        onNoCacheFound();
       }
 
       innerState.foundValidCache = prevFoundValidCache;

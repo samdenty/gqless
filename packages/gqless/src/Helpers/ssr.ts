@@ -1,6 +1,7 @@
 import type { ProxyAccessor } from '../Cache';
 import type { InnerClientState, Refetch } from '../Client/client';
-import { decycle, isPlainObject, retrocycle } from '../Utils';
+import type { SelectionsBackup } from '../Selection/SelectionManager';
+import { decycle, isEmptyObject, isPlainObject, retrocycle } from '../Utils';
 
 export interface HydrateCacheOptions {
   /**
@@ -45,19 +46,27 @@ export function createSSRHelpers({
     shouldRefetch = false,
   }: HydrateCacheOptions) => {
     try {
-      const recoveredCache = retrocycle(JSON.parse(cacheSnapshot));
+      const recoveredCache = retrocycle<{
+        cache?: Record<string, unknown>;
+        normalizedCache?: Record<string, unknown>;
+        selections?: SelectionsBackup;
+      }>(JSON.parse(cacheSnapshot));
       if (
         isPlainObject(recoveredCache) &&
         isPlainObject(recoveredCache.cache)
       ) {
-        Object.assign(innerState.clientCache.cache, recoveredCache.cache);
+        const { selections, cache, normalizedCache } = recoveredCache;
+
+        innerState.selectionManager.restore(selections);
+
+        innerState.clientCache.mergeCache(cache, 'query');
         if (
-          isPlainObject(recoveredCache.normalizedCache) &&
+          isPlainObject(normalizedCache) &&
           innerState.clientCache.normalizedCache
         ) {
           Object.assign(
             innerState.clientCache.normalizedCache,
-            recoveredCache.normalizedCache
+            normalizedCache
           );
         }
 
@@ -75,27 +84,54 @@ export function createSSRHelpers({
     }
   };
 
-  const prepareRender = async (render: () => Promise<void> | void) => {
-    for (const key of Object.keys(innerState.clientCache.cache)) {
-      delete innerState.clientCache.cache[key];
+  const prepareRender = async (render: () => Promise<unknown> | unknown) => {
+    let renderPromise: Promise<unknown> | unknown | undefined;
+
+    const interceptor = innerState.interceptorManager.createInterceptor();
+    let prevIgnoreCache = innerState.allowCache;
+    try {
+      innerState.allowCache = false;
+      renderPromise = render();
+    } finally {
+      innerState.interceptorManager.removeInterceptor(interceptor);
+      innerState.allowCache = prevIgnoreCache;
     }
-    if (innerState.clientCache.normalizedCache) {
-      for (const key of Object.keys(innerState.clientCache.normalizedCache)) {
-        delete innerState.clientCache.normalizedCache[key];
+
+    await Promise.all([
+      renderPromise,
+      ...innerState.scheduler.pendingSelectionsGroupsPromises.values(),
+    ]);
+
+    const selections = innerState.selectionManager.backup();
+
+    const queryCache = innerState.clientCache.cache.query || {};
+
+    // We only want to pass the cache that is part of the selections made
+    // Not all the acumulated server cache
+    const cache: Record<string, unknown> = {};
+    for (const {
+      type,
+      // cachePath has always the form ["query", "user", "email"]
+      cachePath: [, queryPath],
+    } of interceptor.fetchSelections) {
+      // SelectionType.Query === 0
+      if (type === 0) {
+        const value = queryCache[queryPath];
+        if (value !== undefined) cache[queryPath] = value;
       }
     }
 
-    await render();
-
-    await innerState.scheduler.resolving?.promise;
+    const nC = innerState.clientCache.normalizedCache;
 
     return {
-      cacheSnapshot: JSON.stringify(
-        decycle({
-          cache: innerState.clientCache.cache,
-          normalizedCache: innerState.clientCache.normalizedCache,
-        })
-      ),
+      cacheSnapshot: JSON.stringify({
+        ...decycle({
+          cache: isEmptyObject(cache) ? undefined : cache,
+          normalizedCache: nC && (isEmptyObject(nC) ? undefined : nC),
+        }),
+        selections:
+          selections[0].length || selections[1].length ? selections : undefined,
+      }),
     };
   };
 

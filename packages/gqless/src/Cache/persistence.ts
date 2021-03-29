@@ -1,6 +1,6 @@
 import {
   SelectionManager,
-  AliasBackupTuple,
+  SelectionsBackup,
 } from '../Selection/SelectionManager';
 import { decycle, isPlainObject, retrocycle } from '../Utils';
 import { CacheInstance } from './dataCache';
@@ -29,7 +29,7 @@ export function createPersistenceHelpers(
     if (clientCache.normalizedCache) {
       normalizedCache = decycle(clientCache.normalizedCache);
     }
-    const selections = selectionManager.backupAliases();
+    const selections = selectionManager.backup();
 
     return JSON.stringify({ version, cache, normalizedCache, selections });
   }
@@ -59,17 +59,13 @@ export function createPersistenceHelpers(
       if (typeof backup !== 'string') return false;
 
       const backupObject: {
-        cache: object;
-        normalizedCache?: object;
-        selections: AliasBackupTuple[];
+        cache?: Record<string, unknown>;
+        normalizedCache?: Record<string, unknown>;
+        selections?: SelectionsBackup;
         version?: string;
       } = JSON.parse(backup);
 
-      if (
-        isPlainObject(backupObject) &&
-        isPlainObject(backupObject.cache) &&
-        Array.isArray(backupObject.selections)
-      ) {
+      if (isPlainObject(backupObject) && isPlainObject(backupObject.cache)) {
         if (
           (expectedVersion && !backupObject.version) ||
           (backupObject.version && !expectedVersion)
@@ -93,7 +89,8 @@ export function createPersistenceHelpers(
             retrocycle(backupObject.normalizedCache)
           );
         }
-        selectionManager.restoreAliases(backupObject.selections);
+
+        selectionManager.restore(backupObject.selections);
 
         return true;
       }

@@ -148,8 +148,6 @@ describe('server side rendering', () => {
 
     const { cacheSnapshot } = await prepareRender(() => {});
 
-    expect(cacheSnapshot).toBe(
-      JSON.stringify({ cache: {}, normalizedCache: {} })
-    );
+    expect(cacheSnapshot).toBe(JSON.stringify({}));
   });
 });

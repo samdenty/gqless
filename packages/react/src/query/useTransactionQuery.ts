@@ -22,6 +22,7 @@ import {
   useSelectionsState,
   useSubscribeCacheChanges,
   useSuspensePromise,
+  useUpdateEffect,
 } from '../common';
 import { ReactClientOptionsWithDefaults } from '../utils';
 
@@ -208,7 +209,8 @@ export function createUseTransactionQuery<
           ResolveOptions<TData>,
           'onSelection' | 'onCacheData'
         > = {},
-        fetchPolicyArg: FetchPolicy | undefined = fetchPolicy
+        fetchPolicyArg: FetchPolicy | undefined = fetchPolicy,
+        cacheChangeCall?: boolean
       ) => {
         if (skip) {
           return Promise.resolve(
@@ -219,14 +221,12 @@ export function createUseTransactionQuery<
         }
 
         stateRef.current.isCalled = true;
-        isFetching.current = true;
-        dispatch({
-          type: 'loading',
-        });
-        stateRef.current.isLoading = true;
 
         const fn = () => fnRef.current(clientQuery, optsRef.current.variables!);
 
+        stateRef.current.isLoading = false;
+
+        let instaResolved = false;
         const promise = resolved<TData>(fn, {
           ...resolveOptions,
           ...resolveOptsArg,
@@ -236,6 +236,7 @@ export function createUseTransactionQuery<
           onCacheData(data): boolean {
             switch (fetchPolicyArg) {
               case 'cache-and-network': {
+                stateRef.current.isLoading = true;
                 dispatch({
                   type: 'cache-found',
                   data,
@@ -244,24 +245,47 @@ export function createUseTransactionQuery<
                 return true;
               }
               case 'cache-first': {
+                instaResolved = true;
+
+                if (cacheChangeCall) {
+                  dispatch({
+                    type: 'success',
+                    data,
+                  });
+                }
+
+                stateRef.current.data = data;
                 return false;
               }
-              default:
+              default: {
+                instaResolved = true;
                 return false;
+              }
             }
+          },
+          onNoCacheFound() {
+            isFetching.current = true;
+            dispatch({
+              type: 'loading',
+            });
+            stateRef.current.isLoading = true;
           },
         }).then(
           (data) => {
+            pendingPromise.current = undefined;
             optsRef.current.onCompleted?.(data);
             isFetching.current = false;
-            dispatch({
-              type: 'success',
-              data,
-            });
-            stateRef.current.data = data;
+            if (stateRef.current.isLoading || stateRef.current.data !== data) {
+              dispatch({
+                type: 'success',
+                data,
+              });
+              stateRef.current.data = data;
+            }
             stateRef.current.isLoading = false;
           },
           (err: unknown) => {
+            pendingPromise.current = undefined;
             isFetching.current = false;
             const error = gqlessError.create(err, useTransactionQuery);
             optsRef.current.onError?.(error);
@@ -276,6 +300,8 @@ export function createUseTransactionQuery<
           }
         );
 
+        if (instaResolved) return;
+
         pendingPromise.current = promise;
         return promise;
       },
@@ -286,22 +312,26 @@ export function createUseTransactionQuery<
       return variables ? JSON.stringify(variables) : '';
     }, [variables]);
 
-    useEffect(() => {
-      if (!skip) {
-        const promise = queryCallback().then((result) => {
+    const queryCallbackWithPromise = useCallback(
+      (inlineThrow?: boolean) => {
+        if (skip) return;
+
+        const promise = queryCallback()?.then((result) => {
           if (result instanceof gqlessError) {
             if (optsRef.current.retry) {
               doRetry(optsRef.current.retry, {
                 async onRetry() {
                   const retryPromise = queryCallback({
                     refetch: true,
-                  }).then((result) => {
+                  })?.then((result) => {
                     if (result instanceof gqlessError) throw result;
                   });
 
-                  setSuspensePromise(retryPromise);
+                  if (retryPromise) {
+                    setSuspensePromise(retryPromise);
 
-                  await retryPromise;
+                    await retryPromise;
+                  }
                 },
               });
             } else if (optsRef.current.suspense) {
@@ -310,9 +340,16 @@ export function createUseTransactionQuery<
           }
         });
 
-        setSuspensePromise(promise);
-      }
-    }, [skip, queryCallback, serializedVariables, optsRef, setSuspensePromise]);
+        if (promise) setSuspensePromise(promise, inlineThrow);
+      },
+      [queryCallback, skip, setSuspensePromise, optsRef]
+    );
+
+    if (!state.isCalled && !skip) queryCallbackWithPromise(true);
+
+    useUpdateEffect(() => {
+      queryCallbackWithPromise();
+    }, [queryCallbackWithPromise, serializedVariables]);
 
     useEffect(() => {
       if (skip || pollInterval <= 0) return;
@@ -381,7 +418,8 @@ export function createUseTransactionQuery<
           {
             refetch: false,
           },
-          'cache-first'
+          'cache-first',
+          true
         );
       },
     });
