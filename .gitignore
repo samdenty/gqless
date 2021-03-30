@@ -8,3 +8,4 @@ examples/react/last-browser-open
 *.tsbuildinfo
 .docusaurus
 build
+.env
