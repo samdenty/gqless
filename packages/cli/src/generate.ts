@@ -291,8 +291,6 @@ export async function generate(
       };
 
       if (gqlType.args.length) {
-        objectFieldsArgsDescriptions[fieldName] ||= {};
-
         if (ignoreArgs) {
           const isEveryArgOptional = gqlType.args.every(({ type }) => {
             return isNullableType(type);
@@ -304,6 +302,7 @@ export async function generate(
             if (shouldIgnore) return;
           }
         }
+        objectFieldsArgsDescriptions[fieldName] ||= {};
 
         schemaType[fieldName].__args = gqlType.args.reduce((acum, arg) => {
           acum[arg.name] = arg.type.toString();
@@ -378,6 +377,10 @@ export async function generate(
   const interfacesMap = new Map<string, InterfaceMapValue[]>();
 
   const parseInterfaceType = (type: GraphQLInterfaceType) => {
+    const schemaType: Record<string, Type> = {
+      __typename: { __type: 'String!' },
+    };
+
     const fields = type.getFields();
 
     const interfaceFieldDescriptions: Record<string, FieldDescription> = {};
@@ -389,10 +392,35 @@ export async function generate(
         fieldName,
         __type: gqlType.type.toString(),
       };
+      schemaType[fieldName] = {
+        __type: gqlType.type.toString(),
+      };
 
+      let hasArgs = true;
       if (gqlType.args.length) {
+        if (ignoreArgs) {
+          const isEveryArgOptional = gqlType.args.every(({ type }) => {
+            return isNullableType(type);
+          });
+
+          if (isEveryArgOptional) {
+            const shouldIgnore = ignoreArgs(gqlType);
+
+            if (shouldIgnore) {
+              hasArgs = false;
+            }
+          }
+        }
+      } else {
+        hasArgs = false;
+      }
+
+      if (hasArgs) {
         objectFieldsArgsDescriptions[fieldName] ||= {};
-        interfaceValue.__args = gqlType.args.reduce((acum, arg) => {
+
+        schemaType[
+          fieldName
+        ].__args = interfaceValue.__args = gqlType.args.reduce((acum, arg) => {
           acum[arg.name] = arg.type.toString();
           if (
             arg.description ||
@@ -426,6 +454,8 @@ export async function generate(
     fieldsArgsDescriptions.set(type.name, objectFieldsArgsDescriptions);
 
     interfacesMap.set(type.name, list);
+
+    generatedSchema[type.name] = schemaType;
   };
 
   config.types.forEach((type) => {
@@ -566,7 +596,12 @@ export async function generate(
       acum += `
 
       ${addDescription(typeName)}export interface ${typeName} ${
-        objectTypeInterfaces ? 'extends ' + objectTypeInterfaces.join(', ') : ''
+        objectTypeInterfaces
+          ? 'extends ' +
+            objectTypeInterfaces
+              .map((v) => `Omit<${v}, "__typename">`)
+              .join(', ')
+          : ''
       }{ 
         __typename: "${typeName}" | undefined; ${Object.entries(
         typeValue

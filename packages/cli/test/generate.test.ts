@@ -668,6 +668,13 @@ describe('feature complete app', () => {
           value: { __type: 'String' },
           scal: { __type: 'ExampleScalar' },
         },
+        NamedEntity: {
+          __typename: { __type: 'String!' },
+          name: { __type: 'String!' },
+          other: { __type: 'String' },
+          withArgs: { __type: 'Int', __args: { a: 'Int!', b: 'Int' } },
+          withArgs2: { __type: 'Int!', __args: { a: 'Int' } },
+        },
         Human: {
           __typename: { __type: 'String!' },
           name: { __type: 'String!' },
@@ -738,7 +745,33 @@ describe('feature complete app', () => {
         __typename: 'Subscription' | undefined;
       }
 
-      export interface Human extends NamedEntity {
+      /**
+       * Named Entity
+       */
+      export interface NamedEntity {
+        __typename: 'NamedEntity' | undefined;
+        /**
+         * Named Entity Name
+         */
+        name: ScalarsEnums['String'];
+        other?: Maybe<ScalarsEnums['String']>;
+        withArgs: (args: {
+          /**
+           * A Arg
+           */
+          a: Scalars['Int']
+          /**
+           * @defaultValue \`0\`
+           */;
+          b?: Maybe<Scalars['Int']>;
+        }) => Maybe<ScalarsEnums['Int']>;
+        /**
+         * @deprecated No longer supported
+         */
+        withArgs2: (args?: { a?: Maybe<Scalars['Int']> }) => ScalarsEnums['Int'];
+      }
+
+      export interface Human extends Omit<NamedEntity, '__typename'> {
         __typename: 'Human' | undefined;
         name: ScalarsEnums['String'];
         other?: Maybe<ScalarsEnums['String']>;
@@ -766,6 +799,7 @@ describe('feature complete app', () => {
         Query: Query;
         Mutation: Mutation;
         Subscription: Subscription;
+        NamedEntity: NamedEntity;
         Human: Human;
         OtherHuman: OtherHuman;
       }
@@ -773,6 +807,7 @@ describe('feature complete app', () => {
         | 'Query'
         | 'Mutation'
         | 'Subscription'
+        | 'NamedEntity'
         | 'Human'
         | 'OtherHuman';
 
@@ -830,7 +865,7 @@ describe('feature complete app', () => {
       "
     `);
     expect(JSON.stringify(generatedSchema)).toMatchInlineSnapshot(
-      `"{\\"query\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"simpleString\\":{\\"__type\\":\\"String!\\"},\\"stringWithArgs\\":{\\"__type\\":\\"String!\\",\\"__args\\":{\\"hello\\":\\"String!\\"}},\\"stringNullableWithArgs\\":{\\"__type\\":\\"String\\",\\"__args\\":{\\"hello\\":\\"String!\\",\\"helloTwo\\":\\"String\\"}},\\"stringNullableWithArgsArray\\":{\\"__type\\":\\"String\\",\\"__args\\":{\\"hello\\":\\"[String]!\\"}},\\"object\\":{\\"__type\\":\\"Human\\"},\\"objectArray\\":{\\"__type\\":\\"[Human]\\"},\\"objectWithArgs\\":{\\"__type\\":\\"Human!\\",\\"__args\\":{\\"who\\":\\"String!\\"}},\\"arrayString\\":{\\"__type\\":\\"[String!]!\\"},\\"arrayObjectArgs\\":{\\"__type\\":\\"[Human!]!\\",\\"__args\\":{\\"limit\\":\\"Int\\"}},\\"greetings\\":{\\"__type\\":\\"GreetingsEnum!\\"},\\"giveGreetingsInput\\":{\\"__type\\":\\"String!\\",\\"__args\\":{\\"input\\":\\"GreetingsInput!\\"}},\\"enumsInput\\":{\\"__type\\":\\"GreetingsEnum\\",\\"__args\\":{\\"nullableEnum\\":\\"GreetingsEnum\\",\\"notNullableEnum\\":\\"GreetingsEnum!\\"}},\\"number\\":{\\"__type\\":\\"Int!\\"}},\\"mutation\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"increment\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"n\\":\\"Int!\\"}}},\\"subscription\\":{},\\"GreetingsInput\\":{\\"language\\":{\\"__type\\":\\"String!\\"},\\"value\\":{\\"__type\\":\\"String\\"},\\"scal\\":{\\"__type\\":\\"ExampleScalar\\"}},\\"Human\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"father\\":{\\"__type\\":\\"Human!\\"},\\"fieldWithArgs\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"id\\":\\"Int!\\"}},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}},\\"OtherHuman\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}}}"`
+      `"{\\"query\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"simpleString\\":{\\"__type\\":\\"String!\\"},\\"stringWithArgs\\":{\\"__type\\":\\"String!\\",\\"__args\\":{\\"hello\\":\\"String!\\"}},\\"stringNullableWithArgs\\":{\\"__type\\":\\"String\\",\\"__args\\":{\\"hello\\":\\"String!\\",\\"helloTwo\\":\\"String\\"}},\\"stringNullableWithArgsArray\\":{\\"__type\\":\\"String\\",\\"__args\\":{\\"hello\\":\\"[String]!\\"}},\\"object\\":{\\"__type\\":\\"Human\\"},\\"objectArray\\":{\\"__type\\":\\"[Human]\\"},\\"objectWithArgs\\":{\\"__type\\":\\"Human!\\",\\"__args\\":{\\"who\\":\\"String!\\"}},\\"arrayString\\":{\\"__type\\":\\"[String!]!\\"},\\"arrayObjectArgs\\":{\\"__type\\":\\"[Human!]!\\",\\"__args\\":{\\"limit\\":\\"Int\\"}},\\"greetings\\":{\\"__type\\":\\"GreetingsEnum!\\"},\\"giveGreetingsInput\\":{\\"__type\\":\\"String!\\",\\"__args\\":{\\"input\\":\\"GreetingsInput!\\"}},\\"enumsInput\\":{\\"__type\\":\\"GreetingsEnum\\",\\"__args\\":{\\"nullableEnum\\":\\"GreetingsEnum\\",\\"notNullableEnum\\":\\"GreetingsEnum!\\"}},\\"number\\":{\\"__type\\":\\"Int!\\"}},\\"mutation\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"increment\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"n\\":\\"Int!\\"}}},\\"subscription\\":{},\\"GreetingsInput\\":{\\"language\\":{\\"__type\\":\\"String!\\"},\\"value\\":{\\"__type\\":\\"String\\"},\\"scal\\":{\\"__type\\":\\"ExampleScalar\\"}},\\"NamedEntity\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}},\\"Human\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"father\\":{\\"__type\\":\\"Human!\\"},\\"fieldWithArgs\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"id\\":\\"Int!\\"}},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}},\\"OtherHuman\\":{\\"__typename\\":{\\"__type\\":\\"String!\\"},\\"name\\":{\\"__type\\":\\"String!\\"},\\"other\\":{\\"__type\\":\\"String\\"},\\"withArgs\\":{\\"__type\\":\\"Int\\",\\"__args\\":{\\"a\\":\\"Int!\\",\\"b\\":\\"Int\\"}},\\"withArgs2\\":{\\"__type\\":\\"Int!\\",\\"__args\\":{\\"a\\":\\"Int\\"}}}}"`
     );
     expect(JSON.stringify(scalarsEnumsHash)).toMatchInlineSnapshot(
       `"{\\"ExampleScalar\\":true,\\"GreetingsEnum\\":true,\\"OtherEnum\\":true,\\"String\\":true,\\"Int\\":true,\\"Boolean\\":true}"`
