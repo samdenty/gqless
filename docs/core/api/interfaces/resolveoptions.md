@@ -67,6 +67,24 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:45](https://github.com/gqle
 
 ---
 
+### onNoCacheFound
+
+• `Optional` **onNoCacheFound**: () => _void_
+
+On No Cache found
+
+#### Type declaration:
+
+▸ (): _void_
+
+**Returns:** _void_
+
+Defined in: [packages/gqless/src/Client/resolvers.ts:49](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L49)
+
+Defined in: [packages/gqless/src/Client/resolvers.ts:49](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L49)
+
+---
+
 ### onSelection
 
 • `Optional` **onSelection**: (`selection`: [_Selection_](../classes/selection.md)) => _void_
@@ -85,9 +103,9 @@ Get every selection intercepted in the specified function
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:49](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L49)
+Defined in: [packages/gqless/src/Client/resolvers.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L53)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:49](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L49)
+Defined in: [packages/gqless/src/Client/resolvers.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L53)
 
 ---
 
@@ -109,9 +127,9 @@ On subscription event listener
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L53)
+Defined in: [packages/gqless/src/Client/resolvers.ts:57](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L57)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L53)
+Defined in: [packages/gqless/src/Client/resolvers.ts:57](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L57)
 
 ---
 
@@ -131,4 +149,4 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:26](https://github.com/gqle
 
 Retry strategy
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:78](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L78)
+Defined in: [packages/gqless/src/Client/resolvers.ts:82](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L82)

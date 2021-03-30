@@ -72,9 +72,17 @@ Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:8](https://github
 
 ### CacheType
 
-Ƭ **CacheType**: _Record_<string, unknown\>
+Ƭ **CacheType**: _object_
 
-Defined in: [packages/gqless/src/Cache/dataCache.ts:8](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/dataCache.ts#L8)
+#### Type declaration:
+
+| Name            | Type                       |
+| :-------------- | :------------------------- |
+| `mutation`?     | _Record_<string, unknown\> |
+| `query`?        | _Record_<string, unknown\> |
+| `subscription`? | _Record_<string, unknown\> |
+
+Defined in: [packages/gqless/src/Cache/dataCache.ts:6](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/dataCache.ts#L6)
 
 ---
 
@@ -441,4 +449,4 @@ Defined in: [packages/gqless/src/Helpers/prepass.ts:12](https://github.com/gqles
 
 **Returns:** A
 
-Defined in: [packages/gqless/src/Helpers/selectFields.ts:4](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/selectFields.ts#L4)
+Defined in: [packages/gqless/src/Helpers/selectFields.ts:3](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/selectFields.ts#L3)

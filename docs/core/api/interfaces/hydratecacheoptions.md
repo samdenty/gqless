@@ -16,7 +16,7 @@ hide_title: true
 
 Cache snapshot, returned from `prepareRender`
 
-Defined in: [packages/gqless/src/Helpers/ssr.ts:9](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/ssr.ts#L9)
+Defined in: [packages/gqless/src/Helpers/ssr.ts:10](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/ssr.ts#L10)
 
 ---
 
@@ -31,4 +31,4 @@ Specify a number greater than `0` to delay the refetch that amount in ms
 **`default`**
 false
 
-Defined in: [packages/gqless/src/Helpers/ssr.ts:18](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/ssr.ts#L18)
+Defined in: [packages/gqless/src/Helpers/ssr.ts:19](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/ssr.ts#L19)

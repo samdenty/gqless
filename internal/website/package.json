@@ -13,6 +13,7 @@
     "start": "docusaurus start --host 0.0.0.0 --no-open"
   },
   "dependencies": {
+    "@chakra-ui/react": "^1.4.2",
     "@docusaurus/core": "^2.0.0-alpha.72",
     "@docusaurus/module-type-aliases": "^2.0.0-alpha.72",
     "@docusaurus/preset-classic": "^2.0.0-alpha.72",
@@ -35,6 +36,7 @@
     "prism-react-renderer": "^1.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
     "react-use": "^17.2.1",
     "regenerator-runtime": "^0.13.7",
     "rimraf": "^3.0.2",

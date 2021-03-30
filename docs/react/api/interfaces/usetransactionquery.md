@@ -35,4 +35,4 @@ hide_title: true
 
 **Returns:** [_UseTransactionQueryState_](usetransactionquerystate.md)<TData\>
 
-Defined in: [query/useTransactionQuery.ts:123](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L123)
+Defined in: [query/useTransactionQuery.ts:124](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L124)

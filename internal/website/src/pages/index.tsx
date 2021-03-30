@@ -7,7 +7,6 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styled from '@emotion/styled';
 import CodeBlock from '@theme/CodeBlock';
 import Layout from '@theme/Layout';
-import useThemeContext from '@theme/hooks/useThemeContext';
 
 import { Arrow, Example, Feature, Overflow } from '../components';
 
@@ -262,7 +261,7 @@ function IndexPage() {
   );
 }
 
-export default () => {
+export default function IndexPageWrapper() {
   const context = useDocusaurusContext();
 
   const { siteConfig = {} } = context;
@@ -271,4 +270,4 @@ export default () => {
       <IndexPage />
     </Layout>
   );
-};
+}

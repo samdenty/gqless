@@ -38,6 +38,12 @@ module.exports = {
           activeBasePath: 'introduction',
         },
         {
+          label: 'Examples',
+          to: '/examples',
+          position: 'right',
+          activeBasePath: 'examples',
+        },
+        {
           label: 'React',
           to: 'react/basic-usage',
           position: 'right',

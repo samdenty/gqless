@@ -76,7 +76,7 @@ Defined in: [query/useLazyQuery.ts:13](https://github.com/gqless/gqless/blob/mas
 
 **Returns:** _void_
 
-Defined in: [common.ts:496](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L496)
+Defined in: [common.ts:505](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L505)
 
 ---
 
@@ -122,7 +122,7 @@ Defined in: [query/useQuery.ts:37](https://github.com/gqless/gqless/blob/master/
 | `TData`      |
 | `TVariables` |
 
-Defined in: [query/useTransactionQuery.ts:105](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L105)
+Defined in: [query/useTransactionQuery.ts:106](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L106)
 
 ## Functions
 
