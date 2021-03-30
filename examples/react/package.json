@@ -34,7 +34,7 @@
     "mercurius-codegen": "^1.4.2",
     "mercurius-upload": "^1.1.1",
     "ms": "^2.1.3",
-    "next": "^10.1.0",
+    "next": "^10.1.1",
     "node-json-db": "^1.3.0",
     "open": "^8.0.4",
     "react": "^17.0.2",
