@@ -2,6 +2,7 @@ import 'regenerator-runtime/runtime';
 
 import { motion, useAnimation } from 'framer-motion';
 import * as React from 'react';
+
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styled from '@emotion/styled';
@@ -189,6 +190,9 @@ function IndexPage() {
             }}
           >
             <Action to="/introduction/getting-started">Get Started ›</Action>
+            <Action to="/examples" style={{ color: 'rgb(170, 170, 255)' }}>
+              Interactive Examples ›
+            </Action>
             <Action
               to="/introduction/features"
               style={{ color: 'rgb(170, 170, 255)' }}
@@ -266,7 +270,7 @@ export default function IndexPageWrapper() {
 
   const { siteConfig = {} } = context;
   return (
-    <Layout title="Home" description={siteConfig.tagline}>
+    <Layout description={siteConfig.tagline}>
       <IndexPage />
     </Layout>
   );

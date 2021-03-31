@@ -102,6 +102,7 @@ const App = ({ children }: { children?: AppChildren }) => {
           p="1rem"
           h="full"
           w="full"
+          position="relative"
           children={children}
         />
       </Flex>

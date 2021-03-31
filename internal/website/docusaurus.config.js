@@ -38,7 +38,7 @@ module.exports = {
           activeBasePath: 'introduction',
         },
         {
-          label: 'Examples',
+          label: 'Interactive Examples',
           to: '/examples',
           position: 'right',
           activeBasePath: 'examples',
