@@ -1,5 +1,12 @@
 # @gqless/subscriptions
 
+## 1.0.9
+
+### Patch Changes
+
+- Updated dependencies [6a9269f]
+  - gqless@2.0.9
+
 ## 1.0.8
 
 ### Patch Changes
