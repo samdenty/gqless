@@ -53,6 +53,11 @@ module.exports = {
           to: 'faq',
           position: 'right',
         },
+        {
+          label: 'Discord',
+          to: 'https://discord.gg/FjwyGQKYER',
+          position: 'right',
+        },
 
         // { to: 'blog', label: 'Blog', position: 'left' },
         {

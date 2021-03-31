@@ -29,8 +29,7 @@ export const NavLink = (props: NavLinkProps) => {
       py="2"
       px="3"
       borderRadius="md"
-      transition="all 0.3s"
-      fontWeight="medium"
+      transition="unset"
       fontSize="sm"
       userSelect="none"
       textDecor="none !important"
@@ -50,7 +49,9 @@ export const NavLink = (props: NavLinkProps) => {
     >
       <HStack spacing="4">
         <Icon as={icon} fontSize="lg" opacity={0.64} />
-        <Text as="span">{label}</Text>
+        <Text fontWeight={isActive ? 'medium' : undefined} as="span">
+          {label}
+        </Text>
       </HStack>
     </Link>
   );

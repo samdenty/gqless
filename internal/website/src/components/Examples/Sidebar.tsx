@@ -16,6 +16,11 @@ export const Sidebar = (props: FlexProps) => {
               href="/examples/suspense/query"
               icon={FaReact}
             />
+            <NavLink
+              label="React Suspense Authentication"
+              href="/examples/suspense/auth"
+              icon={FaReact}
+            />
           </Stack>
         </Stack>
         <Spacer />

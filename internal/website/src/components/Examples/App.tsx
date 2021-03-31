@@ -123,9 +123,7 @@ const useMobileMenuState = () => {
 const theme = extendTheme({
   styles: {
     global: {
-      body: {
-        bg: null,
-      },
+      body: null,
     },
   },
 });
@@ -143,7 +141,7 @@ export function ExamplesPage({
   const { siteConfig = {} } = context;
   return (
     <Layout title={title} description={siteConfig.tagline}>
-      <ChakraProvider theme={theme}>
+      <ChakraProvider theme={theme} resetCSS={false}>
         <App children={children} />
       </ChakraProvider>
     </Layout>
