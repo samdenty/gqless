@@ -15,7 +15,7 @@ export function getFields<
 export function getArrayFields<
   TArrayValue extends object | null | undefined,
   TArray extends TArrayValue[] | null | undefined,
-  TArrayValueKeys extends keyof NonNullable<TArray>[number]
+  TArrayValueKeys extends keyof NonNullable<NonNullable<TArray>[number]>
 >(accessorArray: TArray, ...keys: TArrayValueKeys[]): TArray {
   if (accessorArray == null) return accessorArray;
 
