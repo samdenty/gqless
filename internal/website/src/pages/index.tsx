@@ -245,7 +245,7 @@ function IndexPage() {
             </FeatureLink>
             <FeatureLink to="react/basic-usage">
               <Feature title="React.js" imageUrl="img/react.svg">
-                React Suspense supports, hooks, automatic component updates and
+                React Suspense support, hooks, automatic component updates and
                 more.
               </Feature>
             </FeatureLink>
