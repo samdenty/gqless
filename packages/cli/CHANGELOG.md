@@ -1,5 +1,13 @@
 # @gqless/cli
 
+## 2.0.11
+
+### Patch Changes
+
+- 5d89cbd: fix generated interfaces
+- Updated dependencies [6a9269f]
+  - gqless@2.0.9
+
 ## 2.0.10
 
 ### Patch Changes

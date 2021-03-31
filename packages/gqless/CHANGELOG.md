@@ -1,5 +1,11 @@
 # gqless
 
+## 2.0.9
+
+### Patch Changes
+
+- 6a9269f: fix getArrayFields type inference on nullable arrays
+
 ## 2.0.8
 
 ### Patch Changes

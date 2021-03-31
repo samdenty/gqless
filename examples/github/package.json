@@ -10,9 +10,9 @@
     "test:manual": "jest -u"
   },
   "dependencies": {
-    "@gqless/cli": "workspace:^2.0.10",
+    "@gqless/cli": "workspace:^2.0.11",
     "dotenv": "^8.2.0",
-    "gqless": "workspace:^2.0.8",
+    "gqless": "workspace:^2.0.9",
     "test-utils": "workspace:^0.1.0"
   },
   "devDependencies": {
