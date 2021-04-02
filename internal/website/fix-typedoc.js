@@ -22,9 +22,27 @@ async function main() {
     docFiles.map(async (docPath) => {
       const docContent = await readFile(docPath, encoding);
 
+      const docContentSplit = docContent.split('\n');
+
+      // Remove duplicated line references
+      const filteredDocContent = docContentSplit
+        .filter((line, index) => {
+          const isLineReference = !!line.match(/Defined in\: \[(.*?)\)/);
+
+          if (
+            isLineReference &&
+            docContentSplit.indexOf(line, Math.max(0, index - 2)) !== index
+          ) {
+            return false;
+          }
+
+          return true;
+        })
+        .join('\n');
+
       await writeFile(
         docPath,
-        docContent.replace(/\/blob\/(.*?)\//g, '/blob/master/'),
+        filteredDocContent.replace(/\/blob\/(.*?)\//g, '/blob/master/'),
         encoding
       );
     })

@@ -43,8 +43,6 @@ Defined in: [query/useQuery.ts:26](https://github.com/gqless/gqless/blob/master/
 
 Defined in: [query/useQuery.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L27)
 
-Defined in: [query/useQuery.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L27)
-
 ---
 
 ### staleWhileRevalidate

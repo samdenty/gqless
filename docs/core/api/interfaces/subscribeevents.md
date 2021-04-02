@@ -22,8 +22,6 @@ hide_title: true
 
 Defined in: [packages/gqless/src/Client/client.ts:72](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L72)
 
-Defined in: [packages/gqless/src/Client/client.ts:72](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L72)
-
 ---
 
 ### onData
@@ -41,8 +39,6 @@ Defined in: [packages/gqless/src/Client/client.ts:72](https://github.com/gqless/
 | `data` | _Record_<string, unknown\> |
 
 **Returns:** _void_
-
-Defined in: [packages/gqless/src/Client/client.ts:66](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L66)
 
 Defined in: [packages/gqless/src/Client/client.ts:66](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L66)
 
@@ -68,8 +64,6 @@ Defined in: [packages/gqless/src/Client/client.ts:66](https://github.com/gqless/
 
 Defined in: [packages/gqless/src/Client/client.ts:67](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L67)
 
-Defined in: [packages/gqless/src/Client/client.ts:67](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L67)
-
 ---
 
 ### onStart
@@ -81,7 +75,5 @@ Defined in: [packages/gqless/src/Client/client.ts:67](https://github.com/gqless/
 ▸ (): _void_
 
 **Returns:** _void_
-
-Defined in: [packages/gqless/src/Client/client.ts:71](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L71)
 
 Defined in: [packages/gqless/src/Client/client.ts:71](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L71)

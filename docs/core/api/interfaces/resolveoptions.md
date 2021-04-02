@@ -63,7 +63,21 @@ with the existing cache data.
 
 Defined in: [packages/gqless/src/Client/resolvers.ts:45](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L45)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:45](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L45)
+---
+
+### onEmptyResolve
+
+• `Optional` **onEmptyResolve**: () => _void_
+
+Function called on empty resolution
+
+#### Type declaration:
+
+▸ (): _void_
+
+**Returns:** _void_
+
+Defined in: [packages/gqless/src/Client/resolvers.ts:81](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L81)
 
 ---
 
@@ -78,8 +92,6 @@ On No Cache found
 ▸ (): _void_
 
 **Returns:** _void_
-
-Defined in: [packages/gqless/src/Client/resolvers.ts:49](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L49)
 
 Defined in: [packages/gqless/src/Client/resolvers.ts:49](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L49)
 
@@ -105,8 +117,6 @@ Get every selection intercepted in the specified function
 
 Defined in: [packages/gqless/src/Client/resolvers.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L53)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:53](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L53)
-
 ---
 
 ### onSubscription
@@ -129,8 +139,6 @@ On subscription event listener
 
 Defined in: [packages/gqless/src/Client/resolvers.ts:57](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L57)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:57](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L57)
-
 ---
 
 ### refetch
@@ -149,4 +157,4 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:26](https://github.com/gqle
 
 Retry strategy
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:82](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L82)
+Defined in: [packages/gqless/src/Client/resolvers.ts:86](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L86)

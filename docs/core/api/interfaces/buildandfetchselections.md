@@ -30,4 +30,4 @@ hide_title: true
 
 **Returns:** _Promise_<undefined \| _null_ \| TData\>
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:167](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L167)
+Defined in: [packages/gqless/src/Client/resolvers.ts:171](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L171)

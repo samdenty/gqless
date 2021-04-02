@@ -10,6 +10,7 @@ export default function TransactionQuery1() {
     },
     {
       suspense: true,
+      fetchPolicy: 'cache-first',
     }
   );
 
@@ -18,7 +19,7 @@ export default function TransactionQuery1() {
       <Text>
         {++nRenders}
         <br />
-        query1 {data}
+        query1 {JSON.stringify(data)}
       </Text>
 
       <Button

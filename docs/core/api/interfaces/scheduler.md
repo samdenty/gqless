@@ -78,8 +78,6 @@ Defined in: [packages/gqless/src/Scheduler/index.ts:38](https://github.com/gqles
 
 Defined in: [packages/gqless/src/Scheduler/index.ts:39](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L39)
 
-Defined in: [packages/gqless/src/Scheduler/index.ts:39](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L39)
-
 ## Methods
 
 ### getResolvingPromise

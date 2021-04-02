@@ -36,8 +36,6 @@ Defined in: [meta/useMetaState.ts:27](https://github.com/gqless/gqless/blob/mast
 
 Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L17)
 
-Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L17)
-
 ---
 
 ### onError
@@ -58,8 +56,6 @@ Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/gqless/blob/mast
 | `data.selections` | _Selection_[] |
 
 **Returns:** _void_
-
-Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L18)
 
 Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L18)
 
@@ -85,8 +81,6 @@ Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/gqless/blob/mast
 
 Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L23)
 
-Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L23)
-
 ---
 
 ### onStartFetching
@@ -98,7 +92,5 @@ Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/gqless/blob/mast
 ▸ (): _void_
 
 **Returns:** _void_
-
-Defined in: [meta/useMetaState.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L16)
 
 Defined in: [meta/useMetaState.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L16)

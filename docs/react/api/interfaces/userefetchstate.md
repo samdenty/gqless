@@ -48,8 +48,6 @@ Defined in: [query/useRefetch.ts:19](https://github.com/gqless/gqless/blob/maste
 
 Defined in: [query/useRefetch.ts:67](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L67)
 
-Defined in: [query/useRefetch.ts:67](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L67)
-
 ---
 
 ### stopWatching
@@ -61,7 +59,5 @@ Defined in: [query/useRefetch.ts:67](https://github.com/gqless/gqless/blob/maste
 ▸ (): _void_
 
 **Returns:** _void_
-
-Defined in: [query/useRefetch.ts:68](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L68)
 
 Defined in: [query/useRefetch.ts:68](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L68)

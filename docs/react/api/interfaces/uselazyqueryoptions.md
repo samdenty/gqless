@@ -42,8 +42,6 @@ Defined in: [query/useLazyQuery.ts:18](https://github.com/gqless/gqless/blob/mas
 
 Defined in: [query/useLazyQuery.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L16)
 
-Defined in: [query/useLazyQuery.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L16)
-
 ---
 
 ### onError

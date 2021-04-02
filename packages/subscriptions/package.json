@@ -22,7 +22,7 @@
     "ws": "^7.4.4"
   },
   "devDependencies": {
-    "@types/ws": "^7.4.0",
+    "@types/ws": "^7.4.1",
     "build-utils": "workspace:*",
     "gqless": "workspace:^2.0.9",
     "graphql": "^15.5.0",

@@ -65,8 +65,6 @@ Defined in: [mutation/useMutation.ts:36](https://github.com/gqless/gqless/blob/m
 
 Defined in: [mutation/useMutation.ts:13](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L13)
 
-Defined in: [mutation/useMutation.ts:13](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L13)
-
 ---
 
 ### onError

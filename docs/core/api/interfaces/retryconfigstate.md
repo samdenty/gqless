@@ -44,8 +44,6 @@ Function to be executed on the last try
 
 Defined in: [packages/gqless/src/Error/retry.ts:51](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L51)
 
-Defined in: [packages/gqless/src/Error/retry.ts:51](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L51)
-
 ---
 
 ### onRetry
@@ -65,7 +63,5 @@ Function to be executed on approved retry attempt
 | `attemptIndex` | _number_ |
 
 **Returns:** _Promise_<void\>
-
-Defined in: [packages/gqless/src/Error/retry.ts:47](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L47)
 
 Defined in: [packages/gqless/src/Error/retry.ts:47](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/retry.ts#L47)

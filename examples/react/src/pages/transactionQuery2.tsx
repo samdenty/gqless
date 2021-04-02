@@ -15,7 +15,7 @@ export default function TransactionQuery2() {
   return (
     <div>
       {++nRenders}
-      query2 {data}
+      query2 {JSON.stringify(data)}
     </div>
   );
 }

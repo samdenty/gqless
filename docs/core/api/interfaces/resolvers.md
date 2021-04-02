@@ -14,7 +14,7 @@ hide_title: true
 
 • **buildAndFetchSelections**: [_BuildAndFetchSelections_](buildandfetchselections.md)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:187](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L187)
+Defined in: [packages/gqless/src/Client/resolvers.ts:191](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L191)
 
 ---
 
@@ -22,7 +22,7 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:187](https://github.com/gql
 
 • **resolveSelections**: ResolveSelections
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:186](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L186)
+Defined in: [packages/gqless/src/Client/resolvers.ts:190](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L190)
 
 ---
 
@@ -30,4 +30,4 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:186](https://github.com/gql
 
 • **resolved**: [_Resolved_](resolved.md)
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:188](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L188)
+Defined in: [packages/gqless/src/Client/resolvers.ts:192](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L192)

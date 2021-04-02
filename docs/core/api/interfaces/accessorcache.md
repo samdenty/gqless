@@ -29,8 +29,6 @@ hide_title: true
 
 Defined in: [packages/gqless/src/Cache/accessorCache.ts:30](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L30)
 
-Defined in: [packages/gqless/src/Cache/accessorCache.ts:30](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L30)
-
 ---
 
 ### addSelectionToAccessorHistory
@@ -49,8 +47,6 @@ Defined in: [packages/gqless/src/Cache/accessorCache.ts:30](https://github.com/g
 | `selection` | [_Selection_](../classes/selection.md) |
 
 **Returns:** _void_
-
-Defined in: [packages/gqless/src/Cache/accessorCache.ts:23](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L23)
 
 Defined in: [packages/gqless/src/Cache/accessorCache.ts:23](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L23)
 
@@ -76,8 +72,6 @@ Defined in: [packages/gqless/src/Cache/accessorCache.ts:23](https://github.com/g
 
 Defined in: [packages/gqless/src/Cache/accessorCache.ts:11](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L11)
 
-Defined in: [packages/gqless/src/Cache/accessorCache.ts:11](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L11)
-
 ---
 
 ### getArrayAccessor
@@ -97,8 +91,6 @@ Defined in: [packages/gqless/src/Cache/accessorCache.ts:11](https://github.com/g
 | `proxyFactory` | () => ProxyAccessor                    |
 
 **Returns:** ProxyAccessor
-
-Defined in: [packages/gqless/src/Cache/accessorCache.ts:16](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L16)
 
 Defined in: [packages/gqless/src/Cache/accessorCache.ts:16](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L16)
 
@@ -122,8 +114,6 @@ Defined in: [packages/gqless/src/Cache/accessorCache.ts:16](https://github.com/g
 
 Defined in: [packages/gqless/src/Cache/accessorCache.ts:22](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L22)
 
-Defined in: [packages/gqless/src/Cache/accessorCache.ts:22](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L22)
-
 ---
 
 ### getSelectionSetHistory
@@ -144,8 +134,6 @@ Defined in: [packages/gqless/src/Cache/accessorCache.ts:22](https://github.com/g
 
 Defined in: [packages/gqless/src/Cache/accessorCache.ts:27](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L27)
 
-Defined in: [packages/gqless/src/Cache/accessorCache.ts:27](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L27)
-
 ---
 
 ### isProxy
@@ -163,7 +151,5 @@ Defined in: [packages/gqless/src/Cache/accessorCache.ts:27](https://github.com/g
 | `obj` | _any_ |
 
 **Returns:** obj is ProxyAccessor
-
-Defined in: [packages/gqless/src/Cache/accessorCache.ts:21](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L21)
 
 Defined in: [packages/gqless/src/Cache/accessorCache.ts:21](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/accessorCache.ts#L21)
