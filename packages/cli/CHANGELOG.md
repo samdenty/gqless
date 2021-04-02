@@ -1,5 +1,12 @@
 # @gqless/cli
 
+## 2.0.12
+
+### Patch Changes
+
+- Updated dependencies [65c4d32]
+  - gqless@2.0.10
+
 ## 2.0.11
 
 ### Patch Changes
