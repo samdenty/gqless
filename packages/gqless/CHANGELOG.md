@@ -1,5 +1,11 @@
 # gqless
 
+## 2.0.10
+
+### Patch Changes
+
+- 65c4d32: add resolved "onEmptyResolve" callback and warn on empty "resolved" calls
+
 ## 2.0.9
 
 ### Patch Changes

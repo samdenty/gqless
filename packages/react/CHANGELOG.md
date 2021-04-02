@@ -1,5 +1,13 @@
 # @gqless/react
 
+## 2.0.11
+
+### Patch Changes
+
+- c486bec: fix useTransactionQuery suspense & fetchPolicy
+- Updated dependencies [65c4d32]
+  - gqless@2.0.10
+
 ## 2.0.10
 
 ### Patch Changes
