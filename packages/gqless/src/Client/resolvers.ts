@@ -75,6 +75,10 @@ export interface ResolveOptions<TData> {
           error?: undefined;
         }
   ) => void;
+  /**
+   * Function called on empty resolution
+   */
+  onEmptyResolve?: () => void;
 
   /**
    * Retry strategy
@@ -215,6 +219,7 @@ export function createResolvers(
       retry,
       nonSerializableVariables,
       onNoCacheFound,
+      onEmptyResolve,
     }: ResolveOptions<T> = {}
   ): Promise<T> {
     const prevFoundValidCache = innerState.foundValidCache;
@@ -250,6 +255,10 @@ export function createResolvers(
       const data = dataFn();
 
       if (interceptor.fetchSelections.size === 0) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[gqless] Warning! No data requested.');
+        }
+        if (onEmptyResolve) onEmptyResolve();
         return data;
       }
 
