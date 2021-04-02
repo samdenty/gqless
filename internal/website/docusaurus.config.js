@@ -123,7 +123,14 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()}`,
+      copyright: `
+<div>
+  <p>${`Copyright © ${new Date().getFullYear()}`}</p>
+  <a href="https://vercel.com/?utm_source=gqless&utm_campaign=oss">
+    <img alt="Powered By Vercel" src="/powered-by-vercel.svg" />
+  </a>
+</div>
+      `.trim(),
     },
   },
   presets: [
