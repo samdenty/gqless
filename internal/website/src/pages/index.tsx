@@ -270,7 +270,10 @@ export default function IndexPageWrapper() {
 
   const { siteConfig = {} } = context;
   return (
-    <Layout description={siteConfig.tagline}>
+    <Layout
+      title="GraphQL client built for rapid iteration"
+      description={siteConfig.tagline}
+    >
       <IndexPage />
     </Layout>
   );
