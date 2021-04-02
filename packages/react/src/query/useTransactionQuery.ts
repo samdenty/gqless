@@ -233,6 +233,9 @@ export function createUseTransactionQuery<
           onSelection(selection) {
             hookSelections.add(selection);
           },
+          onEmptyResolve() {
+            instaResolved = true;
+          },
           onCacheData(data): boolean {
             switch (fetchPolicyArg) {
               case 'cache-and-network': {
@@ -258,8 +261,7 @@ export function createUseTransactionQuery<
                 return false;
               }
               default: {
-                instaResolved = true;
-                return false;
+                return true;
               }
             }
           },
@@ -313,7 +315,7 @@ export function createUseTransactionQuery<
     }, [variables]);
 
     const queryCallbackWithPromise = useCallback(
-      (inlineThrow?: boolean) => {
+      (inlineCall?: boolean) => {
         if (skip) return;
 
         const promise = queryCallback()?.then((result) => {
@@ -340,12 +342,22 @@ export function createUseTransactionQuery<
           }
         });
 
-        if (promise) setSuspensePromise(promise, inlineThrow);
+        if (promise) {
+          if (inlineCall) {
+            Promise.resolve().then(() => {
+              setSuspensePromise(promise);
+            });
+          } else {
+            setSuspensePromise(promise);
+          }
+        }
       },
       [queryCallback, skip, setSuspensePromise, optsRef]
     );
 
-    if (!state.isCalled && !skip) queryCallbackWithPromise(true);
+    if (!state.isCalled && !skip) {
+      queryCallbackWithPromise(true);
+    }
 
     useUpdateEffect(() => {
       queryCallbackWithPromise();
