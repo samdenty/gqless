@@ -27,8 +27,6 @@ export class Interceptor {
 
   addSelectionCacheRefetch(selection: Selection) {
     if (this.listening && this.selectionCacheRefetchListeners.size) {
-      this.fetchSelections.add(selection);
-
       for (const listener of this.selectionCacheRefetchListeners) {
         listener(selection);
       }
