@@ -245,6 +245,14 @@ export function createResolvers(
 
     const interceptor = interceptorManager.createInterceptor();
 
+    let noSelection = true;
+
+    function onScalarSelection() {
+      noSelection = false;
+    }
+    interceptor.selectionAddListeners.add(onScalarSelection);
+    interceptor.selectionCacheRefetchListeners.add(onScalarSelection);
+
     if (onSelection) {
       interceptor.selectionAddListeners.add(onSelection);
       interceptor.selectionCacheListeners.add(onSelection);
@@ -254,7 +262,7 @@ export function createResolvers(
     try {
       const data = dataFn();
 
-      if (interceptor.fetchSelections.size === 0) {
+      if (noSelection) {
         if (process.env.NODE_ENV !== 'production') {
           console.warn('[gqless] Warning! No data requested.');
         }
