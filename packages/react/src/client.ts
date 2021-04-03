@@ -22,6 +22,10 @@ import {
 import type { RetryOptions, GqlessClient } from 'gqless';
 import type { FetchPolicy } from './common';
 import type { ReactClientOptionsWithDefaults } from './utils';
+import {
+  createUsePaginatedQuery,
+  UsePaginatedQuery,
+} from './query/usePaginatedQuery';
 
 export interface ReactClientDefaults {
   /**
@@ -141,6 +145,7 @@ export interface ReactClient<
   useRefetch: UseRefetch;
   useLazyQuery: UseLazyQuery<GeneratedSchema>;
   useTransactionQuery: UseTransactionQuery<GeneratedSchema>;
+  usePaginatedQuery: UsePaginatedQuery<GeneratedSchema>;
   useMutation: UseMutation<GeneratedSchema>;
   graphql: GraphQLHOC;
   state: { isLoading: boolean };
@@ -218,6 +223,7 @@ export function createReactClient<
       client,
       opts
     ),
+    usePaginatedQuery: createUsePaginatedQuery<GeneratedSchema>(client, opts),
     useMutation: createUseMutation<GeneratedSchema>(client, opts),
     graphql: createGraphqlHOC(client, opts),
     state,
