@@ -756,7 +756,9 @@ describe('refetch function', () => {
 
   test('warns about no selections inside function, except on production', async () => {
     const spy = jest.spyOn(console, 'warn').mockImplementation((message) => {
-      expect(message).toBe('gqless: No selections made!');
+      expect(message).toMatchInlineSnapshot(
+        `"[gqless] Warning! No data requested."`
+      );
     });
     const prevEnv = process.env.NODE_ENV;
 
