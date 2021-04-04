@@ -200,8 +200,7 @@ export function createSelectionManager(): SelectionManager {
 
     if (alias == null) {
       incIds[hashedKey] ??= -1;
-      const incId = ++incIds[hashedKey];
-      alias = `${key}${incId}`;
+      alias = `${key}${++incIds[hashedKey]}`;
       aliasMap.set(aliasKey, alias);
 
       if (restoredBackup) restoredBackup[0].push([aliasKey, alias]);

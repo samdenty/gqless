@@ -25,13 +25,13 @@ export function createPersistenceHelpers(
   function backupPersistence(version?: string): string {
     const { query } = clientCache.cache;
     const cache = decycle({ query });
-    let normalizedCache: object | undefined;
-    if (clientCache.normalizedCache) {
-      normalizedCache = decycle(clientCache.normalizedCache);
-    }
     const selections = selectionManager.backup();
 
-    return JSON.stringify({ version, cache, normalizedCache, selections });
+    return JSON.stringify({
+      version,
+      cache,
+      selections,
+    });
   }
 
   function restorePersistence(
@@ -60,7 +60,6 @@ export function createPersistenceHelpers(
 
       const backupObject: {
         cache?: Record<string, unknown>;
-        normalizedCache?: Record<string, unknown>;
         selections?: SelectionsBackup;
         version?: string;
       } = JSON.parse(backup);
@@ -83,12 +82,6 @@ export function createPersistenceHelpers(
         }
 
         Object.assign(clientCache.cache, retrocycle(backupObject.cache));
-        if (isPlainObject(backupObject.normalizedCache)) {
-          Object.assign(
-            clientCache.normalizedCache,
-            retrocycle(backupObject.normalizedCache)
-          );
-        }
 
         selectionManager.restore(backupObject.selections);
 
