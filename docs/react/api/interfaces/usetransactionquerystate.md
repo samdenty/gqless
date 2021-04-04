@@ -20,7 +20,7 @@ hide_title: true
 
 • **data**: _undefined_ \| TData
 
-Defined in: [query/useTransactionQuery.ts:30](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L30)
+Defined in: [react/src/query/useTransactionQuery.ts:30](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L30)
 
 ---
 
@@ -28,7 +28,7 @@ Defined in: [query/useTransactionQuery.ts:30](https://github.com/gqless/gqless/b
 
 • `Optional` **error**: _gqlessError_
 
-Defined in: [query/useTransactionQuery.ts:31](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L31)
+Defined in: [react/src/query/useTransactionQuery.ts:31](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L31)
 
 ---
 
@@ -36,7 +36,7 @@ Defined in: [query/useTransactionQuery.ts:31](https://github.com/gqless/gqless/b
 
 • **isCalled**: _boolean_
 
-Defined in: [query/useTransactionQuery.ts:33](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L33)
+Defined in: [react/src/query/useTransactionQuery.ts:33](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L33)
 
 ---
 
@@ -44,4 +44,4 @@ Defined in: [query/useTransactionQuery.ts:33](https://github.com/gqless/gqless/b
 
 • **isLoading**: _boolean_
 
-Defined in: [query/useTransactionQuery.ts:32](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L32)
+Defined in: [react/src/query/useTransactionQuery.ts:32](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L32)

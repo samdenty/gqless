@@ -14,7 +14,7 @@ hide_title: true
 
 • `Optional` **errors**: _gqlessError_[]
 
-Defined in: [meta/useMetaState.ts:32](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L32)
+Defined in: [react/src/meta/useMetaState.ts:32](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L32)
 
 ---
 
@@ -22,4 +22,4 @@ Defined in: [meta/useMetaState.ts:32](https://github.com/gqless/gqless/blob/mast
 
 • **isFetching**: _boolean_
 
-Defined in: [meta/useMetaState.ts:31](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L31)
+Defined in: [react/src/meta/useMetaState.ts:31](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L31)

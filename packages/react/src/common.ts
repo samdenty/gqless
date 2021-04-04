@@ -1,4 +1,12 @@
 import {
+  prepass,
+  getFields,
+  getArrayFields,
+  selectFields,
+  castNotSkeleton,
+  castNotSkeletonDeep,
+} from 'gqless';
+import {
   BuildSelectionInput,
   gqlessError,
   ResolveOptions,
@@ -503,3 +511,21 @@ export function useSuspensePromise(optsRef: {
 }
 
 export type OnErrorHandler = (error: gqlessError) => void;
+
+export interface CoreHelpers {
+  prepass: typeof prepass;
+  getFields: typeof getFields;
+  getArrayFields: typeof getArrayFields;
+  selectFields: typeof selectFields;
+  castNotSkeleton: typeof castNotSkeleton;
+  castNotSkeletonDeep: typeof castNotSkeletonDeep;
+}
+
+export const coreHelpers: CoreHelpers = {
+  prepass,
+  getFields,
+  getArrayFields,
+  selectFields,
+  castNotSkeleton,
+  castNotSkeletonDeep,
+};

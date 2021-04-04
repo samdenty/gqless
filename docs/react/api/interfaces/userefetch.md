@@ -20,4 +20,4 @@ hide_title: true
 
 **Returns:** <T\>(`refetchArg?`: T \| () => T) => _Promise_<undefined \| T\> & [_UseRefetchState_](userefetchstate.md)
 
-Defined in: [query/useRefetch.ts:77](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L77)
+Defined in: [react/src/query/useRefetch.ts:77](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L77)

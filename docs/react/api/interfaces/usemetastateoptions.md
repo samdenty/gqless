@@ -1,12 +1,12 @@
 ---
-id: 'usegqlessstateoptions'
-title: 'Interface: UseGqlessStateOptions<T>'
-sidebar_label: 'UseGqlessStateOptions'
+id: 'usemetastateoptions'
+title: 'Interface: UseMetaStateOptions<T>'
+sidebar_label: 'UseMetaStateOptions'
 custom_edit_url: null
 hide_title: true
 ---
 
-# Interface: UseGqlessStateOptions<T\>
+# Interface: UseMetaStateOptions<T\>
 
 ## Type parameters
 
@@ -20,7 +20,7 @@ hide_title: true
 
 • `Optional` **filterSelections**: _BuildSelections_<T\>
 
-Defined in: [meta/useMetaState.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L27)
+Defined in: [react/src/meta/useMetaState.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L27)
 
 ---
 
@@ -34,7 +34,7 @@ Defined in: [meta/useMetaState.ts:27](https://github.com/gqless/gqless/blob/mast
 
 **Returns:** _void_
 
-Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L17)
+Defined in: [react/src/meta/useMetaState.ts:17](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L17)
 
 ---
 
@@ -57,7 +57,7 @@ Defined in: [meta/useMetaState.ts:17](https://github.com/gqless/gqless/blob/mast
 
 **Returns:** _void_
 
-Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L18)
+Defined in: [react/src/meta/useMetaState.ts:18](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L18)
 
 ---
 
@@ -79,7 +79,7 @@ Defined in: [meta/useMetaState.ts:18](https://github.com/gqless/gqless/blob/mast
 
 **Returns:** _void_
 
-Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L23)
+Defined in: [react/src/meta/useMetaState.ts:23](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L23)
 
 ---
 
@@ -93,4 +93,4 @@ Defined in: [meta/useMetaState.ts:23](https://github.com/gqless/gqless/blob/mast
 
 **Returns:** _void_
 
-Defined in: [meta/useMetaState.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L16)
+Defined in: [react/src/meta/useMetaState.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L16)

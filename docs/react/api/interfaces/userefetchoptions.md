@@ -14,7 +14,7 @@ hide_title: true
 
 • `Optional` **notifyOnNetworkStatusChange**: _boolean_
 
-Defined in: [query/useRefetch.ts:72](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L72)
+Defined in: [react/src/query/useRefetch.ts:72](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L72)
 
 ---
 
@@ -22,7 +22,7 @@ Defined in: [query/useRefetch.ts:72](https://github.com/gqless/gqless/blob/maste
 
 • `Optional` **retry**: RetryOptions
 
-Defined in: [query/useRefetch.ts:74](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L74)
+Defined in: [react/src/query/useRefetch.ts:74](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L74)
 
 ---
 
@@ -30,4 +30,4 @@ Defined in: [query/useRefetch.ts:74](https://github.com/gqless/gqless/blob/maste
 
 • `Optional` **startWatching**: _boolean_
 
-Defined in: [query/useRefetch.ts:73](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L73)
+Defined in: [react/src/query/useRefetch.ts:73](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L73)

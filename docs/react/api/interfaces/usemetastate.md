@@ -10,7 +10,7 @@ hide_title: true
 
 ## Callable
 
-▸ **UseMetaState**<T\>(`opts?`: [_UseGqlessStateOptions_](usegqlessstateoptions.md)<T\>): [_MetaState_](metastate.md)
+▸ **UseMetaState**<T\>(`opts?`: [_UseMetaStateOptions_](usemetastateoptions.md)<T\>): [_MetaState_](metastate.md)
 
 #### Type parameters:
 
@@ -20,10 +20,10 @@ hide_title: true
 
 #### Parameters:
 
-| Name    | Type                                                    |
-| :------ | :------------------------------------------------------ |
-| `opts?` | [_UseGqlessStateOptions_](usegqlessstateoptions.md)<T\> |
+| Name    | Type                                                |
+| :------ | :-------------------------------------------------- |
+| `opts?` | [_UseMetaStateOptions_](usemetastateoptions.md)<T\> |
 
 **Returns:** [_MetaState_](metastate.md)
 
-Defined in: [meta/useMetaState.ts:35](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L35)
+Defined in: [react/src/meta/useMetaState.ts:35](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L35)

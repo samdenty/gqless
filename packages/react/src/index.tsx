@@ -31,7 +31,7 @@ export type {
 export type {
   UseMetaState,
   MetaState,
-  UseMetaStateOptions as UseGqlessStateOptions,
+  UseMetaStateOptions,
 } from './meta/useMetaState';
 export type {
   UseMutation,
@@ -39,7 +39,14 @@ export type {
   UseMutationState,
 } from './mutation/useMutation';
 export type { UseSubscription } from './subscription/useSubscription';
-
+export type {
+  PaginatedQueryFetchPolicy,
+  UsePaginatedQuery,
+  FetchMoreCallbackArgs,
+  UsePaginatedQueryData,
+  UsePaginatedQueryMergeParams,
+  UsePaginatedQueryOptions,
+} from './query/usePaginatedQuery';
 export type {
   UseHydrateCache,
   PrepareReactRender,
@@ -47,4 +54,5 @@ export type {
   UseHydrateCacheOptions,
 } from './ssr/ssr';
 
-export type { OnErrorHandler, FetchPolicy } from './common';
+export type { OnErrorHandler, FetchPolicy, CoreHelpers } from './common';
+export { coreHelpers } from './common';

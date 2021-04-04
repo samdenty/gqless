@@ -195,6 +195,7 @@ export type {
   BuildSelection,
   Prefetch,
   BuildAndFetchSelections,
+  InlineResolved,
 };
 
 export function createClient<

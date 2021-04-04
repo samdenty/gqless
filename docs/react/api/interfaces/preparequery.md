@@ -33,4 +33,4 @@ hide_title: true
 
 **Returns:** [_PreparedQuery_](preparedquery.md)<GeneratedSchema, TFunction\>
 
-Defined in: [query/preparedQuery.ts:47](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L47)
+Defined in: [react/src/query/preparedQuery.ts:47](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L47)

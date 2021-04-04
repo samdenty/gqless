@@ -16,4 +16,4 @@ hide_title: true
 
 Useful for `Non-Suspense` usage.
 
-Defined in: [query/useQuery.ts:34](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L34)
+Defined in: [react/src/query/useQuery.ts:34](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L34)

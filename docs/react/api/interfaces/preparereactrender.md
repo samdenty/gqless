@@ -20,4 +20,4 @@ hide_title: true
 
 **Returns:** _Promise_<{ `cacheSnapshot`: _string_ }\>
 
-Defined in: [ssr/ssr.ts:38](https://github.com/gqless/gqless/blob/master/packages/react/src/ssr/ssr.ts#L38)
+Defined in: [react/src/ssr/ssr.ts:38](https://github.com/gqless/gqless/blob/master/packages/react/src/ssr/ssr.ts#L38)

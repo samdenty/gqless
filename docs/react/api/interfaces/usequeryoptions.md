@@ -21,7 +21,7 @@ hide_title: true
 
 • `Optional` **onError**: [_OnErrorHandler_](../modules.md#onerrorhandler)
 
-Defined in: [query/useQuery.ts:26](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L26)
+Defined in: [react/src/query/useQuery.ts:26](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L26)
 
 ---
 
@@ -41,7 +41,7 @@ Defined in: [query/useQuery.ts:26](https://github.com/gqless/gqless/blob/master/
 
 **Returns:** _void_
 
-Defined in: [query/useQuery.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L27)
+Defined in: [react/src/query/useQuery.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L27)
 
 ---
 
@@ -49,7 +49,7 @@ Defined in: [query/useQuery.ts:27](https://github.com/gqless/gqless/blob/master/
 
 • `Optional` **staleWhileRevalidate**: _null_ \| _string_ \| _number_ \| _boolean_ \| _object_
 
-Defined in: [query/useQuery.ts:25](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L25)
+Defined in: [react/src/query/useQuery.ts:25](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L25)
 
 ---
 
@@ -57,4 +57,4 @@ Defined in: [query/useQuery.ts:25](https://github.com/gqless/gqless/blob/master/
 
 • `Optional` **suspense**: _boolean_
 
-Defined in: [query/useQuery.ts:24](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L24)
+Defined in: [react/src/query/useQuery.ts:24](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L24)

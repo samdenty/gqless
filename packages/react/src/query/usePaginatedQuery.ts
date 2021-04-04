@@ -1,14 +1,9 @@
-import {
-  GqlessClient,
-  prepass,
-  getFields,
-  getArrayFields,
-  selectFields,
-  castNotSkeleton,
-  castNotSkeletonDeep,
-} from 'gqless';
+import type { GqlessClient } from 'gqless';
 import { Dispatch, useCallback, useMemo, useReducer, useRef } from 'react';
+
 import {
+  coreHelpers,
+  CoreHelpers,
   FetchPolicy,
   useSelectionsState,
   useSubscribeCacheChanges,
@@ -49,7 +44,7 @@ export type PaginatedQueryFetchPolicy = Extract<
   'cache-first' | 'cache-and-network' | 'network-only'
 >;
 
-interface UsePaginatedQueryMergeParams<TData> {
+export interface UsePaginatedQueryMergeParams<TData> {
   data: {
     existing: TData | undefined;
     incoming: TData;
@@ -58,7 +53,7 @@ interface UsePaginatedQueryMergeParams<TData> {
   sortBy: typeof sortBy;
 }
 
-interface UsePaginatedQueryOptions<TData, TArgs> {
+export interface UsePaginatedQueryOptions<TData, TArgs> {
   /**
    * Initial arguments used on first request
    */
@@ -150,12 +145,12 @@ function InitUsePaginatedQueryReducer<TData, TArgs>(
   };
 }
 
-interface FetchMoreCallbackArgs<TData, TArgs> {
+export interface FetchMoreCallbackArgs<TData, TArgs> {
   existingData: TData | undefined;
   existingArgs: TArgs;
 }
 
-interface UsePaginatedQueryData<TData, TArgs> {
+export interface UsePaginatedQueryData<TData, TArgs> {
   data: TData | undefined;
   args: TArgs;
   isLoading: boolean;
@@ -166,16 +161,8 @@ interface UsePaginatedQueryData<TData, TArgs> {
       | undefined,
     fetchPolicy?: PaginatedQueryFetchPolicy
   ) => Promise<TData> | TData;
+  called: boolean;
 }
-
-export const queryHelpers = {
-  prepass,
-  getFields,
-  getArrayFields,
-  selectFields,
-  castNotSkeleton,
-  castNotSkeletonDeep,
-};
 
 export interface UsePaginatedQuery<
   GeneratedSchema extends {
@@ -188,7 +175,7 @@ export interface UsePaginatedQuery<
     fn: (
       query: GeneratedSchema['query'],
       args: TArgs,
-      helpers: typeof queryHelpers
+      helpers: CoreHelpers
     ) => TData,
     options: UsePaginatedQueryOptions<TData, TArgs>
   ): UsePaginatedQueryData<TData, TArgs>;
@@ -217,11 +204,7 @@ export function createUsePaginatedQuery<
     TData,
     TArgs extends Record<string, any> | string | number
   >(
-    fn: (
-      query: typeof clientQuery,
-      args: TArgs,
-      helpers: typeof queryHelpers
-    ) => TData,
+    fn: (query: typeof clientQuery, args: TArgs, helpers: CoreHelpers) => TData,
     opts: UsePaginatedQueryOptions<TData, TArgs>
   ): UsePaginatedQueryData<TData, TArgs> {
     const fnRef = useRef(fn);
@@ -287,7 +270,7 @@ export function createUsePaginatedQuery<
                 : newArgs)
           : stateRef.current.args;
 
-        const resolvedFn = () => fnRef.current(clientQuery, args, queryHelpers);
+        const resolvedFn = () => fnRef.current(clientQuery, args, coreHelpers);
 
         const refetch = fetchPolicy !== 'cache-first';
 

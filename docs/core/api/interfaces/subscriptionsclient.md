@@ -16,7 +16,7 @@ hide_title: true
 
 **Returns:** _Promise_<void\>
 
-Defined in: [packages/gqless/src/Client/client.ts:96](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L96)
+Defined in: [packages/gqless/src/Client/client.ts:97](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L97)
 
 ---
 
@@ -33,7 +33,7 @@ Defined in: [packages/gqless/src/Client/client.ts:96](https://github.com/gqless/
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/client.ts:97](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L97)
+Defined in: [packages/gqless/src/Client/client.ts:98](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L98)
 
 ---
 
@@ -54,7 +54,7 @@ Defined in: [packages/gqless/src/Client/client.ts:97](https://github.com/gqless/
 
 **Returns:** [_PossiblePromise_](../modules.md#possiblepromise)<{ `operationId`: _string_ ; `unsubscribe`: () => _Promise_<void\> }\>
 
-Defined in: [packages/gqless/src/Client/client.ts:78](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L78)
+Defined in: [packages/gqless/src/Client/client.ts:79](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L79)
 
 ---
 
@@ -70,4 +70,4 @@ Defined in: [packages/gqless/src/Client/client.ts:78](https://github.com/gqless/
 
 **Returns:** _Promise_<string[]\>
 
-Defined in: [packages/gqless/src/Client/client.ts:95](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L95)
+Defined in: [packages/gqless/src/Client/client.ts:96](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L96)

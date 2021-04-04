@@ -27,4 +27,4 @@ hide_title: true
 
 **Returns:** [_UseQueryReturnValue_](../modules.md#usequeryreturnvalue)<GeneratedSchema\>
 
-Defined in: [query/useQuery.ts:42](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L42)
+Defined in: [react/src/query/useQuery.ts:42](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L42)

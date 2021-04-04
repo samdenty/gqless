@@ -22,7 +22,7 @@ hide_title: true
 
 • **callback**: TFunction
 
-Defined in: [query/preparedQuery.ts:40](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L40)
+Defined in: [react/src/query/preparedQuery.ts:40](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L40)
 
 ## Methods
 
@@ -38,7 +38,7 @@ Defined in: [query/preparedQuery.ts:40](https://github.com/gqless/gqless/blob/ma
 
 **Returns:** _Promise_<ReturnType<TFunction\>\>
 
-Defined in: [query/preparedQuery.ts:21](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L21)
+Defined in: [react/src/query/preparedQuery.ts:21](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L21)
 
 ---
 
@@ -54,7 +54,7 @@ Defined in: [query/preparedQuery.ts:21](https://github.com/gqless/gqless/blob/ma
 
 **Returns:** _Promise_<ReturnType<TFunction\>\>
 
-Defined in: [query/preparedQuery.ts:26](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L26)
+Defined in: [react/src/query/preparedQuery.ts:26](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L26)
 
 ---
 
@@ -78,4 +78,4 @@ Defined in: [query/preparedQuery.ts:26](https://github.com/gqless/gqless/blob/ma
 | `isLoading`    | _boolean_                               |
 | `isRefetching` | _boolean_                               |
 
-Defined in: [query/preparedQuery.ts:31](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L31)
+Defined in: [react/src/query/preparedQuery.ts:31](https://github.com/gqless/gqless/blob/master/packages/react/src/query/preparedQuery.ts#L31)
