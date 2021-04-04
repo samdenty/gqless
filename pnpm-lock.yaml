@@ -120,6 +120,7 @@ importers:
       '@gqless/subscriptions': link:../../packages/subscriptions
       '@react-native-async-storage/async-storage': 1.15.1_react@17.0.2
       '@types/extract-files': 8.1.0
+      altair-fastify-plugin: 4.0.0_fastify@3.14.1
       date-fns: 2.19.0
       extract-files: 9.0.0
       faker: 5.4.0
@@ -175,6 +176,7 @@ importers:
       '@types/node': ^14.14.37
       '@types/react': ^17.0.3
       '@types/react-dom': ^17.0.3
+      altair-fastify-plugin: ^4.0.0
       concurrently: ^6.0.0
       date-fns: ^2.19.0
       extract-files: ^9.0.0
@@ -5379,6 +5381,23 @@ packages:
   /alphanum-sort/1.0.2:
     resolution:
       integrity: sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
+  /altair-fastify-plugin/4.0.0_fastify@3.14.1:
+    dependencies:
+      altair-static: 4.0.0
+      fastify: 3.14.1
+      fastify-plugin: 2.3.4
+      fastify-static: 3.4.0
+    dev: false
+    peerDependencies:
+      fastify: ^3.1.1
+    resolution:
+      integrity: sha512-JEZ2wfjBKzcEXQBGXNNcgfQ/RADRWyHLhrEYIWj9B3WO4JG4sw5SUvo35IBU0uhHWmsYIqomSE2a4458uBKx0g==
+  /altair-static/4.0.0:
+    dev: false
+    engines:
+      node: '>= 6.9.1'
+    resolution:
+      integrity: sha512-2t8NDg65380Cs6tYEhq/EtkSDQanjen6WUjZs3v/X8uBL8dLjM0AypPaHDsMfP40NI0UeQpVYHKh7n1KqtHSJw==
   /anser/1.4.9:
     dev: false
     resolution:

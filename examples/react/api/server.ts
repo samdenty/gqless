@@ -3,6 +3,7 @@ import ms from 'ms';
 import FastifyNext from 'fastify-nextjs';
 import { resolve } from 'path';
 import mercuriusUpload from 'mercurius-upload';
+import AltairFastify from 'altair-fastify-plugin';
 
 import { register } from './graphql';
 
@@ -10,6 +11,8 @@ const app = Fastify({
   logger: true,
   pluginTimeout: ms('60 seconds'),
 });
+
+app.register(AltairFastify);
 
 app.register(mercuriusUpload, {});
 

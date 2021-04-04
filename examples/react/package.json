@@ -19,6 +19,7 @@
     "@gqless/subscriptions": "workspace:^1.0.10",
     "@react-native-async-storage/async-storage": "^1.15.1",
     "@types/extract-files": "^8.1.0",
+    "altair-fastify-plugin": "^4.0.0",
     "date-fns": "^2.19.0",
     "extract-files": "^9.0.0",
     "faker": "5.4.0",

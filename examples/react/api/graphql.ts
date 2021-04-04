@@ -341,6 +341,7 @@ const resolvers: IResolvers = {
         const sub = await ctx.pubsub.subscribe<{
           newNotification: string;
         }>('NOTIFICATION');
+
         for await (const data of sub) {
           if (data.newNotification === 'ERROR') {
             throw Error('EXPECTED ERROR');
