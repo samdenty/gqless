@@ -7,7 +7,13 @@ import {
   castNotSkeleton,
   castNotSkeletonDeep,
 } from 'gqless';
-import { Dispatch, useCallback, useEffect, useReducer, useRef } from 'react';
+import { Dispatch, useCallback, useMemo, useReducer, useRef } from 'react';
+import {
+  FetchPolicy,
+  useSelectionsState,
+  useSubscribeCacheChanges,
+  useSuspensePromise,
+} from '../common';
 import { ReactClientOptionsWithDefaults } from '../utils';
 
 function uniqBy<TNode>(list: TNode[], cb?: (node: TNode) => unknown): TNode[] {
@@ -21,11 +27,8 @@ function uniqBy<TNode>(list: TNode[], cb?: (node: TNode) => unknown): TNode[] {
   return Array.from(uniqList.values());
 }
 
-function compare(a: string | number, b: string | number) {
-  if (a < b) return -1;
-  if (a > b) return 1;
-  return 0;
-}
+const compare = (a: string | number, b: string | number) =>
+  a < b ? -1 : a > b ? 1 : 0;
 
 function sortBy<TNode>(
   list: TNode[],
@@ -41,6 +44,11 @@ function sortBy<TNode>(
   return orderedList;
 }
 
+export type PaginatedQueryFetchPolicy = Extract<
+  FetchPolicy,
+  'cache-first' | 'cache-and-network' | 'network-only'
+>;
+
 interface UsePaginatedQueryMergeParams<TData> {
   data: {
     existing: TData | undefined;
@@ -51,21 +59,46 @@ interface UsePaginatedQueryMergeParams<TData> {
 }
 
 interface UsePaginatedQueryOptions<TData, TArgs> {
+  /**
+   * Initial arguments used on first request
+   */
+  initialArgs: TArgs;
+  /**
+   * Custom merge function
+   */
   merge?: (
     params: UsePaginatedQueryMergeParams<TData>
   ) => TData | undefined | void;
-  initialArgs: TArgs;
+  /**
+   * Fetch Policy behavior
+   */
+  fetchPolicy?: PaginatedQueryFetchPolicy;
+  /**
+   * Skip initial query call
+   *
+   * @default false
+   */
+  skip?: boolean;
+  /**
+   * Activate suspense on first call
+   */
+  suspense?: boolean;
 }
 
 interface UsePaginatedQueryState<TData, TArgs> {
   data: TData | undefined;
   args: TArgs;
   isLoading: boolean;
+  called: boolean;
 }
 
 type UsePaginatedQueryReducerAction<TData> =
   | {
       type: 'loading';
+    }
+  | {
+      type: 'cache_found';
+      payload: TData;
     }
   | {
       type: 'data';
@@ -82,6 +115,15 @@ function UsePaginatedQueryReducer<TData, TArgs>(
       return {
         ...state,
         isLoading: true,
+        called: true,
+      };
+    }
+    case 'cache_found': {
+      return {
+        data: action.payload,
+        args: state.args,
+        isLoading: true,
+        called: true,
       };
     }
     case 'data': {
@@ -89,6 +131,7 @@ function UsePaginatedQueryReducer<TData, TArgs>(
         data: action.payload,
         args: state.args,
         isLoading: false,
+        called: true,
       };
     }
     default:
@@ -97,12 +140,13 @@ function UsePaginatedQueryReducer<TData, TArgs>(
 }
 
 function InitUsePaginatedQueryReducer<TData, TArgs>(
-  args: TArgs
+  opts: UsePaginatedQueryOptions<TData, TArgs>
 ): UsePaginatedQueryState<TData, TArgs> {
   return {
     data: undefined,
-    args,
-    isLoading: true,
+    args: opts.initialArgs,
+    isLoading: !opts.skip,
+    called: false,
   };
 }
 
@@ -119,8 +163,9 @@ interface UsePaginatedQueryData<TData, TArgs> {
     newArgs?:
       | ((data: FetchMoreCallbackArgs<TData, TArgs>) => TArgs)
       | TArgs
-      | undefined
-  ) => Promise<TData>;
+      | undefined,
+    fetchPolicy?: PaginatedQueryFetchPolicy
+  ) => Promise<TData> | TData;
 }
 
 export const queryHelpers = {
@@ -145,7 +190,7 @@ export interface UsePaginatedQuery<
       args: TArgs,
       helpers: typeof queryHelpers
     ) => TData,
-    { initialArgs, merge }: UsePaginatedQueryOptions<TData, TArgs>
+    options: UsePaginatedQueryOptions<TData, TArgs>
   ): UsePaginatedQueryData<TData, TArgs>;
 }
 
@@ -156,8 +201,17 @@ export function createUsePaginatedQuery<
     subscription: object;
   }
 >(
-  { query: clientQuery, resolved }: GqlessClient<GeneratedSchema>,
-  {}: ReactClientOptionsWithDefaults
+  {
+    query: clientQuery,
+    inlineResolved,
+    eventHandler,
+  }: GqlessClient<GeneratedSchema>,
+  {
+    defaults: {
+      paginatedQueryFetchPolicy: defaultFetchPolicy,
+      paginatedQuerySuspense: defaultSuspense,
+    },
+  }: ReactClientOptionsWithDefaults
 ): UsePaginatedQuery<GeneratedSchema> {
   function usePaginatedQuery<
     TData,
@@ -168,27 +222,59 @@ export function createUsePaginatedQuery<
       args: TArgs,
       helpers: typeof queryHelpers
     ) => TData,
-    { initialArgs, merge }: UsePaginatedQueryOptions<TData, TArgs>
+    opts: UsePaginatedQueryOptions<TData, TArgs>
   ): UsePaginatedQueryData<TData, TArgs> {
     const fnRef = useRef(fn);
     fnRef.current = fn;
 
+    const optsRef = useRef(opts);
+    optsRef.current = Object.assign({}, opts);
+
+    optsRef.current.fetchPolicy ??= defaultFetchPolicy;
+    optsRef.current.suspense ??= defaultSuspense;
+
     const [state, dispatch] = useReducer(
       UsePaginatedQueryReducer,
-      initialArgs,
+      opts,
       InitUsePaginatedQueryReducer
     ) as [
       UsePaginatedQueryState<TData, TArgs>,
       Dispatch<UsePaginatedQueryReducerAction<TData>>
     ];
 
+    const hookSelections = useSelectionsState();
+
     const stateRef = useRef(state);
     stateRef.current = state;
 
+    const setSuspensePromise = useSuspensePromise(optsRef);
+
     const fetchMore = useCallback(
-      async (
-        newArgs?: ((data: FetchMoreCallbackArgs<TData, TArgs>) => TArgs) | TArgs
+      (
+        newArgs?:
+          | ((data: FetchMoreCallbackArgs<TData, TArgs>) => TArgs)
+          | TArgs,
+        fetchPolicy: PaginatedQueryFetchPolicy = optsRef.current.fetchPolicy ||
+          defaultFetchPolicy
       ) => {
+        function mergeData(incomingData: TData) {
+          let mergeResult: TData | void | undefined;
+
+          if (optsRef.current.merge) {
+            const params: UsePaginatedQueryMergeParams<TData> = {
+              data: {
+                incoming: incomingData,
+                existing: stateRef.current.data,
+              },
+              uniqBy,
+              sortBy,
+            };
+            mergeResult = optsRef.current.merge(params);
+          }
+
+          return mergeResult === undefined ? incomingData : mergeResult;
+        }
+
         const args = newArgs
           ? (stateRef.current.args =
               typeof newArgs === 'function'
@@ -203,27 +289,45 @@ export function createUsePaginatedQuery<
 
         const resolvedFn = () => fnRef.current(clientQuery, args, queryHelpers);
 
-        dispatch({
-          type: 'loading',
+        const refetch = fetchPolicy !== 'cache-first';
+
+        let incomingData = inlineResolved(resolvedFn, {
+          onSelection(selection) {
+            hookSelections.add(selection);
+          },
+          refetch,
+          onCacheData(data) {
+            if (fetchPolicy === 'cache-and-network') {
+              const payload = mergeData(data);
+
+              stateRef.current.data = payload;
+              dispatch({
+                type: 'cache_found',
+                payload,
+              });
+            }
+          },
         });
 
-        const incomingData = await resolved(resolvedFn);
+        if (incomingData instanceof Promise) {
+          dispatch({
+            type: 'loading',
+          });
 
-        let mergeResult: TData | void | undefined;
+          return incomingData.then((incomingData) => {
+            const payload = mergeData(incomingData);
+            stateRef.current.data = payload;
 
-        if (merge) {
-          const params: UsePaginatedQueryMergeParams<TData> = {
-            data: {
-              incoming: incomingData,
-              existing: stateRef.current.data,
-            },
-            uniqBy,
-            sortBy,
-          };
-          mergeResult = merge(params);
+            dispatch({
+              type: 'data',
+              payload,
+            });
+            return payload;
+          });
         }
 
-        const payload = mergeResult === undefined ? incomingData : mergeResult;
+        const payload = mergeData(incomingData);
+        stateRef.current.data = payload;
 
         dispatch({
           type: 'data',
@@ -231,17 +335,36 @@ export function createUsePaginatedQuery<
         });
         return payload;
       },
-      [stateRef, fnRef, dispatch]
+      [stateRef, fnRef, dispatch, optsRef, setSuspensePromise]
     );
 
-    useEffect(() => {
-      fetchMore();
-    }, [fetchMore]);
+    useSubscribeCacheChanges({
+      hookSelections,
+      eventHandler,
+      onChange() {
+        fetchMore(undefined, 'cache-first');
+      },
+    });
 
-    return {
-      ...state,
-      fetchMore,
-    };
+    if (!state.called && !opts.skip) {
+      state.called = true;
+      const result = fetchMore();
+
+      if (result instanceof Promise) {
+        const catchedPromise = result.catch(console.error);
+        if (state.data === undefined) {
+          Promise.resolve().then(() => {
+            setSuspensePromise(catchedPromise);
+          });
+        }
+      }
+    }
+
+    return useMemo(() => {
+      return Object.assign(state, {
+        fetchMore,
+      });
+    }, [state, fetchMore]);
   }
 
   return usePaginatedQuery;

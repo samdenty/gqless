@@ -460,7 +460,7 @@ export function useInterceptSelections({
   useSubscribeCacheChanges({
     hookSelections,
     eventHandler,
-    onChange: () => {
+    onChange() {
       if (!fetchingPromise.current) forceUpdate();
     },
   });

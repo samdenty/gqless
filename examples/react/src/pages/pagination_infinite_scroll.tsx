@@ -1,87 +1,80 @@
-import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useDebounce } from 'react-use';
 
 import { Stack, Text } from '@chakra-ui/react';
 
-import { useQuery } from '../components/client';
-import { Human } from '../graphql/gqless';
+import { usePaginatedQuery } from '../components/client';
+import { ConnectionArgs } from '../graphql/gqless';
 
 const first = 20;
-export default function PaginationPage() {
-  const [after, setAfter] = useState<string | null | undefined>(null);
 
-  const args = {
-    input: {
-      first,
-      after,
+export default function Page() {
+  const { data, fetchMore, isLoading } = usePaginatedQuery(
+    (query, input: ConnectionArgs, { getArrayFields }) => {
+      const {
+        nodes,
+        pageInfo: { hasNextPage, endCursor },
+      } = query.paginatedHumans({
+        input,
+      });
+      return {
+        time: query.time,
+        nodes: getArrayFields(nodes, 'name'),
+        hasNextPage,
+        endCursor,
+      };
     },
-  };
-
-  const { paginatedHumans, time } = useQuery({
-    staleWhileRevalidate: after,
-    suspense: false,
-  });
-
-  const {
-    __typename,
-    nodes,
-    pageInfo: { startCursor, endCursor, hasNextPage, hasPreviousPage },
-  } = paginatedHumans(args);
-
-  const [humans, setHumans] = useState<Human[]>(() => {
-    if (__typename) return nodes;
-
-    return [];
-  });
+    {
+      initialArgs: {
+        first,
+      },
+      merge({ data: { existing, incoming }, uniqBy }) {
+        if (existing) {
+          return {
+            ...incoming,
+            nodes: uniqBy([...existing.nodes, ...incoming.nodes], (v) => v.id),
+          };
+        }
+        return incoming;
+      },
+      fetchPolicy: 'cache-and-network',
+      suspense: true,
+    }
+  );
 
   const { ref, inView } = useInView({
     threshold: 0,
   });
 
-  useEffect(() => {
-    // This way, we can check if the data is "skeleton", or real data
-    if (__typename) {
-      setHumans((prev) =>
-        [...prev, ...nodes].filter((value, index, self) => {
-          return self.indexOf(value) === index;
-        })
-      );
-    }
-  }, [__typename, nodes, setHumans]);
-
-  const [next] = useDebounce(
+  useDebounce(
     () => {
-      if (inView && hasNextPage && endCursor) {
-        setAfter(endCursor);
+      if (!isLoading && inView && data?.hasNextPage && data.endCursor) {
+        fetchMore({
+          after: data.endCursor,
+          first,
+        });
       }
     },
     100,
-    [inView, hasNextPage, setAfter, endCursor]
+    [inView, data, fetchMore]
   );
-
-  useEffect(() => {
-    next();
-  }, [next]);
 
   return (
     <Stack>
       <Text whiteSpace="pre-wrap">
         {JSON.stringify(
           {
-            time,
-            data: humans.map(({ id, name }) => ({ id, name })),
-            startCursor,
-            endCursor,
-            hasNextPage,
-            hasPreviousPage,
+            time: data?.time,
+            data: data?.nodes.map(({ id, name }) => ({ id, name })),
+            endCursor: data?.endCursor,
+            hasNextPage: data?.hasNextPage,
           },
           null,
           2
         )}
       </Text>
 
-      {hasNextPage && <Text ref={ref}>Loading...</Text>}
+      {!isLoading && data?.hasNextPage && <Text ref={ref}>Loading...</Text>}
     </Stack>
   );
 }

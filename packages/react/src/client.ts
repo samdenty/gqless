@@ -2,7 +2,11 @@ import { createUseMetaState, UseMetaState } from './meta/useMetaState';
 import { createUseMutation, UseMutation } from './mutation/useMutation';
 import { createGraphqlHOC, GraphQLHOC } from './query/hoc';
 import { createPrepareQuery, PrepareQuery } from './query/preparedQuery';
-import { createUseLazyQuery, UseLazyQuery } from './query/useLazyQuery';
+import {
+  createUseLazyQuery,
+  LazyFetchPolicy,
+  UseLazyQuery,
+} from './query/useLazyQuery';
 import { createUseQuery, UseQuery } from './query/useQuery';
 import { createUseRefetch, UseRefetch } from './query/useRefetch';
 import {
@@ -24,6 +28,7 @@ import type { FetchPolicy } from './common';
 import type { ReactClientOptionsWithDefaults } from './utils';
 import {
   createUsePaginatedQuery,
+  PaginatedQueryFetchPolicy,
   UsePaginatedQuery,
 } from './query/usePaginatedQuery';
 
@@ -78,7 +83,16 @@ export interface ReactClientDefaults {
    * __The _default value_ is obtained from the "`defaults.suspense`" value__
    */
   preparedSuspense?: boolean;
-
+  /**
+   * Enable/Disable by default 'React Suspense' behavior for usePaginatedQuery hooks
+   *
+   * > _Valid only for __usePaginatedQuery___ hooks
+   *
+   * > _You can override it on a per-hook basis_
+   *
+   * @default false
+   */
+  paginatedQuerySuspense?: boolean;
   /**
    * Define default 'fetchPolicy' hooks behaviour
    *
@@ -98,7 +112,17 @@ export interface ReactClientDefaults {
    *
    * @default "network-only"
    */
-  lazyFetchPolicy?: Exclude<FetchPolicy, 'cache-first'>;
+  lazyFetchPolicy?: LazyFetchPolicy;
+  /**
+   * Define default 'fetchPolicy' hooks behaviour
+   *
+   * > __Valid for __usePaginatedQuery____
+   *
+   * > _You can override it on a per-hook basis_
+   *
+   * __The _default value_ is obtained from the "`defaults.suspense`" value__
+   */
+  paginatedQueryFetchPolicy?: PaginatedQueryFetchPolicy;
   /**
    * __Enable__/__Disable__ default 'stale-while-revalidate' behaviour
    *
@@ -178,6 +202,8 @@ export function createReactClient<
     mutationSuspense = false,
     preparedSuspense = suspense,
     refetchAfterHydrate = false,
+    paginatedQueryFetchPolicy = 'cache-first',
+    paginatedQuerySuspense = suspense,
   } = optsCreate.defaults;
 
   const defaults: ReactClientOptionsWithDefaults['defaults'] = {
@@ -191,6 +217,8 @@ export function createReactClient<
     mutationSuspense,
     preparedSuspense,
     refetchAfterHydrate,
+    paginatedQueryFetchPolicy,
+    paginatedQuerySuspense,
   };
 
   const opts: ReactClientOptionsWithDefaults = Object.assign({}, optsCreate, {
