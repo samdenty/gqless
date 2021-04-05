@@ -21,6 +21,7 @@ const defaultConfig = {
     require.resolve('jest-watch-typeahead/filename'),
     require.resolve('jest-watch-typeahead/testname'),
   ],
+  restoreMocks: true,
 };
 
 exports.default = defaultConfig;

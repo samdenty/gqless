@@ -52,7 +52,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:27](https://github.com/g
 
 ### cachePath
 
-• **cachePath**: readonly (_string_ \| _number_)[]
+• **cachePath**: readonly (_string_ \| _number_)[]= []
 
 Defined in: [packages/gqless/src/Selection/selection.ts:31](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L31)
 

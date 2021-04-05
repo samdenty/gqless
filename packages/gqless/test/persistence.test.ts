@@ -4,7 +4,7 @@ test('basic functionality', async () => {
   const client1 = await createTestClient();
 
   expect(client1.backupPersistence()).toMatchInlineSnapshot(
-    `"{\\"cache\\":{},\\"normalizedCache\\":{},\\"selections\\":[[],[],\\"v0\\"]}"`
+    `"{\\"cache\\":{},\\"selections\\":[[],[],[],\\"v0\\"]}"`
   );
 
   await client1.resolved(
@@ -17,7 +17,7 @@ test('basic functionality', async () => {
   const dataBackup1 = client1.backupPersistence();
 
   expect(dataBackup1).toMatchInlineSnapshot(
-    `"{\\"cache\\":{\\"query\\":{\\"human0\\":{\\"__typename\\":\\"Human\\",\\"id\\":\\"1\\",\\"name\\":\\"asd\\"}}},\\"normalizedCache\\":{\\"Human1\\":{\\"__typename\\":\\"Human\\",\\"id\\":\\"1\\",\\"name\\":\\"asd\\"}},\\"selections\\":[[[\\"0-1-2\\",\\"human0\\",0]],[[\\"human\\",0],[\\"{\\\\\\"name\\\\\\":\\\\\\"asd\\\\\\"}\\",1],[\\"{\\\\\\"name\\\\\\":\\\\\\"String\\\\\\"}\\",2],[\\"human\\",0],[\\"{\\\\\\"name\\\\\\":\\\\\\"asd\\\\\\"}\\",1],[\\"{\\\\\\"name\\\\\\":\\\\\\"String\\\\\\"}\\",2]],\\"v0\\"]}"`
+    `"{\\"cache\\":{\\"query\\":{\\"human0\\":{\\"__typename\\":\\"Human\\",\\"id\\":\\"1\\",\\"name\\":\\"asd\\"}}},\\"selections\\":[[[\\"0-1-2\\",\\"human0\\"]],[[\\"human\\",0],[\\"{\\\\\\"name\\\\\\":\\\\\\"asd\\\\\\"}\\",1],[\\"{\\\\\\"name\\\\\\":\\\\\\"String\\\\\\"}\\",2]],[[0,0]],\\"v0\\"]}"`
   );
 
   const client2 = await createTestClient();
@@ -86,7 +86,7 @@ test('version check', async () => {
 
   const emptyPersistenceV1 = client1.backupPersistence('v1');
   expect(emptyPersistenceV1).toMatchInlineSnapshot(
-    `"{\\"version\\":\\"v1\\",\\"cache\\":{},\\"normalizedCache\\":{},\\"selections\\":[[],[],\\"v0\\"]}"`
+    `"{\\"version\\":\\"v1\\",\\"cache\\":{},\\"selections\\":[[],[],[],\\"v0\\"]}"`
   );
 
   await client1.resolved(
@@ -105,7 +105,7 @@ test('version check', async () => {
   const cacheBackupv1 = client1.backupPersistence('v1');
 
   expect(cacheBackupv1).toMatchInlineSnapshot(
-    `"{\\"version\\":\\"v1\\",\\"cache\\":{\\"query\\":{\\"human0\\":{\\"__typename\\":\\"Human\\",\\"id\\":\\"1\\",\\"name\\":\\"asd\\"}}},\\"normalizedCache\\":{\\"Human1\\":{\\"__typename\\":\\"Human\\",\\"id\\":\\"1\\",\\"name\\":\\"asd\\"}},\\"selections\\":[[[\\"0-1-2\\",\\"human0\\",0]],[[\\"human\\",0],[\\"{\\\\\\"name\\\\\\":\\\\\\"asd\\\\\\"}\\",1],[\\"{\\\\\\"name\\\\\\":\\\\\\"String\\\\\\"}\\",2],[\\"human\\",0],[\\"{\\\\\\"name\\\\\\":\\\\\\"asd\\\\\\"}\\",1],[\\"{\\\\\\"name\\\\\\":\\\\\\"String\\\\\\"}\\",2],[\\"human\\",0],[\\"{\\\\\\"name\\\\\\":\\\\\\"asd\\\\\\"}\\",1],[\\"{\\\\\\"name\\\\\\":\\\\\\"String\\\\\\"}\\",2]],\\"v0\\"]}"`
+    `"{\\"version\\":\\"v1\\",\\"cache\\":{\\"query\\":{\\"human0\\":{\\"__typename\\":\\"Human\\",\\"id\\":\\"1\\",\\"name\\":\\"asd\\"}}},\\"selections\\":[[[\\"0-1-2\\",\\"human0\\"]],[[\\"human\\",0],[\\"{\\\\\\"name\\\\\\":\\\\\\"asd\\\\\\"}\\",1],[\\"{\\\\\\"name\\\\\\":\\\\\\"String\\\\\\"}\\",2]],[[0,0]],\\"v0\\"]}"`
   );
 
   const client2 = await createTestClient();
@@ -113,7 +113,7 @@ test('version check', async () => {
   const emptyPersistenceV2 = client2.backupPersistence('v2');
 
   expect(emptyPersistenceV2).toMatchInlineSnapshot(
-    `"{\\"version\\":\\"v2\\",\\"cache\\":{},\\"normalizedCache\\":{},\\"selections\\":[[],[],\\"v0\\"]}"`
+    `"{\\"version\\":\\"v2\\",\\"cache\\":{},\\"selections\\":[[],[],[],\\"v0\\"]}"`
   );
 
   expect(client2.restorePersistence(cacheBackupv1, 'v2')).toBe(false);
@@ -123,7 +123,7 @@ test('version check', async () => {
   const wrongBackupVersion = client2.backupPersistence(123 as any);
 
   expect(wrongBackupVersion).toMatchInlineSnapshot(
-    `"{\\"version\\":123,\\"cache\\":{},\\"normalizedCache\\":{},\\"selections\\":[[],[],\\"v0\\"]}"`
+    `"{\\"version\\":123,\\"cache\\":{},\\"selections\\":[[],[],[],\\"v0\\"]}"`
   );
 
   expect(client2.restorePersistence(wrongBackupVersion, 123 as any)).toBe(

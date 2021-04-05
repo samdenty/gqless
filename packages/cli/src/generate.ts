@@ -898,6 +898,7 @@ export const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
       export const {
         graphql,
         useQuery,
+        usePaginatedQuery,
         useTransactionQuery,
         useLazyQuery,
         useRefetch,
@@ -912,6 +913,7 @@ export const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
       reactClientCode = `export const {
         graphql,
         useQuery,
+        usePaginatedQuery,
         useTransactionQuery,
         useLazyQuery,
         useRefetch,

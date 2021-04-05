@@ -6,7 +6,7 @@ import {
   castNotSkeleton,
   castNotSkeletonDeep,
 } from '../src';
-import { createTestClient } from './utils';
+import { createTestClient, expectConsoleWarn } from './utils';
 
 describe('selectFields', () => {
   test('recursive *, depth 1', async () => {
@@ -329,6 +329,17 @@ describe('selectFields', () => {
   test('empty named fields array', async () => {
     const { query, resolved } = await createTestClient();
 
+    expectConsoleWarn((n, message) => {
+      switch (n) {
+        case 1:
+          return expect(message).toMatchInlineSnapshot(
+            `"[gqless] Warning! No data requested."`
+          );
+        default:
+          throw Error('Unexpected warn: ' + message);
+      }
+    });
+
     const data = await resolved(() => {
       return selectFields(query.human(), []);
     });
@@ -641,6 +652,17 @@ describe('selectFields', () => {
   test('named non-existent field', async () => {
     const { query, resolved } = await createTestClient();
 
+    expectConsoleWarn((n, message) => {
+      switch (n) {
+        case 1:
+          return expect(message).toMatchInlineSnapshot(
+            `"[gqless] Warning! No data requested."`
+          );
+        default:
+          throw Error('Unexpected warn: ' + message);
+      }
+    });
+
     const data = await resolved(() => {
       return selectFields(query.human(), ['non_existent_field']);
     });
@@ -661,6 +683,17 @@ describe('selectFields', () => {
   test('primitive wrong accessor', async () => {
     const { resolved } = await createTestClient();
 
+    expectConsoleWarn((n, message) => {
+      switch (n) {
+        case 1:
+          return expect(message).toMatchInlineSnapshot(
+            `"[gqless] Warning! No data requested."`
+          );
+        default:
+          throw Error('Unexpected warn: ' + message);
+      }
+    });
+
     const data = await resolved(() => {
       return selectFields(123 as any);
     });
@@ -670,6 +703,17 @@ describe('selectFields', () => {
 
   test('object wrong accessor', async () => {
     const { resolved } = await createTestClient();
+
+    expectConsoleWarn((n, message) => {
+      switch (n) {
+        case 1:
+          return expect(message).toMatchInlineSnapshot(
+            `"[gqless] Warning! No data requested."`
+          );
+        default:
+          throw Error('Unexpected warn: ' + message);
+      }
+    });
 
     const data = await resolved(() => {
       return selectFields({
@@ -712,7 +756,9 @@ describe('refetch function', () => {
 
   test('warns about no selections inside function, except on production', async () => {
     const spy = jest.spyOn(console, 'warn').mockImplementation((message) => {
-      expect(message).toBe('gqless: No selections made!');
+      expect(message).toMatchInlineSnapshot(
+        `"[gqless] Warning! No data requested."`
+      );
     });
     const prevEnv = process.env.NODE_ENV;
 

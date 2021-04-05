@@ -18,6 +18,14 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:191](https://github.com/gql
 
 ---
 
+### inlineResolved
+
+• **inlineResolved**: [_InlineResolved_](inlineresolved.md)
+
+Defined in: [packages/gqless/src/Client/resolvers.ts:193](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L193)
+
+---
+
 ### resolveSelections
 
 • **resolveSelections**: ResolveSelections

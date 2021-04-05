@@ -41,6 +41,7 @@ import {
 import {
   BuildAndFetchSelections,
   createResolvers,
+  InlineResolved,
   Resolved,
   Resolvers,
   RetryOptions,
@@ -160,6 +161,7 @@ export interface GqlessClient<
   mutation: GeneratedSchema['mutation'];
   subscription: GeneratedSchema['subscription'];
   resolved: Resolved;
+  inlineResolved: InlineResolved;
   cache: CacheType;
   interceptorManager: InterceptorManager;
   scheduler: Scheduler;
@@ -193,6 +195,7 @@ export type {
   BuildSelection,
   Prefetch,
   BuildAndFetchSelections,
+  InlineResolved,
 };
 
 export function createClient<
@@ -264,6 +267,7 @@ export function createClient<
     resolved,
     buildAndFetchSelections,
     resolveSelections,
+    inlineResolved,
   } = createResolvers(innerState, catchSelectionsTimeMS, subscriptionsClient);
 
   async function resolveSchedulerSelections(selections: Set<Selection>) {
@@ -288,7 +292,7 @@ export function createClient<
     }
   }
 
-  const refetch = createRefetch(innerState, resolveSelections);
+  const refetch = createRefetch(innerState, resolveSelections, inlineResolved);
 
   const {
     query,
@@ -362,6 +366,7 @@ export function createClient<
     mutation,
     subscription,
     resolved,
+    inlineResolved,
     cache: innerState.clientCache.cache,
     interceptorManager,
     scheduler,

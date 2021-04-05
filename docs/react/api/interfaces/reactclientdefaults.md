@@ -12,7 +12,7 @@ hide_title: true
 
 ### lazyFetchPolicy
 
-• `Optional` **lazyFetchPolicy**: _cache-and-network_ \| _network-only_ \| _no-cache_
+• `Optional` **lazyFetchPolicy**: [_LazyFetchPolicy_](../modules.md#lazyfetchpolicy)
 
 Define default 'fetchPolicy' hooks behaviour
 
@@ -22,7 +22,7 @@ Define default 'fetchPolicy' hooks behaviour
 
 **`default`** "network-only"
 
-Defined in: [client.ts:97](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L97)
+Defined in: [react/src/client.ts:115](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L115)
 
 ---
 
@@ -38,7 +38,7 @@ Enable/Disable by default 'React Suspense' behavior for useLazyQuery hook
 
 **`default`** false
 
-Defined in: [client.ts:46](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L46)
+Defined in: [react/src/client.ts:55](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L55)
 
 ---
 
@@ -54,7 +54,39 @@ Enable/Disable by default 'React Suspense' behavior for useMutation hook
 
 **`default`** false
 
-Defined in: [client.ts:66](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L66)
+Defined in: [react/src/client.ts:75](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L75)
+
+---
+
+### paginatedQueryFetchPolicy
+
+• `Optional` **paginatedQueryFetchPolicy**: [_PaginatedQueryFetchPolicy_](../modules.md#paginatedqueryfetchpolicy)
+
+Define default 'fetchPolicy' hooks behaviour
+
+> **Valid for **usePaginatedQuery\_\_\_\_
+
+> _You can override it on a per-hook basis_
+
+**`default`** "cache-first"
+
+Defined in: [react/src/client.ts:125](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L125)
+
+---
+
+### paginatedQuerySuspense
+
+• `Optional` **paginatedQuerySuspense**: _boolean_
+
+Enable/Disable by default 'React Suspense' behavior for usePaginatedQuery hooks
+
+> \_Valid only for **usePaginatedQuery\_** hooks
+
+> _You can override it on a per-hook basis_
+
+**`default`** false
+
+Defined in: [react/src/client.ts:95](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L95)
 
 ---
 
@@ -70,7 +102,7 @@ Enable/Disable by default 'React Suspense' behavior for prepareQuery hooks
 
 **The _default value_ is obtained from the "`defaults.suspense`" value**
 
-Defined in: [client.ts:76](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L76)
+Defined in: [react/src/client.ts:85](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L85)
 
 ---
 
@@ -82,7 +114,7 @@ Refetch after SSR hydration
 
 **`default`** false
 
-Defined in: [client.ts:123](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L123)
+Defined in: [react/src/client.ts:151](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L151)
 
 ---
 
@@ -98,7 +130,7 @@ _You can override these defaults on a per-hook basis_
 
 **`default`** true
 
-Defined in: [client.ts:117](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L117)
+Defined in: [react/src/client.ts:145](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L145)
 
 ---
 
@@ -114,7 +146,7 @@ Defined in: [client.ts:117](https://github.com/gqless/gqless/blob/master/package
 
 **`default`** false
 
-Defined in: [client.ts:107](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L107)
+Defined in: [react/src/client.ts:135](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L135)
 
 ---
 
@@ -130,7 +162,7 @@ Enable/Disable by default 'React Suspense' behavior
 
 **`default`** false
 
-Defined in: [client.ts:36](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L36)
+Defined in: [react/src/client.ts:45](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L45)
 
 ---
 
@@ -146,7 +178,7 @@ Define default 'fetchPolicy' hooks behaviour
 
 **`default`** "cache-first"
 
-Defined in: [client.ts:87](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L87)
+Defined in: [react/src/client.ts:105](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L105)
 
 ---
 
@@ -162,4 +194,4 @@ Enable/Disable by default 'React Suspense' behavior for useTransactionQuery hook
 
 **The _default value_ is obtained from the "`defaults.suspense`" value**
 
-Defined in: [client.ts:56](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L56)
+Defined in: [react/src/client.ts:65](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L65)

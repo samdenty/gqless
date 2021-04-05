@@ -1,4 +1,12 @@
 import {
+  prepass,
+  getFields,
+  getArrayFields,
+  selectFields,
+  castNotSkeleton,
+  castNotSkeletonDeep,
+} from 'gqless';
+import {
   BuildSelectionInput,
   gqlessError,
   ResolveOptions,
@@ -460,7 +468,7 @@ export function useInterceptSelections({
   useSubscribeCacheChanges({
     hookSelections,
     eventHandler,
-    onChange: () => {
+    onChange() {
       if (!fetchingPromise.current) forceUpdate();
     },
   });
@@ -503,3 +511,52 @@ export function useSuspensePromise(optsRef: {
 }
 
 export type OnErrorHandler = (error: gqlessError) => void;
+
+export interface CoreHelpers {
+  prepass: typeof prepass;
+  getFields: typeof getFields;
+  getArrayFields: typeof getArrayFields;
+  selectFields: typeof selectFields;
+  castNotSkeleton: typeof castNotSkeleton;
+  castNotSkeletonDeep: typeof castNotSkeletonDeep;
+}
+
+export const coreHelpers: CoreHelpers = {
+  prepass,
+  getFields,
+  getArrayFields,
+  selectFields,
+  castNotSkeleton,
+  castNotSkeletonDeep,
+};
+
+export function uniqBy<TNode>(
+  list: TNode[],
+  cb?: (node: TNode) => unknown
+): TNode[] {
+  const uniqList = new Map<unknown, TNode>();
+  for (const value of list) {
+    let key: unknown = cb ? cb(value) : value;
+
+    if (uniqList.has(key)) continue;
+    uniqList.set(key, value);
+  }
+  return Array.from(uniqList.values());
+}
+
+const compare = (a: string | number, b: string | number) =>
+  a < b ? -1 : a > b ? 1 : 0;
+
+export function sortBy<TNode>(
+  list: TNode[],
+  cb: (node: TNode) => number | string,
+  order: 'asc' | 'desc' = 'asc'
+): TNode[] {
+  const orderedList = Array.from(list);
+
+  orderedList.sort((a, b) => compare(cb(a), cb(b)));
+
+  if (order === 'desc') orderedList.reverse();
+
+  return orderedList;
+}

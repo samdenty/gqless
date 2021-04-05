@@ -30,7 +30,7 @@ Without making extra bindings/helpers, we suggest using pre-defined functions fo
 `resolved` is very straightforward, you give it a function, and it will isolate the requests you are making,
 and it returns a promise of the data just as you returned it.
 
-If your requests has any error, either from syntax or from the GraphQL API,
+If your request has any error, either from syntax or from the GraphQL API,
 it will always throw an instance of [`gqlessError`](/core/api/classes/gqlesserror) _(which is itself, an instance of [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))_
 
 ```ts
@@ -47,7 +47,33 @@ resolved(() => {
   });
 ```
 
-You can also specify some options in the second argument, like forcing refetch or isolating from existing cache, check [**ResolveOptions**](/core/api/interfaces/resolveoptions) for more information.
+### inlineResolved
+
+`inlineResolved` is similar to [resolved](#resolved), you give it a pre-defined function, but it **won't isolate** it's requests, instead, it will use the `scheduler` _indirectly_, and asynchronously merge your concurrent requests,
+and it returns either the requested data directly if no fetch is needed, or a promise of the data just as you returned it.
+
+```ts
+import { query, inlineResolved } from '../gqless';
+
+// ...
+
+const possibleData = inlineResolved(() => {
+  return query.helloWorld!;
+});
+
+if (possibleData instanceof Promise) {
+  // data == Promise<string>
+
+  // Waiting  the data from the API
+  const data = await possibleData;
+
+  // data == string
+} else {
+  // possibleData == string
+}
+```
+
+You can also specify some options in the second argument, like forcing refetch and/or intercepting existing cache while refetching, check [**InlineResolveOptions**](/core/api/interfaces/inlineresolveoptions) for more information.
 
 ## Using the Scheduler directly
 

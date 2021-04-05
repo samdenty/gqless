@@ -324,3 +324,17 @@ export const createTestClient = async (
 
 export const sleep = (amount: number) =>
   new Promise((resolve) => setTimeout(resolve, amount));
+
+const consoleWarn = console.warn;
+export function expectConsoleWarn(
+  cb: (n: number, ...message: unknown[]) => void
+) {
+  const spy = jest.spyOn(console, 'warn');
+
+  let n = 0;
+  spy.mockImplementation((...message) => {
+    cb(++n, ...message);
+  });
+
+  return { spy, consoleWarn };
+}

@@ -27,7 +27,7 @@
     "get-port": "^5.1.1",
     "graphql": "^15.5.0",
     "jest": "^26.6.3",
-    "jest-watch-typeahead": "^0.6.1",
+    "jest-watch-typeahead": "^0.6.2",
     "mercurius": "^7.3.3",
     "mercurius-codegen": "^1.4.3",
     "mercurius-integration-testing": "^3.1.3",

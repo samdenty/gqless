@@ -2,7 +2,7 @@ import { waitForExpect } from 'test-utils';
 
 import { getArrayFields, SelectionType } from '../src';
 import { CacheChangeEventData } from '../src/Events';
-import { createTestClient, Dog } from './utils';
+import { createTestClient, Dog, expectConsoleWarn } from './utils';
 
 describe('array accessors', () => {
   test('array query', async () => {
@@ -16,6 +16,17 @@ describe('array accessors', () => {
     });
 
     expect(data).toEqual(['default', 'default']);
+
+    expectConsoleWarn((n, message) => {
+      switch (n) {
+        case 1:
+          return expect(message).toMatchInlineSnapshot(
+            `"[gqless] Warning! No data requested."`
+          );
+        default:
+          throw Error('Unexpected warn: ' + message);
+      }
+    });
 
     const cachedDataHumanOutOfSize = await resolved(() => {
       const human = query.human();

@@ -22,13 +22,13 @@ hide_title: true
 
 #### Parameters:
 
-| Name                               | Type                      |
-| :--------------------------------- | :------------------------ |
-| `message`                          | _string_                  |
-| `__namedParameters`                | _object_                  |
-| `__namedParameters.caller?`        | Function                  |
-| `__namedParameters.graphQLErrors?` | readonly _GraphQLError_[] |
-| `__namedParameters.otherError?`    | _unknown_                 |
+| Name                               | Type                      | Default value |
+| :--------------------------------- | :------------------------ | :------------ |
+| `message`                          | _string_                  | -             |
+| `__namedParameters`                | _object_                  | {}            |
+| `__namedParameters.caller?`        | Function                  | -             |
+| `__namedParameters.graphQLErrors?` | readonly _GraphQLError_[] | -             |
+| `__namedParameters.otherError?`    | _unknown_                 | -             |
 
 **Returns:** [_gqlessError_](gqlesserror.md)
 

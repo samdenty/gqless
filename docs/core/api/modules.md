@@ -30,6 +30,8 @@ hide_title: true
 - [GqlessClient](interfaces/gqlessclient.md)
 - [HydrateCache](interfaces/hydratecache.md)
 - [HydrateCacheOptions](interfaces/hydratecacheoptions.md)
+- [InlineResolveOptions](interfaces/inlineresolveoptions.md)
+- [InlineResolved](interfaces/inlineresolved.md)
 - [InnerClientState](interfaces/innerclientstate.md)
 - [InterceptorManager](interfaces/interceptormanager.md)
 - [Mutate](interfaces/mutate.md)
@@ -156,7 +158,7 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:1](https://github.com/gqless
 | :--- |
 | `T`  |
 
-Defined in: [packages/gqless/src/Client/client.ts:75](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L75)
+Defined in: [packages/gqless/src/Client/client.ts:76](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L76)
 
 ---
 
@@ -297,7 +299,7 @@ Defined in: [packages/gqless/src/Helpers/casters.ts:34](https://github.com/gqles
 
 **Returns:** [_GqlessClient_](interfaces/gqlessclient.md)<GeneratedSchema\>
 
-Defined in: [packages/gqless/src/Client/client.ts:198](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L198)
+Defined in: [packages/gqless/src/Client/client.ts:201](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L201)
 
 ---
 

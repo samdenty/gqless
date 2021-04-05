@@ -190,6 +190,26 @@ export interface Resolvers {
   resolveSelections: ResolveSelections;
   buildAndFetchSelections: BuildAndFetchSelections;
   resolved: Resolved;
+  inlineResolved: InlineResolved;
+}
+
+export interface InlineResolved {
+  <TData = unknown>(fn: () => TData, options?: InlineResolveOptions<TData>):
+    | TData
+    | Promise<TData>;
+}
+
+export interface InlineResolveOptions<TData> {
+  refetch?: boolean;
+  onEmptyResolve?: () => void;
+  /**
+   * Get every selection intercepted in the specified function
+   */
+  onSelection?: (selection: Selection) => void;
+  /**
+   * On valid cache data found callback
+   */
+  onCacheData?: (data: TData) => void;
 }
 
 export function createResolvers(
@@ -207,6 +227,91 @@ export function createResolvers(
   } = innerState;
   const { globalInterceptor } = interceptorManager;
   const buildQuery = createQueryBuilder();
+
+  const inlineResolved: InlineResolved = function inlineResolved<
+    TData = unknown
+  >(
+    fn: () => TData,
+    {
+      refetch,
+      onEmptyResolve,
+      onSelection,
+      onCacheData,
+    }: InlineResolveOptions<TData> = {}
+  ) {
+    const prevFoundValidCache = innerState.foundValidCache;
+    innerState.foundValidCache = true;
+
+    const interceptor = interceptorManager.createInterceptor();
+
+    let noSelection = true;
+    function onScalarSelection() {
+      noSelection = false;
+    }
+    interceptor.selectionAddListeners.add(onScalarSelection);
+    interceptor.selectionCacheRefetchListeners.add(onScalarSelection);
+
+    if (onSelection) {
+      interceptor.selectionAddListeners.add(onSelection);
+      interceptor.selectionCacheListeners.add(onSelection);
+      interceptor.selectionCacheRefetchListeners.add(onSelection);
+    }
+
+    const prevAllowCache = innerState.allowCache;
+    try {
+      if (refetch) innerState.allowCache = false;
+
+      const data = fn();
+
+      const foundValidCache = innerState.foundValidCache;
+
+      innerState.foundValidCache = prevFoundValidCache;
+      interceptorManager.removeInterceptor(interceptor);
+      innerState.allowCache = prevAllowCache;
+
+      if (noSelection) {
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[gqless] Warning! No data requested.');
+        }
+        if (onEmptyResolve) onEmptyResolve();
+        return data;
+      }
+
+      const promises: Promise<SchedulerPromiseValue>[] = [];
+      groups: for (const [
+        selectionSet,
+        promise,
+      ] of scheduler.pendingSelectionsGroupsPromises) {
+        for (const selection of interceptor.fetchSelections) {
+          if (selectionSet.has(selection)) {
+            promises.push(promise);
+            continue groups;
+          }
+        }
+      }
+
+      if (promises.length) {
+        if (foundValidCache) {
+          if (onCacheData) {
+            onCacheData(data);
+          }
+        }
+        return Promise.all(promises).then((value) => {
+          for (const v of value) if (v.error) throw v.error;
+
+          innerState.allowCache = true;
+
+          return fn();
+        });
+      }
+
+      return data;
+    } finally {
+      innerState.foundValidCache = prevFoundValidCache;
+      interceptorManager.removeInterceptor(interceptor);
+      innerState.allowCache = prevAllowCache;
+    }
+  };
 
   const resolved: Resolved = async function resolved<T = unknown>(
     dataFn: () => T,
@@ -245,6 +350,14 @@ export function createResolvers(
 
     const interceptor = interceptorManager.createInterceptor();
 
+    let noSelection = true;
+
+    function onScalarSelection() {
+      noSelection = false;
+    }
+    interceptor.selectionAddListeners.add(onScalarSelection);
+    interceptor.selectionCacheRefetchListeners.add(onScalarSelection);
+
     if (onSelection) {
       interceptor.selectionAddListeners.add(onSelection);
       interceptor.selectionCacheListeners.add(onSelection);
@@ -254,7 +367,7 @@ export function createResolvers(
     try {
       const data = dataFn();
 
-      if (interceptor.fetchSelections.size === 0) {
+      if (noSelection) {
         if (process.env.NODE_ENV !== 'production') {
           console.warn('[gqless] Warning! No data requested.');
         }
@@ -763,5 +876,6 @@ export function createResolvers(
     resolveSelections,
     buildAndFetchSelections,
     resolved,
+    inlineResolved,
   };
 }

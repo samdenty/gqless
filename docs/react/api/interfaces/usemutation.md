@@ -35,4 +35,4 @@ hide_title: true
 
 **Returns:** readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fn?`: (`mutation`: GeneratedSchema[*mutation*], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseMutationState_](usemutationstate.md)<TData\>]
 
-Defined in: [mutation/useMutation.ts:89](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L89)
+Defined in: [react/src/mutation/useMutation.ts:89](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L89)

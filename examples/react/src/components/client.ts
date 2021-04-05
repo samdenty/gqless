@@ -16,6 +16,7 @@ export const {
   useMetaState,
   useSubscription,
   prepareQuery,
+  usePaginatedQuery,
 } = createReactClient<GeneratedSchema>(client, {
   defaults: {
     suspense: true,

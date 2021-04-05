@@ -27,6 +27,8 @@ module.exports = [
       'core/api/interfaces/gqlessclient',
       'core/api/interfaces/hydratecache',
       'core/api/interfaces/hydratecacheoptions',
+      'core/api/interfaces/inlineresolveoptions',
+      'core/api/interfaces/inlineresolved',
       'core/api/interfaces/innerclientstate',
       'core/api/interfaces/interceptormanager',
       'core/api/interfaces/mutate',

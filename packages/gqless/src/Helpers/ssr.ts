@@ -55,20 +55,11 @@ export function createSSRHelpers({
         isPlainObject(recoveredCache) &&
         isPlainObject(recoveredCache.cache)
       ) {
-        const { selections, cache, normalizedCache } = recoveredCache;
+        const { selections, cache } = recoveredCache;
 
         innerState.selectionManager.restore(selections);
 
         innerState.clientCache.mergeCache(cache, 'query');
-        if (
-          isPlainObject(normalizedCache) &&
-          innerState.clientCache.normalizedCache
-        ) {
-          Object.assign(
-            innerState.clientCache.normalizedCache,
-            normalizedCache
-          );
-        }
 
         if (shouldRefetch) {
           setTimeout(
@@ -121,13 +112,10 @@ export function createSSRHelpers({
       }
     }
 
-    const nC = innerState.clientCache.normalizedCache;
-
     return {
       cacheSnapshot: JSON.stringify({
         ...decycle({
           cache: isEmptyObject(cache) ? undefined : cache,
-          normalizedCache: nC && (isEmptyObject(nC) ? undefined : nC),
         }),
         selections:
           selections[0].length || selections[1].length ? selections : undefined,
