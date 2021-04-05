@@ -48,6 +48,18 @@ hide_title: true
 - [UseTransactionQuery](interfaces/usetransactionquery.md)
 - [UseTransactionQueryState](interfaces/usetransactionquerystate.md)
 
+## References
+
+### sortBy
+
+Renames and exports: [\_\_type](interfaces/usepaginatedquerymergeparams.md#__type)
+
+---
+
+### uniqBy
+
+Renames and exports: [\_\_type](interfaces/usepaginatedquerymergeparams.md#__type)
+
 ## Type aliases
 
 ### FetchPolicy
@@ -90,7 +102,7 @@ Defined in: [react/src/common.ts:513](https://github.com/gqless/gqless/blob/mast
 
 Ƭ **PaginatedQueryFetchPolicy**: _Extract_<[_FetchPolicy_](modules.md#fetchpolicy), _cache-first_ \| _cache-and-network_ \| _network-only_\>
 
-Defined in: [react/src/query/usePaginatedQuery.ts:42](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L42)
+Defined in: [react/src/query/usePaginatedQuery.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L16)
 
 ---
 

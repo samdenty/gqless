@@ -55,4 +55,4 @@ export type {
 } from './ssr/ssr';
 
 export type { OnErrorHandler, FetchPolicy, CoreHelpers } from './common';
-export { coreHelpers } from './common';
+export { coreHelpers, uniqBy, sortBy } from './common';

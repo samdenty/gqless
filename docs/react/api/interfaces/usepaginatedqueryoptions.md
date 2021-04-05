@@ -23,7 +23,9 @@ hide_title: true
 
 Fetch Policy behavior
 
-Defined in: [react/src/query/usePaginatedQuery.ts:70](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L70)
+If using `cache-and-network` and `merge`, we recomend using the `uniqBy` helper included inside the `merge` parameters.
+
+Defined in: [react/src/query/usePaginatedQuery.ts:46](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L46)
 
 ---
 
@@ -33,7 +35,7 @@ Defined in: [react/src/query/usePaginatedQuery.ts:70](https://github.com/gqless/
 
 Initial arguments used on first request
 
-Defined in: [react/src/query/usePaginatedQuery.ts:60](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L60)
+Defined in: [react/src/query/usePaginatedQuery.ts:34](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L34)
 
 ---
 
@@ -55,7 +57,7 @@ Custom merge function
 
 **Returns:** _undefined_ \| _void_ \| TData
 
-Defined in: [react/src/query/usePaginatedQuery.ts:64](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L64)
+Defined in: [react/src/query/usePaginatedQuery.ts:38](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L38)
 
 ---
 
@@ -67,7 +69,7 @@ Skip initial query call
 
 **`default`** false
 
-Defined in: [react/src/query/usePaginatedQuery.ts:76](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L76)
+Defined in: [react/src/query/usePaginatedQuery.ts:52](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L52)
 
 ---
 
@@ -77,4 +79,4 @@ Defined in: [react/src/query/usePaginatedQuery.ts:76](https://github.com/gqless/
 
 Activate suspense on first call
 
-Defined in: [react/src/query/usePaginatedQuery.ts:80](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L80)
+Defined in: [react/src/query/usePaginatedQuery.ts:56](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L56)

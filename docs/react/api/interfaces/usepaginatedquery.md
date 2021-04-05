@@ -23,10 +23,10 @@ hide_title: true
 
 #### Type parameters:
 
-| Name    | Type                                           |
-| :------ | :--------------------------------------------- |
-| `TData` | -                                              |
-| `TArgs` | _string_ \| _number_ \| _Record_<string, any\> |
+| Name    | Type                                                     |
+| :------ | :------------------------------------------------------- |
+| `TData` | -                                                        |
+| `TArgs` | _null_ \| _string_ \| _number_ \| _Record_<string, any\> |
 
 #### Parameters:
 
@@ -37,4 +37,4 @@ hide_title: true
 
 **Returns:** [_UsePaginatedQueryData_](usepaginatedquerydata.md)<TData, TArgs\>
 
-Defined in: [react/src/query/usePaginatedQuery.ts:173](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L173)
+Defined in: [react/src/query/usePaginatedQuery.ts:176](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L176)

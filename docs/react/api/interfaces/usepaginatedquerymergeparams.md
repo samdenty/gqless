@@ -27,7 +27,7 @@ hide_title: true
 | `existing` | _undefined_ \| TData |
 | `incoming` | TData                |
 
-Defined in: [react/src/query/usePaginatedQuery.ts:48](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L48)
+Defined in: [react/src/query/usePaginatedQuery.ts:22](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L22)
 
 ---
 
@@ -55,9 +55,9 @@ Defined in: [react/src/query/usePaginatedQuery.ts:48](https://github.com/gqless/
 
 **Returns:** TNode[]
 
-Defined in: [react/src/query/usePaginatedQuery.ts:28](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L28)
+Defined in: [react/src/common.ts:550](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L550)
 
-Defined in: [react/src/query/usePaginatedQuery.ts:53](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L53)
+Defined in: [react/src/query/usePaginatedQuery.ts:27](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L27)
 
 ---
 
@@ -84,6 +84,6 @@ Defined in: [react/src/query/usePaginatedQuery.ts:53](https://github.com/gqless/
 
 **Returns:** TNode[]
 
-Defined in: [react/src/query/usePaginatedQuery.ts:14](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L14)
+Defined in: [react/src/common.ts:533](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L533)
 
-Defined in: [react/src/query/usePaginatedQuery.ts:52](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L52)
+Defined in: [react/src/query/usePaginatedQuery.ts:26](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L26)

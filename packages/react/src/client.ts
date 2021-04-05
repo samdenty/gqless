@@ -120,7 +120,7 @@ export interface ReactClientDefaults {
    *
    * > _You can override it on a per-hook basis_
    *
-   * __The _default value_ is obtained from the "`defaults.suspense`" value__
+   * @default "cache-first"
    */
   paginatedQueryFetchPolicy?: PaginatedQueryFetchPolicy;
   /**

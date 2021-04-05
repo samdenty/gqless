@@ -68,7 +68,7 @@ Define default 'fetchPolicy' hooks behaviour
 
 > _You can override it on a per-hook basis_
 
-**The _default value_ is obtained from the "`defaults.suspense`" value**
+**`default`** "cache-first"
 
 Defined in: [react/src/client.ts:125](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L125)
 

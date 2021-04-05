@@ -529,3 +529,34 @@ export const coreHelpers: CoreHelpers = {
   castNotSkeleton,
   castNotSkeletonDeep,
 };
+
+export function uniqBy<TNode>(
+  list: TNode[],
+  cb?: (node: TNode) => unknown
+): TNode[] {
+  const uniqList = new Map<unknown, TNode>();
+  for (const value of list) {
+    let key: unknown = cb ? cb(value) : value;
+
+    if (uniqList.has(key)) continue;
+    uniqList.set(key, value);
+  }
+  return Array.from(uniqList.values());
+}
+
+const compare = (a: string | number, b: string | number) =>
+  a < b ? -1 : a > b ? 1 : 0;
+
+export function sortBy<TNode>(
+  list: TNode[],
+  cb: (node: TNode) => number | string,
+  order: 'asc' | 'desc' = 'asc'
+): TNode[] {
+  const orderedList = Array.from(list);
+
+  orderedList.sort((a, b) => compare(cb(a), cb(b)));
+
+  if (order === 'desc') orderedList.reverse();
+
+  return orderedList;
+}

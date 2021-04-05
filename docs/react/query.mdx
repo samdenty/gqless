@@ -226,6 +226,99 @@ On the other hand, [useQuery](#usequery) enables very nice composability, but it
 
 And it's important to note that for `Non-Suspense` usage we encourage to always use [useQuery](#usequery).
 
+## usePaginatedQuery
+
+Paginated focused queries, in which you specify a function and initial arguments, which is going to be automatically called on first-render or via custom `fetchMore` calls.
+
+### Features
+
+- Suspense support
+- Partial [Fetch policy](/react/api-reference#fetch-policy) support (`'cache-first'`, `'cache-and-network'` or `'network-only'`)
+- Custom data merge function, with included `uniqBy` & `sortBy` helpers.
+- If no new args are defined in your `fetchMore` call, the previous or initial args are used.
+- You can override the existing `fetchPolicy` in the second parameter of `fetchMore`, for example, to force a `refetch`.
+- [Core helpers](/core/helpers) included in third parameter of main function.
+
+### Example
+
+```tsx
+import { usePaginatedQuery, ConnectionArgs } from '../gqless';
+
+// ...
+
+function Example() {
+  const { data, fetchMore, isLoading } = usePaginatedQuery(
+    (
+      // Auto-generated query object
+      query,
+      // You have to specify the arguments types, in this example we are re-using auto-generated types
+      input: ConnectionArgs,
+      // Core helpers, in this example we are just using `getArrayFields`
+      { getArrayFields }
+    ) => {
+      const {
+        nodes,
+        pageInfo: { hasNextPage, endCursor },
+      } = query.users({
+        input,
+      });
+      return {
+        nodes: getArrayFields(nodes, 'name'),
+        hasNextPage,
+        endCursor,
+      };
+    },
+    {
+      // Required, only used for the first fetch
+      initialArgs: {
+        first: 10,
+      },
+      // Optional merge function
+      merge({ data: { existing, incoming }, uniqBy }) {
+        if (existing) {
+          return {
+            ...incoming,
+            // If using 'cache-and-network', you have to use `uniqBy`
+            nodes: uniqBy([...existing.nodes, ...incoming.nodes], (v) => v.id),
+          };
+        }
+        return incoming;
+      },
+      // Default is 'cache-first'
+      fetchPolicy: 'cache-and-network',
+      // Default is `false`, it only applies for the initial fetch.
+      suspense: true,
+    }
+  );
+
+  return (
+    <div>
+      <ul>
+        {data?.nodes.map(({ id = 0, name }) => {
+          return <li key={id}>{name}</li>;
+        })}
+      </ul>
+      {isLoading && <p>Loading...</p>}
+      {data?.hasNextPage && data.endCursor ? (
+        <button
+          disabled={isLoading}
+          onClick={() => {
+            fetchMore({
+              first: 10,
+              after: data.endCursor,
+            });
+          }}
+        >
+          Load more
+        </button>
+      ) : null}
+    </div>
+  );
+}
+```
+
+Check [API Reference](/react/api/interfaces/usepaginatedquery)
+
 ## useTransactionQuery
 
 Alternative to `graphql` and `useQuery` that works via pre-defined functions, which allows for extra features that are not available in `useQuery` & `graphql HOC`.
@@ -243,6 +336,9 @@ Alternative to `graphql` and `useQuery` that works via pre-defined functions, wh
 
 ```tsx
 import { useTransactionQuery } from '../gqless';
+
+// ...
+
 function Example() {
   const { data, error, isLoading } = useTransactionQuery(
     (query, args: string) => {
@@ -286,7 +382,9 @@ Queries meant to be called in response of events, like button clicks.
 
 - Lifecycle functions `onCompleted` & `onError`
 - Suspense support
-- Partial [Fetch policy](/react/api-reference#fetch-policy) support (no `'cache-first'`)
+- Partial [Fetch policy](/react/api-reference#fetch-policy) support (`'network-only'`, `'cache-and-network'` or `'no-cache'`)
+
+### Example
 
 ```tsx
 import { useLazyQuery } from '../gqless';

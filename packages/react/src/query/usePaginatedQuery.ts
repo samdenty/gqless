@@ -8,36 +8,10 @@ import {
   useSelectionsState,
   useSubscribeCacheChanges,
   useSuspensePromise,
+  uniqBy,
+  sortBy,
 } from '../common';
 import { ReactClientOptionsWithDefaults } from '../utils';
-
-function uniqBy<TNode>(list: TNode[], cb?: (node: TNode) => unknown): TNode[] {
-  const uniqList = new Map<unknown, TNode>();
-  for (const value of list) {
-    let key: unknown = cb ? cb(value) : value;
-
-    if (uniqList.has(key)) continue;
-    uniqList.set(key, value);
-  }
-  return Array.from(uniqList.values());
-}
-
-const compare = (a: string | number, b: string | number) =>
-  a < b ? -1 : a > b ? 1 : 0;
-
-function sortBy<TNode>(
-  list: TNode[],
-  cb: (node: TNode) => number | string,
-  order: 'asc' | 'desc' = 'asc'
-): TNode[] {
-  const orderedList = Array.from(list);
-
-  orderedList.sort((a, b) => compare(cb(a), cb(b)));
-
-  if (order === 'desc') orderedList.reverse();
-
-  return orderedList;
-}
 
 export type PaginatedQueryFetchPolicy = Extract<
   FetchPolicy,
@@ -66,6 +40,8 @@ export interface UsePaginatedQueryOptions<TData, TArgs> {
   ) => TData | undefined | void;
   /**
    * Fetch Policy behavior
+   *
+   * If using `cache-and-network` and `merge`, we recomend using the `uniqBy` helper included inside the `merge` parameters.
    */
   fetchPolicy?: PaginatedQueryFetchPolicy;
   /**
@@ -78,6 +54,47 @@ export interface UsePaginatedQueryOptions<TData, TArgs> {
    * Activate suspense on first call
    */
   suspense?: boolean;
+}
+
+export interface UsePaginatedQueryData<TData, TArgs> {
+  /**
+   * Query Data
+   */
+  data: TData | undefined;
+  /**
+   * Current arguments used in the query
+   */
+  args: TArgs;
+  /**
+   * Network fetch is loading
+   */
+  isLoading: boolean;
+  /**
+   * Main function to be used
+   *
+   * If new args are not specified, the previous or initial args are used
+   *
+   * In the second parameter you can override the `"fetchPolicy"`, for example you can set it to `"network-only"` to do a refetch.
+   */
+  fetchMore: (
+    /**
+     * Optional new args. It can receive a function that receives the previous data/args and returns the new args, or the new args directly
+     *
+     * If not specified or `undefined`, the previous or initial args are used.
+     */
+    newArgs?:
+      | ((data: FetchMoreCallbackArgs<TData, TArgs>) => TArgs)
+      | TArgs
+      | undefined,
+    /**
+     * Override hook fetchPolicy
+     */
+    fetchPolicy?: PaginatedQueryFetchPolicy
+  ) => Promise<TData> | TData;
+  /**
+   * Has the function been called
+   */
+  called: boolean;
 }
 
 interface UsePaginatedQueryState<TData, TArgs> {
@@ -150,20 +167,6 @@ export interface FetchMoreCallbackArgs<TData, TArgs> {
   existingArgs: TArgs;
 }
 
-export interface UsePaginatedQueryData<TData, TArgs> {
-  data: TData | undefined;
-  args: TArgs;
-  isLoading: boolean;
-  fetchMore: (
-    newArgs?:
-      | ((data: FetchMoreCallbackArgs<TData, TArgs>) => TArgs)
-      | TArgs
-      | undefined,
-    fetchPolicy?: PaginatedQueryFetchPolicy
-  ) => Promise<TData> | TData;
-  called: boolean;
-}
-
 export interface UsePaginatedQuery<
   GeneratedSchema extends {
     query: object;
@@ -171,7 +174,7 @@ export interface UsePaginatedQuery<
     subscription: object;
   }
 > {
-  <TData, TArgs extends Record<string, any> | string | number>(
+  <TData, TArgs extends Record<string, any> | string | number | null>(
     fn: (
       query: GeneratedSchema['query'],
       args: TArgs,
@@ -202,7 +205,7 @@ export function createUsePaginatedQuery<
 ): UsePaginatedQuery<GeneratedSchema> {
   function usePaginatedQuery<
     TData,
-    TArgs extends Record<string, any> | string | number
+    TArgs extends Record<string, any> | string | number | null
   >(
     fn: (query: typeof clientQuery, args: TArgs, helpers: CoreHelpers) => TData,
     opts: UsePaginatedQueryOptions<TData, TArgs>
@@ -258,17 +261,17 @@ export function createUsePaginatedQuery<
           return mergeResult === undefined ? incomingData : mergeResult;
         }
 
-        const args = newArgs
-          ? (stateRef.current.args =
-              typeof newArgs === 'function'
-                ? (newArgs as (
-                    data: FetchMoreCallbackArgs<TData, TArgs>
-                  ) => TArgs)({
-                    existingData: stateRef.current.data,
-                    existingArgs: stateRef.current.args,
-                  })
-                : newArgs)
-          : stateRef.current.args;
+        let args: TArgs =
+          newArgs !== undefined
+            ? typeof newArgs === 'function'
+              ? (newArgs as (
+                  data: FetchMoreCallbackArgs<TData, TArgs>
+                ) => TArgs)({
+                  existingData: stateRef.current.data,
+                  existingArgs: stateRef.current.args,
+                })
+              : newArgs
+            : stateRef.current.args;
 
         const resolvedFn = () => fnRef.current(clientQuery, args, coreHelpers);
 

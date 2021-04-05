@@ -21,7 +21,9 @@ hide_title: true
 
 • **args**: TArgs
 
-Defined in: [react/src/query/usePaginatedQuery.ts:155](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L155)
+Current arguments used in the query
+
+Defined in: [react/src/query/usePaginatedQuery.ts:67](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L67)
 
 ---
 
@@ -29,7 +31,9 @@ Defined in: [react/src/query/usePaginatedQuery.ts:155](https://github.com/gqless
 
 • **called**: _boolean_
 
-Defined in: [react/src/query/usePaginatedQuery.ts:164](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L164)
+Has the function been called
+
+Defined in: [react/src/query/usePaginatedQuery.ts:97](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L97)
 
 ---
 
@@ -37,13 +41,21 @@ Defined in: [react/src/query/usePaginatedQuery.ts:164](https://github.com/gqless
 
 • **data**: _undefined_ \| TData
 
-Defined in: [react/src/query/usePaginatedQuery.ts:154](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L154)
+Query Data
+
+Defined in: [react/src/query/usePaginatedQuery.ts:63](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L63)
 
 ---
 
 ### fetchMore
 
 • **fetchMore**: (`newArgs?`: TArgs \| (`data`: [_FetchMoreCallbackArgs_](fetchmorecallbackargs.md)<TData, TArgs\>) => TArgs, `fetchPolicy?`: [_PaginatedQueryFetchPolicy_](../modules.md#paginatedqueryfetchpolicy)) => TData \| _Promise_<TData\>
+
+Main function to be used
+
+If new args are not specified, the previous or initial args are used
+
+In the second parameter you can override the `"fetchPolicy"`, for example you can set it to `"network-only"` to do a refetch.
 
 #### Type declaration:
 
@@ -58,7 +70,7 @@ Defined in: [react/src/query/usePaginatedQuery.ts:154](https://github.com/gqless
 
 **Returns:** TData \| _Promise_<TData\>
 
-Defined in: [react/src/query/usePaginatedQuery.ts:157](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L157)
+Defined in: [react/src/query/usePaginatedQuery.ts:79](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L79)
 
 ---
 
@@ -66,4 +78,6 @@ Defined in: [react/src/query/usePaginatedQuery.ts:157](https://github.com/gqless
 
 • **isLoading**: _boolean_
 
-Defined in: [react/src/query/usePaginatedQuery.ts:156](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L156)
+Network fetch is loading
+
+Defined in: [react/src/query/usePaginatedQuery.ts:71](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L71)
