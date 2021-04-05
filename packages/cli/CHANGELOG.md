@@ -1,5 +1,15 @@
 # @gqless/cli
 
+## 2.0.13
+
+### Patch Changes
+
+- 9b9d127: add "usePaginatedQuery" hook
+- Updated dependencies [85a389c]
+- Updated dependencies [cca9d02]
+- Updated dependencies [0904297]
+  - gqless@2.0.11
+
 ## 2.0.12
 
 ### Patch Changes
