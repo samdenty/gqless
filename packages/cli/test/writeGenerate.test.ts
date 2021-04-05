@@ -303,6 +303,7 @@ test('creates dir, generates code and writes new file', async () => {
       export const {
         graphql,
         useQuery,
+        usePaginatedQuery,
         useTransactionQuery,
         useLazyQuery,
         useRefetch,

@@ -200,6 +200,7 @@ test('basic functionality works', async () => {
     export const {
       graphql,
       useQuery,
+      usePaginatedQuery,
       useTransactionQuery,
       useLazyQuery,
       useRefetch,
@@ -352,6 +353,7 @@ test('custom scalars works', async () => {
     export const {
       graphql,
       useQuery,
+      usePaginatedQuery,
       useTransactionQuery,
       useLazyQuery,
       useRefetch,
@@ -1275,6 +1277,7 @@ test('javascript output works', async () => {
     export const {
       graphql,
       useQuery,
+      usePaginatedQuery,
       useTransactionQuery,
       useLazyQuery,
       useRefetch,
@@ -1549,6 +1552,7 @@ test('ignoreArgs transform', async () => {
     export const {
       graphql,
       useQuery,
+      usePaginatedQuery,
       useTransactionQuery,
       useLazyQuery,
       useRefetch,

@@ -104,6 +104,7 @@ test('basic inspectWriteGenerate functionality', async () => {
       export const {
         graphql,
         useQuery,
+        usePaginatedQuery,
         useTransactionQuery,
         useLazyQuery,
         useRefetch,
@@ -293,6 +294,7 @@ describe('from file', () => {
         export const {
           graphql,
           useQuery,
+          usePaginatedQuery,
           useTransactionQuery,
           useLazyQuery,
           useRefetch,
@@ -493,6 +495,7 @@ test('specify generateOptions to inspectWriteGenerate', async () => {
       export const {
         graphql,
         useQuery,
+        usePaginatedQuery,
         useTransactionQuery,
         useLazyQuery,
         useRefetch,
@@ -842,6 +845,7 @@ describe('CLI behavior', () => {
         export const {
           graphql,
           useQuery,
+          usePaginatedQuery,
           useTransactionQuery,
           useLazyQuery,
           useRefetch,
