@@ -1,5 +1,13 @@
 # gqless
 
+## 2.0.11
+
+### Patch Changes
+
+- 85a389c: fix selections backup & fix resolved false-positive warn
+- cca9d02: add inlineResolved function
+- 0904297: remove normalizedCache from persistence
+
 ## 2.0.10
 
 ### Patch Changes

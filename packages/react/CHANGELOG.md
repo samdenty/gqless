@@ -1,5 +1,15 @@
 # @gqless/react
 
+## 2.0.12
+
+### Patch Changes
+
+- c54375d: add "usePaginatedQuery" hook
+- Updated dependencies [85a389c]
+- Updated dependencies [cca9d02]
+- Updated dependencies [0904297]
+  - gqless@2.0.11
+
 ## 2.0.11
 
 ### Patch Changes
