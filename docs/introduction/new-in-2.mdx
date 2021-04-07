@@ -16,8 +16,8 @@ will perform compared to v1.
 ## Typescript Performance
 
 v2 also redid how types are generated, avoiding type explosions that happened in v1. The types generated alongside
-your schema are now just types, rather than typed instances of classes. This flattens things quite a bit, and means
-even on very large schemas we've seen no performance issues.
+your schema are now just types, rather than typed instances of classes. This flattens things quite a bit, and we've seen no performance issues,
+even on very large schemas .
 
 ## Mutations
 
@@ -29,18 +29,20 @@ v2 adds [subscriptions](/core/subscriptions) support.
 
 ## Caching strategies and fetch policies
 
-v2 adds [caching strategies](/core/persistence) that allow your queries to automatically resolve previously fetched data. It supports the `stale-while-revalidate` pattern
+v2 adds caching strategies and [persistence](/core/persistence), that allow your queries to automatically resolve previously fetched data. It supports the `stale-while-revalidate` pattern
 as well as `cache-and-network`, `cache-first`, `network-only` and `no-cache` policies, and lets you configure how you want your cache to persist for cross-session persistence.
 
-Built in [noramlized caching](/core/config#normalization) works as well, which will recognize the same object across different types of queries.
+Built in [**normalized caching**](/core/config#normalization) works as well, which will recognize the same object across different types of queries.
 
 ## Server-side Rendering
 
-v2 adds Server-Side rendering (**SSR**) support first-class.
+v2 adds Server-Side rendering (**SSR**) first-class support.
+
+Check [React Server-Side Rendering](/react/ssr)
 
 ## React Hooks
 
-v2 removes the need to use the higher order component, and lets you just use a [simple useQuery hook](/react/query) for React.
+v2 removes the need to only use a higher order component, and lets you just use a [simple useQuery hook](/react/query) for React.
 
 Alongside that, there are [many new hooks that handle common use cases](/react/basic-usage):
 
@@ -52,7 +54,6 @@ Alongside that, there are [many new hooks that handle common use cases](/react/b
 - **useMetaState**: Lets you hook into the fetch state of gqless and output errors.
 - **useHydrateCache**: For restoring SSR state to the client.
 
-
 As well as some helpers:
 
 - **prepareQuery**: Extract queries above components, letting you do fancier early-fetching on important queries.
@@ -60,7 +61,7 @@ As well as some helpers:
 
 ## Revamped configuration
 
-v2 adds many new configuration options, with highlights including `retry` for retrying failed queries automatically.
+v2 adds many new [Core](/core/config) and [React](/react/config) configuration options, with highlights including `retry` for retrying failed queries automatically.
 
 ## Uploads
 
