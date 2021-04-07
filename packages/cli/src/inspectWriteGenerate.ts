@@ -1,6 +1,6 @@
 import { existsSync } from 'fs';
 import { promises } from 'fs';
-import { buildSchema, GraphQLSchema } from 'graphql';
+import { buildSchema, GraphQLSchema, buildClientSchema } from 'graphql';
 import { resolve } from 'path';
 
 import { defaultConfig, gqlessConfigPromise } from './config';
@@ -103,7 +103,18 @@ export async function inspectWriteGenerate({
         encoding: 'utf-8',
       });
 
-      schema = buildSchema(file);
+      if (endpoint.endsWith('.json')) {
+        const parsedFile = JSON.parse(file);
+
+        if (!parsedFile?.data?.__schema)
+          throw Error(
+            'Invalid JSON introspection result, expected "data.__schema" field.'
+          );
+
+        schema = buildClientSchema(parsedFile.data);
+      } else {
+        schema = buildSchema(file);
+      }
     } else {
       throw Error(
         `File "${endpoint}" doesn't exists. If you meant to inspect a GraphQL API, make sure to put http:// or https:// in front of it.`
