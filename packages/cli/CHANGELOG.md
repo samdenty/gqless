@@ -1,5 +1,11 @@
 # @gqless/cli
 
+## 2.0.14
+
+### Patch Changes
+
+- 7e084fb: accept json introspection schema result
+
 ## 2.0.13
 
 ### Patch Changes
