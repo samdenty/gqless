@@ -9,27 +9,26 @@ and other patterns easier.
 
 ## Runtime Performance
 
-v2 is dramatically faster at fetching, especially with large amounts of data. This is due to re-doing how
-the schema is generated to avoid creating many intermediate objects. The larger your query result is, the better version 2
+V2 is dramatically faster at fetching, especially with large amounts of data. The schema format has too rewritten to avoid creating many intermediate objects. The larger your query result is, the better version 2
 will perform compared to v1.
 
 ## Typescript Performance
 
-v2 also redid how types are generated, avoiding type explosions that happened in v1. The types generated alongside
-your schema are now just types, rather than typed instances of classes. This flattens things quite a bit, and we've seen no performance issues,
+
+V2 also changes how types are generated, dramatically increasing performance. This flattens things quite a bit, and we've seen no performance issues,
 even on very large schemas .
 
 ## Mutations
 
-v2 adds [mutations](/core/mutations) support first class. They work very similarly to queries, using the `mutation` object.
+V2 adds [mutations](/core/mutations) support - they work similarly to queries, using the `mutation` object.
 
 ## Subscriptions
 
-v2 adds [subscriptions](/core/subscriptions) support.
+V2 adds [subscriptions](/core/subscriptions) support.
 
 ## Caching strategies and fetch policies
 
-v2 adds caching strategies and [persistence](/core/persistence), that allow your queries to automatically resolve previously fetched data. It supports the `stale-while-revalidate` pattern
+V2 adds caching strategies and [persistence](/core/persistence), that allow your queries to automatically resolve previously fetched data. It supports the `stale-while-revalidate` pattern
 as well as `cache-and-network`, `cache-first`, `network-only` and `no-cache` policies, and lets you configure how you want your cache to persist for cross-session persistence.
 
 Built in [**normalized caching**](/core/config#normalization) works as well, which will recognize the same object across different types of queries.
@@ -42,7 +41,7 @@ Check [React Server-Side Rendering](/react/ssr)
 
 ## React Hooks
 
-v2 removes the need to only use a higher order component, and lets you just use a [simple useQuery hook](/react/query) for React.
+V2 removes the need to only use a higher order component, and lets you just use a [simple useQuery hook](/react/query) for React.
 
 Alongside that, there are [many new hooks that handle common use cases](/react/basic-usage):
 
@@ -61,8 +60,8 @@ As well as some helpers:
 
 ## Revamped configuration
 
-v2 adds many new [Core](/core/config) and [React](/react/config) configuration options, with highlights including `retry` for retrying failed queries automatically.
+V2 adds many new [Core](/core/config) and [React](/react/config) configuration options, with highlights including `retry` for retrying failed queries automatically.
 
 ## Uploads
 
-v2 adds support for [uploading files](/core/graphql-upload).
+V2 adds support for [uploading files](/core/graphql-upload).
