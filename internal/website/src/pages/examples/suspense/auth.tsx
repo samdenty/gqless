@@ -12,14 +12,14 @@ import { useLocation } from '@docusaurus/router';
 
 import { ExamplesPage } from '../../../components/Examples/App';
 import {
-  StackBlitzEmbed,
-  StackBlitzProps,
-} from '../../../components/Examples/StackblitzEmbed';
+  CodeSandboxEmbed,
+  EmbedProps,
+} from '../../../components/Examples/Embed';
 
 export default function Page() {
   const { hash } = useLocation();
 
-  const { file, initialPath } = useMemo<StackBlitzProps>(() => {
+  const { file, initialPath } = useMemo<EmbedProps>(() => {
     switch (hash) {
       case '#headers': {
         return {
@@ -77,7 +77,7 @@ export default function Page() {
           </ListItem>
         </UnorderedList>
       </Stack>
-      <StackBlitzEmbed file={file} initialPath={initialPath} />
+      <CodeSandboxEmbed file={file} initialPath={initialPath} />
     </ExamplesPage>
   );
 }

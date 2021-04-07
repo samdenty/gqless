@@ -4,7 +4,7 @@ import { Heading, Text } from '@chakra-ui/react';
 import Link from '@docusaurus/Link';
 
 import { ExamplesPage } from '../../../components/Examples/App';
-import { StackBlitzEmbed } from '../../../components/Examples/StackblitzEmbed';
+import { CodeSandboxEmbed } from '../../../components/Examples/Embed';
 
 export default function Page() {
   return (
@@ -15,7 +15,7 @@ export default function Page() {
         <Link to="/react/query#usequery">useQuery</Link> and{' '}
         <Link to="/react/query#graphql-hoc">graphql HOC</Link>.
       </Text>
-      <StackBlitzEmbed file="src/components/Hello.tsx" initialPath="/" />
+      <CodeSandboxEmbed file="src/components/Hello.tsx" initialPath="/" />
     </ExamplesPage>
   );
 }

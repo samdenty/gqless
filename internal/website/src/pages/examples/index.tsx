@@ -33,8 +33,8 @@ export default function Page() {
         <Heading as="h2">Online Editor and Visualization</Heading>
         <Text>
           These examples are made using{' '}
-          <Link to="http://stackblitz.io/">
-            <b>StackBlitz</b>
+          <Link to="https://codesandbox.io/">
+            <b>CodeSandbox</b>
           </Link>
           , which allows you to modify the examples and play with gqless{' '}
           <b>without installing anything</b>.

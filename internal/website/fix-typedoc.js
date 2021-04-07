@@ -47,6 +47,10 @@ async function main() {
       );
     })
   );
+
+  spawnSync('node', ['./node_modules/pretty-quick/bin/pretty-quick.js'], {
+    stdio: 'ignore',
+  });
 }
 
 main().catch((err) => {

@@ -93,7 +93,7 @@ const App = ({ children }: { children?: AppChildren }) => {
   return (
     <Flex flexDirection="column">
       <Topbar />
-      <Flex flex="1" overflow="hidden" h="calc(100vh - 80px)" m="2px">
+      <Flex flex="1" m="2px">
         <Sidebar display={{ base: 'none', md: 'flex' }} />
 
         <Box
