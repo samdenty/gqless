@@ -21,10 +21,6 @@
   <img alt="Example usage" src="https://user-images.githubusercontent.com/13242392/112103674-fddc4980-8ba1-11eb-8c83-b527dcb0243d.PNG">
 </a>
 
-<h4 align="center">
-  By <a href="https://github.com/samdenty">Sam Denty</a>, <a href="https://github.com/natew">Nate Wienert</a>, <a href="https://github.com/PabloSzx">Pablo Sáez</a>, et al.
-</h4>
-
 ---
 
 Head on over to [gqless.com](https://gqless.com), to explore the features and documentation.
