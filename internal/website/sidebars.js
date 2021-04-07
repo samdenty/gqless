@@ -5,6 +5,7 @@ module.exports = {
       'introduction/installation',
       'introduction/features',
       'introduction/motivation',
+      'introduction/new-in-2',
     ],
     CLI: ['cli/config', 'cli/codegen', 'cli/javascript', 'cli/programmatic'],
     React: [
@@ -28,6 +29,7 @@ module.exports = {
       'core/basic-usage',
       'core/helpers',
       'core/config',
+      'core/mutations',
       'core/subscriptions',
       'core/persistence',
       'core/graphql-upload',
