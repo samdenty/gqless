@@ -31,10 +31,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node }}-
 
-      - uses: pnpm/action-setup@v1.2.1
-        with:
-          version: latest
-          run_install: false
+      - run: npm install -g pnpm@latest
       - name: Node version
         run: node --version
       - name: pnpm version
