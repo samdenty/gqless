@@ -20,7 +20,7 @@ hide_title: true
 
 • `Optional` **error**: _gqlessError_
 
-Inherited from: void
+Inherited from: UseRefetchReducerState.error
 
 Defined in: [react/src/query/useRefetch.ts:20](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L20)
 
@@ -30,7 +30,7 @@ Defined in: [react/src/query/useRefetch.ts:20](https://github.com/gqless/gqless/
 
 • **isLoading**: _boolean_
 
-Inherited from: void
+Inherited from: UseRefetchReducerState.isLoading
 
 Defined in: [react/src/query/useRefetch.ts:19](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useRefetch.ts#L19)
 

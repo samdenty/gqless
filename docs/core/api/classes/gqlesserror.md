@@ -32,7 +32,7 @@ hide_title: true
 
 **Returns:** [_gqlessError_](gqlesserror.md)
 
-Overrides: void
+Overrides: Error.constructor
 
 Defined in: [packages/gqless/src/Error/index.ts:5](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Error/index.ts#L5)
 
@@ -50,7 +50,7 @@ Defined in: [packages/gqless/src/Error/index.ts:4](https://github.com/gqless/gql
 
 • **message**: _string_
 
-Inherited from: void
+Inherited from: Error.message
 
 Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.es5.d.ts:974
 
@@ -60,7 +60,7 @@ Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.
 
 • **name**: _string_
 
-Inherited from: void
+Inherited from: Error.name
 
 Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.es5.d.ts:973
 
@@ -78,7 +78,7 @@ Defined in: [packages/gqless/src/Error/index.ts:5](https://github.com/gqless/gql
 
 • `Optional` **stack**: _string_
 
-Inherited from: void
+Inherited from: Error.stack
 
 Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.es5.d.ts:975
 
@@ -105,11 +105,11 @@ Optional override for formatting stack traces
 
 **Returns:** _any_
 
-Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/globals.d.ts:11
+Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/globals.d.ts:11
 
-Inherited from: void
+Inherited from: Error.prepareStackTrace
 
-Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/globals.d.ts:11
+Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/globals.d.ts:11
 
 ---
 
@@ -117,9 +117,9 @@ Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/glo
 
 ▪ `Static` **stackTraceLimit**: _number_
 
-Inherited from: void
+Inherited from: Error.stackTraceLimit
 
-Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/globals.d.ts:13
+Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/globals.d.ts:13
 
 ## Methods
 
@@ -154,9 +154,9 @@ Create .stack property on a target object
 
 **Returns:** _void_
 
-Inherited from: void
+Inherited from: Error.captureStackTrace
 
-Defined in: node_modules/.pnpm/@types/node@14.14.37/node_modules/@types/node/globals.d.ts:4
+Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/globals.d.ts:4
 
 ---
 

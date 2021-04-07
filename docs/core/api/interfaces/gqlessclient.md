@@ -197,7 +197,7 @@ Defined in: [packages/gqless/src/Client/client.ts:178](https://github.com/gqless
 
 **Returns:** _string_
 
-Inherited from: void
+Inherited from: PersistenceHelpers.backupPersistence
 
 Defined in: [packages/gqless/src/Cache/persistence.ts:9](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/persistence.ts#L9)
 
@@ -216,7 +216,7 @@ Defined in: [packages/gqless/src/Cache/persistence.ts:9](https://github.com/gqle
 
 **Returns:** _Promise_<boolean\>
 
-Inherited from: void
+Inherited from: PersistenceHelpers.restorePersistence
 
 Defined in: [packages/gqless/src/Cache/persistence.ts:11](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/persistence.ts#L11)
 
@@ -231,6 +231,6 @@ Defined in: [packages/gqless/src/Cache/persistence.ts:11](https://github.com/gql
 
 **Returns:** _boolean_
 
-Inherited from: void
+Inherited from: PersistenceHelpers.restorePersistence
 
 Defined in: [packages/gqless/src/Cache/persistence.ts:15](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/persistence.ts#L15)

@@ -17,16 +17,12 @@
     "dev:react": "node dev-react.mjs",
     "dev:start": "pnpm start -r --no-bail --no-sort",
     "dev:test": "pnpm test:watch -r --no-bail --no-sort --stream",
-    "docs:build": "pnpm build:website",
+    "docs:build": "pnpm build:website && pretty-quick",
+    "prepare": "husky install",
     "publish:all": "changeset version && pnpm i && pnpm test && pnpm -r publish --access public",
     "test": "jest --clearCache && pnpm test -r --no-sort --no-bail --stream",
     "website": "pnpm -r --filter website start",
-    "website:build": "pnpm -r --filter website docs:build"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
+    "website:build": "pnpm -r --filter website docs:build && pretty-quick"
   },
   "dependencies": {
     "bufferutil": "^4.0.3",
@@ -37,7 +33,7 @@
     "open": "^8.0.5",
     "ts-jest": "^26.5.4",
     "ts-node": "^9.1.1",
-    "tslib": "^2.1.0",
+    "tslib": "^2.2.0",
     "tsup": "^4.8.21",
     "typescript": "^4.2.3",
     "utf-8-validate": "^5.0.4",
@@ -48,9 +44,9 @@
     "@babel/plugin-proposal-optional-chaining": "^7.13.12",
     "@changesets/cli": "^2.15.0",
     "@types/node": "^14.14.37",
-    "concurrently": "^6.0.0",
+    "concurrently": "^6.0.1",
     "fkill": "^7.1.1",
-    "husky": "^4.3.8",
+    "husky": "^6.0.0",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
     "rimraf": "^3.0.2"

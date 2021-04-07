@@ -22,7 +22,7 @@ hide_title: true
 
 Cache snapshot, returned from `prepareReactRender`
 
-Overrides: void
+Overrides: Partial.cacheSnapshot
 
 Defined in: [react/src/ssr/ssr.ts:12](https://github.com/gqless/gqless/blob/master/packages/react/src/ssr/ssr.ts#L12)
 
@@ -37,6 +37,6 @@ If it should refetch everything after the component is mounted
 **`default`**
 false
 
-Overrides: void
+Overrides: Partial.shouldRefetch
 
 Defined in: [react/src/ssr/ssr.ts:19](https://github.com/gqless/gqless/blob/master/packages/react/src/ssr/ssr.ts#L19)
