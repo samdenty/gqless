@@ -235,6 +235,8 @@ export function createUsePaginatedQuery<
 
     const setSuspensePromise = useSuspensePromise(optsRef);
 
+    const isMerging = useRef(0);
+
     const fetchMore = useCallback(
       (
         newArgs?:
@@ -255,7 +257,12 @@ export function createUsePaginatedQuery<
               uniqBy,
               sortBy,
             };
-            mergeResult = optsRef.current.merge(params);
+            try {
+              ++isMerging.current;
+              mergeResult = optsRef.current.merge(params);
+            } finally {
+              Promise.resolve().then(() => --isMerging.current);
+            }
           }
 
           return mergeResult === undefined ? incomingData : mergeResult;
@@ -328,6 +335,8 @@ export function createUsePaginatedQuery<
       hookSelections,
       eventHandler,
       onChange() {
+        if (isMerging.current) return;
+
         fetchMore(undefined, 'cache-first');
       },
     });
