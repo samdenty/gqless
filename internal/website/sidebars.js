@@ -21,7 +21,7 @@ module.exports = {
       'react/api-reference',
       {
         type: 'category',
-        label: 'Auto-generated API Reference',
+        label: 'API Reference',
         items: require('./sidebars/react.js'),
       },
     ],
@@ -33,15 +33,13 @@ module.exports = {
       'core/subscriptions',
       'core/persistence',
       'core/graphql-upload',
-      'core/api-reference',
       {
         type: 'category',
-        label: 'Auto-generated API Reference',
+        label: 'API Reference',
         items: require('./sidebars/core.js'),
       },
     ],
     'Development Tools': ['development/logger'],
-    FAQ: ['faq'],
-    Contributing: ['contributing'],
+    FAQ: ['faq', 'contributing'],
   },
 };

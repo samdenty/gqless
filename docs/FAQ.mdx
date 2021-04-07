@@ -3,12 +3,6 @@ id: faq
 title: Frequently asked questions
 ---
 
-## How does it work?
-
-gqless creates an object using information from your schema. Accessing new properties adds them to the current "commit". GraphQL queries are then generated every few milliseconds.
-
-The response from the query is merged into the cache. Now when you access the same properties again, the newly fetched values are returned.
-
 ## All scalars can be undefined?
 
 For `gqless` to be able to work, in the first pass of your data usage, every GraphQL [Scalar](https://graphql.org/learn/schema/#scalar-types) and [Enum](https://graphql.org/learn/schema/#enumeration-types) is returned as `undefined`,
