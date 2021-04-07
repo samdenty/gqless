@@ -38,9 +38,7 @@ h6 {
 }
 
 article h1 {
-  background: linear-gradient(rgb(140, 152, 243), rgb(58, 80, 229));
-  background-clip: text;
-  -webkit-text-fill-color: rgba(0, 0, 0, 0);
+  color: rgb(58, 80, 229);
 }
 
 article h2,
@@ -48,9 +46,7 @@ article h3,
 article h4,
 article h5,
 article h6 {
-  background: linear-gradient(rgb(165, 174, 246), rgb(108, 121, 225));
-  background-clip: text;
-  -webkit-text-fill-color: rgba(0, 0, 0, 0);
+  color: rgb(108, 121, 225);
 }
 
 button {
