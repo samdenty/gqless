@@ -1,5 +1,11 @@
 # @gqless/react
 
+## 2.0.13
+
+### Patch Changes
+
+- c25bb2e: [usePaginatedQuery] pause cache changes while merge
+
 ## 2.0.12
 
 ### Patch Changes
