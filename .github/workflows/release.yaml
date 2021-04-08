@@ -2,9 +2,13 @@ name: Release
 
 on:
   push:
+    paths-ignore:
+      - 'docs/**'
+      - 'internal/website/**'
+      - '.vscode/**'
+      - '.husky/**'
     branches:
       - master
-
 jobs:
   release:
     name: Release

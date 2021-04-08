@@ -1,6 +1,18 @@
 name: Tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'internal/website/**'
+      - '.vscode/**'
+      - '.husky/**'
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'internal/website/**'
+      - '.vscode/**'
+      - '.husky/**'
 
 env:
   CI: true
