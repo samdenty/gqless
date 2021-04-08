@@ -125,9 +125,9 @@ module.exports = {
       ],
       copyright: `
 <div>
-  <p>${`Copyright © ${new Date().getFullYear()}`}</p>
+  <p>${`© Copyright ${new Date().getFullYear()} GQless`}</p>
   <a href="https://vercel.com/?utm_source=gqless&utm_campaign=oss">
-    <img alt="Powered By Vercel" src="/powered-by-vercel.svg" />
+    <img alt="Powered By Vercel" src="/powered-by-vercel.svg" style="float: right; margin-top: -14px; opacity: 0.3; height: 30px" />
   </a>
 </div>
       `.trim(),
