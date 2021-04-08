@@ -23,7 +23,7 @@
 
 ---
 
-Head on over to [gqless.com](https://gqless.com), to explore the features and documentation.
+Head over to [gqless.com](https://gqless.com), to explore features and documentation.
 
 ---
 
@@ -48,8 +48,4 @@ Documentation, bug reports, pull requests, and all other contributions are welco
 <a href="https://opencollective.com/gqless/organization/8/website"><img src="https://opencollective.com/gqless/organization/8/avatar.svg"></a>
 <a href="https://opencollective.com/gqless/organization/9/website"><img src="https://opencollective.com/gqless/organization/9/avatar.svg"></a>
 
-## Vercel
-
-Website powered by [Vercel](https://vercel.com/?utm_source=gqless&utm_campaign=oss)
-
-[![Powered by Vercel](./internal/website/static/powered-by-vercel.svg)](https://vercel.com/?utm_source=gqless&utm_campaign=oss)
+Docs powered by [Vercel](https://vercel.com/?utm_source=gqless&utm_campaign=oss)
