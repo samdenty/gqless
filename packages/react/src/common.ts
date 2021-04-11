@@ -57,7 +57,7 @@ export function useForceUpdate() {
       () => {
         if (wasCalled.current) return;
         wasCalled.current = true;
-        update();
+        setTimeout(update);
       },
       {
         wasCalled,
