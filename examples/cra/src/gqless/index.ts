@@ -45,7 +45,11 @@ const subscriptionsClient = createSubscriptionsClient({
   wsEndpoint: "wss://examples-api.gqless.com/graphql",
 });
 
-export const client = createClient<GeneratedSchema, SchemaObjectTypesNames, SchemaObjectTypes>({
+export const client = createClient<
+  GeneratedSchema,
+  SchemaObjectTypesNames,
+  SchemaObjectTypes
+>({
   schema: generatedSchema,
   scalarsEnumsHash,
   queryFetcher,
@@ -62,7 +66,14 @@ export const client = createClient<GeneratedSchema, SchemaObjectTypesNames, Sche
   },
 });
 
-export const { query, mutation, mutate, subscription, resolved, refetch } = client;
+export const {
+  query,
+  mutation,
+  mutate,
+  subscription,
+  resolved,
+  refetch,
+} = client;
 
 export const {
   graphql,

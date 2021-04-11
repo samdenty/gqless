@@ -1,22 +1,32 @@
 /** @jsxImportSource @emotion/react */
 
+import { getFields } from "gqless";
 import { useRef } from "react";
 
-import { useMutation, query } from "../gqless";
+import { CursorConnectionArgs, useMutation } from "../gqless";
 
-export function CreatePost() {
+export function CreatePost({
+  fetchMore,
+}: {
+  fetchMore: (args: CursorConnectionArgs) => void;
+}) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [createPost, { isLoading }] = useMutation(
     (mutation, title: string) => {
-      return mutation.createPost({
-        post: {
-          title,
-        },
-      }).title;
+      return getFields(
+        mutation.createPost({
+          post: {
+            title,
+          },
+        })
+      );
     },
     {
-      refetchQueries: [query.currentUser],
-      awaitRefetchQueries: true,
+      onCompleted(_data) {
+        fetchMore({
+          first: 5,
+        });
+      },
     }
   );
 

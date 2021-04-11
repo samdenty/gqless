@@ -6,15 +6,15 @@ export function useCurrentUser(suspense = true) {
     prepare({ prepass, query: { currentUser } }) {
       prepass(currentUser, "error", "token", "user.email");
     },
-    suspense
+    suspense,
   });
 
   const token = currentUser.token;
   useEffect(() => {
-    setAuthorizationToken(token);
+    if (token !== undefined) setAuthorizationToken(token);
   }, [token]);
 
   return {
-    currentUser
+    currentUser,
   };
 }

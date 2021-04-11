@@ -89,6 +89,7 @@ export const generatedSchema = {
     register: { __type: "AuthResult!", __args: { input: "RegisterInput!" } },
     createPost: { __type: "Post!", __args: { post: "PostCreate!" } },
     updatePost: { __type: "Post!", __args: { post: "PostUpdate!" } },
+    removeOwnPost: { __type: "Boolean!", __args: { postId: "String!" } },
   },
   subscription: {},
   CursorConnectionArgs: {
@@ -166,8 +167,17 @@ export interface Query {
      */
     n?: Maybe<Scalars["Int"]>;
   }) => Array<ScalarsEnums["String"]>;
+  /**
+   * Current authenticated user
+   */
   currentUser: AuthResult;
+  /**
+   * Get all published posts
+   */
   publicPosts: (args: { input: CursorConnectionArgs }) => PostsConnection;
+  /**
+   * Get all current created categories
+   */
   postsCategories: Array<Category>;
 }
 
@@ -175,10 +185,28 @@ export interface Mutation {
   __typename: "Mutation" | undefined;
   hello: ScalarsEnums["String"];
   setName: (args: { name: Scalars["String"] }) => User;
+  /**
+   * Login user
+   */
   login: (args: { input: LoginInput }) => AuthResult;
+  /**
+   * Register user
+   */
   register: (args: { input: RegisterInput }) => AuthResult;
+  /**
+   * [Authenticated] Create new post
+   */
   createPost: (args: { post: PostCreate }) => Post;
+  /**
+   * [Authenticated] Update existing post
+   */
   updatePost: (args: { post: PostUpdate }) => Post;
+  /**
+   * [Authenticated] Remove own post
+   */
+  removeOwnPost: (args: {
+    postId: Scalars["String"];
+  }) => ScalarsEnums["Boolean"];
 }
 
 export interface Subscription {
@@ -199,6 +227,9 @@ export interface User {
   name?: Maybe<ScalarsEnums["String"]>;
   role: ScalarsEnums["UserRole"];
   email: ScalarsEnums["String"];
+  /**
+   * Posts created by user
+   */
   posts: (args: { input: CursorConnectionArgs }) => PostsConnection;
 }
 

@@ -8,18 +8,20 @@ import { useCurrentUser } from "../hooks/currentUser";
 
 export function Login() {
   const { currentUser } = useCurrentUser();
-  const [login, { data, isLoading, error }] = useMutation(({ login }, email: string) => {
-    return prepass(
-      login({
-        input: {
-          email,
-        },
-      }),
-      "user.email",
-      "error",
-      "token"
-    );
-  });
+  const [login, { data, isLoading, error }] = useMutation(
+    ({ login }, email: string) => {
+      return prepass(
+        login({
+          input: {
+            email,
+          },
+        }),
+        "user.email",
+        "error",
+        "token"
+      );
+    }
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   if (currentUser.user) return <p>Already Logged in</p>;
@@ -29,9 +31,15 @@ export function Login() {
   return (
     <div>
       {errorMessage ? <p css={{ color: "red" }}>{errorMessage}</p> : null}
-      <form css={{ display: "flex", flexDirection: "column", maxWidth: "350px" }}>
+      <form
+        css={{ display: "flex", flexDirection: "column", maxWidth: "350px" }}
+      >
         <label>Email</label>
-        <input css={{ fontSize: "1.2em" }} ref={inputRef} placeholder="Put your email" />
+        <input
+          css={{ fontSize: "1.2em" }}
+          ref={inputRef}
+          placeholder="Put your email"
+        />
 
         <button
           css={{

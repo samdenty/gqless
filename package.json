@@ -19,6 +19,7 @@
     "dev:test": "pnpm test:watch -r --no-bail --no-sort --stream",
     "docs:build": "pnpm build:website && pretty-quick",
     "prepare": "husky install",
+    "pretty": "pretty-quick",
     "publish:all": "changeset version && pnpm i && pnpm test && pnpm -r publish --access public",
     "test": "jest --clearCache && pnpm test -r --no-sort --no-bail --stream",
     "website": "pnpm -r --filter website start",

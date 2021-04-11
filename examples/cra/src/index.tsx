@@ -62,8 +62,8 @@ function Navigation() {
           justifyContent: "space-around",
           listStyle: "none",
           li: {
-            padding: "5px"
-          }
+            padding: "5px",
+          },
         }}
       >
         <li>

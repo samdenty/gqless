@@ -1,5 +1,5 @@
 {
-  "name": "gqless-create-react-app-example",
+  "name": "cra-example",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,8 +8,7 @@
     "eject": "react-scripts eject",
     "generate": "gqless generate",
     "prepare-lock": "npm install --package-lock-only",
-    "start": "react-scripts start",
-    "test": "react-scripts test"
+    "start": "react-scripts start"
   },
   "browserslist": {
     "production": [
@@ -34,10 +33,10 @@
     "@emotion/css": "^11.1.3",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.1.5",
-    "@gqless/cli": "^2.0.13",
-    "@gqless/logger": "^2.0.10",
-    "@gqless/react": "^2.0.12",
-    "@gqless/subscriptions": "^1.0.10",
+    "@gqless/cli": "workspace:^2.0.13",
+    "@gqless/logger": "workspace:^2.0.10",
+    "@gqless/react": "workspace:^2.0.12",
+    "@gqless/subscriptions": "workspace:^1.0.10",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.1",

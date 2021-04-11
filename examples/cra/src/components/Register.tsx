@@ -8,18 +8,20 @@ import { useCurrentUser } from "../hooks/currentUser";
 
 export function Register() {
   const { currentUser } = useCurrentUser();
-  const [register, { data, isLoading, error }] = useMutation(({ register }, email: string) => {
-    return prepass(
-      register({
-        input: {
-          email,
-        },
-      }),
-      "user.email",
-      "error",
-      "token"
-    );
-  });
+  const [register, { data, isLoading, error }] = useMutation(
+    ({ register }, email: string) => {
+      return prepass(
+        register({
+          input: {
+            email,
+          },
+        }),
+        "user.email",
+        "error",
+        "token"
+      );
+    }
+  );
   const inputRef = useRef<HTMLInputElement>(null);
 
   if (currentUser.user) return <p>Already Logged in</p>;
@@ -29,9 +31,15 @@ export function Register() {
   return (
     <div>
       {errorMessage ? <p css={{ color: "red" }}>{errorMessage}</p> : null}
-      <form css={{ display: "flex", flexDirection: "column", maxWidth: "350px" }}>
+      <form
+        css={{ display: "flex", flexDirection: "column", maxWidth: "350px" }}
+      >
         <label>Email</label>
-        <input css={{ fontSize: "1.2em" }} ref={inputRef} placeholder="Put your email" />
+        <input
+          css={{ fontSize: "1.2em" }}
+          ref={inputRef}
+          placeholder="Put your email"
+        />
 
         <button
           css={{
