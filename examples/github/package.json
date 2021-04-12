@@ -12,7 +12,7 @@
   "dependencies": {
     "@gqless/cli": "workspace:^2.0.14",
     "dotenv": "^8.2.0",
-    "gqless": "workspace:^2.0.11",
+    "gqless": "workspace:^2.0.12",
     "test-utils": "workspace:^0.1.0"
   },
   "devDependencies": {

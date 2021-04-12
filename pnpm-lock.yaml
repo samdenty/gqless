@@ -64,7 +64,7 @@ importers:
     specifiers:
       '@gqless/cli': workspace:^2.0.14
       dotenv: ^8.2.0
-      gqless: workspace:^2.0.11
+      gqless: workspace:^2.0.12
       isomorphic-unfetch: ^3.1.0
       jest: ^26.6.3
       test-utils: workspace:^0.1.0
@@ -86,7 +86,7 @@ importers:
       '@types/randomstring': ^1.1.6
       build-utils: workspace:*
       fastify: ^3.14.1
-      gqless: workspace:^2.0.11
+      gqless: workspace:^2.0.12
       graphql: ^15.5.0
       jest: ^26.6.3
       lodash: ^4.17.21
@@ -129,7 +129,7 @@ importers:
       '@emotion/styled': ^11.1.5
       '@gqless/cli': workspace:^2.0.14
       '@gqless/logger': workspace:^2.0.10
-      '@gqless/react': workspace:^2.0.13
+      '@gqless/react': workspace:^2.0.14
       '@gqless/subscriptions': workspace:^1.0.10
       '@react-native-async-storage/async-storage': ^1.15.2
       '@types/extract-files': ^8.1.0
@@ -147,7 +147,7 @@ importers:
       fastify: ^3.14.1
       fastify-nextjs: ^5.3.0
       framer-motion: ^4.1.2
-      gqless: workspace:^2.0.11
+      gqless: workspace:^2.0.12
       graphql: ^15.5.0
       graphql-upload: ^11.0.0
       jest: ^26.6.3
@@ -561,7 +561,7 @@ importers:
       '@types/react-dom': ^17.0.3
       build-utils: workspace:*
       get-port: ^5.1.1
-      gqless: workspace:^2.0.11
+      gqless: workspace:^2.0.12
       graphql: ^15.5.0
       jest: ^26.6.3
       react: ^17.0.2
