@@ -1,5 +1,13 @@
 # @gqless/react
 
+## 2.0.14
+
+### Patch Changes
+
+- f14df08: fix `forceUpdate` race condition
+- Updated dependencies [c45ca0d]
+  - gqless@2.0.12
+
 ## 2.0.13
 
 ### Patch Changes

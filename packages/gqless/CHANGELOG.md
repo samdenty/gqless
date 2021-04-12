@@ -1,5 +1,11 @@
 # gqless
 
+## 2.0.12
+
+### Patch Changes
+
+- c45ca0d: add NPM readme
+
 ## 2.0.11
 
 ### Patch Changes
