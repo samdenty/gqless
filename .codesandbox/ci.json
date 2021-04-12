@@ -1,0 +1,5 @@
+{
+  "packages": ["packages/gqless", "packages/react", "packages/logger", "packages/subscriptions"],
+  "buildCommand": "build",
+  "sandboxes": ["/examples/react"]
+}
