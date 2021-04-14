@@ -254,8 +254,8 @@ describe('from file', () => {
         } from './schema.generated';
 
         const queryFetcher: QueryFetcher = async function (query, variables) {
-          // Modify \\"/graphql\\" if needed
-          const response = await fetch('/graphql', {
+          // Modify \\"/api/graphql\\" if needed
+          const response = await fetch('/api/graphql', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -441,8 +441,8 @@ describe('from file', () => {
         } from './schema.generated';
 
         const queryFetcher: QueryFetcher = async function (query, variables) {
-          // Modify \\"/graphql\\" if needed
-          const response = await fetch('/graphql', {
+          // Modify \\"/api/graphql\\" if needed
+          const response = await fetch('/api/graphql', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

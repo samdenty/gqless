@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "author": "PabloSz",
+  "author": "GQless <opensource@gqless.com>",
   "main": "dist/index.js",
   "module": "dist/mercurius-example.esm.js",
   "typings": "dist/index.d.ts",

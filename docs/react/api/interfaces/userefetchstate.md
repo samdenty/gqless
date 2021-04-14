@@ -18,7 +18,7 @@ hide_title: true
 
 ### error
 
-• `Optional` **error**: _gqlessError_
+• `Optional` **error**: _GQlessError_
 
 Inherited from: UseRefetchReducerState.error
 

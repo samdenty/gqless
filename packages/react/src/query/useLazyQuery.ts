@@ -1,4 +1,4 @@
-import { doRetry, GqlessClient, gqlessError, RetryOptions } from 'gqless';
+import { doRetry, GQlessClient, GQlessError, RetryOptions } from 'gqless';
 import { Dispatch, useCallback, useMemo, useReducer, useRef } from 'react';
 
 import {
@@ -22,7 +22,7 @@ export interface UseLazyQueryOptions<TData> {
 
 export interface UseLazyQueryState<TData> {
   data: TData | undefined;
-  error?: gqlessError;
+  error?: GQlessError;
   isLoading: boolean;
   isCalled: boolean;
 }
@@ -30,7 +30,7 @@ export interface UseLazyQueryState<TData> {
 type UseLazyQueryReducerAction<TData> =
   | { type: 'cache-found'; data: TData }
   | { type: 'success'; data: TData }
-  | { type: 'failure'; error: gqlessError }
+  | { type: 'failure'; error: GQlessError }
   | { type: 'loading' };
 
 function UseLazyQueryReducer<TData>(
@@ -116,7 +116,7 @@ export function createUseLazyQuery<
     subscription: object;
   }
 >(
-  client: GqlessClient<GeneratedSchema>,
+  client: GQlessClient<GeneratedSchema>,
   {
     defaults: {
       retry: defaultRetry,
@@ -185,7 +185,7 @@ export function createUseLazyQuery<
           : refFn
           ? () => refFn(clientQuery, args)
           : (() => {
-              throw new gqlessError(
+              throw new GQlessError(
                 'You have to specify a function to be resolved',
                 {
                   caller: callback,
@@ -221,7 +221,7 @@ export function createUseLazyQuery<
             return data;
           },
           (err) => {
-            const error = gqlessError.create(err, useLazyQuery);
+            const error = GQlessError.create(err, useLazyQuery);
             optsRef.current.onError?.(error);
             dispatch({
               type: 'failure',

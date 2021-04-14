@@ -1,0 +1,170 @@
+---
+id: helper-functions
+title: Helper Functions
+---
+
+## `prepass`
+
+A common pattern to do while using GQless is to just access manually some specified fields, so GQless can pick up your requirements faster.
+That allows preventing some possible "waterfalling", or simply to make sure to get all the fields requested in the same query,
+specially while using conditionals on possible nulls in your GraphQL Schema.
+
+For that use case we offer a very useful function called `prepass`, in which you can give it an object or array, and given some paths, it will traverse them,
+with some specific features:
+
+- You can specify the path with different syntaxes `"user.dog.name"`, `["user", "dog", "name"]` or `["user", { field: "pet", variables: { type: "dog" } }, "name"]`
+- You **don't** have to specify an array index, since if it finds an array, it will pass-through the **first non-null** value of it
+- If you have a field with arguments that you want to access, you can also specify it's value and it will automatically call it's function with that value.
+
+The only **disadvantages** we see are basically:
+
+- If it finds a function, and you don't specify it's variables, it can't check if all variables are actually optional, so it will call the function anyways without any variable, and that might result in a GraphQL error.
+- It doesn't have autocomplete 😔
+
+```ts
+import { prepass } from 'gqless';
+import { query } from '../gqless';
+
+prepass(
+  query.user,
+  'dog.name',
+  'address.country.name',
+  'address.country.location',
+  [
+    {
+      field: 'pet',
+      variables: {
+        type: 'dog',
+      },
+    },
+    'name',
+  ]
+  //...
+);
+```
+
+## `selectFields`
+
+Given an object or an array of objects, create a new object/array with the specified fields.
+
+### Features and Limitations
+
+- Allows to **select every field** of the proxy with a simple `"*"`.
+- But when it encounters a field with arguments, it only returns the function back, since it can't assume your intent,
+  even if all arguments are optional.
+- Specified keys can be composed via `foo.bar`
+- Specify recursive depth _(`1` by default)_
+- Bad Type-safety, it just returns the same type as the input
+
+### Examples
+
+```ts
+import { selectFields } from 'gqless';
+import { query } from '../gqless';
+
+const dataPicked = selectFields(query.user, ['name', 'address.city']);
+
+const dataEverything1Depth = selectFields(query.user, '*');
+
+const dataDeep = selectFields(query.user, '*', 2);
+```
+
+## `getFields`
+
+Given an object, pre-access the specified fields, and returns the object back.
+
+### Features and Limitations
+
+- Good Type-Safety
+- Allows keeping the proxies around.
+- If no keys are specified, it selects all the scalars of the object
+- You can only specify the first level of scalars
+- It doesn't do anything for objects inside objects
+- It skips fields with arguments
+
+```ts
+import { getFields, query, resolved } from 'gqless';
+
+const data = await resolved(() => {
+  return getFields(query.user, 'name', 'email');
+});
+
+// Proxy is kept, and you can pass it around safely
+// data == query.user
+```
+
+### `getArrayFields`
+
+We also have a helper to work with arrays, and works the same way as `getFields`.
+
+```ts
+import { getArrayFields, query, resolved } from 'gqless';
+
+const data = await resolved(() => {
+  return getArrayFields(query.allUsers, 'name', 'email');
+});
+
+// Proxy Array is kept, and you can pass it around safely
+// data == query.allUsers
+```
+
+## Type Casters
+
+If you find too annoying having to deal with `undefined` everywhere when
+by logic you can be completely sure that in runtime you are not dealing with actual `undefined`s, GQless also exports no-op functions
+with useful types that removes your `undefined`s.
+
+:::caution
+Use with caution, since you might encounter runtime errors if they are used unwisely
+:::
+
+:::tip
+You can also use the types that are being used for this functions for types-only usage.
+:::
+
+### `castNotSkeleton`
+
+Removes all the `undefined`s in 1 level of your object or array.
+
+This next example is a perfectly safe place to use it, since here `id` and `name` will always be actual values in it's return value, not `undefined`.
+
+```ts
+import { castNotSkeleton } from 'gqless';
+import { resolved, query } from '../gqless';
+
+const data = await resolved(() => {
+  const { id, name } = query.user;
+
+  return castNotSkeleton({
+    id,
+    name,
+  });
+});
+
+// query.user = { id: string | undefined; name: string | undefined; }
+// data = { id: string; name: string }
+```
+
+### `castNotSkeletonDeep`
+
+Removes all the `undefined`s **recursively** of your object or array.
+
+This next example is a perfectly safe place to use it, since here all the fields returned will always be actual values in it's return value, not `undefined`.
+
+```ts
+import { castNotSkeletonDeep } from 'gqless';
+import { resolved, query } from '../gqless';
+
+const data = await resolved(() => {
+  const { id, name, dogs } = query.user;
+
+  return castNotSkeletonDeep({
+    id,
+    name,
+    dogsNames: dogs.map((dog) => dog.name),
+  });
+});
+
+// query.user = { id: string | undefined; name: string | undefined; dogs: { name: string | undefined }[] }
+// data = { id: string; name: string; dogsNames: string[] }
+```

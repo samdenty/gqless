@@ -26,7 +26,7 @@ Defined in: [react/src/mutation/useMutation.ts:40](https://github.com/gqless/gql
 
 ### error
 
-• `Optional` **error**: _gqlessError_
+• `Optional` **error**: _GQlessError_
 
 Defined in: [react/src/mutation/useMutation.ts:41](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L41)
 

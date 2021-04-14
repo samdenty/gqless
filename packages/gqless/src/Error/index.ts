@@ -1,6 +1,6 @@
 import type { GraphQLError } from 'graphql';
 
-export class gqlessError extends Error {
+export class GQlessError extends Error {
   graphQLErrors?: ReadonlyArray<GraphQLError>;
   otherError?: unknown;
 
@@ -11,8 +11,8 @@ export class gqlessError extends Error {
       otherError,
       caller,
     }: {
-      graphQLErrors?: gqlessError['graphQLErrors'];
-      otherError?: gqlessError['otherError'];
+      graphQLErrors?: GQlessError['graphQLErrors'];
+      otherError?: GQlessError['otherError'];
       caller?: Function;
     } = {}
   ) {
@@ -34,14 +34,14 @@ export class gqlessError extends Error {
     };
   }
 
-  static create(error: unknown, caller?: Function): gqlessError {
-    let newError: gqlessError;
+  static create(error: unknown, caller?: Function): GQlessError {
+    let newError: GQlessError;
 
-    if (error instanceof gqlessError) newError = error;
+    if (error instanceof GQlessError) newError = error;
     else if (error instanceof Error)
-      newError = Object.assign(new gqlessError(error.message), error);
+      newError = Object.assign(new GQlessError(error.message), error);
     else
-      newError = new gqlessError('Unexpected error type', {
+      newError = new GQlessError('Unexpected error type', {
         otherError: error,
       });
 
@@ -54,7 +54,7 @@ export class gqlessError extends Error {
 
   static fromGraphQLErrors(errors: readonly GraphQLError[]) {
     return errors.length > 1
-      ? new gqlessError(
+      ? new GQlessError(
           `GraphQL Errors${
             process.env.NODE_ENV === 'production'
               ? ''
@@ -64,7 +64,7 @@ export class gqlessError extends Error {
             graphQLErrors: errors,
           }
         )
-      : new gqlessError(errors[0].message, {
+      : new GQlessError(errors[0].message, {
           graphQLErrors: errors,
         });
   }

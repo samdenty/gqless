@@ -1,4 +1,4 @@
-import { GqlessClient } from 'gqless';
+import { GQlessClient } from 'gqless';
 
 import {
   isAnySelectionIncluded,
@@ -23,7 +23,7 @@ export function createUseSubscription<
     subscription: object;
   }
 >(
-  client: GqlessClient<GeneratedSchema>,
+  client: GQlessClient<GeneratedSchema>,
   _opts: ReactClientOptionsWithDefaults
 ): UseSubscription<GeneratedSchema> {
   const {

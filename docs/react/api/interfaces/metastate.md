@@ -12,7 +12,7 @@ hide_title: true
 
 ### errors
 
-• `Optional` **errors**: _gqlessError_[]
+• `Optional` **errors**: _GQlessError_[]
 
 Defined in: [react/src/meta/useMetaState.ts:32](https://github.com/gqless/gqless/blob/master/packages/react/src/meta/useMetaState.ts#L32)
 

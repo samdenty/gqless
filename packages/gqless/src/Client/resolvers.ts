@@ -1,6 +1,6 @@
 import type { ExecutionResult, GraphQLError } from 'graphql';
 import { CacheInstance, createCache } from '../Cache';
-import { gqlessError } from '../Error';
+import { GQlessError } from '../Error';
 import { doRetry } from '../Error/retry';
 import { FetchEventData } from '../Events';
 import { NormalizationHandler } from '../Normalization';
@@ -66,7 +66,7 @@ export interface ResolveOptions<TData> {
           type: 'with-errors';
           unsubscribe: () => Promise<void>;
           data?: TData;
-          error: gqlessError;
+          error: GQlessError;
         }
       | {
           type: 'start' | 'complete';
@@ -449,7 +449,7 @@ export function createResolvers(
 
       return dataFn();
     } catch (err) {
-      throw gqlessError.create(err, resolved);
+      throw GQlessError.create(err, resolved);
     } finally {
       interceptorManager.removeInterceptor(interceptor);
       innerState.allowCache = prevAllowCache;
@@ -551,7 +551,7 @@ export function createResolvers(
       }
 
       if (errors?.length) {
-        throw gqlessError.fromGraphQLErrors(errors);
+        throw GQlessError.fromGraphQLErrors(errors);
       } else if (options.scheduler) {
         innerState.scheduler.errors.removeErrors(selections);
       }
@@ -567,7 +567,7 @@ export function createResolvers(
 
       return data as TData;
     } catch (err) {
-      const error = gqlessError.create(err, () => {});
+      const error = GQlessError.create(err, () => {});
       loggingPromise?.resolve({
         error,
         query,
@@ -606,7 +606,7 @@ export function createResolvers(
             (err) => {
               console.error(err);
               return {
-                error: gqlessError.create(err),
+                error: GQlessError.create(err),
                 selections: new Set(selections),
               };
             }
@@ -868,7 +868,7 @@ export function createResolvers(
         ),
       ]);
     } catch (err) {
-      throw gqlessError.create(err);
+      throw GQlessError.create(err);
     }
   }
 

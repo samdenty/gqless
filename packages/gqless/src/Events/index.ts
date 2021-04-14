@@ -1,13 +1,13 @@
 import { ExecutionResult } from 'graphql';
 
 import { CacheType } from '../Cache';
-import { gqlessError } from '../Error';
+import { GQlessError } from '../Error';
 import { Selection } from '../Selection';
 
 export interface FetchEventData {
   label?: string;
   executionResult?: Pick<ExecutionResult, 'data' | 'extensions'>;
-  error?: gqlessError;
+  error?: GQlessError;
   query: string;
   variables: Record<string, unknown> | undefined;
   cacheSnapshot: CacheType;

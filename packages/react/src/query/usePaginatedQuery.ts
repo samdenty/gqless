@@ -1,4 +1,4 @@
-import type { GqlessClient } from 'gqless';
+import type { GQlessClient } from 'gqless';
 import { Dispatch, useCallback, useMemo, useReducer, useRef } from 'react';
 
 import {
@@ -195,7 +195,7 @@ export function createUsePaginatedQuery<
     query: clientQuery,
     inlineResolved,
     eventHandler,
-  }: GqlessClient<GeneratedSchema>,
+  }: GQlessClient<GeneratedSchema>,
   {
     defaults: {
       paginatedQueryFetchPolicy: defaultFetchPolicy,

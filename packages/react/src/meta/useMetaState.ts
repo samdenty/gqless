@@ -1,4 +1,4 @@
-import type { GqlessClient, gqlessError, Selection } from 'gqless';
+import type { GQlessClient, GQlessError, Selection } from 'gqless';
 import type { SchedulerPromiseValue } from 'gqless/dist/Scheduler';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -16,7 +16,7 @@ export interface UseMetaStateOptions<T> {
   onStartFetching?: () => void;
   onDoneFetching?: () => void;
   onError?: (data: {
-    newError: gqlessError;
+    newError: GQlessError;
     selections: Selection[];
     isLastTry: boolean;
   }) => void;
@@ -29,14 +29,14 @@ export interface UseMetaStateOptions<T> {
 
 export interface MetaState {
   isFetching: boolean;
-  errors?: gqlessError[];
+  errors?: GQlessError[];
 }
 
 export interface UseMetaState {
   <T>(opts?: UseMetaStateOptions<T>): MetaState;
 }
 
-export function createUseMetaState(client: GqlessClient<any>) {
+export function createUseMetaState(client: GQlessClient<any>) {
   const scheduler = client.scheduler;
 
   const {
@@ -94,10 +94,10 @@ export function createUseMetaState(client: GqlessClient<any>) {
           isFetching = false;
         }
 
-        let errors: gqlessError[] | undefined;
+        let errors: GQlessError[] | undefined;
 
         if (hasFilterSelections) {
-          const errorsSet = new Set<gqlessError>();
+          const errorsSet = new Set<GQlessError>();
 
           selectionsToFilter.forEach((selection) => {
             const error = errorsMap.get(selection);

@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 /**
- * @type {import("@gqless/cli").GqlessConfig}
+ * @type {import("@gqless/cli").GQlessConfig}
  */
 const config = {
   endpoint: 'https://api.github.com/graphql',

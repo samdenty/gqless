@@ -1,12 +1,13 @@
 ---
 id: config
-title: React Configuration
-sidebar_label: Configuration
+title: React Client Configuration
+sidebar_label: Client Configuration
 ---
 
 The React Client has some configurations you can set manually:
 
 ```tsx
+// in your `destination` file specified by your gqless config
 createReactClient<GeneratedSchema>(client, {
   defaults: {
     // Here
@@ -20,17 +21,17 @@ In most functions available through the React Client you have some options you c
 
 The defaults value of some of them can be overriden here:
 
-| Name                      | Type                                                                         | Default Value              | Description                                                                                                                                                                 |
-| ------------------------- | ---------------------------------------------------------------------------- | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| suspense                  | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [graphql HOC](/react/query#graphql-hoc) and [useQuery](/react/query#usequery)                               |
-| lazyQuerySuspense         | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useLazyQuery](/react/query#uselazyquery)                                                                   |
-| transactionQuerySuspense  | `boolean`                                                                    | inherited from ` suspense` | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useTransactionQuery](/react/query#usetransactionquery)                                                     |
-| mutationSuspense          | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useMutation](/react/mutations#useMutation)                                                                 |
-| preparedSuspense          | `boolean`                                                                    | inherited from ` suspense` | Enable/Disable '[React Suspense](/react/suspense)' behavior for [prepareQuery hooks](/react/query#preparequery)                                                             |
-| paginatedQuerySuspense    | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [prepareQuery hooks](/react/query#preparequery)                                                             |
-| transactionFetchPolicy    | `"cache-and-network"` or `"cache-first"` or `"network-only"` or `"no-cache"` | `"cache-first"`            | '[fetchPolicy](/react/api-reference#fetch-policy)' of [useTransactionQuery](/react/query#usetransactionquery)                                                               |
-| lazyFetchPolicy           | `"cache-and-network"` or `"network-only"` or `"no-cache"`                    | `"network-only"`           | Partial '[fetchPolicy](/react/api-reference#fetch-policy)' of [useLazyQuery](/react/query#uselazyquery)                                                                     |
-| paginatedQueryFetchPolicy | `"cache-and-network"` or `"network-only"` or `"cache-first"`                 | `"cache-first"`            | Partial '[fetchPolicy](/react/api-reference#fetch-policy)' of [usePaginatedQuery](/react/query#usepaginatedquery)                                                           |
-| staleWhileRevalidate      | `boolean`                                                                    | `false`                    | Enable/Disable '[stale-while-revalidate](https://web.dev/stale-while-revalidate/)' behavior for [graphql HOC](/react/query#graphql-hoc) & [useQuery](/react/query#usequery) |
-| retry                     | [`RetryOptions`](/core/api-reference#retryoptions)                           | `true`                     | Retry on error behavior                                                                                                                                                     |
-| refetchAfterHydrate       | `boolean`                                                                    | `false`                    | Refetch **after** SSR Hydration                                                                                                                                             |
+| Name                      | Type                                                                         | Default Value              | Description                                                                                                                                                                                 |
+| ------------------------- | ---------------------------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| suspense                  | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [graphql HOC](/react/fetching-data#graphql-hoc) and [useQuery](/react/fetching-data#usequery)                               |
+| lazyQuerySuspense         | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useLazyQuery](/react/fetching-data#uselazyquery)                                                                           |
+| transactionQuerySuspense  | `boolean`                                                                    | inherited from ` suspense` | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useTransactionQuery](/react/fetching-data#usetransactionquery)                                                             |
+| mutationSuspense          | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [useMutation](/react/mutations#useMutation)                                                                                 |
+| preparedSuspense          | `boolean`                                                                    | inherited from ` suspense` | Enable/Disable '[React Suspense](/react/suspense)' behavior for [prepareQuery hooks](/react/fetching-data#preparequery)                                                                     |
+| paginatedQuerySuspense    | `boolean`                                                                    | `false`                    | Enable/Disable '[React Suspense](/react/suspense)' behavior for [prepareQuery hooks](/react/fetching-data#preparequery)                                                                     |
+| transactionFetchPolicy    | `"cache-and-network"` or `"cache-first"` or `"network-only"` or `"no-cache"` | `"cache-first"`            | '[fetchPolicy](/react/fetching-data#fetch-policy)' of [useTransactionQuery](/react/fetching-data#usetransactionquery)                                                                       |
+| lazyFetchPolicy           | `"cache-and-network"` or `"network-only"` or `"no-cache"`                    | `"network-only"`           | Partial '[fetchPolicy](/react/fetching-data#fetch-policy)' of [useLazyQuery](/react/fetching-data#uselazyquery)                                                                             |
+| paginatedQueryFetchPolicy | `"cache-and-network"` or `"network-only"` or `"cache-first"`                 | `"cache-first"`            | Partial '[fetchPolicy](/react/fetching-data#fetch-policy)' of [usePaginatedQuery](/react/fetching-data#usepaginatedquery)                                                                   |
+| staleWhileRevalidate      | `boolean`                                                                    | `false`                    | Enable/Disable '[stale-while-revalidate](https://web.dev/stale-while-revalidate/)' behavior for [graphql HOC](/react/fetching-data#graphql-hoc) & [useQuery](/react/fetching-data#usequery) |
+| retry                     | [`RetryOptions`](/client/config#retryoptions)                                | `true`                     | Retry on error behavior                                                                                                                                                                     |
+| refetchAfterHydrate       | `boolean`                                                                    | `false`                    | Refetch **after** SSR Hydration                                                                                                                                                             |

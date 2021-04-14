@@ -1,7 +1,7 @@
 import {
   doRetry,
-  GqlessClient,
-  gqlessError,
+  GQlessClient,
+  GQlessError,
   ResolveOptions,
   RetryOptions,
 } from 'gqless';
@@ -28,7 +28,7 @@ import { ReactClientOptionsWithDefaults } from '../utils';
 
 export interface UseTransactionQueryState<TData> {
   data: TData | undefined;
-  error?: gqlessError;
+  error?: GQlessError;
   isLoading: boolean;
   isCalled: boolean;
 }
@@ -36,7 +36,7 @@ export interface UseTransactionQueryState<TData> {
 type UseTransactionQueryReducerAction<TData> =
   | { type: 'cache-found'; data: TData }
   | { type: 'success'; data: TData }
-  | { type: 'failure'; error: gqlessError }
+  | { type: 'failure'; error: GQlessError }
   | { type: 'loading' }
   | {
       type: 'done';
@@ -137,7 +137,7 @@ export function createUseTransactionQuery<
     subscription: object;
   }
 >(
-  client: GqlessClient<GeneratedSchema>,
+  client: GQlessClient<GeneratedSchema>,
   {
     defaults: {
       transactionFetchPolicy: defaultFetchPolicy,
@@ -289,7 +289,7 @@ export function createUseTransactionQuery<
           (err: unknown) => {
             pendingPromise.current = undefined;
             isFetching.current = false;
-            const error = gqlessError.create(err, useTransactionQuery);
+            const error = GQlessError.create(err, useTransactionQuery);
             optsRef.current.onError?.(error);
             dispatch({
               type: 'failure',
@@ -319,14 +319,14 @@ export function createUseTransactionQuery<
         if (skip) return;
 
         const promise = queryCallback()?.then((result) => {
-          if (result instanceof gqlessError) {
+          if (result instanceof GQlessError) {
             if (optsRef.current.retry) {
               doRetry(optsRef.current.retry, {
                 async onRetry() {
                   const retryPromise = queryCallback({
                     refetch: true,
                   })?.then((result) => {
-                    if (result instanceof gqlessError) throw result;
+                    if (result instanceof GQlessError) throw result;
                   });
 
                   if (retryPromise) {
@@ -399,7 +399,7 @@ export function createUseTransactionQuery<
             if (isMounted)
               dispatch({
                 type: 'failure',
-                error: gqlessError.create(err, useTransactionQuery),
+                error: GQlessError.create(err, useTransactionQuery),
               });
           }
         );

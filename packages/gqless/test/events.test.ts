@@ -1,6 +1,6 @@
 import { GraphQLError, stripIgnoredCharacters } from 'graphql';
 
-import { gqlessError, Selection, SelectionType } from '../src';
+import { GQlessError, Selection, SelectionType } from '../src';
 import { CacheChangeEventData, FetchEventData } from '../src/Events';
 import { createTestClient } from './utils';
 
@@ -62,7 +62,7 @@ describe('fetch events', () => {
         expect(executionResult?.data).toBe(undefined);
 
         expect(error).toStrictEqual(
-          new gqlessError('expected error', {
+          new GQlessError('expected error', {
             graphQLErrors: [new GraphQLError('expected error')],
           })
         );

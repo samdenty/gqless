@@ -60,12 +60,13 @@ const Examples = styled(motion.div)`
 `;
 
 const yourApp = `const App = () => {
-  const { me, users } = useQuery();
+  const query = useQuery();
   return (
     <div>
-      Hello {me.name}!
-      {users({ limit: 10 }).map((user) => (
-        <User key={user.id || 0} user={user} />
+      Hello {query.me.name}!
+
+      {query.users({ limit: 10 }).map((user) => (
+        <User key={user.id} user={user} />
       ))}
     </div>
   );
@@ -189,25 +190,19 @@ function IndexPage() {
               visible: { opacity: 1, scale: 1 },
             }}
           >
-            <Action to="/introduction/getting-started">Get Started ›</Action>
-            <Action to="/examples" style={{ color: 'rgb(170, 170, 255)' }}>
-              Interactive Examples ›
-            </Action>
-            <Action
-              to="/introduction/features"
-              style={{ color: 'rgb(170, 170, 255)' }}
-            >
-              Explore features ›
+            <Action to="/getting-started">Get Started ›</Action>
+            <Action to="/intro" style={{ color: 'rgb(170, 170, 255)' }}>
+              Introduction
             </Action>
           </Actions>
         </Hero>
         <Examples>
-          <Example title="Access GraphQL data" animate={app} initial={initial}>
+          <Example title="Build your app." animate={app} initial={initial}>
             <CodeBlock className="language-jsx">{yourApp}</CodeBlock>
           </Example>
           <ResultArrow animate={arrow} />
           <Example
-            title="Fetched automagically"
+            title="GQless brings it to life"
             animate={queries}
             initial={initial}
           >
@@ -228,7 +223,7 @@ function IndexPage() {
               },
             }}
           >
-            <FeatureLink to="/introduction/features#invisible-data-fetching">
+            <FeatureLink to="/intro/features#invisible-data-fetching">
               <Feature
                 title="Invisible data fetching"
                 imageUrl="img/graphql.svg"
@@ -237,19 +232,19 @@ function IndexPage() {
                 using ES6 Proxies.
               </Feature>
             </FeatureLink>
-            <FeatureLink to="/introduction/features#typescript">
+            <FeatureLink to="/intro/features#typescript">
               <Feature title="Strongly typed" imageUrl="img/typescript.png">
                 Built from the ground up to work with Typescript — no more code
                 generation
               </Feature>
             </FeatureLink>
-            <FeatureLink to="react/basic-usage">
+            <FeatureLink to="react/fetching-data">
               <Feature title="React.js" imageUrl="img/react.svg">
                 React Suspense support, hooks, automatic component updates and
                 more.
               </Feature>
             </FeatureLink>
-            <FeatureLink to="/introduction/features">
+            <FeatureLink to="/intro/features">
               <Feature
                 title="Production ready"
                 imageUrl="img/production_ready.png"

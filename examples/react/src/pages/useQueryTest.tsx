@@ -5,7 +5,7 @@ let nRender = 0;
 let nCommitedRender = 0;
 
 export default function UseQueryPage() {
-  const { time, $state } = useQuery({
+  const query = useQuery({
     suspense: true,
   });
 
@@ -13,7 +13,7 @@ export default function UseQueryPage() {
     console.log('Commited render:', ++nCommitedRender);
   });
 
-  if ($state.isLoading) {
+  if (query.$state.isLoading) {
     console.log('IS LOADING!');
     return (
       <p>
@@ -24,7 +24,7 @@ export default function UseQueryPage() {
 
   return (
     <div>
-      {time}
+      {query.time}
       <br />
       Render: {++nRender}
     </div>

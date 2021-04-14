@@ -1,11 +1,11 @@
-import { gqlessError } from '../Error';
+import { GQlessError } from '../Error';
 import { InterceptorManager } from '../Interceptor';
 import { Selection } from '../Selection';
 import { createDeferredPromise, DeferredPromise } from '../Utils';
 import { debounce } from '../Utils/debounce';
 
 export type SchedulerPromiseValue = {
-  error?: gqlessError;
+  error?: GQlessError;
   data?: unknown;
   selections: Set<Selection>;
 };
@@ -16,7 +16,7 @@ export type ResolvedLazyPromise = Promise<SchedulerPromiseValue>;
 export type ErrorSubscriptionEvent =
   | {
       type: 'new_error';
-      newError: gqlessError;
+      newError: GQlessError;
       selections: Selection[];
       isLastTry: boolean;
     }
@@ -40,10 +40,10 @@ export interface Scheduler {
     fn: (promise: Promise<SchedulerPromiseValue>, selection: Selection) => void
   ) => () => void;
   errors: {
-    map: Map<Selection, gqlessError>;
+    map: Map<Selection, GQlessError>;
     subscribeErrors: (fn: ErrorSubscriptionFn) => () => void;
     triggerError: (
-      newError: gqlessError,
+      newError: GQlessError,
       selections: Selection[],
       isLastTry: boolean
     ) => void;
@@ -84,7 +84,7 @@ export const createScheduler = (
     };
   }
 
-  const errorsMap = new Map<Selection, gqlessError>();
+  const errorsMap = new Map<Selection, GQlessError>();
 
   const pendingSelectionsGroups = new Set<Set<Selection>>();
   const pendingSelectionsGroupsPromises = new Map<
@@ -145,7 +145,7 @@ export const createScheduler = (
   }
 
   function triggerError(
-    newError: gqlessError,
+    newError: GQlessError,
     selections: Selection[],
     isLastTry: boolean
   ) {

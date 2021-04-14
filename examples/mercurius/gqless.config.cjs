@@ -1,5 +1,5 @@
 /**
- * @type {import("@gqless/cli").GqlessConfig}
+ * @type {import("@gqless/cli").GQlessConfig}
  */
 const config = {
   endpoint: '/api/graphql',

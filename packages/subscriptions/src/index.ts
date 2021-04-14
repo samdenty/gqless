@@ -1,5 +1,5 @@
 import {
-  gqlessError,
+  GQlessError,
   Selection,
   SubscribeEvents,
   SubscriptionsClient,
@@ -94,7 +94,7 @@ export function createSubscriptionsClient({
                 if (errors?.length) {
                   onError({
                     data,
-                    error: gqlessError.fromGraphQLErrors(errors),
+                    error: GQlessError.fromGraphQLErrors(errors),
                   });
                 } else if (data) {
                   onData(data);

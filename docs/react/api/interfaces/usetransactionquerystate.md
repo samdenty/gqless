@@ -26,7 +26,7 @@ Defined in: [react/src/query/useTransactionQuery.ts:30](https://github.com/gqles
 
 ### error
 
-• `Optional` **error**: _gqlessError_
+• `Optional` **error**: _GQlessError_
 
 Defined in: [react/src/query/useTransactionQuery.ts:31](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useTransactionQuery.ts#L31)
 

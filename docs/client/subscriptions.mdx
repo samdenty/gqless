@@ -1,0 +1,123 @@
+---
+id: subscriptions
+title: Core Subscriptions
+sidebar_label: Subscriptions
+---
+
+Support for [`GraphQL Subscriptions`](https://github.com/graphql/graphql-spec/blob/main/rfcs/Subscriptions.md) in GQless.
+
+## Installation
+
+First, install `@gqless/subscriptions` into your project's dependencies:
+
+```bash yarn2npm
+yarn add @gqless/subscriptions
+```
+
+## Usage
+
+If you activated `subscriptions` in the [CLI Configuration](/cli/config) you should have something like this in your generated client file:
+
+```ts
+const subscriptionsClient =
+  typeof window !== 'undefined'
+    ? createSubscriptionsClient({
+        wsEndpoint: () => {
+          // Modify if needed
+          const url = new URL('${endpoint}', window.location.href);
+          url.protocol = url.protocol.replace('http', 'ws');
+          return url.href;
+        },
+      })
+    : undefined;
+
+//...
+
+export const client = createClient<
+  GeneratedSchema,
+  SchemaObjectTypesNames,
+  SchemaObjectTypes
+>({
+  // ...
+  subscriptionsClient,
+});
+```
+
+It basically enables subscriptions only on client side, in case you are using [SSR](/react/ssr).
+
+It's important to note that `wsEndpoint` can be a `string`, a `function` that returns a `string` or and an `async function` that returns a `string`.
+
+### `setConnectionParams`
+
+`subscriptionsClient` returns a helper in where you can set the connection parameters for the websocket connection, normally used for `authorization` purposes.
+
+The second parameter is an optional boolean flag that automatically will reset the websocket connection if it's already connected.
+
+```ts
+const subscriptionsClient =
+  typeof window !== 'undefined'
+    ? createSubscriptionsClient({
+        wsEndpoint: () => {
+          // Modify if needed
+          const url = new URL('${endpoint}', window.location.href);
+          url.protocol = url.protocol.replace('http', 'ws');
+          return url.href;
+        },
+      })
+    : undefined;
+
+const { setConnectionParams } = subscriptionsClient || {};
+
+export { setConnectionParams };
+
+// ...
+```
+
+```ts
+import { setConnectionParams } from '../gqless';
+
+// ...
+
+let resetWebsocketConnection = true;
+
+setConnectionParams(
+  {
+    token: 'zLjYkmrdX5...',
+  },
+  resetWebsocketConnection
+);
+```
+
+### Lazy behavior
+
+By default the subscriptions client uses a `lazy` behavior, which means that it will create the connection only when you actually make a subscription, and disconnect after a couple seconds on last unsubscribe.
+
+```ts
+createSubscriptionsClient({
+  //...
+
+  /**
+   * Controls when should the connection be established.
+   *
+   * `false`: Establish a connection immediately.
+   *
+   * `true`: Establish a connection on first subscribe and close on last unsubscribe.
+   *
+   * @default true
+   */
+  lazy: false,
+});
+```
+
+### More options
+
+| Name                     | Type                                                                   | Default Value | Description                                                                                                                                        |
+| ------------------------ | ---------------------------------------------------------------------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| reconnect                | `boolean`                                                              | `true`        | Should the websocket connection try to reconnect                                                                                                   |
+| maxReconnectAttempts     | `boolean`                                                              | `Infinity`    | Amount of reconnection attempts                                                                                                                    |
+| connectionCallback       | `() => void`                                                           | `undefined`   | Callback after successful connection                                                                                                               |
+| failedConnectionCallback | `(payload: unknown) => Promise<void>`                                  | `undefined`   | Callback after failed connection                                                                                                                   |
+| failedReconnectCallback  | `() => void`                                                           | `undefined`   | Callback after last reconnection attempt failed                                                                                                    |
+| connectionInitPayload    | `(() => Promise<Record<string, unknown>>` or `Record<string, unknown>` | `{}`          | Connection init payload, or async function to get the init payload before connection, overridable with [setConnectionParams](#setconnectionparams) |
+| headers                  | `Record<string,string>`                                                | `undefined`   | **Might not be actually supported by browsers, use connection params**. Headers to be set on websocket connection                                  |
+| lazy                     | `boolean`                                                              | `true`        | See [Lazy behavior](#lazy-behavior)                                                                                                                |

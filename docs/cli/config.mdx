@@ -10,7 +10,7 @@ The `CLI` looks for 3 places of configuration files/property, in this respective
 2. `gqless.config.js`
 3. `gqless` property inside `package.json`
 
-And since it's using [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to resolve it, if you are using `gqless` in a monorepo, having it in the root of your monorepo might be enough :tada:.
+And since it's using [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) to resolve it, if you are using GQless in a monorepo, having it in the root of your monorepo might be enough :tada:.
 
 ## Default Config
 
@@ -18,7 +18,7 @@ The default configuration file, which is automatically generated after the first
 
 ```js
 /**
- * @type {import("@gqless/cli").GqlessConfig}
+ * @type {import("@gqless/cli").GQlessConfig}
  */
 const config = {
   endpoint: '/api/graphql',
@@ -43,13 +43,13 @@ module.exports = config;
 | ---------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | endpoint               | `string`                | Endpoint used in the first-generated client, you are free to change it in there, and this config will be ignored.                                                         |
 | enumsAsStrings         | `boolean`               | Whether to use enums as simple string types, or as the default [Object String Enums of TypeScript](https://www.typescriptlang.org/docs/handbook/enums.html#string-enums). |
-| react                  | `boolean`               | Whether to add the [React](/react/basic-usage) bindings to the first-generated client.                                                                                    |
+| react                  | `boolean`               | Whether to add the [React](/react/fetching-data) bindings to the first-generated client.                                                                                  |
 | scalars                | `Record<string,string>` | Mapping of Custom Scalar Types to TypeScript, since by default, **any custom scalar will be casted as `any`**.                                                            |
 | preImport              | `string`                | Code to be added at the very beginning of the generated `schema file`, useful for adding custom imported types in custom scalars.                                         |
 | introspection.endpoint | `string`                | Endpoint from where the introspection of the target GraphQL API, it can be an `http`/`https` endpoint, or the path of a `.gql` GraphQL schema file.                       |
 | introspection.headers  | `Record<string,string>` | Custom headers to be added to `http`/`https` introspection, normally for authorization purposes.                                                                          |
 | destination            | `string`                | **File destination** of the generated client. Keep in mind that the generated schema always will be alongside this destination, but named `schema.generated.ts`.          |
-| subscriptions          | `boolean`               | Whether to add [Subscriptions](/core/subscriptions) support to the client.                                                                                                |
+| subscriptions          | `boolean`               | Whether to add [Subscriptions](/client/subscriptions) support to the client.                                                                                              |
 
 ---
 

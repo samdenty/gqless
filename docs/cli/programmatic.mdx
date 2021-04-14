@@ -1,12 +1,12 @@
 ---
 id: programmatic
-title: CLI Programmatic usage
+title: Programmatic usage of CLI
 sidebar_label: Programmatic usage
 ---
 
 **@gqless/cli** has also a complete programmatic API, which allows you to generate the client with custom scripts.
 
-## inspectWriteGenerate
+## `inspectWriteGenerate`
 
 Basically calling CLI functionality programmatically.
 
@@ -34,7 +34,7 @@ await inspectWriteGenerate({
 });
 ```
 
-## writeGenerate
+## `writeGenerate`
 
 If you have direct access to the [GraphQLSchema](https://graphql.org/graphql-js/type/#graphqlschema) from [graphql-js](https://github.com/graphql/graphql-js), you can give it to this function and it will do the rest.
 
@@ -68,7 +68,7 @@ await writeGenerate(
 );
 ```
 
-## generate
+## `generate`
 
 If you have direct access to the [GraphQLSchema](https://graphql.org/graphql-js/type/#graphqlschema) from [graphql-js](https://github.com/graphql/graphql-js), you can give it to this function and it generates the code and simply return it.
 
@@ -101,7 +101,7 @@ const {
 );
 ```
 
-## getRemoteSchema
+## `getRemoteSchema`
 
 Inspect a remote GraphQL API
 

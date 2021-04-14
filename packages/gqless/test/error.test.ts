@@ -1,17 +1,17 @@
 import { GraphQLError } from 'graphql';
 
-import { gqlessError } from '../src/Error';
+import { GQlessError } from '../src/Error';
 
 test('error creation', () => {
-  const a = new gqlessError('a');
+  const a = new GQlessError('a');
 
-  const b = gqlessError.create(Error('a'));
+  const b = GQlessError.create(Error('a'));
 
-  const c = gqlessError.create(a);
+  const c = GQlessError.create(a);
 
-  const d = gqlessError.create(123);
+  const d = GQlessError.create(123);
 
-  const e = new gqlessError('abc', {
+  const e = new GQlessError('abc', {
     graphQLErrors: [new GraphQLError('gql error')],
   });
 

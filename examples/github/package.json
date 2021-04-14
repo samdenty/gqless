@@ -4,7 +4,7 @@
   "private": true,
   "description": "",
   "license": "MIT",
-  "author": "PabloSzx",
+  "author": "GQless <opensource@gqless.com>",
   "scripts": {
     "generate": "gqless generate",
     "test:manual": "jest -u"

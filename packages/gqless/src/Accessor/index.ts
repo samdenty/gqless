@@ -1,6 +1,6 @@
 import { ProxyAccessor } from '../Cache';
 import { InnerClientState } from '../Client/client';
-import { gqlessError } from '../Error';
+import { GQlessError } from '../Error';
 import {
   DeepPartial,
   parseSchemaType,
@@ -243,7 +243,7 @@ export function createAccessorCreators<
       });
     } else if (typeof accessorOrSelection === 'function') {
       if (dataOrArgs !== undefined && typeof dataOrArgs !== 'object') {
-        throw new gqlessError(
+        throw new GQlessError(
           'Invalid arguments of type: ' + typeof dataOrArgs,
           {
             caller: setCache,
@@ -256,7 +256,7 @@ export function createAccessorCreators<
       })[ResolveInfoSymbol];
 
       if (!resolveInfo) {
-        throw new gqlessError('Invalid gqless function', {
+        throw new GQlessError('Invalid gqless function', {
           caller: setCache,
         });
       }
@@ -279,7 +279,7 @@ export function createAccessorCreators<
       // An edge case hard to reproduce
       /* istanbul ignore if */
       if (!selection) {
-        throw new gqlessError('Invalid proxy selection', {
+        throw new GQlessError('Invalid proxy selection', {
           caller: setCache,
         });
       }
@@ -292,7 +292,7 @@ export function createAccessorCreators<
         selection,
       });
     } else {
-      throw new gqlessError('Invalid gqless proxy', {
+      throw new GQlessError('Invalid gqless proxy', {
         caller: setCache,
       });
     }
@@ -713,7 +713,7 @@ export function createAccessorCreators<
                   return childAccessor;
                 }
 
-                throw new gqlessError(
+                throw new GQlessError(
                   `GraphQL Type not found: ${pureType}, available fields: "${Object.keys(
                     schemaValue
                   ).join(' | ')}"`
@@ -777,14 +777,14 @@ export function createAccessorCreators<
       !accessorCache.isProxy(source) ||
       !(sourceSelection = accessorCache.getProxySelection(source)!)
     )
-      throw new gqlessError('Invalid source proxy', {
+      throw new GQlessError('Invalid source proxy', {
         caller: assignSelections,
       });
     if (
       !accessorCache.isProxy(target) ||
       !(targetSelection = accessorCache.getProxySelection(target)!)
     )
-      throw new gqlessError('Invalid target proxy', {
+      throw new GQlessError('Invalid target proxy', {
         caller: assignSelections,
       });
 

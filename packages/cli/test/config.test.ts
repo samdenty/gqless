@@ -1,4 +1,4 @@
-import { getValidConfig, GqlessConfig } from '../src/config';
+import { getValidConfig, GQlessConfig } from '../src/config';
 
 test('completely valid config', () => {
   const spy = jest.spyOn(console, 'warn').mockImplementation();
@@ -6,7 +6,6 @@ test('completely valid config', () => {
   try {
     getValidConfig({
       destination: './gqless',
-      endpoint: '/graphql',
       enumsAsStrings: true,
       introspection: {
         headers: {
@@ -17,12 +16,12 @@ test('completely valid config', () => {
       javascriptOutput: true,
       preImport: '',
       react: true,
-      scalars: {
+      scalarTypes: {
         DateTime: 'string',
       },
       subscriptions: true,
       other: undefined,
-    } as GqlessConfig);
+    } as GQlessConfig);
 
     expect(spy).toBeCalledTimes(0);
   } finally {
@@ -44,90 +43,84 @@ test('completely invalid config', () => {
           break;
         case 2:
           expect(message).toMatchInlineSnapshot(
-            `"Warning, invalid config endpoint, got: 123, expected string. \\"/api/graphql\\" used instead."`
+            `"Warning, invalid config enumsAsStrings, got: null, expected boolean. false used instead."`
           );
           break;
         case 3:
           expect(message).toMatchInlineSnapshot(
-            `"Warning, invalid config enumsAsStrings, got: null, expected boolean. false used instead."`
+            `"Warning, invalid config introspection.headers, got: {\\"hello\\":null}, expected \\"object of strings\\". {} used instead."`
           );
           break;
         case 4:
           expect(message).toMatchInlineSnapshot(
-            `"Warning, invalid config introspection.headers, got: {\\"hello\\":null}, expected \\"object of strings\\". {} used instead."`
-          );
-          break;
-        case 5:
-          expect(message).toMatchInlineSnapshot(
             `"Warning, invalid config introspection.endpoint, got: null, expected string. \\"SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE\\" used instead."`
           );
           break;
-        case 6:
+        case 5:
           expect(message).toMatchInlineSnapshot(
             `"Warning, invalid and unused config property \\"introspection.other\\": {\\"headers\\":{\\"hello\\":null},\\"endpoint\\":null,\\"other\\":123}"`
           );
           break;
 
-        case 7:
+        case 6:
           expect(message).toMatchInlineSnapshot(
             `"Warning, invalid config javascriptOutput, got: null, expected boolean. false used instead."`
           );
           break;
-        case 8:
+        case 7:
           expect(message).toMatchInlineSnapshot(
             `"Warning, invalid config preImport, got: 123, expected string. \\"\\" used instead."`
           );
           break;
 
-        case 9:
+        case 8:
           expect(message).toMatchInlineSnapshot(
             `"Warning, invalid config react, got: null, expected boolean. true used instead."`
           );
           break;
 
-        case 10:
+        case 9:
           expect(message).toMatchInlineSnapshot(
-            `"Warning, invalid config scalars, got: {\\"DateTime\\":123}, expected \\"object of strings\\". {\\"DateTime\\":\\"string\\"} used instead."`
+            `"Warning, invalid config scalarTypes, got: {\\"DateTime\\":123}, expected \\"object of strings\\". {\\"DateTime\\":\\"string\\"} used instead."`
           );
           break;
 
-        case 11:
+        case 10:
           expect(message).toMatchInlineSnapshot(
             `"Warning, invalid config subscriptions, got: 123, expected boolean. false used instead."`
           );
           break;
-        case 12:
+        case 11:
           expect(message).toMatchInlineSnapshot(
             `"Warning, invalid and unused config property \\"other\\": null"`
           );
           break;
-        case 13:
+        case 12:
           expect(message).toMatchInlineSnapshot(
             `"Warning, invalid config introspection, got: null, expected object. {\\"endpoint\\":\\"SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE\\",\\"headers\\":{}} used instead."`
           );
           break;
-        case 14:
+        case 13:
           expect(message).toMatchInlineSnapshot(
             `"Warning, invalid config introspection.headers, got: null, expected \\"object of strings\\". {} used instead."`
           );
           break;
-        case 15:
+        case 14:
           expect(message).toMatchInlineSnapshot(`
             "Invalid config, using instead: {
-              \\"endpoint\\": \\"/api/graphql\\",
-              \\"enumsAsStrings\\": false,
               \\"react\\": true,
-              \\"scalars\\": {
+              \\"scalarTypes\\": {
                 \\"DateTime\\": \\"string\\"
               },
-              \\"preImport\\": \\"\\",
               \\"introspection\\": {
                 \\"endpoint\\": \\"SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE\\",
                 \\"headers\\": {}
               },
               \\"destination\\": \\"./src/gqless/index.ts\\",
               \\"subscriptions\\": false,
-              \\"javascriptOutput\\": false
+              \\"javascriptOutput\\": false,
+              \\"enumsAsStrings\\": false,
+              \\"preImport\\": \\"\\"
             }"
           `);
           break;
@@ -137,7 +130,6 @@ test('completely invalid config', () => {
     });
     getValidConfig({
       destination: 123,
-      endpoint: 123,
       enumsAsStrings: null,
       introspection: {
         headers: {
@@ -149,7 +141,7 @@ test('completely invalid config', () => {
       javascriptOutput: null,
       preImport: 123,
       react: null,
-      scalars: {
+      scalarTypes: {
         DateTime: 123,
       },
       subscriptions: 123,
@@ -170,7 +162,7 @@ test('completely invalid config', () => {
 
     getValidConfig(null);
 
-    expect(spy).toBeCalledTimes(15);
+    expect(spy).toBeCalledTimes(14);
   } finally {
     spy!.mockRestore();
   }

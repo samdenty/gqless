@@ -1,4 +1,4 @@
-import { GqlessClient, prepass } from 'gqless';
+import { GQlessClient, prepass } from 'gqless';
 import { useMemo, useRef, useState } from 'react';
 
 import {
@@ -51,7 +51,7 @@ export function createUseQuery<
     mutation: object;
     subscription: object;
   }
->(client: GqlessClient<GeneratedSchema>, opts: ReactClientOptionsWithDefaults) {
+>(client: GQlessClient<GeneratedSchema>, opts: ReactClientOptionsWithDefaults) {
   const {
     suspense: defaultSuspense,
     staleWhileRevalidate: defaultStaleWhileRevalidate,

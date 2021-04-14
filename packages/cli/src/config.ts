@@ -3,7 +3,7 @@ import { resolve } from 'path';
 import type { GenerateOptions } from './generate';
 import type { IntrospectionOptions } from './introspection';
 
-export type GqlessConfig = GenerateOptions & {
+export type GQlessConfig = Omit<GenerateOptions, 'endpoint'> & {
   /**
    * Introspection options
    */
@@ -24,21 +24,22 @@ function isStringRecord(v: unknown): v is Record<string, string> {
   );
 }
 
-export const defaultConfig = {
-  endpoint: '/api/graphql',
-  enumsAsStrings: false,
+export const DUMMY_ENDPOINT = 'SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE';
+
+export const defaultConfig: Required<GQlessConfig> = {
   react: true,
-  scalars: {
+  scalarTypes: {
     DateTime: 'string',
   },
-  preImport: '',
   introspection: {
-    endpoint: 'SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE',
+    endpoint: DUMMY_ENDPOINT,
     headers: {} as Record<string, string>,
   },
   destination: './src/gqless/index.ts',
   subscriptions: false,
   javascriptOutput: false,
+  enumsAsStrings: false,
+  preImport: '',
 };
 
 function warnConfig(
@@ -56,9 +57,9 @@ function warnConfig(
   );
 }
 
-export function getValidConfig(v: unknown): GqlessConfig {
+export function getValidConfig(v: unknown): GQlessConfig {
   if (isPlainObject(v)) {
-    const newConfig: GqlessConfig = {};
+    const newConfig: GQlessConfig = {};
 
     if (typeof v.javascriptOutput === 'boolean') {
       newConfig.javascriptOutput = v.javascriptOutput;
@@ -69,8 +70,7 @@ export function getValidConfig(v: unknown): GqlessConfig {
 
       switch (key) {
         case 'destination':
-        case 'preImport':
-        case 'endpoint': {
+        case 'preImport': {
           if (typeof value === 'string') {
             newConfig[key] = value;
           } else {
@@ -90,7 +90,7 @@ export function getValidConfig(v: unknown): GqlessConfig {
           }
           break;
         }
-        case 'scalars': {
+        case 'scalarTypes': {
           if (isStringRecord(value)) {
             newConfig[key] = value;
           } else {
@@ -182,19 +182,19 @@ type DeepReadonlyObject<T> = {
   readonly [P in keyof T]: DeepReadonly<T[P]>;
 };
 
-const defaultGqlessConfig = {
+const defaultGQlessConfig = {
   filepath: defaultFilePath,
   config: defaultConfig,
 };
 
 export const gqlessConfigPromise: Promise<{
   filepath: string;
-  config: DeepReadonly<GqlessConfig>;
+  config: DeepReadonly<GQlessConfig>;
 }> = new Promise(async (resolve) => {
   /* istanbul ignore else */
   if (process.env.NODE_ENV === 'test') {
     setTimeout(() => {
-      resolve(defaultGqlessConfig);
+      resolve(defaultGQlessConfig);
     }, 10);
   } else {
     import('cosmiconfig')
@@ -217,15 +217,20 @@ export const gqlessConfigPromise: Promise<{
                 const { format } = (await import('./prettier')).formatPrettier({
                   parser: 'typescript',
                 });
+
+                const config: GQlessConfig = { ...defaultConfig };
+                delete config.preImport;
+                delete config.enumsAsStrings;
+
                 await promises.writeFile(
                   defaultFilePath,
                   await format(`
-      /**
-       * @type {import("@gqless/cli").GqlessConfig}
-       */
-      const config = ${JSON.stringify(defaultConfig)};
-      
-      module.exports = config;`)
+                    /**
+                     * @type {import("@gqless/cli").GQlessConfig}
+                     */
+                    const config = ${JSON.stringify(config)};
+                    
+                    module.exports = config;`)
                 );
               }
               return resolve({
@@ -239,8 +244,8 @@ export const gqlessConfigPromise: Promise<{
               filepath: config.filepath,
             });
           })
-          .catch(() => defaultGqlessConfig);
+          .catch(() => defaultGQlessConfig);
       })
-      .catch(() => defaultGqlessConfig);
+      .catch(() => defaultGQlessConfig);
   }
 });

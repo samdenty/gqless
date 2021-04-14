@@ -2,7 +2,11 @@
   "name": "@gqless/subscriptions",
   "version": "1.0.10",
   "homepage": "https://gqless.com",
-  "author": "PabloSz <pablosaez1995@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gqless/gqless.git"
+  },
+  "author": "GQless <opensource@gqless.com>",
   "main": "dist/index.js",
   "module": "dist/gqless-subscriptions.esm.js",
   "types": "dist/index.d.ts",
