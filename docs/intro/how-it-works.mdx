@@ -1,0 +1,52 @@
+---
+id: how-it-works
+title: How it works
+---
+
+## Skeleton render & values
+
+GQless performs a invisible render (called the skeleton render) of all components, to identify the data they need. During this render, all scalars & enums are returned as `undefined` (aka. skeleton values).
+Once the response from the server arrives, these skeleton values are replaced with actual ones.
+
+### Interplay with Lists & Keys
+
+It's important to be aware of skeleton values, as using them as keys will result in a warning:
+
+```tsx
+query.users.map((user) => (
+  // During the skeleton render, the key is `undefined`
+  <div key={user.id}>{user.name}</div>
+));
+```
+
+![React lists key warning](/img/react-key-warning.png)
+
+You can overcome this using either destructuring,
+
+```tsx
+query.users.map(({ id = 0, name }) => (
+                   ^^^^^^
+  <div key={id}>{name}</div>
+```
+
+or the [nullish coalescing operator](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator):
+
+```tsx
+query.users.map((user) => (
+  <div key={user.id ?? 0}>{user.name}</div>
+                    ^^^^^
+```
+
+## How does it work?
+
+GQless performs a invisible render of all components, to identify the data they need. Once the data is fetched — scalars, nulls, and array sizes are filled in.
+
+## Will it affect bundle size?
+
+In the code-generated files, an object representation of the schema is outputted - negligible for most apps. This could be optimized in the future by stripping out unused parts.
+
+The gqless packages are lightweight and don't require external dependencies.
+
+## How fast is it?
+
+Very fast, gqless's architecture was designed with performance in mind. Unlike other clients, queries are generated directly - instead of outputting intermediate AST.

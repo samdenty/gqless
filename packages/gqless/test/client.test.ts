@@ -2,7 +2,7 @@ import '../src/Client';
 
 import { waitForExpect } from 'test-utils';
 
-import { gqlessError, Selection } from '../src';
+import { GQlessError, Selection } from '../src';
 import { createTestClient } from './utils';
 
 describe('core', () => {
@@ -315,7 +315,7 @@ describe('error handling', () => {
 
       throw Error("shouldn't reach here");
     } catch (err) {
-      expect(err).toStrictEqual(gqlessError.create(12345));
+      expect(err).toStrictEqual(GQlessError.create(12345));
     }
   });
 });

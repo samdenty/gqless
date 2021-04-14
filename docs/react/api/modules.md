@@ -80,17 +80,17 @@ Defined in: [react/src/query/useLazyQuery.ts:13](https://github.com/gqless/gqles
 
 ### OnErrorHandler
 
-Ƭ **OnErrorHandler**: (`error`: gqlessError) => _void_
+Ƭ **OnErrorHandler**: (`error`: GQlessError) => _void_
 
 #### Type declaration:
 
-▸ (`error`: gqlessError): _void_
+▸ (`error`: GQlessError): _void_
 
 #### Parameters:
 
 | Name    | Type        |
 | :------ | :---------- |
-| `error` | gqlessError |
+| `error` | GQlessError |
 
 **Returns:** _void_
 
@@ -162,7 +162,7 @@ Defined in: [react/src/common.ts:524](https://github.com/gqless/gqless/blob/mast
 
 ### createReactClient
 
-▸ **createReactClient**<GeneratedSchema\>(`client`: _GqlessClient_<GeneratedSchema\>, `optsCreate?`: [_CreateReactClientOptions_](interfaces/createreactclientoptions.md)): [_ReactClient_](interfaces/reactclient.md)<GeneratedSchema\>
+▸ **createReactClient**<GeneratedSchema\>(`client`: _GQlessClient_<GeneratedSchema\>, `optsCreate?`: [_CreateReactClientOptions_](interfaces/createreactclientoptions.md)): [_ReactClient_](interfaces/reactclient.md)<GeneratedSchema\>
 
 #### Type parameters:
 
@@ -177,7 +177,7 @@ Defined in: [react/src/common.ts:524](https://github.com/gqless/gqless/blob/mast
 
 | Name         | Type                                                                 | Default value |
 | :----------- | :------------------------------------------------------------------- | :------------ |
-| `client`     | _GqlessClient_<GeneratedSchema\>                                     | -             |
+| `client`     | _GQlessClient_<GeneratedSchema\>                                     | -             |
 | `optsCreate` | [_CreateReactClientOptions_](interfaces/createreactclientoptions.md) | {}            |
 
 **Returns:** [_ReactClient_](interfaces/reactclient.md)<GeneratedSchema\>

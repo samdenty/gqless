@@ -65,7 +65,7 @@ video {
   font-weight: var(--ifm-font-weight-normal);
 }
 
-:not(.navbar-sidebar__items) .menu__link--sublist {
+.menu > .menu__list > .menu__list-item > .menu__link {
   font-weight: var(--ifm-font-weight-semibold);
   letter-spacing: -0.03em;
 }
@@ -106,4 +106,13 @@ html[data-theme='dark'] .github-star {
     .sidebar__-_-node_modules-\@docusaurus-theme-classic-src-theme-DocSidebar-::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.1) !important;
   }
+}
+
+li > div[class*='codeBlockContainer'] {
+  margin-top: 15px;
+}
+
+.menu__list-item {
+  margin: 0.1rem 0;
+  font-size: 95%;
 }

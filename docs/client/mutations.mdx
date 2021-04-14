@@ -1,0 +1,35 @@
+---
+id: mutations
+title: Core Mutations
+sidebar_label: Mutations
+---
+
+Mutations greatly follow the format of queries (see [fetching data with `resolved`](/client/fetching-data#resolved)).
+
+## Example
+
+```ts
+import { resolved, mutation } from '../gqless';
+
+resolved(() => {
+  const { email, name } = mutation.createUser({
+    email: 'xx@xx.com',
+    name: 'XX',
+  });
+
+  return {
+    email,
+    name,
+  };
+})
+  .then((data) => {
+    console.log('User created!', data);
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+## See also
+
+- [Mutations with React](/react/mutations)

@@ -1,4 +1,4 @@
-import { doRetry, GqlessClient, gqlessError, RetryOptions } from 'gqless';
+import { doRetry, GQlessClient, GQlessError, RetryOptions } from 'gqless';
 import { Dispatch, useCallback, useMemo, useReducer, useRef } from 'react';
 
 import {
@@ -38,13 +38,13 @@ export interface UseMutationOptions<TData> {
 
 export interface UseMutationState<TData> {
   data: TData | undefined;
-  error?: gqlessError;
+  error?: GQlessError;
   isLoading: boolean;
 }
 
 type UseMutationReducerAction<TData> =
   | { type: 'success'; data: TData }
-  | { type: 'failure'; error: gqlessError }
+  | { type: 'failure'; error: GQlessError }
   | { type: 'loading' };
 
 function UseMutationReducer<TData>(
@@ -123,7 +123,7 @@ export function createUseMutation<
     subscription: object;
   }
 >(
-  client: GqlessClient<GeneratedSchema>,
+  client: GQlessClient<GeneratedSchema>,
   {
     defaults: { retry: defaultRetry, mutationSuspense: defaultSuspense },
   }: ReactClientOptionsWithDefaults
@@ -172,7 +172,7 @@ export function createUseMutation<
         ).catch((err) => {
           dispatch({
             type: 'failure',
-            error: gqlessError.create(err, useMutation),
+            error: GQlessError.create(err, useMutation),
           });
         });
 
@@ -194,7 +194,7 @@ export function createUseMutation<
           : refFn
           ? () => refFn(clientMutation, args)
           : (() => {
-              throw new gqlessError(
+              throw new GQlessError(
                 'You have to specify a function to be resolved',
                 {
                   caller: mutateFn,
@@ -220,7 +220,7 @@ export function createUseMutation<
             return data;
           },
           (err: unknown) => {
-            const error = gqlessError.create(err, useMutation);
+            const error = GQlessError.create(err, useMutation);
             optsRef.current.onError?.(error);
             dispatch({
               type: 'failure',

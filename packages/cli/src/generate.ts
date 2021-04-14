@@ -28,23 +28,31 @@ import { codegen } from '@graphql-codegen/core';
 import * as typescriptPlugin from '@graphql-codegen/typescript';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
-import { defaultConfig, gqlessConfigPromise } from './config';
+import { defaultConfig, DUMMY_ENDPOINT, gqlessConfigPromise } from './config';
 import { formatPrettier } from './prettier';
 
 export interface GenerateOptions {
   /**
-   * Target Query Fetcher endpoint
-   * @default '/graphql'
+   * The endpoint to use for the `queryFetcher` function
    */
   endpoint?: string;
   /**
-   * Add a custom string at the beginning of the schema file, for example, add imports.
+   * Customize the TypeScript types for scalars.
+   *
+   * You can use the `preImport` option to import / define custom types.
+   *
+   * @example
+   * ```json
+   * scalarTypes: {
+   *   DateTime: "string",
+   * }
+   * ```
+   */
+  scalarTypes?: Record<string, string>;
+  /**
+   * Prepend code to the schema file, useful with the `scalarTypes` option.
    */
   preImport?: string;
-  /**
-   * Specify the types of custom scalars
-   */
-  scalars?: Record<string, string>;
   /**
    * Generate React Client code
    */
@@ -79,7 +87,7 @@ export async function generate(
   schema: GraphQLSchema,
   {
     preImport,
-    scalars,
+    scalarTypes,
     react,
     endpoint,
     enumsAsStrings,
@@ -110,12 +118,16 @@ export async function generate(
     }
     enumsAsStrings = true;
   } else {
-    enumsAsStrings ??=
-      gqlessConfig.enumsAsStrings ?? defaultConfig.enumsAsStrings;
+    enumsAsStrings ??= gqlessConfig.enumsAsStrings ?? false;
   }
 
-  scalars ||= gqlessConfig.scalars || defaultConfig.scalars;
-  endpoint ||= gqlessConfig.endpoint ?? defaultConfig.endpoint;
+  scalarTypes ||= gqlessConfig.scalarTypes || defaultConfig.scalarTypes;
+  endpoint ||=
+    gqlessConfig.introspection?.endpoint ??
+    defaultConfig.introspection.endpoint;
+  if (endpoint === DUMMY_ENDPOINT) {
+    endpoint = '/api/graphql';
+  }
   react ??= gqlessConfig.react ?? defaultConfig.react;
   preImport ??= gqlessConfig.preImport ?? defaultConfig.preImport;
   subscriptions ??= gqlessConfig.subscriptions ?? defaultConfig.subscriptions;
@@ -138,7 +150,7 @@ export async function generate(
           onlyOperationTypes: true,
           declarationKind: 'interface',
           addUnderscoreToArgsType: true,
-          scalars,
+          scalars: scalarTypes,
           namingConvention: 'keep',
           enumsAsTypes: enumsAsStrings,
         } as typescriptPlugin.TypeScriptPluginConfig,
@@ -979,7 +991,7 @@ export const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
   ${
     isJavascriptOutput
       ? `${typeDoc(
-          'import("gqless").GqlessClient<import("./schema.generated").GeneratedSchema>'
+          'import("gqless").GQlessClient<import("./schema.generated").GeneratedSchema>'
         )}export const client = createClient({
         schema: generatedSchema,
         scalarsEnumsHash, 

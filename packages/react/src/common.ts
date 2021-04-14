@@ -8,7 +8,7 @@ import {
 } from 'gqless';
 import {
   BuildSelectionInput,
-  gqlessError,
+  GQlessError,
   ResolveOptions,
   Selection,
 } from 'gqless';
@@ -510,7 +510,7 @@ export function useSuspensePromise(optsRef: {
   return setPromise;
 }
 
-export type OnErrorHandler = (error: gqlessError) => void;
+export type OnErrorHandler = (error: GQlessError) => void;
 
 export interface CoreHelpers {
   prepass: typeof prepass;

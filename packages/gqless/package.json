@@ -3,8 +3,12 @@
   "version": "2.0.12",
   "description": "gqless client without queries",
   "homepage": "https://gqless.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gqless/gqless.git"
+  },
   "license": "MIT",
-  "author": "PabloSz <pablosaez1995@gmail.com>",
+  "author": "GQless <opensource@gqless.com>",
   "main": "dist/index.js",
   "module": "dist/gqless.esm.js",
   "typings": "dist/index.d.ts",

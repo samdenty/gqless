@@ -9,4 +9,4 @@ hide_title: true
 
 # @gqless/react
 
-## Visit [https://gqless.com/react/basic-usage](https://gqless.com/react/basic-usage)
+## Visit [https://gqless.com/react/fetching-data](https://gqless.com/react/fetching-data)

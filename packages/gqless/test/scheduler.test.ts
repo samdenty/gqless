@@ -1,6 +1,6 @@
 import { waitForExpect } from 'test-utils';
 
-import { gqlessError } from '../src';
+import { GQlessError } from '../src';
 import { createInterceptorManager } from '../src/Interceptor';
 import { createScheduler } from '../src/Scheduler';
 import { Selection } from '../src/Selection';
@@ -186,7 +186,7 @@ describe('retry', () => {
             if ('retryPromise' in data) {
               data.retryPromise
                 .then(({ error }) => {
-                  expect(error instanceof gqlessError).toBeTruthy();
+                  expect(error instanceof GQlessError).toBeTruthy();
                   if (error) {
                     expect(error.message).toBe('try again, throwTry=2');
                   }
@@ -272,7 +272,7 @@ describe('retry', () => {
               if (currentCallNumber === 6 && callNumber === 7)
                 readyPromise.resolve();
 
-              expect(error instanceof gqlessError).toBeTruthy();
+              expect(error instanceof GQlessError).toBeTruthy();
               if (error) {
                 expect(error.message).toBe('expected error');
               }

@@ -40,11 +40,11 @@ Defined in: [react/src/meta/useMetaState.ts:17](https://github.com/gqless/gqless
 
 ### onError
 
-• `Optional` **onError**: (`data`: { `isLastTry`: _boolean_ ; `newError`: _gqlessError_ ; `selections`: _Selection_[] }) => _void_
+• `Optional` **onError**: (`data`: { `isLastTry`: _boolean_ ; `newError`: _GQlessError_ ; `selections`: _Selection_[] }) => _void_
 
 #### Type declaration:
 
-▸ (`data`: { `isLastTry`: _boolean_ ; `newError`: _gqlessError_ ; `selections`: _Selection_[] }): _void_
+▸ (`data`: { `isLastTry`: _boolean_ ; `newError`: _GQlessError_ ; `selections`: _Selection_[] }): _void_
 
 #### Parameters:
 
@@ -52,7 +52,7 @@ Defined in: [react/src/meta/useMetaState.ts:17](https://github.com/gqless/gqless
 | :---------------- | :------------ |
 | `data`            | _object_      |
 | `data.isLastTry`  | _boolean_     |
-| `data.newError`   | _gqlessError_ |
+| `data.newError`   | _GQlessError_ |
 | `data.selections` | _Selection_[] |
 
 **Returns:** _void_

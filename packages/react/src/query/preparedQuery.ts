@@ -1,4 +1,4 @@
-import type { GqlessClient, gqlessError } from 'gqless';
+import type { GQlessClient, GQlessError } from 'gqless';
 import type { SchedulerPromiseValue } from 'gqless/dist/Scheduler';
 
 import {
@@ -32,7 +32,7 @@ export interface PreparedQuery<
     opts?: UsePreparedQueryOptions
   ): {
     data: ReturnType<TFunction> | undefined;
-    error?: gqlessError | undefined;
+    error?: GQlessError | undefined;
     isLoading: boolean;
     isRefetching: boolean;
     called: boolean;
@@ -57,7 +57,7 @@ export function createPrepareQuery<
     subscription: object;
   }
 >(
-  { prefetch, query, refetch: refetchClient }: GqlessClient<GeneratedSchema>,
+  { prefetch, query, refetch: refetchClient }: GQlessClient<GeneratedSchema>,
   {
     defaults: { preparedSuspense: defaultSuspense },
   }: ReactClientOptionsWithDefaults
@@ -69,7 +69,7 @@ export function createPrepareQuery<
   >(fn: TFunction): PreparedQuery<GeneratedSchema, TFunction> {
     const state: {
       data: ReturnType<TFunction> | typeof emptyDataSymbol;
-      error?: gqlessError;
+      error?: GQlessError;
       isLoading: boolean;
       isRefetching: boolean;
       called: boolean;

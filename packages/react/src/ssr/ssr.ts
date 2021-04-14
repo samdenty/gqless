@@ -2,7 +2,7 @@ import { ReactNode, useEffect } from 'react';
 
 import { useOnFirstMount } from '../common';
 
-import type { GqlessClient, HydrateCacheOptions } from 'gqless';
+import type { GQlessClient, HydrateCacheOptions } from 'gqless';
 import type { ReactClientOptionsWithDefaults } from '../utils';
 
 export interface UseHydrateCacheOptions extends Partial<HydrateCacheOptions> {
@@ -42,7 +42,7 @@ export interface PrepareReactRender {
 }
 
 export function createSSRHelpers(
-  client: GqlessClient<any>,
+  client: GQlessClient<any>,
   { defaults: { refetchAfterHydrate } }: ReactClientOptionsWithDefaults
 ) {
   const prepareReactRender: PrepareReactRender = async function prepareReactRender(

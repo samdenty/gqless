@@ -3,7 +3,7 @@ import { promises } from 'fs';
 import { buildSchema, GraphQLSchema, buildClientSchema } from 'graphql';
 import { resolve } from 'path';
 
-import { defaultConfig, gqlessConfigPromise } from './config';
+import { defaultConfig, DUMMY_ENDPOINT, gqlessConfigPromise } from './config';
 
 import type { GenerateOptions, TransformSchemaOptions } from './generate';
 
@@ -92,12 +92,12 @@ export async function inspectWriteGenerate({
   defaultConfig.introspection.headers = headers || {};
 
   if (endpoint.startsWith('http://') || endpoint.startsWith('https://')) {
-    defaultConfig.endpoint = endpoint;
-
     schema = await (await import('./introspection')).getRemoteSchema(endpoint, {
       headers,
     });
   } else {
+    defaultConfig.introspection.endpoint = DUMMY_ENDPOINT;
+
     if (existsSync(endpoint)) {
       const file = await promises.readFile(endpoint, {
         encoding: 'utf-8',

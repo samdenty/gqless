@@ -1,20 +1,20 @@
 ---
 id: ssr
-title: React Server-Side Rendering
+title: Server-Side Rendering with React
 sidebar_label: Server-Side Rendering
 ---
 
-## Helpers
+## Helper functions
 
 These functions are meant to be used together, in different steps of your application.
 
-### prepareReactRender
+### `prepareReactRender`
 
 Function designed to be used before the React Render is being made, for example, in places like [getStaticProps](https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation) or [getServerSideProps](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering) of [Next.js](https://nextjs.org/)
 
 Internally it uses [react-ssr-prepass](https://github.com/FormidableLabs/react-ssr-prepass)
 
-### useHydrateCache
+### `useHydrateCache`
 
 Function designed to be placed at the very top of the hydrated component
 
@@ -23,7 +23,6 @@ Function designed to be placed at the very top of the hydrated component
 Made with **[Next.js SSR Data Fetching](https://nextjs.org/docs/basic-features/data-fetching)** in mind.
 
 > It's exactly the same usage for `getServerSideProps`
-
 > If you are using `staleWhileRevalidate` in your application, **You should always set 'shouldRefetch' as false**, since that feature will always do the refetch anyways.
 
 ```tsx
@@ -44,15 +43,11 @@ export default function ExamplePage({ cacheSnapshot, name }: PageProps) {
     shouldRefetch: false,
   });
 
-  const { hello } = useQuery();
+  const query = useQuery();
 
   return (
     <div>
-      <p>
-        {hello({
-          name,
-        })}
-      </p>
+      <p>{query.hello({ name })}</p>
     </div>
   );
 }

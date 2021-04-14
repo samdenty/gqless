@@ -1,0 +1,107 @@
+---
+id: intro
+title: Introduction
+sidebar_label: What & Why
+---
+
+From previously working on a large GraphQL codebase, the boilerplate involved with shipping new features often slowed me down.
+
+## What
+
+gqless is a fundamentally new approach to a GraphQL client. It makes using your API enjoyable, by _generating queries at runtime_ based upon the data your app consumes.
+
+#### Your app
+
+```jsx
+const App = () => {
+  const query = useQuery();
+
+  return (
+    <div>
+      Hello {query.me.name}!
+      {query.users({ limit: 10 }).map((user) => (
+        <User key={user.id || 0} user={user} />
+      ))}
+    </div>
+  );
+};
+```
+
+#### Generated query
+
+```graphql
+query {
+  me {
+    name
+  }
+  users(limit: 10) {
+    id
+    name
+  }
+}
+```
+
+## Why
+
+I wanted a GraphQL client that lets you _forget you're using GraphQL_, whilst tackling some issues shared across all existing GraphQL clients:
+
+- **Slow Typescript DX**. Typescript should speed up your workflow, not slow it down
+- **Inefficient queries**, due to underutilized nesting. [Relay](https://relay.dev) is a solution, but has even more boilerplate 😢
+
+## Workflow comparison
+
+Lets say you've just added a new field to your API, and want it displayed within multiple places in the UI:
+
+```graphql
+type User {
+  username: String!
++ avatarUrl(size: Int!): String!
+}
+```
+
+### Conventional client
+
+First you'd need to search your components, and identify which queries need updating. After referring to your browser for documentation, you'd then update the query
+
+```graphql
+query UserProfile(avatarSize: Int!) {
+  user {
+    ...
++   avatarUrl(size: $avatarSize)
+  }
+}
+```
+
+Typically you'd then run a type generator to create types for each query (changes may not be reflected in IDE straight away).
+
+Finally you'd do the task you set out to do - updating the components,
+
+```tsx
+const UserProfile = ({ id }) => {
+  const { data } = useQuery(
+    gql`
+      query UserProfile($username: ID!, $avatarSize: Int!) {
+        user(username: $id) {
+          avatarUrl(size: $avatarSize)
+        }
+      }
+    `,
+    {
+      variables: { id, avatarSize: 100 },
+    }
+  );
+
+  return <img src={data.user.avatarUrl} />;
+};
+```
+
+### With GQless
+
+Just update your components, and the queries generated at runtime will reflect your changes.
+
+```tsx
+const UserProfile = ({ id }) => {
+  const query = useQuery();
+  return <img src={query.user({ id }).avatarUrl({ size: 100 })} />;
+};
+```

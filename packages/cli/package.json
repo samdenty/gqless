@@ -2,8 +2,12 @@
   "name": "@gqless/cli",
   "version": "2.0.14",
   "homepage": "https://gqless.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gqless/gqless.git"
+  },
   "license": "MIT",
-  "author": "PabloSz <pablosaez1995@gmail.com>",
+  "author": "GQless <opensource@gqless.com>",
   "main": "dist/index.js",
   "module": "dist/gqless-cli.esm.js",
   "typings": "dist/index.d.ts",

@@ -45,11 +45,7 @@ export default function Page() {
           usages of <b>gqless</b>.
         </Text>
         <Text>
-          And we encourage you to{' '}
-          <Link to="https://discord.gg/FjwyGQKYER">
-            Join our Discord server
-          </Link>{' '}
-          or open a new{' '}
+          And we encourage you to open a new{' '}
           <Link to="https://github.com/gqless/gqless/issues">GitHub issue</Link>{' '}
           to request some examples about specific issues you might have, and you
           will also be helping everyone.

@@ -12,8 +12,8 @@ export default function Page() {
       <Heading>GraphQL Queries in React Suspense</Heading>
       <Text>
         In this example you can see some usage examples of{' '}
-        <Link to="/react/query#usequery">useQuery</Link> and{' '}
-        <Link to="/react/query#graphql-hoc">graphql HOC</Link>.
+        <Link to="/react/fetching-data#usequery">useQuery</Link> and{' '}
+        <Link to="/react/fetching-data#graphql-hoc">graphql HOC</Link>.
       </Text>
       <CodeSandboxEmbed file="src/components/Hello.tsx" initialPath="/" />
     </ExamplesPage>

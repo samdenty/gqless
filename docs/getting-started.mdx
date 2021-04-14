@@ -1,0 +1,74 @@
+---
+id: getting-started
+title: Getting started
+---
+
+## Installation
+
+1. Go to the root of your project, and run:
+   ```bash yarn2npm
+   yarn add gqless
+   yarn add -D @gqless/cli graphql
+   ```
+2. Next, add a `script` field to your package.json:
+   ```json
+   {
+     "scripts": {
+       "generate": "gqless generate"
+     }
+   }
+   ```
+3. Then run the script once, to create a `gqless.config.cjs` file:
+   ```bash yarn2npm
+   yarn generate
+   ```
+
+## Configuring Codegen
+
+> The default config should look something like this:
+>
+> _can also be specified in `package.json` via `gqless` key_
+>
+> ```js
+> /**
+> * @type {import("@gqless/cli").GQlessConfig}
+> */
+> const config = {,
+>  react: true,
+>  scalarTypes: { DateTime: 'string' },
+>  introspection: {
+>    endpoint: 'SPECIFY_ENDPOINT_OR_SCHEMA_FILE_PATH_HERE',
+>    headers: {},
+>  },
+>  destination: './src/gqless/index.ts',
+>  subscriptions: false,
+> };
+>
+> module.exports = config;
+> ```
+
+Point `introspection.endpoint` to your GraphQL API, _adding headers for authorization if necessary_. Then run the generate command again, to fetch your schema and output to the `destination` file:
+
+```bash yarn2npm
+yarn generate
+```
+
+The output should look like this:
+
+```bash
+src/gqless
+├── schema.generated.ts # Will be overwritten when you codegen again
+└── index.ts # GQless client is exported from here, safe to modify options
+```
+
+## Getting started
+
+Configure the `fetch()` call to your GraphQL server, located inside the `queryFetcher()` method within `src/gqless/index.ts`. You might for instance want to dynamically generate the URL depending on environment, or connect it up to your apps authorization.
+
+## Usage
+
+See one of the following for more:
+
+### [Using with React](/react/fetching-data)
+
+### [Using the standalone Client](/client/fetching-data)

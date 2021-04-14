@@ -291,7 +291,7 @@ test('custom scalars works', async () => {
     generatedSchema,
     scalarsEnumsHash,
   } = await generate(server.graphql.schema, {
-    scalars: {
+    scalarTypes: {
       Custom: '"hello world"',
     },
   });
@@ -1242,7 +1242,7 @@ test('javascript output works', async () => {
         : undefined;
 
     /**
-     * @type {import(\\"gqless\\").GqlessClient<import(\\"./schema.generated\\").GeneratedSchema>}
+     * @type {import(\\"gqless\\").GQlessClient<import(\\"./schema.generated\\").GeneratedSchema>}
      */
     export const client = createClient({
       schema: generatedSchema,

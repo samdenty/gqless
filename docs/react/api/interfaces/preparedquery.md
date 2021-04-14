@@ -74,7 +74,7 @@ Defined in: [react/src/query/preparedQuery.ts:26](https://github.com/gqless/gqle
 | :------------- | :-------------------------------------- |
 | `called`       | _boolean_                               |
 | `data`         | _undefined_ \| _ReturnType_<TFunction\> |
-| `error`?       | _gqlessError_                           |
+| `error`?       | _GQlessError_                           |
 | `isLoading`    | _boolean_                               |
 | `isRefetching` | _boolean_                               |
 

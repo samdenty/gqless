@@ -1,59 +1,40 @@
 ---
 id: suspense
-title: React Suspense Features
-sidebar_label: Suspense
+title: Using React Suspense
+sidebar_label: Suspense & usage without
 ---
 
-## Focus
+## How to enable it
 
-The focus of `gqless` is to embrace [React Suspense](https://reactjs.org/docs/concurrent-mode-suspense.html) & [React Concurrent Mode](https://reactjs.org/docs/concurrent-mode-intro.html), and that's why most of it's functions/hooks are `Suspense ready`, but we understand that it's not always the best solution, and it may not be for everyone.
+One of the goals of GQless is to embrace React [Suspense](https://reactjs.org/docs/concurrent-mode-suspense.html) & [Concurrent Mode](https://reactjs.org/docs/concurrent-mode-intro.html), however these features are still in development by the React team.
 
-That's why it's usage will always be [**opt-in via defaults**](/react/config#defaults), and you will always be able to turn on/off `Suspense` in a per function/hook basis.
+Until these features become widespread enough, you will need to **opt-in** for Suspense support via configuration. This can be done directly in hook, or via the [defaults of the client](/react/config#defaults).
 
 ```ts
-const {
-  // ...
-} = useQuery({
-  suspense: false,
-  // ...
-});
+// Enabling support with hooks
+const query = useQuery({ suspense: true });
 
-// ...
-
-const Component = graphql(
-  () => {
-    //...
-  },
-  {
-    suspense: true,
-    // ...
-  }
-);
+// Enabling support with HoC
+const Component = graphql(() => <div />, { suspense: true });
 ```
 
-## Non-Suspense usage
+## Usage without Suspense
 
-Most of the hooks/functions offer some way of using it flawlessly without `Suspense` usage in mind, often with `isLoading` states returned.
-
-But in the main design of `gqless`, using [useQuery](/react/query#usequery) and/or [graphql HOC](/react/query#graphql-hoc) it's a little bit different.
-
-First of all, **We suggest NOT using the `graphql HOC`** for `Non-Suspense usage`, instead, do [useQuery](/react/query#usequery), mainly because it returns an extra reserved `$state` object, in which you can check easily if the data you requested is being fetched for the first time:
+All hooks return a `$state` object, when suspense support is not enabled.
 
 ```tsx
 function Example() {
-  const { helloWorld, $state } = useQuery({
-    suspense: false,
-  });
+  const query = useQuery({ suspense: false });
 
-  if ($state.isLoading) return <p>Loading...</p>;
+  if (query.$state.isLoading) return <p>Loading...</p>;
 
   return <p>{helloWorld}</p>;
 }
 ```
 
-## Suspense in SSR
+## Suspense & SSR
 
-Meanwhile we [support Server-Side Rendering](/react/ssr), React still today doesn't support `Suspense` in `SSR`, that's why we use [react-ssr-prepass](https://github.com/FormidableLabs/react-ssr-prepass) for our `SSR` helpers, but while you are using it, you might encounter something like this:
+React doesn't yet support suspense whilst rendering on the server, so [react-ssr-prepass](https://github.com/FormidableLabs/react-ssr-prepass) is used in our SSR functions:
 
 ![React Error with Suspense in SSR](/img/suspense-ssr.png)
 

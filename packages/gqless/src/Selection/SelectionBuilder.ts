@@ -1,6 +1,6 @@
 import { SchemaUnion } from '../Accessor';
 import { InnerClientState } from '../Client/client';
-import { gqlessError } from '../Error';
+import { GQlessError } from '../Error';
 import { parseSchemaType, Type } from '../Schema/types';
 import { isInteger } from '../Utils';
 import { Selection, SelectionType } from './selection';
@@ -49,7 +49,7 @@ export function createSelectionBuilder(
         break;
       }
       default:
-        throw new gqlessError(
+        throw new GQlessError(
           'Invalid initial selection build argument, specify "query", "mutation" or "subscription"',
           {
             caller: buildSelection,
@@ -104,7 +104,7 @@ export function createSelectionBuilder(
 
       const schemaTypeValue = schemaType[key] as Type | undefined;
       if (!schemaTypeValue)
-        throw new gqlessError(
+        throw new GQlessError(
           `Invalid selection argument at index ${index}: ${JSON.stringify(
             key
           )}, possible valid keys: '${Object.keys(schemaType)
@@ -142,7 +142,7 @@ export function createSelectionBuilder(
       }
 
       if (!typeValue)
-        throw new gqlessError('Invalid schema type', {
+        throw new GQlessError('Invalid schema type', {
           caller: buildSelection,
         });
 

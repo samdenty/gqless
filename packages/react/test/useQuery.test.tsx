@@ -6,13 +6,13 @@ test('Basic Non-Suspense', async () => {
   const { useQuery } = await createReactTestClient();
 
   const { result, waitFor } = renderHook(() => {
-    const { hello, $state } = useQuery({
+    const query = useQuery({
       suspense: false,
     });
 
     return {
-      hello,
-      $state,
+      hello: query.hello,
+      $state: query.$state,
     };
   });
 
@@ -31,11 +31,11 @@ test('Basic Suspense', async () => {
   const { useQuery } = await createReactTestClient();
 
   const { result, waitForNextUpdate } = renderHook(() => {
-    const { hello } = useQuery({
+    const query = useQuery({
       suspense: true,
     });
 
-    return hello;
+    return query.hello;
   });
 
   expect(result.current).toBe(undefined);

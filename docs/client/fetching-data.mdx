@@ -1,0 +1,126 @@
+---
+id: fetching-data
+title: Fetching data
+---
+
+> #### Prerequisites
+>
+> Make sure you've completed [Getting Started](/getting-started) first. `../gqless` refers to the generated directory.
+
+GQless is a framework-agnostic GraphQL client, and can be used anywhere _(we might add more bindings for other Frontend frameworks in the future)_.
+
+## Fetching data
+
+### `resolved`
+
+Accepts a callback, which will be recursively executed, until the data has been fetched (or an error occurs).
+The final result of the callback is returned as a promise.
+
+If your request has any error, either from syntax or from the GraphQL API,
+it will always throw an instance of [`GQlessError`](/client/api/classes/GQlessError) _(which is itself, an instance of [`Error`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error))_
+
+```ts
+import { query, resolved } from '../gqless';
+
+resolved(() => {
+  return query.helloWorld!;
+})
+  .then((data) => {
+    // data == string
+  })
+  .catch((err) => {
+    // err == import("gqless").GQlessError
+  });
+```
+
+You can specify options in the second argument, like forcing a refetch or isolating from existing cache, see [**ResolveOptions**](/client/api/interfaces/resolveoptions).
+
+### `inlineResolved`
+
+`inlineResolved` is the exact same as [resolved](#resolved), but it returns the data straight away if it can.
+
+```ts
+const possibleData = inlineResolved(() => {
+  return query.helloWorld!;
+});
+
+if (possibleData instanceof Promise) {
+  // data == Promise<string>
+
+  // Waiting for data from API
+  const data = await possibleData;
+
+  // data == string
+} else {
+  // possibleData == string
+}
+```
+
+## Refetching data
+
+### `refetch`
+
+A special function that accepts object proxies, or functions.
+
+When dealing with object proxies, it recovers **all** the history of the specific object down the tree of selections,
+and refetchs them, returning the same object back after all the resolutions are done.
+
+On the other hand, when used with a **function**, it calls the function (using the core scheduler) ignoring possible nulls in the middle in the first pass,
+and returns whatever the function gave back as a promise.
+
+```ts
+import { query, refetch, resolved } from '../gqless';
+
+// ...
+
+const data = await resolved(() => {
+  const user = query.user;
+
+  if (user) {
+    return {
+      id: user.name,
+      name: user.name,
+    };
+  }
+  return null;
+});
+
+// Later...
+
+// It will refetch 'id' & 'name' of 'query.user'
+const refetchedUser = await refetch(query.user);
+```
+
+## Using the Scheduler directly
+
+GQless exposes the Scheduler API, which is used by the helper functions above.
+
+```ts
+import { query, client } from '../gqless';
+
+async function Example() {
+  query.helloWorld;
+
+  await client.scheduler.resolving?.promise;
+
+  // string
+  const helloWorld = query.helloWorld!;
+}
+```
+
+### Error handling
+
+The scheduler resolves to a promise of a [`GQlessError`](/client/api/classes/GQlessError):
+
+```ts
+async function Example() {
+  query.helloWorld;
+
+  await client.scheduler.resolving?.promise.then(({ error }) => {
+    // error == import("gqless").GQlessError | undefined
+    if (error) {
+      throw error;
+    }
+  });
+}
+```

@@ -26,7 +26,7 @@ Defined in: [react/src/query/useLazyQuery.ts:24](https://github.com/gqless/gqles
 
 ### error
 
-• `Optional` **error**: _gqlessError_
+• `Optional` **error**: _GQlessError_
 
 Defined in: [react/src/query/useLazyQuery.ts:25](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L25)
 

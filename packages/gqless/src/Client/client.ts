@@ -16,7 +16,7 @@ import {
   createPersistenceHelpers,
   PersistenceHelpers,
 } from '../Cache/persistence';
-import { gqlessError } from '../Error';
+import { GQlessError } from '../Error';
 import { EventHandler } from '../Events';
 import { createPrefetch, Prefetch } from '../Helpers/prefetch';
 import { createRefetch, Refetch } from '../Helpers/refetch';
@@ -66,7 +66,7 @@ export interface InnerClientState {
 export interface SubscribeEvents {
   onData: (data: Record<string, unknown>) => void;
   onError: (payload: {
-    error: gqlessError;
+    error: GQlessError;
     data: Record<string, unknown> | null;
   }) => void;
   onStart?: () => void;
@@ -143,14 +143,14 @@ export interface Mutate<
     opts?: {
       onComplete?: (data: T, helpers: MutateHelpers<GeneratedSchema>) => void;
       onError?: (
-        error: gqlessError,
+        error: GQlessError,
         helpers: MutateHelpers<GeneratedSchema>
       ) => void;
     }
   ): Promise<T>;
 }
 
-export interface GqlessClient<
+export interface GQlessClient<
   GeneratedSchema extends {
     query: {};
     mutation: {};
@@ -221,7 +221,7 @@ export function createClient<
 }: ClientOptions<
   ObjectTypesNames,
   ObjectTypes
->): GqlessClient<GeneratedSchema> {
+>): GQlessClient<GeneratedSchema> {
   const interceptorManager = createInterceptorManager();
 
   const { globalInterceptor } = interceptorManager;
@@ -320,7 +320,7 @@ export function createClient<
         }
       ) => void;
       onError?: (
-        error: gqlessError,
+        error: GQlessError,
         helpers: {
           query: GeneratedSchema['query'];
           setCache: typeof setCache;
@@ -340,7 +340,7 @@ export function createClient<
       });
       return data;
     } catch (err) {
-      const error = gqlessError.create(err, mutate);
+      const error = GQlessError.create(err, mutate);
 
       opts.onError?.(error, {
         query,

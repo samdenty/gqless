@@ -1,7 +1,7 @@
 module.exports = {
   title: 'gqless',
   tagline: `A GraphQL client without queries`,
-  url: 'https://gqless.dev',
+  url: 'https://gqless.com',
   baseUrl: '/',
   favicon: '/favicon.ico',
   organizationName: 'gqless',
@@ -32,31 +32,27 @@ module.exports = {
       },
       items: [
         {
-          label: 'Getting Started',
-          to: 'introduction/getting-started',
+          label: 'Introduction',
+          to: 'intro',
           position: 'right',
-          activeBasePath: 'introduction',
+          activeBasePath: 'intro',
         },
         {
-          label: 'Interactive Examples',
+          label: 'Get started',
+          to: 'getting-started',
+          position: 'right',
+        },
+        {
+          label: 'Examples',
           to: '/examples',
           position: 'right',
           activeBasePath: 'examples',
         },
         {
           label: 'React',
-          to: 'react/basic-usage',
+          to: 'react/fetching-data',
           position: 'right',
-        },
-        {
-          label: 'FAQ',
-          to: 'faq',
-          position: 'right',
-        },
-        {
-          label: 'Discord',
-          to: 'https://discord.gg/FjwyGQKYER',
-          position: 'right',
+          activeBasePath: 'react',
         },
 
         // { to: 'blog', label: 'Blog', position: 'left' },
@@ -82,17 +78,17 @@ module.exports = {
           title: 'Docs',
           items: [
             {
+              label: 'Introduction',
+              to: 'intro',
+            },
+            {
               label: 'Getting Started',
-              to: 'introduction/getting-started',
+              to: 'getting-started',
             },
             {
               label: 'React',
-              to: 'react/basic-usage',
+              to: 'react/fetching-data',
               position: 'right',
-            },
-            {
-              label: 'FAQ',
-              to: 'faq',
             },
           ],
         },
@@ -104,8 +100,8 @@ module.exports = {
               href: 'http://twitter.com/gqlessdev',
             },
             {
-              label: 'Spectrum',
-              href: 'https://spectrum.chat/gqless',
+              label: 'Discussions',
+              href: 'https://github.com/gqless/gqless/discussions',
             },
           ],
         },
@@ -126,9 +122,6 @@ module.exports = {
       copyright: `
 <div>
   <p>${`© Copyright ${new Date().getFullYear()} GQless`}</p>
-  <a href="https://vercel.com/?utm_source=gqless&utm_campaign=oss">
-    <img alt="Powered By Vercel" src="/powered-by-vercel.svg" style="float: right; margin-top: -14px; opacity: 0.3; height: 30px" />
-  </a>
 </div>
       `.trim(),
     },
@@ -158,13 +151,13 @@ module.exports = {
         [
           'docusaurus-plugin-typedoc',
           {
-            id: 'core',
+            id: 'client',
             entryPoints: ['../../packages/gqless/src/index.ts'],
             tsconfig: '../../packages/gqless/tsconfig.json',
             docsRoot: '../../docs',
-            out: 'core/api',
+            out: 'client/api',
             sidebar: {
-              sidebarFile: 'sidebars/core.js',
+              sidebarFile: 'sidebars/client.js',
               fullNames: true,
             },
             allReflectionsHaveOwnDocument: false,
