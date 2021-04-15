@@ -14,7 +14,7 @@ hide_title: true
 
 • `Optional` **\_\_args**: _Record_<string, string\>
 
-Defined in: [packages/gqless/src/Schema/types.ts:4](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Schema/types.ts#L4)
+Defined in: [packages/gqless/src/Schema/types.ts:4](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L4)
 
 ---
 
@@ -22,4 +22,4 @@ Defined in: [packages/gqless/src/Schema/types.ts:4](https://github.com/gqless/gq
 
 • **\_\_type**: _string_
 
-Defined in: [packages/gqless/src/Schema/types.ts:5](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Schema/types.ts#L5)
+Defined in: [packages/gqless/src/Schema/types.ts:5](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L5)

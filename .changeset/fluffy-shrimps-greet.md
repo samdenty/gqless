@@ -1,9 +1,4 @@
 ---
-'github-example': patch
-'mercurius-example': patch
-'react-example': patch
-'test-utils': patch
-'website': patch
 '@gqless/cli': patch
 'gqless': patch
 '@gqless/logger': patch

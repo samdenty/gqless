@@ -14,7 +14,7 @@ const encoding = {
 
 async function main() {
   const docFiles = await globby([
-    '../../docs/core/api/**/*.md',
+    '../../docs/client/api/**/*.md',
     '../../docs/react/api/**/*.md',
   ]);
 

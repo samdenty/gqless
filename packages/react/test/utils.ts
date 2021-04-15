@@ -75,32 +75,6 @@ export interface TestClientConfig {
   subscriptions?: boolean;
 }
 
-let mockActWarning: jest.SpyInstance | undefined;
-
-beforeAll(() => {
-  const prevConsoleError = console.error;
-  mockActWarning = jest
-    .spyOn(console, 'error')
-    .mockImplementation((message, ...rest) => {
-      if (
-        typeof message === 'string' &&
-        message.includes(
-          'Warning: An update to %s inside a test was not wrapped in act'
-        )
-      ) {
-        return;
-      }
-      prevConsoleError(message, ...rest);
-    });
-});
-
-afterAll(async () => {
-  if (mockActWarning) {
-    mockActWarning.mockRestore();
-  }
-  await sleep(500);
-});
-
 export const createReactTestClient = async (
   addedToGeneratedSchema?: DeepPartial<Schema>,
   queryFetcher?: QueryFetcher,

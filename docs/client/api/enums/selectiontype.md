@@ -14,7 +14,7 @@ hide_title: true
 
 • **Mutation**: = 1
 
-Defined in: [packages/gqless/src/Selection/selection.ts:3](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L3)
+Defined in: [packages/gqless/src/Selection/selection.ts:3](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L3)
 
 ---
 
@@ -22,7 +22,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:3](https://github.com/gq
 
 • **Query**: = 0
 
-Defined in: [packages/gqless/src/Selection/selection.ts:2](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L2)
+Defined in: [packages/gqless/src/Selection/selection.ts:2](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L2)
 
 ---
 
@@ -30,4 +30,4 @@ Defined in: [packages/gqless/src/Selection/selection.ts:2](https://github.com/gq
 
 • **Subscription**: = 2
 
-Defined in: [packages/gqless/src/Selection/selection.ts:4](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L4)
+Defined in: [packages/gqless/src/Selection/selection.ts:4](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L4)

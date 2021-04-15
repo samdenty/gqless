@@ -22,7 +22,7 @@ hide_title: true
 
 **Returns:** [_Selection_](selection.md)
 
-Defined in: [packages/gqless/src/Selection/selection.ts:36](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L36)
+Defined in: [packages/gqless/src/Selection/selection.ts:36](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L36)
 
 ## Properties
 
@@ -30,7 +30,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:36](https://github.com/g
 
 • `Optional` **alias**: _string_
 
-Defined in: [packages/gqless/src/Selection/selection.ts:29](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L29)
+Defined in: [packages/gqless/src/Selection/selection.ts:29](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L29)
 
 ---
 
@@ -38,7 +38,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:29](https://github.com/g
 
 • `Optional` **argTypes**: _Readonly_<Record<string, string\>\>
 
-Defined in: [packages/gqless/src/Selection/selection.ts:28](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L28)
+Defined in: [packages/gqless/src/Selection/selection.ts:28](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L28)
 
 ---
 
@@ -46,7 +46,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:28](https://github.com/g
 
 • `Optional` **args**: _Readonly_<Record<string, unknown\>\>
 
-Defined in: [packages/gqless/src/Selection/selection.ts:27](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L27)
+Defined in: [packages/gqless/src/Selection/selection.ts:27](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L27)
 
 ---
 
@@ -54,7 +54,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:27](https://github.com/g
 
 • **cachePath**: readonly (_string_ \| _number_)[]= []
 
-Defined in: [packages/gqless/src/Selection/selection.ts:31](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L31)
+Defined in: [packages/gqless/src/Selection/selection.ts:31](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L31)
 
 ---
 
@@ -62,7 +62,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:31](https://github.com/g
 
 • **id**: _string_
 
-Defined in: [packages/gqless/src/Selection/selection.ts:19](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L19)
+Defined in: [packages/gqless/src/Selection/selection.ts:19](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L19)
 
 ---
 
@@ -70,7 +70,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:19](https://github.com/g
 
 • **key**: _string_ \| _number_
 
-Defined in: [packages/gqless/src/Selection/selection.ts:21](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L21)
+Defined in: [packages/gqless/src/Selection/selection.ts:21](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L21)
 
 ---
 
@@ -78,7 +78,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:21](https://github.com/g
 
 • **noIndexSelections**: readonly [_Selection_](selection.md)[]
 
-Defined in: [packages/gqless/src/Selection/selection.ts:36](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L36)
+Defined in: [packages/gqless/src/Selection/selection.ts:36](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L36)
 
 ---
 
@@ -86,7 +86,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:36](https://github.com/g
 
 • **pathString**: _string_
 
-Defined in: [packages/gqless/src/Selection/selection.ts:32](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L32)
+Defined in: [packages/gqless/src/Selection/selection.ts:32](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L32)
 
 ---
 
@@ -94,7 +94,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:32](https://github.com/g
 
 • **selectionsList**: readonly [_Selection_](selection.md)[]
 
-Defined in: [packages/gqless/src/Selection/selection.ts:34](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L34)
+Defined in: [packages/gqless/src/Selection/selection.ts:34](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L34)
 
 ---
 
@@ -102,7 +102,7 @@ Defined in: [packages/gqless/src/Selection/selection.ts:34](https://github.com/g
 
 • **type**: [_SelectionType_](../enums/selectiontype.md)
 
-Defined in: [packages/gqless/src/Selection/selection.ts:23](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L23)
+Defined in: [packages/gqless/src/Selection/selection.ts:23](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L23)
 
 ---
 
@@ -110,4 +110,4 @@ Defined in: [packages/gqless/src/Selection/selection.ts:23](https://github.com/g
 
 • `Optional` **unions**: _string_[]
 
-Defined in: [packages/gqless/src/Selection/selection.ts:25](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/selection.ts#L25)
+Defined in: [packages/gqless/src/Selection/selection.ts:25](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L25)

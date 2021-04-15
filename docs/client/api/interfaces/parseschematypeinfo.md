@@ -14,7 +14,7 @@ hide_title: true
 
 • **isArray**: _boolean_
 
-Defined in: [packages/gqless/src/Schema/types.ts:33](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Schema/types.ts#L33)
+Defined in: [packages/gqless/src/Schema/types.ts:33](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L33)
 
 ---
 
@@ -22,7 +22,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:33](https://github.com/gqless/g
 
 • **isNullable**: _boolean_
 
-Defined in: [packages/gqless/src/Schema/types.ts:32](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Schema/types.ts#L32)
+Defined in: [packages/gqless/src/Schema/types.ts:32](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L32)
 
 ---
 
@@ -30,7 +30,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:32](https://github.com/gqless/g
 
 • **nullableItems**: _boolean_
 
-Defined in: [packages/gqless/src/Schema/types.ts:34](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Schema/types.ts#L34)
+Defined in: [packages/gqless/src/Schema/types.ts:34](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L34)
 
 ---
 
@@ -38,4 +38,4 @@ Defined in: [packages/gqless/src/Schema/types.ts:34](https://github.com/gqless/g
 
 • **pureType**: _string_
 
-Defined in: [packages/gqless/src/Schema/types.ts:31](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Schema/types.ts#L31)
+Defined in: [packages/gqless/src/Schema/types.ts:31](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L31)
