@@ -1,0 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+body {
+  font-family: "Lato", sans-serif;
+  /* Used to prevent CodeSandbox embed buttons */
+  padding-bottom: 50px;
+}
+
+a:link {
+  text-decoration: inherit;
+  color: inherit;
+  font-weight: bold;
+  box-shadow: 1px 1px 1px 1px;
+  border-radius: 3px;
+  padding: 2px;
+}
+
+a:visited {
+  text-decoration: inherit;
+  color: inherit;
+  font-weight: bold;
+}
+
+a:hover {
+  color: rgb(52, 52, 170);
+}

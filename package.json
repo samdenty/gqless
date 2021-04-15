@@ -19,6 +19,7 @@
     "dev:test": "pnpm test:watch -r --no-bail --no-sort --stream",
     "docs:build": "pnpm build:website && pretty-quick",
     "prepare": "husky install",
+    "pretty": "pretty-quick",
     "publish:all": "changeset version && pnpm i && pnpm test && pnpm -r publish --access public",
     "test": "jest --clearCache && pnpm test -r --no-sort --no-bail --stream",
     "website": "pnpm -r --filter website start",
@@ -27,7 +28,7 @@
   "dependencies": {
     "bufferutil": "^4.0.3",
     "build-utils": "workspace:^1.0.0",
-    "esbuild": "^0.11.5",
+    "esbuild": "^0.11.11",
     "jest": "^26.6.3",
     "nodemon": "^2.0.7",
     "open": "^8.0.5",
@@ -35,7 +36,7 @@
     "ts-node": "^9.1.1",
     "tslib": "^2.2.0",
     "tsup": "^4.8.21",
-    "typescript": "^4.2.3",
+    "typescript": "^4.2.4",
     "utf-8-validate": "^5.0.4",
     "wait-on": "^5.3.0"
   },
@@ -46,9 +47,9 @@
   "devDependencies": {
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.13.8",
     "@babel/plugin-proposal-optional-chaining": "^7.13.12",
-    "@changesets/cli": "^2.15.0",
-    "@types/node": "^14.14.37",
-    "concurrently": "^6.0.1",
+    "@changesets/cli": "^2.16.0",
+    "@types/node": "^14.14.40",
+    "concurrently": "^6.0.2",
     "fkill": "^7.1.1",
     "husky": "^6.0.0",
     "prettier": "^2.2.1",
