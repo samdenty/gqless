@@ -1,5 +1,8 @@
 import { promises } from 'fs';
 import { resolve } from 'path';
+
+import { __innerState } from './innerState';
+
 import type { GenerateOptions } from './generate';
 import type { IntrospectionOptions } from './introspection';
 
@@ -213,7 +216,11 @@ export const gqlessConfigPromise: Promise<{
 
               const NODE_ENV = process.env['NODE_ENV'];
 
-              if (NODE_ENV !== 'test' && NODE_ENV !== 'production') {
+              if (
+                NODE_ENV !== 'test' &&
+                NODE_ENV !== 'production' &&
+                __innerState.isCLI
+              ) {
                 const { format } = (await import('./prettier')).formatPrettier({
                   parser: 'typescript',
                 });
@@ -225,12 +232,12 @@ export const gqlessConfigPromise: Promise<{
                 await promises.writeFile(
                   defaultFilePath,
                   await format(`
-                    /**
-                     * @type {import("@gqless/cli").GQlessConfig}
-                     */
-                    const config = ${JSON.stringify(config)};
-                    
-                    module.exports = config;`)
+                      /**
+                       * @type {import("@gqless/cli").GQlessConfig}
+                       */
+                      const config = ${JSON.stringify(config)};
+                      
+                      module.exports = config;`)
                 );
               }
               return resolve({
