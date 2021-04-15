@@ -38,7 +38,7 @@
     "commander": "^7.2.0",
     "cosmiconfig": "^7.0.0",
     "cross-fetch": "^3.1.4",
-    "gqless": "workspace:^2.0.11",
+    "gqless": "workspace:^2.0.12",
     "mkdirp": "^1.0.4",
     "prettier": "^2.2.1"
   },

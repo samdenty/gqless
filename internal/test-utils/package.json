@@ -34,7 +34,7 @@
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1",
     "randomstring": "^1.1.5",
-    "ts-jest": "^26.5.4",
+    "ts-jest": "^26.5.5",
     "wait-for-expect": "^3.0.2"
   },
   "devDependencies": {

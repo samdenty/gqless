@@ -22,7 +22,7 @@
     "altair-fastify-plugin": "^4.0.0",
     "date-fns": "^2.21.1",
     "extract-files": "^9.0.0",
-    "faker": "5.5.3",
+    "faker": "^5.5.3",
     "fastify": "^3.14.2",
     "fastify-nextjs": "^5.3.0",
     "framer-motion": "^4.1.4",

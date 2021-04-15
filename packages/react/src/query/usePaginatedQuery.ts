@@ -271,13 +271,13 @@ export function createUsePaginatedQuery<
         let args: TArgs =
           newArgs !== undefined
             ? typeof newArgs === 'function'
-              ? (newArgs as (
+              ? (stateRef.current.args = (newArgs as (
                   data: FetchMoreCallbackArgs<TData, TArgs>
                 ) => TArgs)({
                   existingData: stateRef.current.data,
                   existingArgs: stateRef.current.args,
-                })
-              : newArgs
+                }))
+              : (stateRef.current.args = newArgs)
             : stateRef.current.args;
 
         const resolvedFn = () => fnRef.current(clientQuery, args, coreHelpers);
