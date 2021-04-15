@@ -722,113 +722,132 @@ export function createResolvers(
       return;
     }
 
-    const { query, variables, cacheKey } = buildQueryAndCheckTempCache<TData>(
-      selections,
-      'subscription',
-      innerState.normalizationHandler,
-      true,
-      cache === globalCache
-    );
+    const selectionsByRoot = new Map<Selection, Array<Selection>>();
 
-    let unsubscribe: () => Promise<void>;
-    let operationId: string;
-    const subResult = subscriptions.subscribe({
-      query,
-      variables,
-      selections,
-      cacheKey,
-      events: options.scheduler
-        ? subscriptionSchedulerEvents
-        : {
-            onData(data) {
-              cache.mergeCache(data, 'subscription');
+    for (const selection of selections) {
+      const root = selection.selectionsList[1];
+      // This case realistically should never happen
+      /* istanbul ignore next */
+      if (!root) continue;
 
-              options.onSubscription?.({
-                type: 'data',
-                unsubscribe,
-                data,
-              });
-              if (eventHandler.hasFetchSubscribers) {
-                eventHandler.sendFetchPromise(
-                  Promise.resolve({
-                    executionResult: {
-                      data,
-                    },
-                    cacheSnapshot: globalCache.cache,
-                    query,
-                    variables,
-                    selections,
-                    type: 'subscription',
-                    label: `[id=${operationId}] [data]`,
-                  }),
-                  selections
-                );
-              }
-            },
-            onError({ data, error }) {
-              if (data) cache.mergeCache(data, 'subscription');
-
-              options.onSubscription?.({
-                type: 'with-errors',
-                unsubscribe,
-                data,
-                error,
-              });
-
-              if (eventHandler.hasFetchSubscribers) {
-                eventHandler.sendFetchPromise(
-                  Promise.resolve({
-                    executionResult: {
-                      data,
-                    },
-                    error,
-                    cacheSnapshot: globalCache.cache,
-                    query,
-                    variables,
-                    selections,
-                    type: 'subscription',
-                    label: `[id=${operationId}] [error]`,
-                  }),
-                  selections
-                );
-              }
-            },
-            onStart: options.onSubscription
-              ? () => {
-                  options.onSubscription?.({
-                    type: 'start',
-                    unsubscribe,
-                  });
-                }
-              : undefined,
-            onComplete: options.onSubscription
-              ? () => {
-                  options.onSubscription?.({
-                    type: 'complete',
-                    unsubscribe,
-                  });
-                }
-              : undefined,
-          },
-    });
-
-    if (subResult instanceof Promise) {
-      let loggingPromise: DeferredPromise<FetchEventData> | undefined;
-      if (eventHandler.hasFetchSubscribers) {
-        loggingPromise = createDeferredPromise();
-        eventHandler.sendFetchPromise(loggingPromise.promise, selections);
+      let selectionSet = selectionsByRoot.get(root);
+      if (selectionSet) {
+        selectionSet.push(selection);
+      } else {
+        selectionSet = [selection];
+        selectionsByRoot.set(root, selectionSet);
       }
-      ({ unsubscribe, operationId } = await subResult);
-      loggingPromise?.resolve({
-        cacheSnapshot: cache.cache,
+    }
+
+    for (const selections of selectionsByRoot.values()) {
+      const { query, variables, cacheKey } = buildQueryAndCheckTempCache<TData>(
+        selections,
+        'subscription',
+        innerState.normalizationHandler,
+        true,
+        cache === globalCache
+      );
+
+      let unsubscribe: () => Promise<void>;
+      let operationId: string;
+      const subResult = subscriptions.subscribe({
         query,
         variables,
         selections,
-        type: 'subscription',
-        label: `[id=${operationId}] [created]`,
+        cacheKey,
+        events: options.scheduler
+          ? subscriptionSchedulerEvents
+          : {
+              onData(data) {
+                cache.mergeCache(data, 'subscription');
+
+                options.onSubscription?.({
+                  type: 'data',
+                  unsubscribe,
+                  data,
+                });
+                if (eventHandler.hasFetchSubscribers) {
+                  eventHandler.sendFetchPromise(
+                    Promise.resolve({
+                      executionResult: {
+                        data,
+                      },
+                      cacheSnapshot: globalCache.cache,
+                      query,
+                      variables,
+                      selections,
+                      type: 'subscription',
+                      label: `[id=${operationId}] [data]`,
+                    }),
+                    selections
+                  );
+                }
+              },
+              onError({ data, error }) {
+                if (data) cache.mergeCache(data, 'subscription');
+
+                options.onSubscription?.({
+                  type: 'with-errors',
+                  unsubscribe,
+                  data,
+                  error,
+                });
+
+                if (eventHandler.hasFetchSubscribers) {
+                  eventHandler.sendFetchPromise(
+                    Promise.resolve({
+                      executionResult: {
+                        data,
+                      },
+                      error,
+                      cacheSnapshot: globalCache.cache,
+                      query,
+                      variables,
+                      selections,
+                      type: 'subscription',
+                      label: `[id=${operationId}] [error]`,
+                    }),
+                    selections
+                  );
+                }
+              },
+              onStart: options.onSubscription
+                ? () => {
+                    options.onSubscription?.({
+                      type: 'start',
+                      unsubscribe,
+                    });
+                  }
+                : undefined,
+              onComplete: options.onSubscription
+                ? () => {
+                    options.onSubscription?.({
+                      type: 'complete',
+                      unsubscribe,
+                    });
+                  }
+                : undefined,
+            },
       });
-    } else {
-      unsubscribe = subResult.unsubscribe;
+
+      if (subResult instanceof Promise) {
+        let loggingPromise: DeferredPromise<FetchEventData> | undefined;
+        if (eventHandler.hasFetchSubscribers) {
+          loggingPromise = createDeferredPromise();
+          eventHandler.sendFetchPromise(loggingPromise.promise, selections);
+        }
+        ({ unsubscribe, operationId } = await subResult);
+        loggingPromise?.resolve({
+          cacheSnapshot: cache.cache,
+          query,
+          variables,
+          selections,
+          type: 'subscription',
+          label: `[id=${operationId}] [created]`,
+        });
+      } else {
+        unsubscribe = subResult.unsubscribe;
+      }
     }
   }
 
