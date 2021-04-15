@@ -739,6 +739,11 @@ export function createResolvers(
       }
     }
 
+    const unsubscribeCallbacks = new Set<() => Promise<void>>();
+    const unsubscribe = async () => {
+      await Promise.all(Array.from(unsubscribeCallbacks).map((cb) => cb()));
+    };
+
     for (const selections of selectionsByRoot.values()) {
       const { query, variables, cacheKey } = buildQueryAndCheckTempCache<TData>(
         selections,
@@ -748,7 +753,6 @@ export function createResolvers(
         cache === globalCache
       );
 
-      let unsubscribe: () => Promise<void>;
       let operationId: string;
       const subResult = subscriptions.subscribe({
         query,
@@ -836,7 +840,10 @@ export function createResolvers(
           loggingPromise = createDeferredPromise();
           eventHandler.sendFetchPromise(loggingPromise.promise, selections);
         }
-        ({ unsubscribe, operationId } = await subResult);
+        const { unsubscribe, operationId } = await subResult;
+
+        unsubscribeCallbacks.add(unsubscribe);
+
         loggingPromise?.resolve({
           cacheSnapshot: cache.cache,
           query,
@@ -846,7 +853,7 @@ export function createResolvers(
           label: `[id=${operationId}] [created]`,
         });
       } else {
-        unsubscribe = subResult.unsubscribe;
+        unsubscribeCallbacks.add(subResult.unsubscribe);
       }
     }
   }

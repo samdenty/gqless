@@ -119,9 +119,12 @@ export const createTestClient = async (
       type Mutation {
         sendNotification(message: String!): Boolean!
         humanMutation(nameArg: String!): Human
+        createDog(name: String!): Dog!
       }
       type Subscription {
         newNotification: String!
+        newHuman: Human!
+        newDog: Dog!
       }
       type Human {
         id: ID
@@ -198,14 +201,49 @@ export const createTestClient = async (
 
           return true;
         },
-        humanMutation(_root, { nameArg }: { nameArg: string }) {
-          return createHuman(nameArg);
+        humanMutation(_root, { nameArg }: { nameArg: string }, { pubsub }) {
+          const human = createHuman(nameArg);
+
+          pubsub.publish({
+            topic: 'NEW_HUMAN',
+            payload: {
+              newHuman: human,
+            },
+          });
+
+          return human;
+        },
+        createDog(_root, { name }: { name: string }, { pubsub }) {
+          const dog = {
+            id: ++dogId,
+            name,
+          };
+
+          pubsub.publish({
+            topic: 'NEW_DOG',
+            payload: {
+              newDog: dog,
+            },
+          });
+
+          return dog;
         },
       },
       Subscription: {
         newNotification: {
           subscribe(_root, _args, ctx) {
             return ctx.pubsub.subscribe('NOTIFICATION');
+          },
+        },
+
+        newHuman: {
+          subscribe(_root, _args, ctx) {
+            return ctx.pubsub.subscribe('NEW_HUMAN');
+          },
+        },
+        newDog: {
+          subscribe(_root, _args, ctx) {
+            return ctx.pubsub.subscribe('NEW_DOG');
           },
         },
       },
@@ -301,9 +339,12 @@ export const createTestClient = async (
     mutation: {
       sendNotification(args: { message: string }): boolean;
       humanMutation: (args?: { nameArg?: string }) => Human;
+      createDog: (args?: { name?: string }) => Dog;
     };
     subscription: {
       newNotification: string | null | undefined;
+      newHuman: Human;
+      newDog: Dog;
     };
   };
 
