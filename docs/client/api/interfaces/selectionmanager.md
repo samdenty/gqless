@@ -14,7 +14,7 @@ hide_title: true
 
 • **getSelection**: GetSelection
 
-Defined in: [packages/gqless/src/Selection/SelectionManager.ts:57](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/SelectionManager.ts#L57)
+Defined in: [packages/gqless/src/Selection/SelectionManager.ts:57](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/SelectionManager.ts#L57)
 
 ## Methods
 
@@ -24,7 +24,7 @@ Defined in: [packages/gqless/src/Selection/SelectionManager.ts:57](https://githu
 
 **Returns:** SelectionsBackup
 
-Defined in: [packages/gqless/src/Selection/SelectionManager.ts:59](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/SelectionManager.ts#L59)
+Defined in: [packages/gqless/src/Selection/SelectionManager.ts:59](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/SelectionManager.ts#L59)
 
 ---
 
@@ -40,4 +40,4 @@ Defined in: [packages/gqless/src/Selection/SelectionManager.ts:59](https://githu
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Selection/SelectionManager.ts:58](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Selection/SelectionManager.ts#L58)
+Defined in: [packages/gqless/src/Selection/SelectionManager.ts:58](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/SelectionManager.ts#L58)

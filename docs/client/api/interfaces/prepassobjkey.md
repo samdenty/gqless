@@ -14,7 +14,7 @@ hide_title: true
 
 • **field**: _string_
 
-Defined in: [packages/gqless/src/Helpers/prepass.ts:8](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Helpers/prepass.ts#L8)
+Defined in: [packages/gqless/src/Helpers/prepass.ts:8](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/prepass.ts#L8)
 
 ---
 
@@ -22,4 +22,4 @@ Defined in: [packages/gqless/src/Helpers/prepass.ts:8](https://github.com/gqless
 
 • `Optional` **variables**: _Record_<string, unknown\>
 
-Defined in: [packages/gqless/src/Helpers/prepass.ts:9](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Helpers/prepass.ts#L9)
+Defined in: [packages/gqless/src/Helpers/prepass.ts:9](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Helpers/prepass.ts#L9)

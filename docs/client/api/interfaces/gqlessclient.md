@@ -29,7 +29,7 @@ hide_title: true
 
 • **accessorCache**: [_AccessorCache_](accessorcache.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:169](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L169)
+Defined in: [packages/gqless/src/Client/client.ts:169](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L169)
 
 ---
 
@@ -37,7 +37,7 @@ Defined in: [packages/gqless/src/Client/client.ts:169](https://github.com/gqless
 
 • **assignSelections**: [_AssignSelections_](assignselections.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:175](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L175)
+Defined in: [packages/gqless/src/Client/client.ts:175](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L175)
 
 ---
 
@@ -45,7 +45,7 @@ Defined in: [packages/gqless/src/Client/client.ts:175](https://github.com/gqless
 
 • **buildAndFetchSelections**: [_BuildAndFetchSelections_](buildandfetchselections.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:170](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L170)
+Defined in: [packages/gqless/src/Client/client.ts:170](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L170)
 
 ---
 
@@ -53,7 +53,7 @@ Defined in: [packages/gqless/src/Client/client.ts:170](https://github.com/gqless
 
 • **buildSelection**: [_BuildSelection_](buildselection.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:177](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L177)
+Defined in: [packages/gqless/src/Client/client.ts:177](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L177)
 
 ---
 
@@ -61,7 +61,7 @@ Defined in: [packages/gqless/src/Client/client.ts:177](https://github.com/gqless
 
 • **cache**: [_CacheType_](../modules.md#cachetype)
 
-Defined in: [packages/gqless/src/Client/client.ts:165](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L165)
+Defined in: [packages/gqless/src/Client/client.ts:165](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L165)
 
 ---
 
@@ -69,7 +69,7 @@ Defined in: [packages/gqless/src/Client/client.ts:165](https://github.com/gqless
 
 • **eventHandler**: [_EventHandler_](../classes/eventhandler.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:171](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L171)
+Defined in: [packages/gqless/src/Client/client.ts:171](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L171)
 
 ---
 
@@ -77,7 +77,7 @@ Defined in: [packages/gqless/src/Client/client.ts:171](https://github.com/gqless
 
 • **hydrateCache**: [_HydrateCache_](hydratecache.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:173](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L173)
+Defined in: [packages/gqless/src/Client/client.ts:173](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L173)
 
 ---
 
@@ -85,7 +85,7 @@ Defined in: [packages/gqless/src/Client/client.ts:173](https://github.com/gqless
 
 • **inlineResolved**: [_InlineResolved_](inlineresolved.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:164](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L164)
+Defined in: [packages/gqless/src/Client/client.ts:164](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L164)
 
 ---
 
@@ -93,7 +93,7 @@ Defined in: [packages/gqless/src/Client/client.ts:164](https://github.com/gqless
 
 • **interceptorManager**: [_InterceptorManager_](interceptormanager.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:166](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L166)
+Defined in: [packages/gqless/src/Client/client.ts:166](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L166)
 
 ---
 
@@ -101,7 +101,7 @@ Defined in: [packages/gqless/src/Client/client.ts:166](https://github.com/gqless
 
 • **mutate**: [_Mutate_](mutate.md)<GeneratedSchema\>
 
-Defined in: [packages/gqless/src/Client/client.ts:176](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L176)
+Defined in: [packages/gqless/src/Client/client.ts:176](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L176)
 
 ---
 
@@ -109,7 +109,7 @@ Defined in: [packages/gqless/src/Client/client.ts:176](https://github.com/gqless
 
 • **mutation**: GeneratedSchema[*mutation*]
 
-Defined in: [packages/gqless/src/Client/client.ts:161](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L161)
+Defined in: [packages/gqless/src/Client/client.ts:161](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L161)
 
 ---
 
@@ -117,7 +117,7 @@ Defined in: [packages/gqless/src/Client/client.ts:161](https://github.com/gqless
 
 • **prefetch**: [_Prefetch_](prefetch.md)<GeneratedSchema\>
 
-Defined in: [packages/gqless/src/Client/client.ts:179](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L179)
+Defined in: [packages/gqless/src/Client/client.ts:179](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L179)
 
 ---
 
@@ -125,7 +125,7 @@ Defined in: [packages/gqless/src/Client/client.ts:179](https://github.com/gqless
 
 • **prepareRender**: [_PrepareRender_](preparerender.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:174](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L174)
+Defined in: [packages/gqless/src/Client/client.ts:174](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L174)
 
 ---
 
@@ -133,7 +133,7 @@ Defined in: [packages/gqless/src/Client/client.ts:174](https://github.com/gqless
 
 • **query**: GeneratedSchema[*query*]
 
-Defined in: [packages/gqless/src/Client/client.ts:160](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L160)
+Defined in: [packages/gqless/src/Client/client.ts:160](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L160)
 
 ---
 
@@ -141,7 +141,7 @@ Defined in: [packages/gqless/src/Client/client.ts:160](https://github.com/gqless
 
 • **refetch**: [_Refetch_](refetch.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:168](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L168)
+Defined in: [packages/gqless/src/Client/client.ts:168](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L168)
 
 ---
 
@@ -149,7 +149,7 @@ Defined in: [packages/gqless/src/Client/client.ts:168](https://github.com/gqless
 
 • **resolved**: [_Resolved_](resolved.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:163](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L163)
+Defined in: [packages/gqless/src/Client/client.ts:163](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L163)
 
 ---
 
@@ -157,7 +157,7 @@ Defined in: [packages/gqless/src/Client/client.ts:163](https://github.com/gqless
 
 • **scheduler**: [_Scheduler_](scheduler.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:167](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L167)
+Defined in: [packages/gqless/src/Client/client.ts:167](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L167)
 
 ---
 
@@ -165,7 +165,7 @@ Defined in: [packages/gqless/src/Client/client.ts:167](https://github.com/gqless
 
 • **setCache**: [_SetCache_](setcache.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:172](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L172)
+Defined in: [packages/gqless/src/Client/client.ts:172](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L172)
 
 ---
 
@@ -173,7 +173,7 @@ Defined in: [packages/gqless/src/Client/client.ts:172](https://github.com/gqless
 
 • **subscription**: GeneratedSchema[*subscription*]
 
-Defined in: [packages/gqless/src/Client/client.ts:162](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L162)
+Defined in: [packages/gqless/src/Client/client.ts:162](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L162)
 
 ---
 
@@ -181,7 +181,7 @@ Defined in: [packages/gqless/src/Client/client.ts:162](https://github.com/gqless
 
 • **subscriptionsClient**: _undefined_ \| [_SubscriptionsClient_](subscriptionsclient.md)
 
-Defined in: [packages/gqless/src/Client/client.ts:178](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/client.ts#L178)
+Defined in: [packages/gqless/src/Client/client.ts:178](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L178)
 
 ## Methods
 
@@ -199,7 +199,7 @@ Defined in: [packages/gqless/src/Client/client.ts:178](https://github.com/gqless
 
 Inherited from: PersistenceHelpers.backupPersistence
 
-Defined in: [packages/gqless/src/Cache/persistence.ts:9](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Cache/persistence.ts#L9)
+Defined in: [packages/gqless/src/Cache/persistence.ts:9](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/persistence.ts#L9)
 
 ---
 
@@ -218,7 +218,7 @@ Defined in: [packages/gqless/src/Cache/persistence.ts:9](https://github.com/gqle
 
 Inherited from: PersistenceHelpers.restorePersistence
 
-Defined in: [packages/gqless/src/Cache/persistence.ts:11](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Cache/persistence.ts#L11)
+Defined in: [packages/gqless/src/Cache/persistence.ts:11](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/persistence.ts#L11)
 
 ▸ **restorePersistence**(`backup`: _undefined_ \| _null_ \| _string_, `expectedVersion?`: _string_): _boolean_
 
@@ -233,4 +233,4 @@ Defined in: [packages/gqless/src/Cache/persistence.ts:11](https://github.com/gql
 
 Inherited from: PersistenceHelpers.restorePersistence
 
-Defined in: [packages/gqless/src/Cache/persistence.ts:15](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Cache/persistence.ts#L15)
+Defined in: [packages/gqless/src/Cache/persistence.ts:15](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/persistence.ts#L15)

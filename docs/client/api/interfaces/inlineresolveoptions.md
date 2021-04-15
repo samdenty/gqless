@@ -34,9 +34,7 @@ On valid cache data found callback
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:212](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/resolvers.ts#L212)
-
-Defined in: [packages/gqless/src/Client/resolvers.ts:212](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/resolvers.ts#L212)
+Defined in: [packages/gqless/src/Client/resolvers.ts:212](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L212)
 
 ---
 
@@ -50,9 +48,7 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:212](https://github.com/gql
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:204](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/resolvers.ts#L204)
-
-Defined in: [packages/gqless/src/Client/resolvers.ts:204](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/resolvers.ts#L204)
+Defined in: [packages/gqless/src/Client/resolvers.ts:204](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L204)
 
 ---
 
@@ -74,9 +70,7 @@ Get every selection intercepted in the specified function
 
 **Returns:** _void_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:208](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/resolvers.ts#L208)
-
-Defined in: [packages/gqless/src/Client/resolvers.ts:208](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/resolvers.ts#L208)
+Defined in: [packages/gqless/src/Client/resolvers.ts:208](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L208)
 
 ---
 
@@ -84,4 +78,4 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:208](https://github.com/gql
 
 • `Optional` **refetch**: _boolean_
 
-Defined in: [packages/gqless/src/Client/resolvers.ts:203](https://github.com/gqless/gqless/blob/41c894a/packages/gqless/src/Client/resolvers.ts#L203)
+Defined in: [packages/gqless/src/Client/resolvers.ts:203](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L203)
