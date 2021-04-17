@@ -378,7 +378,7 @@ export function useInterceptSelections({
   scheduler: Scheduler;
   eventHandler: EventHandler;
   onError: OnErrorHandler | undefined;
-  updateOnFetchPromise?: { current: boolean };
+  updateOnFetchPromise?: boolean;
 }) {
   const hookSelections = useSelectionsState();
   const forceUpdate = useDeferDispatch(useForceUpdate());
@@ -446,7 +446,7 @@ export function useInterceptSelections({
 
         fetchingPromise.current = newPromise;
 
-        if (updateOnFetchPromise?.current) {
+        if (updateOnFetchPromise) {
           if (enabledStaleWhileRevalidate && isRendering.current) {
             deferredCall.current = forceUpdate;
           } else {
