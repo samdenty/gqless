@@ -1,6 +1,11 @@
 import { existsSync } from 'fs';
 import { promises } from 'fs';
-import { buildSchema, GraphQLSchema, buildClientSchema } from 'graphql';
+import {
+  buildClientSchema,
+  buildSchema,
+  GraphQLSchema,
+  IntrospectionQuery,
+} from 'graphql';
 import { resolve } from 'path';
 
 import { defaultConfig, DUMMY_ENDPOINT, gqlessConfigPromise } from './config';
@@ -104,14 +109,27 @@ export async function inspectWriteGenerate({
       });
 
       if (endpoint.endsWith('.json')) {
-        const parsedFile = JSON.parse(file);
+        const parsedFile:
+          | IntrospectionQuery
+          | { data?: IntrospectionQuery }
+          | undefined = JSON.parse(file);
 
-        if (!parsedFile?.data?.__schema)
+        let dataField: IntrospectionQuery | undefined;
+
+        if (typeof parsedFile === 'object') {
+          if ('data' in parsedFile && parsedFile.data) {
+            dataField = parsedFile.data;
+          } else if ('__schema' in parsedFile) {
+            dataField = parsedFile;
+          }
+        }
+
+        if (!(typeof dataField === 'object'))
           throw Error(
-            'Invalid JSON introspection result, expected "data.__schema" field.'
+            'Invalid JSON introspection result, expected "__schema" or "data.__schema" field.'
           );
 
-        schema = buildClientSchema(parsedFile.data);
+        schema = buildClientSchema(dataField);
       } else {
         schema = buildSchema(file);
       }
