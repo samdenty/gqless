@@ -17,7 +17,7 @@ hide_title: true
 
 ## Callable
 
-▸ **UseMutation**<TData, TArgs\>(`mutationFn?`: (`mutation`: GeneratedSchema[*mutation*], `args`: TArgs) => TData, `options?`: [_UseMutationOptions_](usemutationoptions.md)<TData\>): readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fn?`: (`mutation`: GeneratedSchema[*mutation*], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseMutationState_](usemutationstate.md)<TData\>]
+▸ **UseMutation**<TData, TArgs\>(`mutationFn?`: (`mutation`: GeneratedSchema[``"mutation"``], `args`: TArgs) => TData, `options?`: [_UseMutationOptions_](usemutationoptions.md)<TData\>): readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fn?`: (`mutation`: GeneratedSchema[``"mutation"``], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseMutationState_](usemutationstate.md)<TData\>]
 
 #### Type parameters:
 
@@ -28,11 +28,11 @@ hide_title: true
 
 #### Parameters:
 
-| Name          | Type                                                              |
-| :------------ | :---------------------------------------------------------------- |
-| `mutationFn?` | (`mutation`: GeneratedSchema[*mutation*], `args`: TArgs) => TData |
-| `options?`    | [_UseMutationOptions_](usemutationoptions.md)<TData\>             |
+| Name          | Type                                                                  |
+| :------------ | :-------------------------------------------------------------------- |
+| `mutationFn?` | (`mutation`: GeneratedSchema[``"mutation"``], `args`: TArgs) => TData |
+| `options?`    | [_UseMutationOptions_](usemutationoptions.md)<TData\>                 |
 
-**Returns:** readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fn?`: (`mutation`: GeneratedSchema[*mutation*], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseMutationState_](usemutationstate.md)<TData\>]
+**Returns:** readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fn?`: (`mutation`: GeneratedSchema[``"mutation"``], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseMutationState_](usemutationstate.md)<TData\>]
 
-Defined in: [react/src/mutation/useMutation.ts:89](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L89)
+Defined in: [react/src/mutation/useMutation.ts:94](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L94)

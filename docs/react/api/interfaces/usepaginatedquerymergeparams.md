@@ -33,11 +33,11 @@ Defined in: [react/src/query/usePaginatedQuery.ts:22](https://github.com/gqless/
 
 ### sortBy
 
-• **sortBy**: <TNode\>(`list`: TNode[], `cb`: (`node`: TNode) => _number_ \| _string_, `order`: _asc_ \| _desc_) => TNode[]
+• **sortBy**: <TNode\>(`list`: TNode[], `cb`: (`node`: TNode) => _number_ \| _string_, `order`: `"asc"` \| `"desc"`) => TNode[]
 
 #### Type declaration:
 
-▸ <TNode\>(`list`: TNode[], `cb`: (`node`: TNode) => _number_ \| _string_, `order?`: _asc_ \| _desc_): TNode[]
+▸ <TNode\>(`list`: TNode[], `cb`: (`node`: TNode) => _number_ \| _string_, `order?`: `"asc"` \| `"desc"`): TNode[]
 
 #### Type parameters:
 
@@ -51,7 +51,7 @@ Defined in: [react/src/query/usePaginatedQuery.ts:22](https://github.com/gqless/
 | :------ | :-------------------------------------- | :------------ |
 | `list`  | TNode[]                                 | -             |
 | `cb`    | (`node`: TNode) => _number_ \| _string_ | -             |
-| `order` | _asc_ \| _desc_                         | 'asc'         |
+| `order` | `"asc"` \| `"desc"`                     | 'asc'         |
 
 **Returns:** TNode[]
 

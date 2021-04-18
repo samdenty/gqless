@@ -16,4 +16,4 @@ hide_title: true
 
 Default behaviour values
 
-Defined in: [react/src/client.ts:158](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L158)
+Defined in: [react/src/client.ts:160](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L160)

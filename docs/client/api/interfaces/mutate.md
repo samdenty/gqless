@@ -18,7 +18,7 @@ hide_title: true
 
 ## Callable
 
-▸ **Mutate**<T\>(`fn`: (`mutation`: GeneratedSchema[*mutation*]) => T, `opts?`: { `onComplete?`: (`data`: T, `helpers`: [_MutateHelpers_](mutatehelpers.md)<GeneratedSchema\>) => _void_ ; `onError?`: (`error`: [_GQlessError_](../classes/gqlesserror.md), `helpers`: [_MutateHelpers_](mutatehelpers.md)<GeneratedSchema\>) => _void_ }): _Promise_<T\>
+▸ **Mutate**<T\>(`fn`: (`mutation`: GeneratedSchema[``"mutation"``]) => T, `opts?`: { `onComplete?`: (`data`: T, `helpers`: [_MutateHelpers_](mutatehelpers.md)<GeneratedSchema\>) => _void_ ; `onError?`: (`error`: [_GQlessError_](../classes/gqlesserror.md), `helpers`: [_MutateHelpers_](mutatehelpers.md)<GeneratedSchema\>) => _void_ }): _Promise_<T\>
 
 #### Type parameters:
 
@@ -30,7 +30,7 @@ hide_title: true
 
 | Name               | Type                                                                                                                              |
 | :----------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
-| `fn`               | (`mutation`: GeneratedSchema[*mutation*]) => T                                                                                    |
+| `fn`               | (`mutation`: GeneratedSchema[``"mutation"``]) => T                                                                                |
 | `opts?`            | _object_                                                                                                                          |
 | `opts.onComplete?` | (`data`: T, `helpers`: [_MutateHelpers_](mutatehelpers.md)<GeneratedSchema\>) => _void_                                           |
 | `opts.onError?`    | (`error`: [_GQlessError_](../classes/gqlesserror.md), `helpers`: [_MutateHelpers_](mutatehelpers.md)<GeneratedSchema\>) => _void_ |

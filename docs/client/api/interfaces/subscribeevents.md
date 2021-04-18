@@ -46,18 +46,18 @@ Defined in: [packages/gqless/src/Client/client.ts:67](https://github.com/gqless/
 
 ### onError
 
-• **onError**: (`payload`: { `data`: _null_ \| _Record_<string, unknown\> ; `error`: [_GQlessError_](../classes/gqlesserror.md) }) => _void_
+• **onError**: (`payload`: { `data`: `null` \| _Record_<string, unknown\> ; `error`: [_GQlessError_](../classes/gqlesserror.md) }) => _void_
 
 #### Type declaration:
 
-▸ (`payload`: { `data`: _null_ \| _Record_<string, unknown\> ; `error`: [_GQlessError_](../classes/gqlesserror.md) }): _void_
+▸ (`payload`: { `data`: `null` \| _Record_<string, unknown\> ; `error`: [_GQlessError_](../classes/gqlesserror.md) }): _void_
 
 #### Parameters:
 
 | Name            | Type                                       |
 | :-------------- | :----------------------------------------- |
 | `payload`       | _object_                                   |
-| `payload.data`  | _null_ \| _Record_<string, unknown\>       |
+| `payload.data`  | `null` \| _Record_<string, unknown\>       |
 | `payload.error` | [_GQlessError_](../classes/gqlesserror.md) |
 
 **Returns:** _void_

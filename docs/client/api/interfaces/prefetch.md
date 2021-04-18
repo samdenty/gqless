@@ -17,7 +17,7 @@ hide_title: true
 
 ## Callable
 
-▸ **Prefetch**<TData\>(`fn`: (`query`: GeneratedSchema[*query*]) => TData): TData \| _Promise_<TData\> & { `schedulerPromise`: _Promise_<SchedulerPromiseValue\> }
+▸ **Prefetch**<TData\>(`fn`: (`query`: GeneratedSchema[``"query"``]) => TData): TData \| _Promise_<TData\> & { `schedulerPromise`: _Promise_<SchedulerPromiseValue\> }
 
 #### Type parameters:
 
@@ -27,9 +27,9 @@ hide_title: true
 
 #### Parameters:
 
-| Name | Type                                         |
-| :--- | :------------------------------------------- |
-| `fn` | (`query`: GeneratedSchema[*query*]) => TData |
+| Name | Type                                             |
+| :--- | :----------------------------------------------- |
+| `fn` | (`query`: GeneratedSchema[``"query"``]) => TData |
 
 **Returns:** TData \| _Promise_<TData\> & { `schedulerPromise`: _Promise_<SchedulerPromiseValue\> }
 

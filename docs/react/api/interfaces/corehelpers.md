@@ -78,8 +78,8 @@ Defined in: [react/src/common.ts:521](https://github.com/gqless/gqless/blob/mast
 
 | Name              | Type                                   |
 | :---------------- | :------------------------------------- |
-| `TArrayValue`     | _undefined_ \| _null_ \| _object_      |
-| `TArray`          | _undefined_ \| _null_ \| TArrayValue[] |
+| `TArrayValue`     | _undefined_ \| `null` \| _object_      |
+| `TArray`          | _undefined_ \| `null` \| TArrayValue[] |
 | `TArrayValueKeys` | _string_ \| _number_ \| _symbol_       |
 
 #### Parameters:
@@ -109,7 +109,7 @@ Defined in: [react/src/common.ts:518](https://github.com/gqless/gqless/blob/mast
 
 | Name           | Type                              |
 | :------------- | :-------------------------------- |
-| `TAccesorData` | _undefined_ \| _null_ \| _object_ |
+| `TAccesorData` | _undefined_ \| `null` \| _object_ |
 | `TAccesorKeys` | _string_ \| _number_ \| _symbol_  |
 
 #### Parameters:
@@ -139,7 +139,7 @@ Defined in: [react/src/common.ts:517](https://github.com/gqless/gqless/blob/mast
 
 | Name | Type                              |
 | :--- | :-------------------------------- |
-| `T`  | _undefined_ \| _null_ \| _object_ |
+| `T`  | _undefined_ \| `null` \| _object_ |
 
 #### Parameters:
 
@@ -158,25 +158,25 @@ Defined in: [react/src/common.ts:516](https://github.com/gqless/gqless/blob/mast
 
 ### selectFields
 
-• **selectFields**: <A\>(`accessor`: A, `fields?`: *\*\* \| (*string* \| *number*)[], `recursionDepth?`: *number\*) => A
+• **selectFields**: <A\>(`accessor`: A, `fields?`: `"*"` \| (_string_ \| _number_)[], `recursionDepth?`: _number_) => A
 
 #### Type declaration:
 
-▸ <A\>(`accessor`: A, `fields?`: *\*\* \| (*string* \| *number*)[], `recursionDepth?`: *number\*): A
+▸ <A\>(`accessor`: A, `fields?`: `"*"` \| (_string_ \| _number_)[], `recursionDepth?`: _number_): A
 
 #### Type parameters:
 
 | Name | Type                              |
 | :--- | :-------------------------------- |
-| `A`  | _undefined_ \| _null_ \| _object_ |
+| `A`  | _undefined_ \| `null` \| _object_ |
 
 #### Parameters:
 
-| Name              | Type                               |
-| :---------------- | :--------------------------------- |
-| `accessor`        | A                                  |
-| `fields?`         | *\*\* \| (*string* \| *number\*)[] |
-| `recursionDepth?` | _number_                           |
+| Name              | Type                              |
+| :---------------- | :-------------------------------- |
+| `accessor`        | A                                 |
+| `fields?`         | `"*"` \| (_string_ \| _number_)[] |
+| `recursionDepth?` | _number_                          |
 
 **Returns:** A
 

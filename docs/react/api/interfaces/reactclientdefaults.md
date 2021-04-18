@@ -114,7 +114,7 @@ Refetch after SSR hydration
 
 **`default`** false
 
-Defined in: [react/src/client.ts:151](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L151)
+Defined in: [react/src/client.ts:153](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L153)
 
 ---
 
@@ -126,11 +126,13 @@ Retry on error behaviour
 
 _You can override these defaults on a per-hook basis_
 
-> \_Valid for **useMutation**, **useLazyQuery**, **useTransactionQuery** & **useRefetch\_**
+> \_Valid for **useLazyQuery**, **useTransactionQuery** & **useRefetch\_**
+
+> For **useQuery** & **graphql HOC** you should use the `retry` in the core client options
 
 **`default`** true
 
-Defined in: [react/src/client.ts:145](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L145)
+Defined in: [react/src/client.ts:147](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L147)
 
 ---
 

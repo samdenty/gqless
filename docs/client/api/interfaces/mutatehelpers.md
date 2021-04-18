@@ -27,7 +27,7 @@ Defined in: [packages/gqless/src/Client/client.ts:132](https://github.com/gqless
 
 ### query
 
-• **query**: GeneratedSchema[*query*]
+• **query**: GeneratedSchema[``"query"``]
 
 Defined in: [packages/gqless/src/Client/client.ts:130](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L130)
 

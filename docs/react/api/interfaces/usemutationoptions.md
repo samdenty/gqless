@@ -22,7 +22,7 @@ hide_title: true
 
 Await refetch resolutions before calling the mutation actually complete
 
-Defined in: [react/src/mutation/useMutation.ts:25](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L25)
+Defined in: [react/src/mutation/useMutation.ts:30](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L30)
 
 ---
 
@@ -43,7 +43,7 @@ for example, files uploading
 
 **`default`** false
 
-Defined in: [react/src/mutation/useMutation.ts:36](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L36)
+Defined in: [react/src/mutation/useMutation.ts:41](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L41)
 
 ---
 
@@ -83,7 +83,7 @@ Refetch specific queries after mutation completion.
 
 You can give functions or parts of the schema to be refetched
 
-Defined in: [react/src/mutation/useMutation.ts:21](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L21)
+Defined in: [react/src/mutation/useMutation.ts:26](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L26)
 
 ---
 
@@ -91,7 +91,11 @@ Defined in: [react/src/mutation/useMutation.ts:21](https://github.com/gqless/gql
 
 • `Optional` **retry**: RetryOptions
 
-Defined in: [react/src/mutation/useMutation.ts:15](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L15)
+Retry behaviour
+
+**`default`** false
+
+Defined in: [react/src/mutation/useMutation.ts:20](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L20)
 
 ---
 
@@ -101,4 +105,4 @@ Defined in: [react/src/mutation/useMutation.ts:15](https://github.com/gqless/gql
 
 Enable suspense behavior
 
-Defined in: [react/src/mutation/useMutation.ts:29](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L29)
+Defined in: [react/src/mutation/useMutation.ts:34](https://github.com/gqless/gqless/blob/master/packages/react/src/mutation/useMutation.ts#L34)

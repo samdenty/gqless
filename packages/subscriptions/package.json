@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "isomorphic-ws": "^4.0.1",
-    "ws": "^7.4.4"
+    "ws": "^7.4.5"
   },
   "devDependencies": {
     "@types/ws": "^7.4.1",

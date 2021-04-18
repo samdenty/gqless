@@ -10,7 +10,7 @@ hide_title: true
 
 ## Callable
 
-▸ **AssignSelections**<A, B\>(`source`: _undefined_ \| _null_ \| A, `target`: _undefined_ \| _null_ \| B): _void_
+▸ **AssignSelections**<A, B\>(`source`: _undefined_ \| `null` \| A, `target`: _undefined_ \| `null` \| B): _void_
 
 #### Type parameters:
 
@@ -23,8 +23,8 @@ hide_title: true
 
 | Name     | Type                       |
 | :------- | :------------------------- |
-| `source` | _undefined_ \| _null_ \| A |
-| `target` | _undefined_ \| _null_ \| B |
+| `source` | _undefined_ \| `null` \| A |
+| `target` | _undefined_ \| `null` \| B |
 
 **Returns:** _void_
 

@@ -17,8 +17,8 @@ hide_title: true
 
 ## Callable
 
-▸ **UseSubscription**(): GeneratedSchema[*subscription*]
+▸ **UseSubscription**(): GeneratedSchema[``"subscription"``]
 
-**Returns:** GeneratedSchema[*subscription*]
+**Returns:** GeneratedSchema[``"subscription"``]
 
 Defined in: [react/src/subscription/useSubscription.ts:15](https://github.com/gqless/gqless/blob/master/packages/react/src/subscription/useSubscription.ts#L15)

@@ -107,7 +107,7 @@ Defined in: [packages/gqless/src/Client/client.ts:176](https://github.com/gqless
 
 ### mutation
 
-• **mutation**: GeneratedSchema[*mutation*]
+• **mutation**: GeneratedSchema[``"mutation"``]
 
 Defined in: [packages/gqless/src/Client/client.ts:161](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L161)
 
@@ -131,7 +131,7 @@ Defined in: [packages/gqless/src/Client/client.ts:174](https://github.com/gqless
 
 ### query
 
-• **query**: GeneratedSchema[*query*]
+• **query**: GeneratedSchema[``"query"``]
 
 Defined in: [packages/gqless/src/Client/client.ts:160](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L160)
 
@@ -171,7 +171,7 @@ Defined in: [packages/gqless/src/Client/client.ts:172](https://github.com/gqless
 
 ### subscription
 
-• **subscription**: GeneratedSchema[*subscription*]
+• **subscription**: GeneratedSchema[``"subscription"``]
 
 Defined in: [packages/gqless/src/Client/client.ts:162](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/client.ts#L162)
 
@@ -220,13 +220,13 @@ Inherited from: PersistenceHelpers.restorePersistence
 
 Defined in: [packages/gqless/src/Cache/persistence.ts:11](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/persistence.ts#L11)
 
-▸ **restorePersistence**(`backup`: _undefined_ \| _null_ \| _string_, `expectedVersion?`: _string_): _boolean_
+▸ **restorePersistence**(`backup`: _undefined_ \| `null` \| _string_, `expectedVersion?`: _string_): _boolean_
 
 #### Parameters:
 
 | Name               | Type                              |
 | :----------------- | :-------------------------------- |
-| `backup`           | _undefined_ \| _null_ \| _string_ |
+| `backup`           | _undefined_ \| `null` \| _string_ |
 | `expectedVersion?` | _string_                          |
 
 **Returns:** _boolean_

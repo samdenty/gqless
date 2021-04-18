@@ -17,7 +17,7 @@ hide_title: true
 
 ## Callable
 
-▸ **UseLazyQuery**<TData, TArgs\>(`queryFn`: (`query`: GeneratedSchema[*query*], `args`: TArgs) => TData, `options?`: [_UseLazyQueryOptions_](uselazyqueryoptions.md)<TData\>): readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fetchPolicy?`: [_LazyFetchPolicy_](../modules.md#lazyfetchpolicy) ; `fn?`: (`query`: GeneratedSchema[*query*], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseLazyQueryState_](uselazyquerystate.md)<TData\>]
+▸ **UseLazyQuery**<TData, TArgs\>(`queryFn`: (`query`: GeneratedSchema[``"query"``], `args`: TArgs) => TData, `options?`: [_UseLazyQueryOptions_](uselazyqueryoptions.md)<TData\>): readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fetchPolicy?`: [_LazyFetchPolicy_](../modules.md#lazyfetchpolicy) ; `fn?`: (`query`: GeneratedSchema[``"query"``], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseLazyQueryState_](uselazyquerystate.md)<TData\>]
 
 #### Type parameters:
 
@@ -28,11 +28,11 @@ hide_title: true
 
 #### Parameters:
 
-| Name       | Type                                                        |
-| :--------- | :---------------------------------------------------------- |
-| `queryFn`  | (`query`: GeneratedSchema[*query*], `args`: TArgs) => TData |
-| `options?` | [_UseLazyQueryOptions_](uselazyqueryoptions.md)<TData\>     |
+| Name       | Type                                                            |
+| :--------- | :-------------------------------------------------------------- |
+| `queryFn`  | (`query`: GeneratedSchema[``"query"``], `args`: TArgs) => TData |
+| `options?` | [_UseLazyQueryOptions_](uselazyqueryoptions.md)<TData\>         |
 
-**Returns:** readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fetchPolicy?`: [_LazyFetchPolicy_](../modules.md#lazyfetchpolicy) ; `fn?`: (`query`: GeneratedSchema[*query*], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseLazyQueryState_](uselazyquerystate.md)<TData\>]
+**Returns:** readonly [(...`opts`: _undefined_ _extends_ TArgs ? [object?] : [{ `args`: TArgs ; `fetchPolicy?`: [_LazyFetchPolicy_](../modules.md#lazyfetchpolicy) ; `fn?`: (`query`: GeneratedSchema[``"query"``], `args`: TArgs) => TData }]) => _Promise_<TData\>, [_UseLazyQueryState_](uselazyquerystate.md)<TData\>]
 
 Defined in: [react/src/query/useLazyQuery.ts:86](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L86)

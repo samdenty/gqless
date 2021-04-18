@@ -12,18 +12,18 @@ hide_title: true
 
 ### addAccessorChild
 
-• **addAccessorChild**: (`parent`: ProxyAccessor, `child`: _null_ \| ProxyAccessor) => _void_
+• **addAccessorChild**: (`parent`: ProxyAccessor, `child`: `null` \| ProxyAccessor) => _void_
 
 #### Type declaration:
 
-▸ (`parent`: ProxyAccessor, `child`: _null_ \| ProxyAccessor): _void_
+▸ (`parent`: ProxyAccessor, `child`: `null` \| ProxyAccessor): _void_
 
 #### Parameters:
 
 | Name     | Type                    |
 | :------- | :---------------------- |
 | `parent` | ProxyAccessor           |
-| `child`  | _null_ \| ProxyAccessor |
+| `child`  | `null` \| ProxyAccessor |
 
 **Returns:** _void_
 

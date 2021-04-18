@@ -10,13 +10,13 @@ hide_title: true
 
 ## Callable
 
-▸ **BuildSelection**(`type`: _query_ \| _mutation_ \| _subscription_, ...`values`: [_BuildSelectionValue_](../modules.md#buildselectionvalue)[]): [_Selection_](../classes/selection.md)
+▸ **BuildSelection**(`type`: `"query"` \| `"mutation"` \| `"subscription"`, ...`values`: [_BuildSelectionValue_](../modules.md#buildselectionvalue)[]): [_Selection_](../classes/selection.md)
 
 #### Parameters:
 
 | Name        | Type                                                         |
 | :---------- | :----------------------------------------------------------- |
-| `type`      | _query_ \| _mutation_ \| _subscription_                      |
+| `type`      | `"query"` \| `"mutation"` \| `"subscription"`                |
 | `...values` | [_BuildSelectionValue_](../modules.md#buildselectionvalue)[] |
 
 **Returns:** [_Selection_](../classes/selection.md)

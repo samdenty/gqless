@@ -23,7 +23,7 @@ hide_title: true
 
 • **graphql**: [_GraphQLHOC_](graphqlhoc.md)
 
-Defined in: [react/src/client.ts:174](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L174)
+Defined in: [react/src/client.ts:176](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L176)
 
 ---
 
@@ -31,7 +31,7 @@ Defined in: [react/src/client.ts:174](https://github.com/gqless/gqless/blob/mast
 
 • **prepareQuery**: [_PrepareQuery_](preparequery.md)<GeneratedSchema\>
 
-Defined in: [react/src/client.ts:180](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L180)
+Defined in: [react/src/client.ts:182](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L182)
 
 ---
 
@@ -39,7 +39,7 @@ Defined in: [react/src/client.ts:180](https://github.com/gqless/gqless/blob/mast
 
 • **prepareReactRender**: [_PrepareReactRender_](preparereactrender.md)
 
-Defined in: [react/src/client.ts:176](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L176)
+Defined in: [react/src/client.ts:178](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L178)
 
 ---
 
@@ -53,7 +53,7 @@ Defined in: [react/src/client.ts:176](https://github.com/gqless/gqless/blob/mast
 | :---------- | :-------- |
 | `isLoading` | _boolean_ |
 
-Defined in: [react/src/client.ts:175](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L175)
+Defined in: [react/src/client.ts:177](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L177)
 
 ---
 
@@ -61,7 +61,7 @@ Defined in: [react/src/client.ts:175](https://github.com/gqless/gqless/blob/mast
 
 • **useHydrateCache**: [_UseHydrateCache_](usehydratecache.md)
 
-Defined in: [react/src/client.ts:177](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L177)
+Defined in: [react/src/client.ts:179](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L179)
 
 ---
 
@@ -69,7 +69,7 @@ Defined in: [react/src/client.ts:177](https://github.com/gqless/gqless/blob/mast
 
 • **useLazyQuery**: [_UseLazyQuery_](uselazyquery.md)<GeneratedSchema\>
 
-Defined in: [react/src/client.ts:170](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L170)
+Defined in: [react/src/client.ts:172](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L172)
 
 ---
 
@@ -77,7 +77,7 @@ Defined in: [react/src/client.ts:170](https://github.com/gqless/gqless/blob/mast
 
 • **useMetaState**: [_UseMetaState_](usemetastate.md)
 
-Defined in: [react/src/client.ts:178](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L178)
+Defined in: [react/src/client.ts:180](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L180)
 
 ---
 
@@ -85,7 +85,7 @@ Defined in: [react/src/client.ts:178](https://github.com/gqless/gqless/blob/mast
 
 • **useMutation**: [_UseMutation_](usemutation.md)<GeneratedSchema\>
 
-Defined in: [react/src/client.ts:173](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L173)
+Defined in: [react/src/client.ts:175](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L175)
 
 ---
 
@@ -93,7 +93,7 @@ Defined in: [react/src/client.ts:173](https://github.com/gqless/gqless/blob/mast
 
 • **usePaginatedQuery**: [_UsePaginatedQuery_](usepaginatedquery.md)<GeneratedSchema\>
 
-Defined in: [react/src/client.ts:172](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L172)
+Defined in: [react/src/client.ts:174](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L174)
 
 ---
 
@@ -101,7 +101,7 @@ Defined in: [react/src/client.ts:172](https://github.com/gqless/gqless/blob/mast
 
 • **useQuery**: [_UseQuery_](usequery.md)<GeneratedSchema\>
 
-Defined in: [react/src/client.ts:168](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L168)
+Defined in: [react/src/client.ts:170](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L170)
 
 ---
 
@@ -109,7 +109,7 @@ Defined in: [react/src/client.ts:168](https://github.com/gqless/gqless/blob/mast
 
 • **useRefetch**: [_UseRefetch_](userefetch.md)
 
-Defined in: [react/src/client.ts:169](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L169)
+Defined in: [react/src/client.ts:171](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L171)
 
 ---
 
@@ -117,7 +117,7 @@ Defined in: [react/src/client.ts:169](https://github.com/gqless/gqless/blob/mast
 
 • **useSubscription**: [_UseSubscription_](usesubscription.md)<GeneratedSchema\>
 
-Defined in: [react/src/client.ts:179](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L179)
+Defined in: [react/src/client.ts:181](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L181)
 
 ---
 
@@ -125,4 +125,4 @@ Defined in: [react/src/client.ts:179](https://github.com/gqless/gqless/blob/mast
 
 • **useTransactionQuery**: [_UseTransactionQuery_](usetransactionquery.md)<GeneratedSchema\>
 
-Defined in: [react/src/client.ts:171](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L171)
+Defined in: [react/src/client.ts:173](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L173)
