@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "prettier": "^2.2.1",
-    "serialize-error": "^8.0.1"
+    "serialize-error": "^8.1.0"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.10.2",
