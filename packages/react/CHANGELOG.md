@@ -1,5 +1,20 @@
 # @gqless/react
 
+## 2.0.15
+
+### Patch Changes
+
+- 4a3d5ef: fix useQuery's prepare update
+- af6a437: - Rename `GqlessConfig` to `GQlessConfig` (so it's consistent with the new logo)
+  - Rename `gqlessError` to `GQlessError`
+  - Remove `endpoint` option from the configuration, and instead always defaults to introspection one
+    - It's confusing why theres two of them, and the user can change it later by modifying the file anyway
+- 4a3d5ef: fix args state usePaginatedQuery
+- 4a3d5ef: detach react default retry in useMutation
+- Updated dependencies [4a3d5ef]
+- Updated dependencies [af6a437]
+  - gqless@2.0.13
+
 ## 2.0.14
 
 ### Patch Changes
