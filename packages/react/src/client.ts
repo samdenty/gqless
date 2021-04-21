@@ -138,7 +138,9 @@ export interface ReactClientDefaults {
    *
    * _You can override these defaults on a per-hook basis_
    *
-   * > _Valid for __useMutation__, __useLazyQuery__, __useTransactionQuery__ & __useRefetch___
+   * > _Valid for __useLazyQuery__, __useTransactionQuery__ & __useRefetch___
+   *
+   * > For __useQuery__ & __graphql HOC__ you should use the `retry` in the core client options
    *
    * @default true
    */

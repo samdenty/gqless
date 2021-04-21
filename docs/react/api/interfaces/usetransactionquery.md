@@ -17,7 +17,7 @@ hide_title: true
 
 ## Callable
 
-▸ **UseTransactionQuery**<TData, TVariables\>(`fn`: (`query`: GeneratedSchema[*query*], `variables`: TVariables) => TData, ...`__namedParameters`: _undefined_ _extends_ TVariables ? [UseTransactionQueryOptions<TData, TVariables\>?] : [[_UseTransactionQueryOptions_](../modules.md#usetransactionqueryoptions)<TData, TVariables\>]): [_UseTransactionQueryState_](usetransactionquerystate.md)<TData\>
+▸ **UseTransactionQuery**<TData, TVariables\>(`fn`: (`query`: GeneratedSchema[``"query"``], `variables`: TVariables) => TData, ...`__namedParameters`: _undefined_ _extends_ TVariables ? [UseTransactionQueryOptions<TData, TVariables\>?] : [[_UseTransactionQueryOptions_](../modules.md#usetransactionqueryoptions)<TData, TVariables\>]): [_UseTransactionQueryState_](usetransactionquerystate.md)<TData\>
 
 #### Type parameters:
 
@@ -30,7 +30,7 @@ hide_title: true
 
 | Name                   | Type                                                                                                                                                                                  |
 | :--------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `fn`                   | (`query`: GeneratedSchema[*query*], `variables`: TVariables) => TData                                                                                                                 |
+| `fn`                   | (`query`: GeneratedSchema[``"query"``], `variables`: TVariables) => TData                                                                                                             |
 | `...__namedParameters` | _undefined_ _extends_ TVariables ? [UseTransactionQueryOptions<TData, TVariables\>?] : [[_UseTransactionQueryOptions_](../modules.md#usetransactionqueryoptions)<TData, TVariables\>] |
 
 **Returns:** [_UseTransactionQueryState_](usetransactionquerystate.md)<TData\>

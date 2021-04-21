@@ -121,19 +121,19 @@ Defined in: [packages/gqless/src/Client/resolvers.ts:53](https://github.com/gqle
 
 ### onSubscription
 
-• `Optional` **onSubscription**: (`event`: { `data`: TData ; `error?`: _undefined_ ; `type`: _data_ ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: TData ; `error`: [_GQlessError_](../classes/gqlesserror.md) ; `type`: _with-errors_ ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: _undefined_ ; `error?`: _undefined_ ; `type`: _start_ \| _complete_ ; `unsubscribe`: () => _Promise_<void\> }) => _void_
+• `Optional` **onSubscription**: (`event`: { `data`: TData ; `error?`: _undefined_ ; `type`: `"data"` ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: TData ; `error`: [_GQlessError_](../classes/gqlesserror.md) ; `type`: `"with-errors"` ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: _undefined_ ; `error?`: _undefined_ ; `type`: `"start"` \| `"complete"` ; `unsubscribe`: () => _Promise_<void\> }) => _void_
 
 On subscription event listener
 
 #### Type declaration:
 
-▸ (`event`: { `data`: TData ; `error?`: _undefined_ ; `type`: _data_ ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: TData ; `error`: [_GQlessError_](../classes/gqlesserror.md) ; `type`: _with-errors_ ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: _undefined_ ; `error?`: _undefined_ ; `type`: _start_ \| _complete_ ; `unsubscribe`: () => _Promise_<void\> }): _void_
+▸ (`event`: { `data`: TData ; `error?`: _undefined_ ; `type`: `"data"` ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: TData ; `error`: [_GQlessError_](../classes/gqlesserror.md) ; `type`: `"with-errors"` ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: _undefined_ ; `error?`: _undefined_ ; `type`: `"start"` \| `"complete"` ; `unsubscribe`: () => _Promise_<void\> }): _void_
 
 #### Parameters:
 
-| Name    | Type                                                                                                                                                                                                                                                                                                                                                                       |
-| :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `event` | { `data`: TData ; `error?`: _undefined_ ; `type`: _data_ ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: TData ; `error`: [_GQlessError_](../classes/gqlesserror.md) ; `type`: _with-errors_ ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: _undefined_ ; `error?`: _undefined_ ; `type`: _start_ \| _complete_ ; `unsubscribe`: () => _Promise_<void\> } |
+| Name    | Type                                                                                                                                                                                                                                                                                                                                                                               |
+| :------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `event` | { `data`: TData ; `error?`: _undefined_ ; `type`: `"data"` ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: TData ; `error`: [_GQlessError_](../classes/gqlesserror.md) ; `type`: `"with-errors"` ; `unsubscribe`: () => _Promise_<void\> } \| { `data?`: _undefined_ ; `error?`: _undefined_ ; `type`: `"start"` \| `"complete"` ; `unsubscribe`: () => _Promise_<void\> } |
 
 **Returns:** _void_
 

@@ -58,7 +58,7 @@ hide_title: true
 
 ### BuildSelectionInput
 
-Ƭ **BuildSelectionInput**: [_query_ \| _mutation_ \| _subscription_, ...BuildSelectionValue[]]
+Ƭ **BuildSelectionInput**: [`"query"` \| `"mutation"` \| `"subscription"`, ...BuildSelectionValue[]]
 
 Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:12](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/SelectionBuilder.ts#L12)
 
@@ -80,9 +80,9 @@ Defined in: [packages/gqless/src/Selection/SelectionBuilder.ts:8](https://github
 
 | Name            | Type                       |
 | :-------------- | :------------------------- |
-| `mutation`?     | _Record_<string, unknown\> |
-| `query`?        | _Record_<string, unknown\> |
-| `subscription`? | _Record_<string, unknown\> |
+| `mutation?`     | _Record_<string, unknown\> |
+| `query?`        | _Record_<string, unknown\> |
+| `subscription?` | _Record_<string, unknown\> |
 
 Defined in: [packages/gqless/src/Cache/dataCache.ts:6](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Cache/dataCache.ts#L6)
 
@@ -193,7 +193,7 @@ Defined in: [packages/gqless/src/Error/retry.ts:6](https://github.com/gqless/gql
 
 ### ScalarsEnumsHash
 
-Ƭ **ScalarsEnumsHash**: _Record_<string, _true_\>
+Ƭ **ScalarsEnumsHash**: _Record_<string, `true`\>
 
 Defined in: [packages/gqless/src/Schema/types.ts:23](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Schema/types.ts#L23)
 
@@ -207,14 +207,14 @@ Defined in: [packages/gqless/src/Schema/types.ts:23](https://github.com/gqless/g
 
 | Name             | Type                                      |
 | :--------------- | :---------------------------------------- |
-| `alias`?         | _string_                                  |
-| `argTypes`?      | _Record_<string, string\>                 |
-| `args`?          | _Record_<string, unknown\>                |
+| `alias?`         | _string_                                  |
+| `argTypes?`      | _Record_<string, string\>                 |
+| `args?`          | _Record_<string, unknown\>                |
 | `id`             | _number_                                  |
 | `key`            | _string_ \| _number_                      |
-| `prevSelection`? | [_Selection_](classes/selection.md)       |
-| `type`?          | [_SelectionType_](enums/selectiontype.md) |
-| `unions`?        | _string_[]                                |
+| `prevSelection?` | [_Selection_](classes/selection.md)       |
+| `type?`          | [_SelectionType_](enums/selectiontype.md) |
+| `unions?`        | _string_[]                                |
 
 Defined in: [packages/gqless/src/Selection/selection.ts:7](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Selection/selection.ts#L7)
 
@@ -351,8 +351,8 @@ Defined in: [packages/gqless/src/Error/retry.ts:54](https://github.com/gqless/gq
 
 | Name              | Type                                   |
 | :---------------- | :------------------------------------- |
-| `TArrayValue`     | _undefined_ \| _null_ \| _object_      |
-| `TArray`          | _undefined_ \| _null_ \| TArrayValue[] |
+| `TArrayValue`     | _undefined_ \| `null` \| _object_      |
+| `TArray`          | _undefined_ \| `null` \| TArrayValue[] |
 | `TArrayValueKeys` | _string_ \| _number_ \| _symbol_       |
 
 #### Parameters:
@@ -376,7 +376,7 @@ Defined in: [packages/gqless/src/Helpers/getFields.ts:15](https://github.com/gql
 
 | Name           | Type                              |
 | :------------- | :-------------------------------- |
-| `TAccesorData` | _undefined_ \| _null_ \| _object_ |
+| `TAccesorData` | _undefined_ \| `null` \| _object_ |
 | `TAccesorKeys` | _string_ \| _number_ \| _symbol_  |
 
 #### Parameters:
@@ -416,7 +416,7 @@ Defined in: [packages/gqless/src/Schema/types.ts:37](https://github.com/gqless/g
 
 | Name | Type                              |
 | :--- | :-------------------------------- |
-| `T`  | _undefined_ \| _null_ \| _object_ |
+| `T`  | _undefined_ \| `null` \| _object_ |
 
 #### Parameters:
 
@@ -433,21 +433,21 @@ Defined in: [packages/gqless/src/Helpers/prepass.ts:12](https://github.com/gqles
 
 ### selectFields
 
-▸ **selectFields**<A\>(`accessor`: A, `fields?`: *\*\* \| (*string* \| *number*)[], `recursionDepth?`: *number\*): A
+▸ **selectFields**<A\>(`accessor`: A, `fields?`: `"*"` \| (_string_ \| _number_)[], `recursionDepth?`: _number_): A
 
 #### Type parameters:
 
 | Name | Type                              |
 | :--- | :-------------------------------- |
-| `A`  | _undefined_ \| _null_ \| _object_ |
+| `A`  | _undefined_ \| `null` \| _object_ |
 
 #### Parameters:
 
-| Name             | Type                               | Default value |
-| :--------------- | :--------------------------------- | :------------ |
-| `accessor`       | A                                  | -             |
-| `fields`         | *\*\* \| (*string* \| *number\*)[] | '\*'          |
-| `recursionDepth` | _number_                           | 1             |
+| Name             | Type                              | Default value |
+| :--------------- | :-------------------------------- | :------------ |
+| `accessor`       | A                                 | -             |
+| `fields`         | `"*"` \| (_string_ \| _number_)[] | '\*'          |
+| `recursionDepth` | _number_                          | 1             |
 
 **Returns:** A
 

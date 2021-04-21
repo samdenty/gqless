@@ -10,7 +10,7 @@ hide_title: true
 
 ## Callable
 
-▸ **BuildAndFetchSelections**<TData\>(`selections`: _undefined_ \| [_Selection_](../classes/selection.md)[], `type`: _query_ \| _mutation_, `cache?`: CacheInstance, `options?`: FetchResolveOptions, `lastTryParam?`: _boolean_): _Promise_<undefined \| _null_ \| TData\>
+▸ **BuildAndFetchSelections**<TData\>(`selections`: _undefined_ \| [_Selection_](../classes/selection.md)[], `type`: `"query"` \| `"mutation"`, `cache?`: CacheInstance, `options?`: FetchResolveOptions, `lastTryParam?`: _boolean_): _Promise_<undefined \| `null` \| TData\>
 
 #### Type parameters:
 
@@ -23,11 +23,11 @@ hide_title: true
 | Name            | Type                                                    |
 | :-------------- | :------------------------------------------------------ |
 | `selections`    | _undefined_ \| [_Selection_](../classes/selection.md)[] |
-| `type`          | _query_ \| _mutation_                                   |
+| `type`          | `"query"` \| `"mutation"`                               |
 | `cache?`        | CacheInstance                                           |
 | `options?`      | FetchResolveOptions                                     |
 | `lastTryParam?` | _boolean_                                               |
 
-**Returns:** _Promise_<undefined \| _null_ \| TData\>
+**Returns:** _Promise_<undefined \| `null` \| TData\>
 
 Defined in: [packages/gqless/src/Client/resolvers.ts:171](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Client/resolvers.ts#L171)

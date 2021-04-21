@@ -23,7 +23,7 @@ hide_title: true
 
 Defined in: [packages/gqless/src/Accessor/index.ts:119](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Accessor/index.ts#L119)
 
-▸ **SetCache**<A\>(`accessor`: A, `data`: _undefined_ \| _null_ \| [_DeepPartial_](../modules.md#deeppartial)<A\>): _void_
+▸ **SetCache**<A\>(`accessor`: A, `data`: _undefined_ \| `null` \| [_DeepPartial_](../modules.md#deeppartial)<A\>): _void_
 
 #### Type parameters:
 
@@ -36,13 +36,13 @@ Defined in: [packages/gqless/src/Accessor/index.ts:119](https://github.com/gqles
 | Name       | Type                                                                    |
 | :--------- | :---------------------------------------------------------------------- |
 | `accessor` | A                                                                       |
-| `data`     | _undefined_ \| _null_ \| [_DeepPartial_](../modules.md#deeppartial)<A\> |
+| `data`     | _undefined_ \| `null` \| [_DeepPartial_](../modules.md#deeppartial)<A\> |
 
 **Returns:** _void_
 
 Defined in: [packages/gqless/src/Accessor/index.ts:120](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Accessor/index.ts#L120)
 
-▸ **SetCache**<B\>(`accessor`: B, `args`: _Parameters_<B\>[*0*], `data`: _undefined_ \| _null_ \| [_DeepPartial_](../modules.md#deeppartial)<ReturnType<B\>\>): _void_
+▸ **SetCache**<B\>(`accessor`: B, `args`: _Parameters_<B\>[``"0"``], `data`: _undefined_ \| `null` \| [_DeepPartial_](../modules.md#deeppartial)<ReturnType<B\>\>): _void_
 
 #### Type parameters:
 
@@ -55,8 +55,8 @@ Defined in: [packages/gqless/src/Accessor/index.ts:120](https://github.com/gqles
 | Name       | Type                                                                                 |
 | :--------- | :----------------------------------------------------------------------------------- |
 | `accessor` | B                                                                                    |
-| `args`     | _Parameters_<B\>[*0*]                                                                |
-| `data`     | _undefined_ \| _null_ \| [_DeepPartial_](../modules.md#deeppartial)<ReturnType<B\>\> |
+| `args`     | _Parameters_<B\>[``"0"``]                                                            |
+| `data`     | _undefined_ \| `null` \| [_DeepPartial_](../modules.md#deeppartial)<ReturnType<B\>\> |
 
 **Returns:** _void_
 

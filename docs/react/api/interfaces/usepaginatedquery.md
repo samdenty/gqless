@@ -19,21 +19,21 @@ hide_title: true
 
 ## Callable
 
-▸ **UsePaginatedQuery**<TData, TArgs\>(`fn`: (`query`: GeneratedSchema[*query*], `args`: TArgs, `helpers`: [_CoreHelpers_](corehelpers.md)) => TData, `options`: [_UsePaginatedQueryOptions_](usepaginatedqueryoptions.md)<TData, TArgs\>): [_UsePaginatedQueryData_](usepaginatedquerydata.md)<TData, TArgs\>
+▸ **UsePaginatedQuery**<TData, TArgs\>(`fn`: (`query`: GeneratedSchema[``"query"``], `args`: TArgs, `helpers`: [_CoreHelpers_](corehelpers.md)) => TData, `options`: [_UsePaginatedQueryOptions_](usepaginatedqueryoptions.md)<TData, TArgs\>): [_UsePaginatedQueryData_](usepaginatedquerydata.md)<TData, TArgs\>
 
 #### Type parameters:
 
 | Name    | Type                                                     |
 | :------ | :------------------------------------------------------- |
 | `TData` | -                                                        |
-| `TArgs` | _null_ \| _string_ \| _number_ \| _Record_<string, any\> |
+| `TArgs` | `null` \| _string_ \| _number_ \| _Record_<string, any\> |
 
 #### Parameters:
 
-| Name      | Type                                                                                                    |
-| :-------- | :------------------------------------------------------------------------------------------------------ |
-| `fn`      | (`query`: GeneratedSchema[*query*], `args`: TArgs, `helpers`: [_CoreHelpers_](corehelpers.md)) => TData |
-| `options` | [_UsePaginatedQueryOptions_](usepaginatedqueryoptions.md)<TData, TArgs\>                                |
+| Name      | Type                                                                                                        |
+| :-------- | :---------------------------------------------------------------------------------------------------------- |
+| `fn`      | (`query`: GeneratedSchema[``"query"``], `args`: TArgs, `helpers`: [_CoreHelpers_](corehelpers.md)) => TData |
+| `options` | [_UsePaginatedQueryOptions_](usepaginatedqueryoptions.md)<TData, TArgs\>                                    |
 
 **Returns:** [_UsePaginatedQueryData_](usepaginatedquerydata.md)<TData, TArgs\>
 

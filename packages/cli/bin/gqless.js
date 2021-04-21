@@ -2,7 +2,13 @@
 
 const { program } = require('commander');
 
-const { inspectWriteGenerate, defaultConfig } = require('../dist/index');
+const {
+  inspectWriteGenerate,
+  defaultConfig,
+  __innerState,
+} = require('../dist/index');
+
+__innerState.isCLI = true;
 
 program
   .version(require('../package.json').version)

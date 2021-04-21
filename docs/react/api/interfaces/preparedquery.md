@@ -10,11 +10,11 @@ hide_title: true
 
 ## Type parameters
 
-| Name                    | Type                                                        |
-| :---------------------- | :---------------------------------------------------------- |
-| `GeneratedSchema`       | _object_                                                    |
-| `GeneratedSchema.query` | _object_                                                    |
-| `TFunction`             | (`query`: GeneratedSchema[*query*], `args`: _any_) => _any_ |
+| Name                    | Type                                                            |
+| :---------------------- | :-------------------------------------------------------------- |
+| `GeneratedSchema`       | _object_                                                        |
+| `GeneratedSchema.query` | _object_                                                        |
+| `TFunction`             | (`query`: GeneratedSchema[``"query"``], `args`: _any_) => _any_ |
 
 ## Properties
 
@@ -28,13 +28,13 @@ Defined in: [react/src/query/preparedQuery.ts:40](https://github.com/gqless/gqle
 
 ### preload
 
-▸ **preload**(...`__namedParameters`: _undefined_ _extends_ _Parameters_<TFunction\>[*1*] ? [Parameters<TFunction\>["1"]?] : [_Parameters_<TFunction\>[*1*]]): _Promise_<ReturnType<TFunction\>\>
+▸ **preload**(...`__namedParameters`: _undefined_ _extends_ _Parameters_<TFunction\>[``"1"``] ? [Parameters<TFunction\>["1"]?] : [_Parameters_<TFunction\>[``"1"``]]): _Promise_<ReturnType<TFunction\>\>
 
 #### Parameters:
 
-| Name                   | Type                                                                                                                   |
-| :--------------------- | :--------------------------------------------------------------------------------------------------------------------- |
-| `...__namedParameters` | _undefined_ _extends_ _Parameters_<TFunction\>[*1*] ? [Parameters<TFunction\>["1"]?] : [_Parameters_<TFunction\>[*1*]] |
+| Name                   | Type                                                                                                                           |
+| :--------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| `...__namedParameters` | _undefined_ _extends_ _Parameters_<TFunction\>[``"1"``] ? [Parameters<TFunction\>["1"]?] : [_Parameters_<TFunction\>[``"1"``]] |
 
 **Returns:** _Promise_<ReturnType<TFunction\>\>
 
@@ -44,13 +44,13 @@ Defined in: [react/src/query/preparedQuery.ts:21](https://github.com/gqless/gqle
 
 ### refetch
 
-▸ **refetch**(...`__namedParameters`: _undefined_ _extends_ _Parameters_<TFunction\>[*1*] ? [Parameters<TFunction\>["1"]?] : [_Parameters_<TFunction\>[*1*]]): _Promise_<ReturnType<TFunction\>\>
+▸ **refetch**(...`__namedParameters`: _undefined_ _extends_ _Parameters_<TFunction\>[``"1"``] ? [Parameters<TFunction\>["1"]?] : [_Parameters_<TFunction\>[``"1"``]]): _Promise_<ReturnType<TFunction\>\>
 
 #### Parameters:
 
-| Name                   | Type                                                                                                                   |
-| :--------------------- | :--------------------------------------------------------------------------------------------------------------------- |
-| `...__namedParameters` | _undefined_ _extends_ _Parameters_<TFunction\>[*1*] ? [Parameters<TFunction\>["1"]?] : [_Parameters_<TFunction\>[*1*]] |
+| Name                   | Type                                                                                                                           |
+| :--------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| `...__namedParameters` | _undefined_ _extends_ _Parameters_<TFunction\>[``"1"``] ? [Parameters<TFunction\>["1"]?] : [_Parameters_<TFunction\>[``"1"``]] |
 
 **Returns:** _Promise_<ReturnType<TFunction\>\>
 
@@ -74,7 +74,7 @@ Defined in: [react/src/query/preparedQuery.ts:26](https://github.com/gqless/gqle
 | :------------- | :-------------------------------------- |
 | `called`       | _boolean_                               |
 | `data`         | _undefined_ \| _ReturnType_<TFunction\> |
-| `error`?       | _GQlessError_                           |
+| `error?`       | _GQlessError_                           |
 | `isLoading`    | _boolean_                               |
 | `isRefetching` | _boolean_                               |
 

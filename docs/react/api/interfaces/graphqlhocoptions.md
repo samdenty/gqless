@@ -28,6 +28,6 @@ Defined in: [react/src/query/hoc.tsx:14](https://github.com/gqless/gqless/blob/m
 
 ### suspense
 
-• `Optional` **suspense**: _boolean_ \| { `fallback`: _null_ \| _boolean_ \| ReactChild \| ReactFragment \| _ReactPortal_ }
+• `Optional` **suspense**: _boolean_ \| { `fallback`: `null` \| _boolean_ \| ReactChild \| ReactFragment \| _ReactPortal_ }
 
 Defined in: [react/src/query/hoc.tsx:9](https://github.com/gqless/gqless/blob/master/packages/react/src/query/hoc.tsx#L9)

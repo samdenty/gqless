@@ -12,6 +12,11 @@ export interface UseMutationOptions<TData> {
   noCache?: boolean;
   onCompleted?: (data: TData) => void;
   onError?: OnErrorHandler;
+  /**
+   * Retry behaviour
+   *
+   * @default false
+   */
   retry?: RetryOptions;
   /**
    * Refetch specific queries after mutation completion.
@@ -125,7 +130,7 @@ export function createUseMutation<
 >(
   client: GQlessClient<GeneratedSchema>,
   {
-    defaults: { retry: defaultRetry, mutationSuspense: defaultSuspense },
+    defaults: { mutationSuspense: defaultSuspense },
   }: ReactClientOptionsWithDefaults
 ) {
   const { resolved, refetch } = client;
@@ -234,7 +239,7 @@ export function createUseMutation<
       [optsRef, fnRef, dispatch, callRefetchQueries]
     );
 
-    const { retry = defaultRetry } = opts;
+    const { retry = false } = opts;
 
     return useMemo(() => {
       const fn: typeof mutate = retry

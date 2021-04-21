@@ -23,16 +23,16 @@
   },
   "dependencies": {
     "isomorphic-ws": "^4.0.1",
-    "ws": "^7.4.4"
+    "ws": "^7.4.5"
   },
   "devDependencies": {
     "@types/ws": "^7.4.1",
     "build-utils": "workspace:*",
-    "gqless": "workspace:^2.0.11",
+    "gqless": "workspace:^2.0.12",
     "graphql": "^15.5.0",
     "test-utils": "workspace:^0.1.0",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.4"
   },
   "peerDependencies": {
     "gqless": "workspace:^2.0.10",

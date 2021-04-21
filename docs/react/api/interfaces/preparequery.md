@@ -21,9 +21,9 @@ hide_title: true
 
 #### Type parameters:
 
-| Name        | Type                                                        |
-| :---------- | :---------------------------------------------------------- |
-| `TFunction` | (`query`: GeneratedSchema[*query*], `args`: _any_) => _any_ |
+| Name        | Type                                                            |
+| :---------- | :-------------------------------------------------------------- |
+| `TFunction` | (`query`: GeneratedSchema[``"query"``], `args`: _any_) => _any_ |
 
 #### Parameters:
 

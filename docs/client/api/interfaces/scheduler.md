@@ -54,7 +54,7 @@ Defined in: [packages/gqless/src/Scheduler/index.ts:58](https://github.com/gqles
 
 ### resolving
 
-• **resolving**: _null_ \| _DeferredPromise_<SchedulerPromiseValue\>
+• **resolving**: `null` \| _DeferredPromise_<SchedulerPromiseValue\>
 
 Defined in: [packages/gqless/src/Scheduler/index.ts:38](https://github.com/gqless/gqless/blob/master/packages/gqless/src/Scheduler/index.ts#L38)
 

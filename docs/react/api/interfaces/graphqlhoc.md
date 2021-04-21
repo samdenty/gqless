@@ -10,7 +10,7 @@ hide_title: true
 
 ## Callable
 
-▸ **GraphQLHOC**<P\>(`component`: (`props`: P) => _null_ \| _ReactElement_<any, string \| JSXElementConstructor<any\>\>, `options?`: [_GraphQLHOCOptions_](graphqlhocoptions.md)): _function_
+▸ **GraphQLHOC**<P\>(`component`: (`props`: P) => `null` \| _ReactElement_<any, string \| JSXElementConstructor<any\>\>, `options?`: [_GraphQLHOCOptions_](graphqlhocoptions.md)): _function_
 
 #### Type parameters:
 
@@ -22,9 +22,9 @@ hide_title: true
 
 | Name        | Type                                                                                  |
 | :---------- | :------------------------------------------------------------------------------------ |
-| `component` | (`props`: P) => _null_ \| _ReactElement_<any, string \| JSXElementConstructor<any\>\> |
+| `component` | (`props`: P) => `null` \| _ReactElement_<any, string \| JSXElementConstructor<any\>\> |
 | `options?`  | [_GraphQLHOCOptions_](graphqlhocoptions.md)                                           |
 
-**Returns:** (`props`: P) => _null_ \| _ReactElement_<any, string \| JSXElementConstructor<any\>\>
+**Returns:** (`props`: P) => `null` \| _ReactElement_<any, string \| JSXElementConstructor<any\>\>
 
 Defined in: [react/src/query/hoc.tsx:18](https://github.com/gqless/gqless/blob/master/packages/react/src/query/hoc.tsx#L18)

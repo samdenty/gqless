@@ -47,7 +47,7 @@ Defined in: [react/src/query/useQuery.ts:27](https://github.com/gqless/gqless/bl
 
 ### staleWhileRevalidate
 
-• `Optional` **staleWhileRevalidate**: _null_ \| _string_ \| _number_ \| _boolean_ \| _object_
+• `Optional` **staleWhileRevalidate**: `null` \| _string_ \| _number_ \| _boolean_ \| _object_
 
 Defined in: [react/src/query/useQuery.ts:25](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useQuery.ts#L25)
 

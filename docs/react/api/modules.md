@@ -64,7 +64,7 @@ Renames and exports: [\_\_type](interfaces/usepaginatedquerymergeparams.md#__typ
 
 ### FetchPolicy
 
-Ƭ **FetchPolicy**: _cache-and-network_ \| _cache-first_ \| _network-only_ \| _no-cache_
+Ƭ **FetchPolicy**: `"cache-and-network"` \| `"cache-first"` \| `"network-only"` \| `"no-cache"`
 
 Defined in: [react/src/common.ts:152](https://github.com/gqless/gqless/blob/master/packages/react/src/common.ts#L152)
 
@@ -72,7 +72,7 @@ Defined in: [react/src/common.ts:152](https://github.com/gqless/gqless/blob/mast
 
 ### LazyFetchPolicy
 
-Ƭ **LazyFetchPolicy**: _Exclude_<[_FetchPolicy_](modules.md#fetchpolicy), _cache-first_\>
+Ƭ **LazyFetchPolicy**: _Exclude_<[_FetchPolicy_](modules.md#fetchpolicy), `"cache-first"`\>
 
 Defined in: [react/src/query/useLazyQuery.ts:13](https://github.com/gqless/gqless/blob/master/packages/react/src/query/useLazyQuery.ts#L13)
 
@@ -100,7 +100,7 @@ Defined in: [react/src/common.ts:513](https://github.com/gqless/gqless/blob/mast
 
 ### PaginatedQueryFetchPolicy
 
-Ƭ **PaginatedQueryFetchPolicy**: _Extract_<[_FetchPolicy_](modules.md#fetchpolicy), _cache-first_ \| _cache-and-network_ \| _network-only_\>
+Ƭ **PaginatedQueryFetchPolicy**: _Extract_<[_FetchPolicy_](modules.md#fetchpolicy), `"cache-first"` \| `"cache-and-network"` \| `"network-only"`\>
 
 Defined in: [react/src/query/usePaginatedQuery.ts:16](https://github.com/gqless/gqless/blob/master/packages/react/src/query/usePaginatedQuery.ts#L16)
 
@@ -124,7 +124,7 @@ Defined in: [react/src/ssr/ssr.ts:25](https://github.com/gqless/gqless/blob/mast
 
 ### UseQueryReturnValue
 
-Ƭ **UseQueryReturnValue**<GeneratedSchema\>: GeneratedSchema[*query*] & { `$state`: [_UseQueryState_](interfaces/usequerystate.md) }
+Ƭ **UseQueryReturnValue**<GeneratedSchema\>: GeneratedSchema[``"query"``] & { `$state`: [_UseQueryState_](interfaces/usequerystate.md) }
 
 #### Type parameters:
 
@@ -182,4 +182,4 @@ Defined in: [react/src/common.ts:524](https://github.com/gqless/gqless/blob/mast
 
 **Returns:** [_ReactClient_](interfaces/reactclient.md)<GeneratedSchema\>
 
-Defined in: [react/src/client.ts:183](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L183)
+Defined in: [react/src/client.ts:185](https://github.com/gqless/gqless/blob/master/packages/react/src/client.ts#L185)

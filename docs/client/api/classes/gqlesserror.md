@@ -52,7 +52,7 @@ Defined in: [packages/gqless/src/Error/index.ts:4](https://github.com/gqless/gql
 
 Inherited from: Error.message
 
-Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.es5.d.ts:974
+Defined in: node_modules/.pnpm/typescript@4.2.4/node_modules/typescript/lib/lib.es5.d.ts:974
 
 ---
 
@@ -62,7 +62,7 @@ Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.
 
 Inherited from: Error.name
 
-Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.es5.d.ts:973
+Defined in: node_modules/.pnpm/typescript@4.2.4/node_modules/typescript/lib/lib.es5.d.ts:973
 
 ---
 
@@ -80,7 +80,7 @@ Defined in: [packages/gqless/src/Error/index.ts:5](https://github.com/gqless/gql
 
 Inherited from: Error.stack
 
-Defined in: node_modules/.pnpm/typescript@4.2.3/node_modules/typescript/lib/lib.es5.d.ts:975
+Defined in: node_modules/.pnpm/typescript@4.2.4/node_modules/typescript/lib/lib.es5.d.ts:975
 
 ---
 
@@ -105,11 +105,11 @@ Optional override for formatting stack traces
 
 **Returns:** _any_
 
-Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/globals.d.ts:11
+Defined in: node_modules/.pnpm/@types+node@14.14.41/node_modules/@types/node/globals.d.ts:11
 
 Inherited from: Error.prepareStackTrace
 
-Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/globals.d.ts:11
+Defined in: node_modules/.pnpm/@types+node@14.14.41/node_modules/@types/node/globals.d.ts:11
 
 ---
 
@@ -119,7 +119,7 @@ Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/glo
 
 Inherited from: Error.stackTraceLimit
 
-Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/globals.d.ts:13
+Defined in: node_modules/.pnpm/@types+node@14.14.41/node_modules/@types/node/globals.d.ts:13
 
 ## Methods
 
@@ -156,7 +156,7 @@ Create .stack property on a target object
 
 Inherited from: Error.captureStackTrace
 
-Defined in: node_modules/.pnpm/@types+node@14.14.37/node_modules/@types/node/globals.d.ts:4
+Defined in: node_modules/.pnpm/@types+node@14.14.41/node_modules/@types/node/globals.d.ts:4
 
 ---
 

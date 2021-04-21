@@ -1,5 +1,5 @@
 import { GQlessClient, prepass } from 'gqless';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import {
   OnErrorHandler,
@@ -73,7 +73,6 @@ export function createUseQuery<
     onError,
     prepare,
   }: UseQueryOptions<GeneratedSchema> = {}): UseQueryReturnValue<GeneratedSchema> {
-    const updateOnFetchPromise = useRef(true);
     const [$state] = useState<Writeable<UseQueryState>>(() => {
       return {
         isLoading: true,
@@ -85,11 +84,10 @@ export function createUseQuery<
       interceptorManager,
       scheduler,
       onError,
-      updateOnFetchPromise,
+      updateOnFetchPromise: true,
     });
 
     if (prepare) {
-      updateOnFetchPromise.current = false;
       try {
         prepare(prepareHelpers);
       } catch (err) {
@@ -97,8 +95,6 @@ export function createUseQuery<
           Error.captureStackTrace(err, useQuery);
         }
         throw err;
-      } finally {
-        updateOnFetchPromise.current = true;
       }
     }
 
