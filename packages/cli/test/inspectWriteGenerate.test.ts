@@ -137,8 +137,6 @@ test('basic inspectWriteGenerate functionality', async () => {
        * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
        */
 
-      import { ScalarsEnumsHash } from 'gqless';
-
       export type Maybe<T> = T | null;
       export type Exact<T extends { [key: string]: unknown }> = {
         [K in keyof T]: T[K];
@@ -156,7 +154,7 @@ test('basic inspectWriteGenerate functionality', async () => {
         Float: number;
       }
 
-      export const scalarsEnumsHash: ScalarsEnumsHash = {
+      export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
         String: true,
         Boolean: true,
       };
@@ -322,8 +320,6 @@ describe('from file', () => {
          * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
          */
 
-        import { ScalarsEnumsHash } from 'gqless';
-
         export type Maybe<T> = T | null;
         export type Exact<T extends { [key: string]: unknown }> = {
           [K in keyof T]: T[K];
@@ -341,7 +337,7 @@ describe('from file', () => {
           Float: number;
         }
 
-        export const scalarsEnumsHash: ScalarsEnumsHash = {
+        export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
           Int: true,
           Boolean: true,
           String: true,
@@ -509,8 +505,6 @@ describe('from file', () => {
          * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
          */
 
-        import { ScalarsEnumsHash } from 'gqless';
-
         export type Maybe<T> = T | null;
         export type Exact<T extends { [key: string]: unknown }> = {
           [K in keyof T]: T[K];
@@ -528,7 +522,7 @@ describe('from file', () => {
           Float: number;
         }
 
-        export const scalarsEnumsHash: ScalarsEnumsHash = {
+        export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
           String: true,
           Boolean: true,
         };
@@ -695,8 +689,6 @@ describe('from file', () => {
          * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
          */
 
-        import { ScalarsEnumsHash } from 'gqless';
-
         export type Maybe<T> = T | null;
         export type Exact<T extends { [key: string]: unknown }> = {
           [K in keyof T]: T[K];
@@ -714,7 +706,7 @@ describe('from file', () => {
           Float: number;
         }
 
-        export const scalarsEnumsHash: ScalarsEnumsHash = {
+        export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
           String: true,
           Boolean: true,
         };
@@ -920,8 +912,6 @@ test('specify generateOptions to inspectWriteGenerate', async () => {
 
       // This should be included
 
-      import { ScalarsEnumsHash } from 'gqless';
-
       export type Maybe<T> = T | null;
       export type Exact<T extends { [key: string]: unknown }> = {
         [K in keyof T]: T[K];
@@ -939,7 +929,7 @@ test('specify generateOptions to inspectWriteGenerate', async () => {
         Float: number;
       }
 
-      export const scalarsEnumsHash: ScalarsEnumsHash = {
+      export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
         String: true,
         Boolean: true,
       };
@@ -1058,8 +1048,6 @@ describe('inspect headers', () => {
          */
         // This should be included
 
-        import { ScalarsEnumsHash } from 'gqless';
-
         export type Maybe<T> = T | null;
         export type Exact<T extends { [key: string]: unknown }> = {
           [K in keyof T]: T[K];
@@ -1077,7 +1065,7 @@ describe('inspect headers', () => {
           Float: number;
         }
 
-        export const scalarsEnumsHash: ScalarsEnumsHash = {
+        export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
           String: true,
           Boolean: true,
         };
@@ -1273,8 +1261,6 @@ describe('CLI behavior', () => {
          * GQLESS AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
          */
 
-        import { ScalarsEnumsHash } from 'gqless';
-
         export type Maybe<T> = T | null;
         export type Exact<T extends { [key: string]: unknown }> = {
           [K in keyof T]: T[K];
@@ -1292,7 +1278,7 @@ describe('CLI behavior', () => {
           Float: number;
         }
 
-        export const scalarsEnumsHash: ScalarsEnumsHash = {
+        export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
           String: true,
           Boolean: true,
         };

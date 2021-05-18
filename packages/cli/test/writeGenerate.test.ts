@@ -69,8 +69,6 @@ test('generates code and writes existing file', async () => {
        */
       // This should be included
 
-      import { ScalarsEnumsHash } from 'gqless';
-
       export type Maybe<T> = T | null;
       export type Exact<T extends { [key: string]: unknown }> = {
         [K in keyof T]: T[K];
@@ -88,7 +86,7 @@ test('generates code and writes existing file', async () => {
         Float: number;
       }
 
-      export const scalarsEnumsHash: ScalarsEnumsHash = {
+      export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
         String: true,
         Boolean: true,
       };
@@ -176,8 +174,6 @@ test('creates dir, generates code and writes new file', async () => {
        */
       // This should be included
 
-      import { ScalarsEnumsHash } from 'gqless';
-
       export type Maybe<T> = T | null;
       export type Exact<T extends { [key: string]: unknown }> = {
         [K in keyof T]: T[K];
@@ -195,7 +191,7 @@ test('creates dir, generates code and writes new file', async () => {
         Float: number;
       }
 
-      export const scalarsEnumsHash: ScalarsEnumsHash = {
+      export const scalarsEnumsHash: import('gqless').ScalarsEnumsHash = {
         String: true,
         Boolean: true,
       };
