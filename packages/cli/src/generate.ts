@@ -866,15 +866,13 @@ export const generatedSchema = {${Object.entries(generatedSchema).reduceRight(
  */
   ${preImport}
 
-  import { ScalarsEnumsHash${
-    hasUnions ? ', SchemaUnionsKey' : ''
-  } } from "gqless";
+  ${hasUnions ? 'import { SchemaUnionsKey } from "gqless";' : ''}
 
   ${await codegenResultPromise}
 
   export${
     isJavascriptOutput ? ' declare' : ''
-  } const scalarsEnumsHash: ScalarsEnumsHash${
+  } const scalarsEnumsHash: import("gqless").ScalarsEnumsHash${
       isJavascriptOutput ? ';' : ` = ${JSON.stringify(scalarsEnumsHash)};`
     }
   export${isJavascriptOutput ? ' declare' : ''} const generatedSchema ${

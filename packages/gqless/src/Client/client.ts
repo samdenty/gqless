@@ -61,6 +61,7 @@ export interface InnerClientState {
   readonly queryFetcher: QueryFetcher;
   readonly schemaUnions: SchemaUnions;
   readonly normalizationHandler: NormalizationHandler | undefined;
+  defaults: CoreClientDefaults;
 }
 
 export interface SubscribeEvents {
@@ -103,6 +104,32 @@ export interface SubscriptionsClient {
   ): void;
 }
 
+export interface CoreClientDefaults {
+  /**
+   * `resolved` defaults
+   */
+  resolved?: {
+    /**
+     * Set the default `noCache` option
+     *
+     * @default false
+     */
+    noCache?: boolean;
+    /**
+     * Set the default `noCache` option
+     *
+     * @default false
+     */
+    refetch?: boolean;
+    /**
+     * Set the default `retry` strategy
+     *
+     * @default false
+     */
+    retry?: RetryOptions;
+  };
+}
+
 export interface ClientOptions<
   ObjectTypesNames extends string = never,
   SchemaObjectTypes extends {
@@ -120,6 +147,7 @@ export interface ClientOptions<
     | NormalizationOptions<ObjectTypesNames, SchemaObjectTypes>
     | boolean;
   subscriptionsClient?: SubscriptionsClient;
+  defaults?: CoreClientDefaults;
 }
 
 export interface MutateHelpers<
@@ -218,6 +246,7 @@ export function createClient<
   retry,
   normalization = true,
   subscriptionsClient,
+  defaults = {},
 }: ClientOptions<
   ObjectTypesNames,
   ObjectTypes
@@ -261,6 +290,7 @@ export function createClient<
     queryFetcher,
     schemaUnions: createSchemaUnions(schema),
     normalizationHandler,
+    defaults,
   };
 
   const {

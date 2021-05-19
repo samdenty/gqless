@@ -2,7 +2,7 @@ import { isObject, isPlainObject } from '../Utils';
 
 export function getFields<
   TAccesorData extends object | undefined | null,
-  TAccesorKeys extends keyof TAccesorData
+  TAccesorKeys extends keyof NonNullable<TAccesorData>
 >(accessor: TAccesorData, ...keys: TAccesorKeys[]): TAccesorData {
   if (!isObject(accessor)) return accessor;
 
