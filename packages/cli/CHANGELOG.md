@@ -1,5 +1,14 @@
 # @gqless/cli
 
+## 2.0.16
+
+### Patch Changes
+
+- 422eb9a: fix importsNotUsedAsValues error on generated schema
+- Updated dependencies [422eb9a]
+- Updated dependencies [422eb9a]
+  - gqless@2.0.14
+
 ## 2.0.15
 
 ### Patch Changes
