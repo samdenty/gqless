@@ -1,5 +1,12 @@
 # gqless
 
+## 2.0.14
+
+### Patch Changes
+
+- 422eb9a: allow set core "resolved" defaults
+- 422eb9a: hotfix nullable getFields
+
 ## 2.0.13
 
 ### Patch Changes
