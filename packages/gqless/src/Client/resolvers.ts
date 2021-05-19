@@ -224,6 +224,7 @@ export function createResolvers(
     scheduler,
     clientCache: globalCache,
     selectionManager: globalSelectionManager,
+    defaults: { resolved: resolvedDefaults = {} },
   } = innerState;
   const { globalInterceptor } = interceptorManager;
   const buildQuery = createQueryBuilder();
@@ -313,15 +314,20 @@ export function createResolvers(
     }
   };
 
+  const {
+    noCache: noCacheDefault = false,
+    refetch: refetchDefault = false,
+    retry: retryDefault = false,
+  } = resolvedDefaults;
   const resolved: Resolved = async function resolved<T = unknown>(
     dataFn: () => T,
     {
-      refetch,
-      noCache,
+      refetch = refetchDefault,
+      noCache = noCacheDefault,
       onCacheData,
       onSelection,
       onSubscription,
-      retry,
+      retry = retryDefault,
       nonSerializableVariables,
       onNoCacheFound,
       onEmptyResolve,
