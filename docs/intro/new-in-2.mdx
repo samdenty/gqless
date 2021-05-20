@@ -3,18 +3,9 @@ id: new-in-2
 title: What's new in 2.0
 ---
 
-Mutations, subscriptions and new hooks for React make lazy loading, suspense, and other patterns much easier.
+GQless 2.0 builds upon the ideas from gqless 1.0, adding support for mutations, subscriptions and new hooks for React, to make lazy loading, suspense, and other patterns much easier.
+
 Here's a breakdown of what's changed:
-
-## Improved performance
-
-### Client-side
-
-Runtime speed has been dramatically increased, fetching data now scales much better - the largest queries will see the greatest benefit. The schema format has been simplified.
-
-### Build-time
-
-Types are now generated differently. You should see significant gains in TypeScript compiler performance.
 
 ## Mutations
 
@@ -23,17 +14,6 @@ Support for [mutations](/client/mutations) has been added. They work very simila
 ## Subscriptions
 
 Support for [subscriptions](/client/subscriptions) is now here. You can build realtime user interfaces with GQless now.
-
-## Caching strategies and fetch policies
-
-Theres new support for caching strategies and [persistence](/client/persistence), that allow your queries to retrieve previously fetched data. It supports the `stale-while-revalidate` pattern
-as well as `cache-and-network`, `cache-first`, `network-only` and `no-cache` policies, and lets you configure how you want your cache to persist for cross-session persistence.
-
-[**Normalized caching**](/client/config#normalization) has also been improved.
-
-## Server-side Rendering
-
-Server-Side rendering (**SSR**) is now supported, which works great with Next.js. See [React SSR](/react/ssr) for more
 
 ## React Hooks
 
@@ -54,10 +34,29 @@ And the new helpers functions:
 - `prepareQuery`: Extract queries above components, letting you do fancier early-fetching on important queries.
 - `prepareReactRender`: Use before rendering React to trigger getting data.
 
-## Client configuration
+## Server-side Rendering
 
-You can now configure options for the [core-client](/client/config) and [react integration](/react/config). A `retry` option allows for failed queries to retry automatically.
+Server-Side rendering (**SSR**) is now supported, which works great with Next.js. See [React SSR](/react/ssr) for more
+
+## Caching strategies and fetch policies
+
+Theres new support for caching strategies and [persistence](/client/persistence), that allow your queries to retrieve previously fetched data. It supports the `stale-while-revalidate` pattern
+as well as `cache-and-network`, `cache-first`, `network-only` and `no-cache` policies, and lets you configure how you want your cache to persist for cross-session persistence.
+
+[**Normalized caching**](/client/config#normalization) has also been improved.
 
 ## File uploading
 
 File uploading is now supported, see [here](/client/graphql-upload) for more.
+
+## Improved performance
+
+Runtime speed has been dramatically increased, fetching data now scales much better - the largest queries will see the greatest benefit. The schema format has been simplified. Types are now also generated differently. You should see significant gains in TypeScript compiler performance.
+
+## Client configuration
+
+You can now configure options for the [core-client](/client/config) and [react integration](/react/config). A `retry` option allows for failed queries to retry automatically.
+
+# Getting started
+
+If this sounds exciting, head over to the [Getting started](/getting-started) page
