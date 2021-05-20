@@ -32,6 +32,14 @@ module.exports = {
       },
       items: [
         {
+          label: 'Discord',
+          to: 'https://discord.gg/FjwyGQKYER',
+          label: 'React',
+          to: 'react/fetching-data',
+          position: 'right',
+          activeBasePath: 'react',
+        },
+        {
           label: 'Introduction',
           to: 'intro',
           position: 'right',
