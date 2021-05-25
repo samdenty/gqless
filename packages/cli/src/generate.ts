@@ -150,7 +150,7 @@ export async function generate(
           onlyOperationTypes: true,
           declarationKind: 'interface',
           addUnderscoreToArgsType: true,
-          scalarTypes: scalarTypes,
+          scalars: scalarTypes,
           namingConvention: 'keep',
           enumsAsTypes: enumsAsStrings,
         } as typescriptPlugin.TypeScriptPluginConfig,
