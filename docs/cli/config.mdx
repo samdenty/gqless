@@ -40,10 +40,9 @@ module.exports = config;
 
 | Name                   | Type                    | Description                                                                                                                                                               |
 | ---------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| endpoint               | `string`                | Endpoint used in the first-generated client, you are free to change it in there, and this config will be ignored.                                                         |
 | enumsAsStrings         | `boolean`               | Whether to use enums as simple string types, or as the default [Object String Enums of TypeScript](https://www.typescriptlang.org/docs/handbook/enums.html#string-enums). |
 | react                  | `boolean`               | Whether to add the [React](/react/fetching-data) bindings to the first-generated client.                                                                                  |
-| scalars                | `Record<string,string>` | Mapping of Custom Scalar Types to TypeScript, since by default, **any custom scalar will be casted as `any`**.                                                            |
+| scalarTypes            | `Record<string,string>` | Mapping of Custom Scalar Types to TypeScript, since by default, **any custom scalar will be casted as `any`**.                                                            |
 | preImport              | `string`                | Code to be added at the very beginning of the generated `schema file`, useful for adding custom imported types in custom scalars.                                         |
 | introspection.endpoint | `string`                | Endpoint from where the introspection of the target GraphQL API, it can be an `http`/`https` endpoint, or the path of a `.gql` GraphQL schema file.                       |
 | introspection.headers  | `Record<string,string>` | Custom headers to be added to `http`/`https` introspection, normally for authorization purposes.                                                                          |
