@@ -8,7 +8,7 @@ import { app } from './src';
     app.graphql.schema,
     './src/generated/gqless.ts',
     {
-      scalars: {
+      scalarTypes: {
         ExampleScalar: 'string',
       },
     }

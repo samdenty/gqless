@@ -1,11 +1,10 @@
 /**
- * @type {import("@gqless/cli").GqlessConfig}
+ * @type {import("@gqless/cli").GQlessConfig}
  */
 const config = {
-  endpoint: "https://examples-api.gqless.com/graphql",
   enumsAsStrings: true,
   react: true,
-  scalars: {
+  scalarTypes: {
     DateTime: "string",
     NonNegativeInt: "number",
     NonEmptyString: "string",

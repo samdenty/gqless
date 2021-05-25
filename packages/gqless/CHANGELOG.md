@@ -12,7 +12,7 @@
 ### Patch Changes
 
 - 4a3d5ef: divide subscriptions with only one top level field
-- af6a437: - Rename `GqlessConfig` to `GQlessConfig` (so it's consistent with the new logo)
+- af6a437: - Rename `gqlessConfig` to `GQlessConfig` (so it's consistent with the new logo)
   - Rename `gqlessError` to `GQlessError`
   - Remove `endpoint` option from the configuration, and instead always defaults to introspection one
     - It's confusing why theres two of them, and the user can change it later by modifying the file anyway

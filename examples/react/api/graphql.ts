@@ -403,7 +403,7 @@ export async function register(app: FastifyInstance) {
     targetPath: './src/graphql/mercurius.ts',
     silent: true,
     codegenConfig: {
-      scalars: {
+      scalarTypes: {
         Upload: 'Promise<FileUpload>',
       },
     },

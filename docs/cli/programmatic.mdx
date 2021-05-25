@@ -16,12 +16,10 @@ All the fields are optional, and it will always read from the [Configuration](/c
 import { inspectWriteGenerate } from '@gqless/cli';
 
 await inspectWriteGenerate({
-  endpoint: 'http://localhost:3000/api/graphql',
   destination: './src/gqless/index.ts',
   generateOptions: {
-    endpoint: '/api/graphql',
     preImport: '',
-    scalars: {
+    scalarTypes: {
       DateTime: 'string',
     },
     react: true,
@@ -52,9 +50,8 @@ await writeGenerate(
   './src/gqless/index.ts',
   // GenerateOptions, optional
   {
-    endpoint: '/api/graphql',
     preImport: '',
-    scalars: {
+    scalarTypes: {
       DateTime: 'string',
     },
     react: true,
@@ -89,9 +86,8 @@ const {
   schema,
   // GenerateOptions, optional
   {
-    endpoint: '/api/graphql',
     preImport: '',
-    scalars: {
+    scalarTypes: {
       DateTime: 'string',
     },
     react: true,

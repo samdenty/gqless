@@ -4,10 +4,9 @@ require('dotenv').config();
  * @type {import("@gqless/cli").GQlessConfig}
  */
 const config = {
-  endpoint: 'https://api.github.com/graphql',
   enumsAsStrings: false,
   react: false,
-  scalars: {
+  scalarTypes: {
     DateTime: 'string',
     Date: 'string',
     GitObjectID: 'string',
