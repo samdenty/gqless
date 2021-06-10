@@ -57,7 +57,7 @@ export function useForceUpdate() {
       () => {
         if (wasCalled.current) return;
         wasCalled.current = true;
-        setTimeout(update);
+        Promise.resolve().then(update);
       },
       {
         wasCalled,
