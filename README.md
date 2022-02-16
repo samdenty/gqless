@@ -9,8 +9,8 @@
   <a href="https://gqless.com">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-documentation?color=C00B84">
   </a>
-  <a href="https://discord.gg/9DNNPedhbx">
-    <img alt="Discord" src="https://img.shields.io/discord/793628688439836694?color=7289d9&label=discord">
+  <a href="https://github.com/sponsors/samdenty">
+    <img alt="Sponsor" src="https://img.shields.io/github/sponsors/samdenty?label=Sponsors)">
   </a>
   <a href="https://twitter.com/gqlessdev">
     <img alt="Twitter" src="https://img.shields.io/twitter/follow/gqlessdev?label=%40gqlessdev&style=flat&logo=twitter&color=00acee">
